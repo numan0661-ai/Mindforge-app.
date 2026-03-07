@@ -554,3 +554,474 @@
                 timer.textContent = 'Bekle...';
                 timer.style.color = '#f59e0b';
                 btn.text
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0f0f23">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>MindForge</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f0f23;color:#f8fafc;min-height:100vh}
+        .container{max-width:430px;margin:0 auto;padding:20px;padding-bottom:100px}
+        .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+        .logo{font-size:24px;font-weight:800;background:linear-gradient(135deg,#6366f1,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .streak{display:flex;align-items:center;gap:5px;background:#1a1a2e;padding:8px 16px;border-radius:20px}
+        .card{background:#1a1a2e;border-radius:16px;padding:20px;margin-bottom:12px;cursor:pointer;transition:transform 0.2s}
+        .card:active{transform:scale(0.98)}
+        .card-title{font-size:18px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+        .card-desc{font-size:14px;color:#94a3b8}
+        .progress-bar{height:4px;background:rgba(255,255,255,0.1);border-radius:2px;margin-top:10px;overflow:hidden}
+        .progress-fill{height:100%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:2px;transition:width 0.5s}
+        .nav{position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;display:flex;justify-content:space-around;padding:12px 0 30px;border-top:1px solid rgba(255,255,255,0.05)}
+        .nav-item{text-align:center;color:#94a3b8;font-size:12px;cursor:pointer}
+        .nav-item.active{color:#6366f1}
+        .page{display:none}
+        .page.active{display:block}
+        .btn{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;border:none;padding:12px 24px;border-radius:12px;font-size:16px;cursor:pointer;width:100%;margin-top:10px}
+        .btn.completed{background:#10b981}
+        .btn.danger{background:#ef4444}
+        .exercise-item{background:#252542;padding:15px;border-radius:12px;margin-bottom:10px}
+        .exercise-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+        .timer-display{font-size:64px;font-weight:800;text-align:center;margin:30px 0;font-family:'Courier New',monospace}
+        .timer-display.work{color:#10b981}
+        .timer-display.rest{color:#f59e0b}
+        .set-counter{text-align:center;font-size:18px;color:#94a3b8;margin-bottom:20px}
+        .timer-controls{display:flex;gap:10px;margin-top:20px}
+        .timer-controls .btn{flex:1}
+        .toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(100px);background:#1a1a2e;padding:16px 24px;border-radius:12px;opacity:0;transition:all 0.3s;z-index:1000}
+        .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">MindForge</div>
+            <div class="streak">🔥 <span id="streakCount">0</span></div>
+        </div>
+        
+        <div id="home" class="page active">
+            <div class="card" onclick="showPage('fitness')">
+                <div class="card-title">💪 FitForge <span id="fitnessPercent">0%</span></div>
+                <div class="card-desc">Vücut geliştirme</div>
+                <div class="progress-bar"><div class="progress-fill" id="fitnessBar" style="width:0%"></div></div>
+            </div>
+            <div class="card" onclick="showPage('voice')">
+                <div class="card-title">🗣️ VoiceForge <span id="voicePercent">0%</span></div>
+                <div class="card-desc">Diksiyon</div>
+                <div class="progress-bar"><div class="progress-fill" id="voiceBar" style="width:0%"></div></div>
+            </div>
+            <div class="card" onclick="showPage('mind')">
+                <div class="card-title">⚡ MindForge <span id="mindPercent">0%</span></div>
+                <div class="card-desc">Hızlı düşünme</div>
+                <div class="progress-bar"><div class="progress-fill" id="mindBar" style="width:0%"></div></div>
+            </div>
+            <div class="card" onclick="showPage('logic')">
+                <div class="card-title">🧩 LogicForge <span id="logicPercent">0%</span></div>
+                <div class="card-desc">Pratik zeka</div>
+                <div class="progress-bar"><div class="progress-fill" id="logicBar" style="width:0%"></div></div>
+            </div>
+        </div>
+        
+        <div id="fitness" class="page">
+            <button onclick="showPage('home')" style="background:none;border:none;color:white;font-size:20px;margin-bottom:20px">← Geri</button>
+            <h2>FitForge</h2>
+            <div id="fitnessList"></div>
+        </div>
+        
+        <div id="fitnessTimer" class="page">
+            <button onclick="stopTimer();showPage('fitness')" style="background:none;border:none;color:white;font-size:20px;margin-bottom:20px">← Durdur</button>
+            <h2 id="timerExerciseName">Egzersiz</h2>
+            <div class="set-counter">Set <span id="currentSet">1</span> / <span id="totalSets">3</span></div>
+            <div class="timer-display work" id="mainTimer">00:30</div>
+            <div style="text-align:center;color:#94a3b8;margin-bottom:20px" id="timerStatus">HAZIR</div>
+            <div class="timer-controls">
+                <button class="btn" id="timerBtn" onclick="toggleTimer()">BAŞLA</button>
+                <button class="btn danger" onclick="resetTimer()">SIFIRLA</button>
+            </div>
+        </div>
+        
+        <div id="voice" class="page">
+            <button onclick="showPage('home')" style="background:none;border:none;color:white;font-size:20px;margin-bottom:20px">← Geri</button>
+            <h2>VoiceForge</h2>
+            <div id="voiceList"></div>
+        </div>
+        
+        <div id="mind" class="page">
+            <button onclick="showPage('home')" style="background:none;border:none;color:white;font-size:20px;margin-bottom:20px">← Geri</button>
+            <h2>MindForge</h2>
+            <div style="text-align:center;padding:40px 0">
+                <div style="font-size:48px;margin-bottom:20px" id="reactionTime">00:00</div>
+                <button class="btn" id="gameBtn" onclick="playReactionGame()">Başla</button>
+                <div id="bestScore" style="margin-top:20px;color:#94a3b8">En iyi: --</div>
+            </div>
+        </div>
+        
+        <div id="logic" class="page">
+            <button onclick="showPage('home')" style="background:none;border:none;color:white;font-size:20px;margin-bottom:20px">← Geri</button>
+            <h2>LogicForge</h2>
+            <div id="logicList"></div>
+        </div>
+    </div>
+    
+    <div class="nav">
+        <div class="nav-item active" onclick="showPage('home')">🏠<br>Ana Sayfa</div>
+        <div class="nav-item" onclick="showStats()">📊<br>İlerleme</div>
+        <div class="nav-item" onclick="showToast('AI Koç yakında!')">🤖<br>AI Koç</div>
+        <div class="nav-item" onclick="showToast('Profil yakında!')">👤<br>Profil</div>
+    </div>
+    
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const data = {
+            streak: 0,
+            lastActive: null,
+            modules: {
+                fitness: { completed: [], total: 3 },
+                voice: { completed: [], total: 2 },
+                mind: { bestScore: null, plays: 0 },
+                logic: { completed: [], total: 2 }
+            },
+            exercises: {
+                fitness: [
+                    {id: 'f1', name: 'Push-up 3x12', duration: '10 dk', work: 30, rest: 15, sets: 3},
+                    {id: 'f2', name: 'Squat 3x15', duration: '10 dk', work: 30, rest: 15, sets: 3},
+                    {id: 'f3', name: 'Plank 3x45sn', duration: '5 dk', work: 45, rest: 30, sets: 3}
+                ],
+                voice: [
+                    {id: 'v1', name: 'Diyafram Nefesi', duration: '3 dk'},
+                    {id: 'v2', name: '"R" Sesi Pratiği', duration: '5 dk'}
+                ],
+                logic: [
+                    {id: 'l1', name: 'Sudoku Kolay', duration: '10 dk'},
+                    {id: 'l2', name: 'Mantık Sorusu', duration: '5 dk'}
+                ]
+            }
+        };
+
+        let currentTimer = null;
+        let timerState = 'idle';
+        let timeLeft = 0;
+        let currentExercise = null;
+        let currentSetNum = 1;
+
+        function loadData() {
+            const saved = localStorage.getItem('mindforgeData');
+            if (saved) Object.assign(data, JSON.parse(saved));
+            checkStreak();
+            updateUI();
+        }
+
+        function saveData() {
+            localStorage.setItem('mindforgeData', JSON.stringify(data));
+        }
+
+        function checkStreak() {
+            const today = new Date().toDateString();
+            if (data.lastActive !== today) {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                data.streak = (data.lastActive === yesterday.toDateString()) ? data.streak + 1 : 1;
+                data.lastActive = today;
+                saveData();
+            }
+        }
+
+        function updateUI() {
+            document.getElementById('streakCount').textContent = data.streak;
+            ['fitness', 'voice', 'logic'].forEach(m => {
+                const p = Math.round((data.modules[m].completed.length / data.modules[m].total) * 100);
+                document.getElementById(m + 'Percent').textContent = p + '%';
+                document.getElementById(m + 'Bar').style.width = p + '%';
+            });
+            const mp = Math.min(data.modules.mind.plays * 10, 100);
+            document.getElementById('mindPercent').textContent = mp + '%';
+            document.getElementById('mindBar').style.width = mp + '%';
+            if (data.modules.mind.bestScore) {
+                document.getElementById('bestScore').textContent = 'En iyi: ' + data.modules.mind.bestScore + 'ms';
+            }
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if (pageId === 'home') document.querySelector('.nav-item').classList.add('active');
+            if (pageId === 'fitness') renderFitness();
+            if (pageId === 'voice') renderVoice();
+            if (pageId === 'logic') renderLogic();
+        }
+
+        function renderFitness() {
+            const container = document.getElementById('fitnessList');
+            container.innerHTML = '';
+            data.exercises.fitness.forEach(ex => {
+                const completed = data.modules.fitness.completed.includes(ex.id);
+                const div = document.createElement('div');
+                div.className = 'exercise-item';
+                div.innerHTML = `
+                    <div class="exercise-header">
+                        <div>
+                            <div style="font-weight:600">${ex.name}</div>
+                            <div style="font-size:12px;color:#94a3b8">⏱️ ${ex.duration} | ${ex.sets} set</div>
+                        </div>
+                    </div>
+                    <button class="btn" onclick="startExerciseTimer('${ex.id}')">Zamanlayıcı</button>
+                    <button class="btn ${completed ? 'completed' : ''}" style="margin-top:5px" onclick="toggleExercise('${ex.id}', this)">
+                        ${completed ? '✓ Tamamlandı' : 'Tamamla'}
+                    </button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function startExerciseTimer(exId) {
+            currentExercise = data.exercises.fitness.find(e => e.id === exId);
+            currentSetNum = 1;
+            document.getElementById('timerExerciseName').textContent = currentExercise.name;
+            document.getElementById('totalSets').textContent = currentExercise.sets;
+            document.getElementById('currentSet').textContent = currentSetNum;
+            document.getElementById('mainTimer').textContent = formatTime(currentExercise.work);
+            document.getElementById('mainTimer').className = 'timer-display work';
+            document.getElementById('timerStatus').textContent = 'HAZIR - BAŞLA\'ya basın';
+            document.getElementById('timerBtn').textContent = 'BAŞLA';
+            timerState = 'idle';
+            showPage('fitnessTimer');
+        }
+
+        function toggleTimer() {
+            const btn = document.getElementById('timerBtn');
+            const display = document.getElementById('mainTimer');
+            const status = document.getElementById('timerStatus');
+            
+            if (timerState === 'idle') {
+                timerState = 'work';
+                timeLeft = currentExercise.work;
+                status.textContent = 'ÇALIŞ!';
+                display.className = 'timer-display work';
+                btn.textContent = 'DURAKLAT';
+                runTimer();
+            } else if (timerState === 'work' || timerState === 'rest') {
+                clearInterval(currentTimer);
+                timerState = timerState === 'work' ? 'pausedWork' : 'pausedRest';
+                btn.textContent = 'DEVAM ET';
+                status.textContent = 'DURAKLATILDI';
+            } else if (timerState === 'pausedWork' || timerState === 'pausedRest') {
+                timerState = timerState === 'pausedWork' ? 'work' : 'rest';
+                btn.textContent = 'DURAKLAT';
+                status.textContent = timerState === 'work' ? 'ÇALIŞ!' : 'DİNLEN!';
+                runTimer();
+            }
+        }
+
+        function runTimer() {
+            currentTimer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('mainTimer').textContent = formatTime(timeLeft);
+                
+                if (timeLeft <= 0) {
+                    clearInterval(currentTimer);
+                    handleTimerComplete();
+                }
+            }, 1000);
+        }
+
+        function handleTimerComplete() {
+            const display = document.getElementById('mainTimer');
+            const status = document.getElementById('timerStatus');
+            const btn = document.getElementById('timerBtn');
+            
+            if (timerState === 'work') {
+                if (currentSetNum >= currentExercise.sets) {
+                    status.textContent = 'TAMAMLANDI! 🎉';
+                    display.textContent = '00:00';
+                    btn.textContent = 'BİTTİ';
+                    timerState = 'finished';
+                    showToast('Egzersiz tamamlandı!');
+                    return;
+                }
+                timerState = 'rest';
+                timeLeft = currentExercise.rest;
+                status.textContent = 'DİNLEN!';
+                display.className = 'timer-display rest';
+                display.textContent = formatTime(timeLeft);
+                runTimer();
+            } else if (timerState === 'rest') {
+                currentSetNum++;
+                document.getElementById('currentSet').textContent = currentSetNum;
+                timerState = 'work';
+                timeLeft = currentExercise.work;
+                status.textContent = 'ÇALIŞ!';
+                display.className = 'timer-display work';
+                display.textContent = formatTime(timeLeft);
+                runTimer();
+            }
+        }
+
+        function stopTimer() {
+            clearInterval(currentTimer);
+            timerState = 'idle';
+        }
+
+        function resetTimer() {
+            clearInterval(currentTimer);
+            currentSetNum = 1;
+            document.getElementById('currentSet').textContent = currentSetNum;
+            document.getElementById('mainTimer').textContent = formatTime(currentExercise.work);
+            document.getElementById('mainTimer').className = 'timer-display work';
+            document.getElementById('timerStatus').textContent = 'HAZIR';
+            document.getElementById('timerBtn').textContent = 'BAŞLA';
+            timerState = 'idle';
+        }
+
+        function formatTime(seconds) {
+            const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const s = (seconds % 60).toString().padStart(2, '0');
+            return m + ':' + s;
+        }
+
+        function toggleExercise(id, btn) {
+            const list = data.modules.fitness.completed;
+            const idx = list.indexOf(id);
+            if (idx > -1) {
+                list.splice(idx, 1);
+                btn.textContent = 'Tamamla';
+                btn.classList.remove('completed');
+                showToast('Sıfırlandı');
+            } else {
+                list.push(id);
+                btn.textContent = '✓ Tamamlandı';
+                btn.classList.add('completed');
+                showToast('Tebrikler! +10 puan');
+            }
+            saveData();
+            updateUI();
+        }
+
+        function renderVoice() {
+            const container = document.getElementById('voiceList');
+            container.innerHTML = '';
+            data.exercises.voice.forEach(ex => {
+                const completed = data.modules.voice.completed.includes(ex.id);
+                const div = document.createElement('div');
+                div.className = 'exercise-item';
+                div.innerHTML = `
+                    <div>
+                        <div style="font-weight:600">${ex.name}</div>
+                        <div style="font-size:12px;color:#94a3b8">⏱️ ${ex.duration}</div>
+                    </div>
+                    <button class="btn ${completed ? 'completed' : ''}" onclick="toggleVoice('${ex.id}', this)">
+                        ${completed ? '✓' : 'Başla'}
+                    </button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function toggleVoice(id, btn) {
+            const list = data.modules.voice.completed;
+            const idx = list.indexOf(id);
+            if (idx > -1) {
+                list.splice(idx, 1);
+                btn.textContent = 'Başla';
+                btn.classList.remove('completed');
+            } else {
+                list.push(id);
+                btn.textContent = '✓';
+                btn.classList.add('completed');
+                showToast('Tamamlandı!');
+            }
+            saveData();
+            updateUI();
+        }
+
+        function renderLogic() {
+            const container = document.getElementById('logicList');
+            container.innerHTML = '';
+            data.exercises.logic.forEach(ex => {
+                const completed = data.modules.logic.completed.includes(ex.id);
+                const div = document.createElement('div');
+                div.className = 'exercise-item';
+                div.innerHTML = `
+                    <div>
+                        <div style="font-weight:600">${ex.name}</div>
+                        <div style="font-size:12px;color:#94a3b8">⏱️ ${ex.duration}</div>
+                    </div>
+                    <button class="btn ${completed ? 'completed' : ''}" onclick="toggleLogic('${ex.id}', this)">
+                        ${completed ? '✓' : 'Çöz'}
+                    </button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function toggleLogic(id, btn) {
+            const list = data.modules.logic.completed;
+            const idx = list.indexOf(id);
+            if (idx > -1) {
+                list.splice(idx, 1);
+                btn.textContent = 'Çöz';
+                btn.classList.remove('completed');
+            } else {
+                list.push(id);
+                btn.textContent = '✓';
+                btn.classList.add('completed');
+                showToast('Bulmaca çözüldü!');
+            }
+            saveData();
+            updateUI();
+        }
+
+        function playReactionGame() {
+            const timer = document.getElementById('reactionTime');
+            const btn = document.getElementById('gameBtn');
+            
+            if (btn.textContent === 'Başla' || btn.textContent === 'Tekrar Dene') {
+                timer.textContent = 'Bekle...';
+                timer.style.color = '#f59e0b';
+                btn.textContent = 'Bekliyor...';
+                
+                setTimeout(() => {
+                    timer.textContent = 'ŞİMDİ!';
+                    timer.style.color = '#10b981';
+                    const start = Date.now();
+                    
+                    btn.onclick = function() {
+                        const time = Date.now() - start;
+                        timer.textContent = time + 'ms';
+                        btn.textContent = 'Tekrar Dene';
+                        btn.onclick = playReactionGame;
+                        
+                        data.modules.mind.plays++;
+                        if (!data.modules.mind.bestScore || time < data.modules.mind.bestScore) {
+                            data.modules.mind.bestScore = time;
+                            showToast('Yeni rekor! 🎉');
+                        }
+                        saveData();
+                        updateUI();
+                    };
+                }, Math.random() * 2000 + 1500);
+            }
+        }
+
+        function showStats() {
+            const total = data.modules.fitness.completed.length + data.modules.voice.completed.length + data.modules.logic.completed.length;
+            const max = data.modules.fitness.total + data.modules.voice.total + data.modules.logic.total;
+            showToast(`İlerleme: ${Math.round((total/max)*100)}% | Seri: ${data.streak} gün`);
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
