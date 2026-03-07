@@ -36,8 +36,8 @@
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-top: 10px; }
         .cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 10px; border-radius: 6px; background: rgba(255,255,255,0.05); }
         .cal-day.done { background: var(--success); color: white; font-weight: bold; }
-        .word-item { border-bottom: 1px solid #2d2d44; padding: 10px 0; }
-        .word-item:last-child { border: none; }
+        .word-item { border-bottom: 1px solid #2d2d44; padding: 12px 0; }
+        .word-item b { color: var(--purple); display: block; margin-bottom: 4px; }
     </style>
 </head>
 <body>
@@ -68,58 +68,43 @@
         </div>
     </div>
 
-    <div class="screen" id="corelScreen">
+    <div class="screen" id="exerciseScreen">
         <button class="btn" style="background:none; color:var(--accent); text-align:left; padding:0;" onclick="showScreen('homeScreen')">← Geri</button>
         <div class="card">
-            <h4 style="color:var(--corel); margin-top:0;">⚡ Corel Kısayol Havuzu</h4>
-            <div id="corelQuest" style="text-align:center; margin:15px 0; font-weight:bold; min-height: 40px;"></div>
-            <div id="corelOpts" class="grid-2"></div>
+            <h4 id="exTitle" style="color:var(--gold); margin:0;">Günlük Program</h4>
+            <div id="exListBody" style="line-height:1.8; margin:15px 0; font-size:15px;"></div>
+            <button class="btn" onclick="logWorkout()">Antrenmanı Tamamla ✅</button>
         </div>
     </div>
 
     <div class="screen" id="wordScreen">
         <button class="btn" style="background:none; color:var(--accent); text-align:left; padding:0;" onclick="showScreen('homeScreen')">← Geri</button>
         <div class="card">
-            <h4 style="color:var(--purple); margin:0;">📚 Günün 5 Kelimesi</h4>
+            <h4 style="color:var(--purple); margin:0;">📚 Bugünün 5 Kelimesi</h4>
             <div id="wordListBody" style="margin-top:10px;"></div>
-            <button class="btn" onclick="renderWords()" style="background:var(--purple); margin-top:15px;">Kelimeleri Yenile</button>
+            <button class="btn" onclick="renderWords()" style="background:var(--purple); margin-top:15px;">Yeni 5 Kelime Getir</button>
         </div>
     </div>
 
+    <div class="screen" id="corelScreen">
+        <button class="btn" style="background:none; color:var(--accent); text-align:left; padding:0;" onclick="showScreen('homeScreen')">← Geri</button>
+        <div class="card"><h4>⚡ Corel Kısayol Testi</h4><div id="corelQuest" style="text-align:center; margin:15px 0; font-weight:bold;"></div><div id="corelOpts" class="grid-2"></div></div>
+    </div>
     <div class="screen" id="dictionScreen">
         <button class="btn" style="background:none; color:var(--accent); text-align:left; padding:0;" onclick="showScreen('homeScreen')">← Geri</button>
-        <div class="card">
-            <h4 style="color:var(--gold); margin:0;">🗣️ Tekerleme Egzersizi</h4>
-            <div id="tekerlemeBox" style="margin:20px 0; font-style:italic; line-height:1.5;"></div>
-            <button class="btn" onclick="renderTekerleme()">Yeni Tekerleme</button>
-        </div>
+        <div class="card"><h4>🗣️ Tekerleme</h4><div id="tekerlemeBox" style="margin:20px 0; font-style:italic;"></div><button class="btn" onclick="renderTekerleme()">Değiştir</button></div>
     </div>
-
     <div class="screen" id="logicScreen">
         <button class="btn" style="background:none; color:var(--accent); text-align:left; padding:0;" onclick="showScreen('homeScreen')">← Geri</button>
-        <div class="card">
-            <h4 style="color:var(--primary); margin:0;">⚡ Hızlı Hesap (Lvl: <span id="logicLvlDisplay">1</span>)</h4>
-            <div id="logicQuest" style="font-size:32px; text-align:center; margin:25px; font-weight:bold;"></div>
-            <div id="logicOpts" class="grid-2"></div>
-        </div>
+        <div class="card"><h4>⚡ Zekâ (Lvl: <span id="logicLvlDisplay">1</span>)</h4><div id="logicQuest" style="font-size:32px; text-align:center; margin:25px; font-weight:bold;"></div><div id="logicOpts" class="grid-2"></div></div>
     </div>
-
     <div class="screen" id="confidenceScreen">
         <button class="btn" style="background:none; color:var(--accent); text-align:left; padding:0;" onclick="showScreen('homeScreen')">← Geri</button>
-        <div class="card">
-            <h4 style="color:var(--success); margin:0;">💎 Günlük Sosyal Görev</h4>
-            <div id="confTask" style="margin:20px 0; font-size:16px; line-height:1.4;"></div>
-            <button class="btn" onclick="renderConfTask()">Yeni Görev</button>
-        </div>
+        <div class="card"><h4>💎 Özgüven Görevi</h4><div id="confTask" style="margin:20px 0; line-height:1.4;"></div><button class="btn" onclick="renderConfTask()">Yeni Görev</button></div>
     </div>
-
     <div class="screen" id="mentalScreen">
         <button class="btn" style="background:none; color:var(--accent); text-align:left; padding:0;" onclick="showScreen('homeScreen')">← Geri</button>
-        <div class="card" style="text-align:center;">
-            <h4 style="color:var(--accent); margin:0;">🧘‍♂️ Kutu Nefesi</h4>
-            <div id="boxBreath" style="width:120px; height:120px; border:4px solid var(--accent); border-radius:20px; margin:30px auto; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:bold; transition:0.5s;">DUR</div>
-            <button class="btn" onclick="startBoxBreathing()">Egzersizi Başlat</button>
-        </div>
+        <div class="card" style="text-align:center;"><h4>🧘‍♂️ Kutu Nefesi</h4><div id="boxBreath" style="width:100px; height:100px; border:4px solid var(--accent); border-radius:20px; margin:30px auto; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:20px;">DUR</div><button class="btn" onclick="startBoxBreathing()">Başlat</button></div>
     </div>
 
     <div class="screen" id="businessScreen">
@@ -132,20 +117,10 @@
             <h2 id="finalRes" style="text-align:center; color:var(--success); margin-top:20px;">0₺</h2>
         </div>
     </div>
-
     <div class="screen" id="settingsScreen">
         <h2>Ayarlar</h2>
-        <div class="card">
-            <label>Şeffaf m² (₺)</label><input type="number" id="set_trans" oninput="saveConfig()">
-            <label>Renkli m² (₺)</label><input type="number" id="set_color" oninput="saveConfig()">
-            <label>Sabit Gider (₺)</label><input type="number" id="set_fixed" oninput="saveConfig()">
-        </div>
+        <div class="card"><label>Şeffaf m²</label><input type="number" id="set_trans" oninput="saveConfig()"><label>Renkli m²</label><input type="number" id="set_color" oninput="saveConfig()"><label>Sabit Gider</label><input type="number" id="set_fixed" oninput="saveConfig()"></div>
         <button class="btn" style="background:var(--danger)" onclick="resetSystem()">SIFIRLA</button>
-    </div>
-
-    <div class="screen" id="exerciseScreen">
-        <button class="btn" onclick="showScreen('homeScreen')">Geri</button>
-        <div class="card"><div id="exListBody" style="line-height:2;"></div><button class="btn" onclick="logWorkout()">Tamamla ✅</button></div>
     </div>
 
     <div class="nav-bar">
@@ -160,30 +135,28 @@
     let config = { trans: 450, color: 600, fixed: 50 };
     let workoutHistory = JSON.parse(localStorage.getItem('mf_workout_history')) || [];
 
-    // --- VERİ HAVUZLARI ---
     const corelData = [
-        {q:"Sayfaya MERKEZLEMEK (Center to Page)?", a:"P", o:["P","C","E","M"]},
-        {q:"Gruplama (Group) kısayolu?", a:"Ctrl+G", o:["Ctrl+G","Ctrl+U","Ctrl+L","Ctrl+K"]},
-        {q:"Curveleme (Convert to Curves)?", a:"Ctrl+Q", o:["Ctrl+Q","Ctrl+L","Ctrl+K","Ctrl+G"]},
-        {q:"Yatayda merkezlemek (Center Horizontally)?", a:"E", o:["E","C","P","A"]},
-        {q:"Dikeyde merkezlemek (Center Vertically)?", a:"C", o:["C","E","P","S"]},
-        {q:"Grubu Dağıt (Ungroup)?", a:"Ctrl+U", o:["Ctrl+U","Ctrl+G","Ctrl+K","Ctrl+L"]},
-        {q:"Nesneyi En ÖNE Getir?", a:"Shift+PgUp", o:["Shift+PgUp","Ctrl+Home","P","F4"]},
-        {q:"Pick Tool (Seçim Aracı) geçişi?", a:"Space", o:["Space","Tab","F10","Z"]}
+        {q:"Sayfaya MERKEZLEMEK?", a:"P", o:["P","C","E","M"]},
+        {q:"Gruplama (Group)?", a:"Ctrl+G", o:["Ctrl+G","Ctrl+U","Ctrl+L","Ctrl+K"]},
+        {q:"Curveleme (Curves)?", a:"Ctrl+Q", o:["Ctrl+Q","Ctrl+L","Ctrl+K","Ctrl+G"]},
+        {q:"Dikey Merkez Hizalama?", a:"C", o:["C","E","P","S"]},
+        {q:"Yatay Merkez Hizalama?", a:"E", o:["E","C","P","A"]},
+        {q:"Nesneyi En ÖNE Getir?", a:"Shift+PgUp", o:["Shift+PgUp","Ctrl+Home","P","F4"]}
     ];
 
-    const allWords = [
-        {w:"Liyakat", m:"Layık olma, yaraşır olma."}, {w:"İntizam", m:"Düzen, düzgünlük."},
-        {w:"Maharet", m:"Beceri, el ustalığı."}, {w:"Dirayet", m:"Zeka ve kavrayış gücü."},
+    const wordsBank = [
+        {w:"Liyakat", m:"Layık olma, yaraşır olma durumu."}, {w:"İntizam", m:"Düzenli olma, düzgünlük."},
+        {w:"Maharet", m:"Beceri, el ustalığı."}, {w:"Dirayet", m:"Güçlüklerin üstesinden gelme yeteneği."},
         {w:"Muvaffak", m:"Başarmış, başarılı."}, {w:"Metanet", m:"Dayanıklılık, sağlamlık."},
-        {w:"Basiret", m:"Gerçeği görme, uzağı görme."}, {w:"İstikrar", m:"Kararlılık, düzenlilik."},
-        {w:"Kudret", m:"Güç, yetenek."}, {w:"Azim", m:"Bir işteki engelleri yenme kararlılığı."}
+        {w:"Basiret", m:"Uzağı görme, sezme gücü."}, {w:"İstikrar", m:"Kararlılık, düzenlilik."},
+        {w:"Kudret", m:"Güç, erk, yetenek."}, {w:"Azim", m:"Engelleri yenme kararlılığı."},
+        {w:"Nezaket", m:"Başkalarına karşı ince davranma."}, {w:"Teveccüh", m:"Güler yüz gösterme, ilgi."},
+        {w:"Mütevazı", m:"Alçak gönüllü."}, {w:"Faset", m:"Yüzey, yön, görünüş."}
     ];
 
     const tekerlemeler = ["Bir berber bir berbere...", "Şu köşe yaz köşesi...", "Kartal kalkar dal sarkar...", "Dal sarkar kartal kalkar..."];
-    const confTasks = ["Müşteriyle konuşurken dik dur.", "Bugün tanımadığın birine içten bir selam ver.", "Fiyat verirken tereddüt etmeden söyle.", "En az 5 dakika kitap oku."];
+    const confTasks = ["Fiyat verirken göz teması kur.", "Bugün tanımadığın birine selam ver.", "Dik duruşla 10 dakika yürü.", "Hayır demeyi dene."];
 
-    // --- MODÜL FONKSİYONLARI ---
     function showScreen(id, el) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
@@ -202,7 +175,7 @@
 
     function addExp(amount) {
         stats.exp += amount;
-        if(stats.exp >= stats.lvl * 100) { stats.exp = 0; stats.lvl++; alert("Seviye Atladın! Yeni Lvl: " + stats.lvl); }
+        if(stats.exp >= stats.lvl * 100) { stats.exp = 0; stats.lvl++; alert("Level Atladın!"); }
         updateMasteryUI();
     }
 
@@ -210,23 +183,21 @@
         document.getElementById('lvlLabel').innerText = stats.lvl;
         document.getElementById('expLabel').innerText = stats.exp;
         document.getElementById('lvlFill').style.width = (stats.exp / (stats.lvl * 100)) * 100 + "%";
-        const ranks = ["ÇIRAK", "KALFA", "USTA", "ÜSTAT", "EFSANE"];
-        document.getElementById('userRank').innerText = ranks[Math.min(Math.floor(stats.lvl/5), 4)];
         localStorage.setItem('mf_stats', JSON.stringify(stats));
     }
 
     function initCorelQuiz() {
         const q = corelData[Math.floor(Math.random()*corelData.length)];
-        const sOpts = [...q.o].sort(() => Math.random() - 0.5);
+        const o = [...q.o].sort(() => Math.random() - 0.5);
         document.getElementById('corelQuest').innerText = q.q;
-        document.getElementById('corelOpts').innerHTML = sOpts.map(o => `<button class="btn btn-outline" onclick="checkCorel('${o}','${q.a}')">${o}</button>`).join('');
+        document.getElementById('corelOpts').innerHTML = o.map(opt => `<button class="btn btn-outline" onclick="checkCorel('${opt}','${q.a}')">${opt}</button>`).join('');
     }
     function checkCorel(s,a) { if(s===a){ addExp(15); initCorelQuiz(); } else { alert("Doğru: " + a); initCorelQuiz(); } }
 
     function renderWords() {
-        const shuffled = allWords.sort(() => 0.5 - Math.random()).slice(0, 5);
-        document.getElementById('wordListBody').innerHTML = shuffled.map(w => `<div class="word-item"><b>${w.w}:</b> ${w.m}</div>`).join('');
-        addExp(5);
+        const shuffled = wordsBank.sort(() => 0.5 - Math.random()).slice(0, 5);
+        document.getElementById('wordListBody').innerHTML = shuffled.map(w => `<div class="word-item"><b>${w.w}</b> ${w.m}</div>`).join('');
+        addExp(10);
     }
 
     function initLogicGame() {
@@ -238,18 +209,19 @@
     }
     function checkLogic(s,a) { if(s===a){ stats.logicLvl++; addExp(20); initLogicGame(); } else { stats.logicLvl = Math.max(1, stats.logicLvl-1); initLogicGame(); } }
 
-    function renderTekerleme() { document.getElementById('tekerlemeBox').innerText = tekerlemeler[Math.floor(Math.random()*tekerlemeler.length)]; addExp(10); }
-    function renderConfTask() { document.getElementById('confTask').innerText = confTasks[Math.floor(Math.random()*confTasks.length)]; addExp(10); }
+    function renderTekerleme() { document.getElementById('tekerlemeBox').innerText = tekerlemeler[Math.floor(Math.random()*tekerlemeler.length)]; }
+    function renderConfTask() { document.getElementById('confTask').innerText = confTasks[Math.floor(Math.random()*confTasks.length)]; }
 
     function startBoxBreathing() {
         const box = document.getElementById('boxBreath'); const p = ["AL", "TUT", "VER", "BEKLE"]; let i = 0;
-        const itv = setInterval(() => {
-            if(!document.getElementById('mentalScreen').classList.contains('active')) clearInterval(itv);
-            box.innerText = p[i]; box.style.borderColor = (i%2==0) ? "var(--accent)" : "var(--purple)"; i=(i+1)%4;
-        }, 4000);
+        setInterval(() => { box.innerText = p[i]; i=(i+1)%4; }, 4000);
     }
 
-    function renderWorkout() { document.getElementById('exListBody').innerHTML = "<b>Program:</b><br>• Şınav: 4x12<br>• Dips: 3x10<br>• Plank: 45sn"; }
+    function renderWorkout() { 
+        const day = new Date().getDay() % 2;
+        document.getElementById('exTitle').innerText = day === 0 ? "İtiş (Göğüs/Omuz)" : "Çekiş (Sırt/Biceps)";
+        document.getElementById('exListBody').innerHTML = day === 0 ? "• Şınav: 4x12<br>• Dips: 3x10<br>• Plank: 45sn" : "• Barfiks: 3xMax<br>• Lunge: 4x12<br>• Mekik: 3x20";
+    }
     function renderCalendar() {
         const cal = document.getElementById('mainCalendar'); cal.innerHTML = "";
         const now = new Date(); const days = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
@@ -262,7 +234,7 @@
     function logWorkout() {
         const d = new Date().toLocaleDateString('tr-TR');
         if(!workoutHistory.includes(d)){ workoutHistory.push(d); localStorage.setItem('mf_workout_history', JSON.stringify(workoutHistory)); addExp(50); }
-        alert("Harika! 🔥"); renderCalendar();
+        alert("Başarıyla İşlendi! 🔥"); renderCalendar();
     }
 
     function saveConfig() {
@@ -271,8 +243,8 @@
     }
     function updateUI() {
         const sel = document.getElementById('mType');
-        sel.innerHTML = `<option value="${config.trans}">Şeffaf (${config.trans}₺)</option><option value="${config.color}">Renkli (${config.color}₺)</option>`;
-        document.getElementById('uPrice').value = sel.value;
+        sel.innerHTML = `<option value="${config.trans}">Şeffaf</option><option value="${config.color}">Renkli</option>`;
+        syncPrice();
     }
     function calculate() {
         const w = document.getElementById('w').value, h = document.getElementById('h').value;
@@ -288,7 +260,7 @@
         document.getElementById('set_fixed').value = config.fixed;
         updateUI(); updateMasteryUI(); renderCalendar();
     };
-    function resetSystem() { if(confirm("Tüm veriler silinsin mi?")){ localStorage.clear(); location.reload(); } }
+    function resetSystem() { if(confirm("Sıfırlansın mı?")){ localStorage.clear(); location.reload(); } }
 </script>
 </body>
 </html>
