@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MindForge Elite</title>
+    <title>MindForge Master</title>
     <style>
         :root {
             --primary: #6366f1; --accent: #06b6d4; --bg: #0b0b1a;
@@ -17,16 +17,12 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .card { background: var(--surface); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
         .btn { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: none; padding: 15px; border-radius: 14px; width: 100%; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .btn:active { transform: scale(0.98); }
         input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #2d2d44; background: #0b0b1a; color: white; box-sizing: border-box; }
         .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(22, 22, 45, 0.95); display: flex; justify-content: space-around; padding: 15px 0 25px; backdrop-filter: blur(10px); border-top: 1px solid #2d2d44; z-index: 1000; }
         .nav-item { font-size: 22px; cursor: pointer; opacity: 0.4; }
         .nav-item.active { opacity: 1; color: var(--accent); }
-        
-        /* Gelişim Modülleri */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .stat-box { text-align: center; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 15px; }
-        .progress-bar { height: 8px; background: #2d2d44; border-radius: 4px; overflow: hidden; margin: 10px 0; }
+        .ex-img { width: 100%; height: 120px; border-radius: 12px; margin: 10px 0; object-fit: cover; border: 1px solid var(--primary); }
+        .progress-bar { height: 10px; background: #2d2d44; border-radius: 5px; margin: 15px 0; overflow: hidden; }
         .progress-fill { height: 100%; background: var(--success); width: 0%; transition: 0.5s; }
     </style>
 </head>
@@ -34,68 +30,80 @@
 
 <div class="app-container">
     <div class="screen active" id="homeScreen">
-        <h2 style="color:var(--accent)">Hoş Geldin, Usta</h2>
+        <h2 style="color:var(--accent)">MindForge Master</h2>
         <div class="card">
-            <div id="dailyQuote" style="font-style:italic; font-size:14px; color:var(--text-muted)">"Zihin bir kas gibidir, çalıştıkça gelişir."</div>
+            <div id="dailyQuote" style="font-style:italic; font-size:14px; text-align:center;">"İstikrar, yeteneği zafere dönüştürür."</div>
         </div>
-        <div class="grid-2">
-            <div class="stat-box"><small>Seri (Gün)</small><div id="streakVal" style="font-size:24px; font-weight:bold; color:var(--gold)">0</div></div>
-            <div class="stat-box"><small>Tamamlanan</small><div id="doneCount" style="font-size:24px; font-weight:bold; color:var(--success)">0</div></div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="card" onclick="showScreen('exerciseScreen')" style="text-align:center;">🏋️‍♂️<br>Fiziksel</div>
+            <div class="card" onclick="showScreen('dictionScreen')" style="text-align:center;">🗣️<br>Diksiyon</div>
+            <div class="card" onclick="showScreen('logicScreen')" style="text-align:center;">⚡<br>Zeka</div>
+            <div class="card" onclick="showScreen('confidenceScreen')" style="text-align:center;">💎<br>Özgüven</div>
         </div>
-        <h3>Gelişim Modülleri</h3>
-        <div class="grid-2">
-            <div class="card" onclick="showScreen('exerciseScreen')" style="text-align:center;">🏋️‍♂️<br><small>Fiziksel</small></div>
-            <div class="card" onclick="showScreen('dictionScreen')" style="text-align:center;">🗣️<br><small>Hitabet</small></div>
-            <div class="card" onclick="showScreen('logicScreen')" style="text-align:center;">⚡<br><small>Zeka</small></div>
-            <div class="card" onclick="showScreen('confidenceScreen')" style="text-align:center;">💎<br><small>Karakter</small></div>
+        <div class="card">
+            <h4>Gelişim Takvimi</h4>
+            <div id="streakCounter" style="font-size:12px; color:var(--text-muted)">Henüz görev tamamlanmadı.</div>
         </div>
     </div>
 
     <div class="screen" id="exerciseScreen">
         <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer;">← Geri</button>
-        <h2>Vücut Geliştirme (PPL)</h2>
-        <div class="card">
-            <div id="workoutDayTitle" style="font-weight:bold; color:var(--gold)">Bugün: İtiş (Göğüs/Omuz/Triceps)</div>
-            <div class="progress-bar"><div class="progress-fill" id="workoutProgress"></div></div>
-            <div id="exerciseList"></div>
-            <button class="btn" style="margin-top:10px;" onclick="completeWorkout()">Bugünü Tamamla</button>
+        <h2>Vücut Geliştirme</h2>
+        <div class="card" id="exProgCard">
+            <h4 id="exTitle" style="color:var(--gold); margin:0;">Gün: İtiş (Göğüs & Kol)</h4>
+            <div class="progress-bar"><div class="progress-fill" id="exFill"></div></div>
+            <div id="exListBody"></div>
+            <button class="btn" style="margin-top:15px;" onclick="completeTask('exercise')">Antrenmanı Tamamla</button>
         </div>
     </div>
 
     <div class="screen" id="dictionScreen">
         <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer;">← Geri</button>
-        <h2>Profesyonel Diksiyon</h2>
+        <h2>Hitabet Akademisi</h2>
         <div class="card">
-            <h4 style="color:var(--accent)">1. Fonetik Pratiği (Artikülasyon)</h4>
-            <p style="font-size:12px;">Kalem ağızda 1 dakika boyunca şu metni oku:</p>
-            <div style="background:#0b0b1a; padding:10px; border-radius:8px; font-size:13px; margin-bottom:10px;">
-                "Diksiyon, seslerin doğru boğumlanması ve kelimelerin ahenkle dizilmesidir."
+            <h4 style="color:var(--accent); margin:0;">1. Kalem Tekniği (Artikülasyon)</h4>
+            <p style="font-size:12px; color:var(--text-muted); margin:10px 0;">Dişlerinin arasına bir kalem al ve şu metni 3 kez oku:</p>
+            <div style="background:#0b0b1a; padding:15px; border-radius:10px; font-size:13px; line-height:1.5;">
+                "Diksiyon; seslerin doğru boğumlanması, kelimelerin yerli yerinde kullanılmasıdır. Esnaflıkta dil, en az usta eli kadar kıymetlidir."
             </div>
-            <button class="btn" onclick="startDictionTimer(60)">Zamanlayıcıyı Başlat</button>
+            <button class="btn" onclick="startTimer(60, 'dictionTimer')">Zamanlayıcıyı Başlat (60s)</button>
+            <div id="dictionTimer" style="text-align:center; font-weight:bold; margin-top:10px; color:var(--gold);"></div>
+        </div>
+        <div class="card">
+            <h4 style="color:var(--gold); margin:0;">2. Zorlayıcı Tekerleme</h4>
+            <div id="tekerlemeText" style="margin:15px 0; font-style:italic;">"Şu yoğurdu sarımsaklasak da mı saklasak..."</div>
+            <button class="btn" style="background:var(--surface); border:1px solid var(--gold); color:var(--gold);" onclick="getNewTekerleme()">Yeni Tekerleme</button>
         </div>
     </div>
 
     <div class="screen" id="logicScreen">
         <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer;">← Geri</button>
-        <h2>Zihinsel Çeviklik</h2>
+        <h2>Zihinsel Hız</h2>
         <div id="logicIntro" class="card">
-            <h4 style="color:var(--purple)">Seviye 1: Görsel Tahmin</h4>
-            <p style="font-size:13px;">Hızlı düşünmek, veriyi süzmektir. Şimdi sana gelen alanları çarpmadan, en yakın onluğa yuvarlayarak tahmin etmeye çalış.</p>
-            <button class="btn" onclick="startLogicLevel(1)">Anladım, Başla</button>
+            <h4 style="color:var(--purple);">Eğitim: Yuvarlama Tekniği</h4>
+            <p style="font-size:13px; line-height:1.6;">Atölyede hızlı fiyat verirken ölçüleri onluğa yuvarla. Örneğin; 28x42 yerine 30x40 diye düşün. Şimdi test zamanı!</p>
+            <button class="btn" onclick="startLogicGame()">Testi Başlat</button>
         </div>
-        <div id="logicGame" class="card" style="display:none; text-align:center;">
-            <div id="logicQuest" style="font-size:24px; font-weight:bold; margin-bottom:20px;"></div>
-            <div id="logicOptions" class="grid-2"></div>
+        <div id="logicGame" style="display:none;">
+            <div class="card" style="text-align:center;">
+                <div id="logicLevel" style="color:var(--purple); font-weight:bold; margin-bottom:10px;">SEVİYE 1</div>
+                <div id="logicQuestion" style="font-size:32px; font-weight:bold; margin-bottom:20px;">25 x 30</div>
+                <div id="logicOptions" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;"></div>
+            </div>
         </div>
     </div>
 
     <div class="screen" id="confidenceScreen">
         <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer;">← Geri</button>
-        <h2>Sosyal Mühendislik</h2>
+        <h2>Karakter İnşası</h2>
         <div class="card">
-            <h4 style="color:var(--success)">Günlük Özgüven Görevi</h4>
-            <div id="confTask" style="font-style:italic; margin-bottom:15px;">"Bugün tanımadığın birine içten bir iltifat et veya bir esnafa işlerin nasıl gittiğini sor."</div>
-            <button class="btn" onclick="completeTask('conf')">Görevi Yaptım</button>
+            <h4 style="color:var(--success);">Bugünkü Özgüven Görevi</h4>
+            <p id="confTaskDesc" style="font-size:14px; margin:15px 0; font-style:italic; line-height:1.5;">"Bugün bir müşteriye veya esnafa fiyat söylerken gözlerinin içine bak ve rakamı söyledikten sonra 3 saniye sessiz kal."</p>
+            <button class="btn" onclick="completeTask('confidence')">Görevi Tamamladım</button>
+        </div>
+        <div class="card">
+            <h4 style="color:var(--accent);">Zihinsel Çapa</h4>
+            <p style="font-size:12px;">En başarılı olduğun, en iyi işi teslim ettiğin anı hatırla. O andaki duyguyu şu anki işine aktar.</p>
         </div>
     </div>
 
@@ -103,25 +111,29 @@
         <h2>BusinessForge</h2>
         <div class="card">
             <label>Ölçüler (cm)</label>
-            <div style="display:flex; gap:8px;"><input type="number" id="w" placeholder="En"><input type="number" id="h" placeholder="Boy"></div>
-            <label>Malzeme & Birim Fiyat</label>
+            <div style="display:flex; gap:10px;"><input type="number" id="w" placeholder="En"><input type="number" id="h" placeholder="Boy"></div>
+            <label>Malzeme Seçimi</label>
             <select id="mType" onchange="syncPrice()"></select>
-            <input type="number" id="uPrice" placeholder="₺/m²">
-            <label>Kâr & Sabit Gider</label>
-            <select id="margin"><option value="2">100% Kâr</option><option value="2.5">150% Kâr</option></select>
+            <input type="number" id="uPrice" placeholder="Birim Fiyat">
+            <label>Fire & Kâr</label>
+            <div style="display:flex; gap:10px;"><input type="number" id="waste" placeholder="Fire %"><select id="margin"><option value="2">100% Kâr</option><option value="2.5">150% Kâr</option></select></div>
             <button class="btn" onclick="calculate()">HESAPLA</button>
-            <div id="res" style="text-align:center; font-size:28px; color:var(--success); font-weight:bold; margin-top:15px;">0₺</div>
+            <div style="text-align:center; margin-top:15px; border-top:1px solid #333; padding-top:15px;">
+                <div id="areaRes" style="font-size:12px; color:var(--text-muted)">Alan: 0 m²</div>
+                <div id="finalRes" style="font-size:32px; color:var(--success); font-weight:bold;">0₺</div>
+            </div>
         </div>
     </div>
 
     <div class="screen" id="settingsScreen">
         <h2>Atölye Ayarları</h2>
         <div class="card">
-            <label>Şeffaf m²</label><input type="number" id="set_trans" oninput="saveConfig()">
-            <label>Renkli m²</label><input type="number" id="set_color" oninput="saveConfig()">
+            <label>Şeffaf Pleksi m²</label><input type="number" id="set_trans" oninput="saveConfig()">
+            <label>Renkli Pleksi m²</label><input type="number" id="set_color" oninput="saveConfig()">
             <label>Sabit Gider (₺)</label><input type="number" id="set_fixed" oninput="saveConfig()">
+            <label>Varsayılan Fire (%)</label><input type="number" id="set_waste" oninput="saveConfig()">
         </div>
-        <button class="btn" style="background:var(--danger)" onclick="resetAll()">TÜM VERİLERİ SIFIRLA</button>
+        <button class="btn" style="background:var(--danger)" onclick="resetSystem()">Sistemi Sıfırla</button>
     </div>
 
     <div class="nav-bar">
@@ -132,8 +144,8 @@
 </div>
 
 <script>
-    let config = { trans: 450, color: 600, fixed: 50 };
-    let userStats = { streak: 0, done: 0, lastDate: "" };
+    let config = { trans: 450, color: 600, fixed: 50, waste: 10 };
+    let stats = { streak: 0, lastDate: "", tasks: [] };
 
     function showScreen(id, el) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -145,104 +157,98 @@
         if(id === 'exerciseScreen') renderWorkout();
     }
 
-    // --- EGZERSİZ SİSTEMİ (ARTIRILDI) ---
-    const dailyWorkouts = [
-        { title: "İtiş", moves: ["Şınav: 4x12", "Dips: 3x10", "Pike Pushup: 3x8"] },
-        { title: "Çekiş", moves: ["Barfiks (veya Kapı Çekiş): 3xMax", "Ters Lunge: 4x12"] },
-        { title: "Bacak/Core", moves: ["Squat: 4x20", "Plank: 3x45sn", "L-Sit: 3x15sn"] }
-    ];
+    // --- EGZERSİZ SİSTEMİ ---
+    const exercises = {
+        0: { title: "İtiş (Göğüs/Omuz)", moves: [
+            { name: "Şınav", reps: "4 Set x 12", gif: "https://media.giphy.com/media/26ueYUlPAmUkTBAM8/giphy.gif" },
+            { name: "Pike Push-up", reps: "3 Set x 8", gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueXo1bmZ4NjZidHh6YTN4bmZ4NjZidHh6YTN4bmZ4NjZidHh6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/l0HlU9D26bM9r3A8I/giphy.gif" }
+        ]},
+        1: { title: "Çekiş (Sırt/Biceps)", moves: [
+            { name: "Kapı Barfiksi", reps: "3 Set x Max", gif: "https://media.giphy.com/media/3o7TKLJ3KL3lG3L9Gg/giphy.gif" },
+            { name: "Ters Lunge", reps: "4 Set x 12", gif: "https://media.giphy.com/media/26tnb67f4M1fG4Lte/giphy.gif" }
+        ]}
+    };
 
     function renderWorkout() {
-        const dayIdx = new Date().getDay() % 3;
-        const workout = dailyWorkouts[dayIdx];
-        document.getElementById('workoutDayTitle').innerText = "Bugün: " + workout.title;
-        const list = document.getElementById('exerciseList');
-        list.innerHTML = workout.moves.map(m => `<div style="padding:10px 0; border-bottom:1px solid #333;">${m}</div>`).join('');
+        const day = new Date().getDay() % 2;
+        const data = exercises[day];
+        document.getElementById('exTitle').innerText = data.title;
+        document.getElementById('exListBody').innerHTML = data.moves.map(m => `
+            <div style="border-bottom:1px solid #333; padding:10px 0;">
+                <img src="${m.gif}" class="ex-img">
+                <strong>${m.name}</strong> - <span style="color:var(--success)">${m.reps}</span>
+            </div>
+        `).join('');
     }
 
-    function completeWorkout() {
-        updateStats();
-        document.getElementById('workoutProgress').style.width = "100%";
-        alert("Harika! Fiziksel kapasiten arttı.");
+    // --- DİKSİYON ---
+    const tekerlemeler = ["Kartal kalkar dal sarkar, dal sarkar kartal kalkar.", "Şu köşe yaz köşesi, şu köşe kış köşesi.", "Bir berber bir berbere..."];
+    function getNewTekerleme() { document.getElementById('tekerlemeText').innerText = tekerlemeler[Math.floor(Math.random()*tekerlemeler.length)]; }
+    function startTimer(s, id) {
+        let t = s;
+        const itv = setInterval(() => {
+            document.getElementById(id).innerText = t + "s";
+            t--;
+            if(t<0) { clearInterval(itv); document.getElementById(id).innerText = "TAMAMLANDI!"; }
+        }, 1000);
     }
 
-    // --- HIZLI DÜŞÜNME (SEVİYELİ) ---
-    let curLvl = 1;
-    function startLogicLevel(lvl) {
+    // --- HIZLI DÜŞÜNME ---
+    let correctLogicAns = 0;
+    function startLogicGame() {
         document.getElementById('logicIntro').style.display = 'none';
         document.getElementById('logicGame').style.display = 'block';
-        nextLogicQuest();
+        const w = Math.floor(Math.random()*30)+10, h = Math.floor(Math.random()*30)+10;
+        correctLogicAns = w * h;
+        document.getElementById('logicQuestion').innerText = `${w} x ${h}`;
+        const opts = [correctLogicAns, correctLogicAns+15, correctLogicAns-10, correctLogicAns+40].sort(()=>Math.random()-0.5);
+        document.getElementById('logicOptions').innerHTML = opts.map(o => `<button class="btn" style="background:var(--surface); border:1px solid #444;" onclick="checkLogic(${o})">${o}</button>`).join('');
+    }
+    function checkLogic(v) {
+        if(v === correctLogicAns) { alert("🎯 Müthiş!"); startLogicGame(); }
+        else alert("Yanlış! Tekrar dene.");
     }
 
-    function nextLogicQuest() {
-        const quest = document.getElementById('logicQuest');
-        const options = document.getElementById('logicOptions');
-        const w = Math.floor(Math.random()*20)+10;
-        const h = Math.floor(Math.random()*20)+10;
-        const ans = w * h;
-        quest.innerText = `${w} x ${h} = ?`;
-        const opts = [ans, ans+15, ans-10, ans+30].sort(()=>Math.random()-0.5);
-        options.innerHTML = opts.map(o => `<button class="btn" style="background:var(--surface); border:1px solid #333" onclick="checkLogic(${o}, ${ans})">${o}</button>`).join('');
-    }
-
-    function checkLogic(v, a) {
-        if(v === a) { alert("🎯 Müthiş Hız!"); nextLogicQuest(); }
-        else alert("Yanlış! Odaklan.");
-    }
-
-    // --- İŞ & AYARLAR (DÜZELTİLDİ) ---
+    // --- BUSINESS & SETTINGS ---
     function saveConfig() {
         config = {
             trans: document.getElementById('set_trans').value || 450,
             color: document.getElementById('set_color').value || 600,
-            fixed: document.getElementById('set_fixed').value || 50
+            fixed: document.getElementById('set_fixed').value || 50,
+            waste: document.getElementById('set_waste').value || 10
         };
         localStorage.setItem('mf_elite_config', JSON.stringify(config));
-        updateBusinessUI();
+        updateUI();
     }
-
-    function loadData() {
-        const savedCfg = localStorage.getItem('mf_elite_config');
-        if(savedCfg) config = JSON.parse(savedCfg);
-        document.getElementById('set_trans').value = config.trans;
-        document.getElementById('set_color').value = config.color;
-        document.getElementById('set_fixed').value = config.fixed;
-        
-        const savedStats = localStorage.getItem('mf_stats');
-        if(savedStats) userStats = JSON.parse(savedStats);
-        document.getElementById('streakVal').innerText = userStats.streak;
-        document.getElementById('doneCount').innerText = userStats.done;
-        
-        updateBusinessUI();
-    }
-
-    function updateBusinessUI() {
+    function updateUI() {
         const sel = document.getElementById('mType');
         sel.innerHTML = `<option value="${config.trans}">Şeffaf (${config.trans}₺)</option><option value="${config.color}">Renkli (${config.color}₺)</option>`;
         document.getElementById('uPrice').value = sel.value;
+        document.getElementById('waste').value = config.waste;
     }
-
-    function syncPrice() { document.getElementById('uPrice').value = document.getElementById('mType').value; }
-
     function calculate() {
         const w = parseFloat(document.getElementById('w').value) || 0;
         const h = parseFloat(document.getElementById('h').value) || 0;
-        const up = parseFloat(document.getElementById('uPrice').value) || 0;
-        const mrg = parseFloat(document.getElementById('margin').value) || 1;
-        const final = (((w * h) / 10000) * up + parseFloat(config.fixed)) * mrg;
-        document.getElementById('res').innerText = Math.round(final) + "₺";
+        const area = (w * h) / 10000;
+        const cost = (area * document.getElementById('uPrice').value * (1 + document.getElementById('waste').value/100)) + parseFloat(config.fixed);
+        const final = cost * document.getElementById('margin').value;
+        document.getElementById('areaRes').innerText = `Alan: ${area.toFixed(4)} m²`;
+        document.getElementById('finalRes').innerText = Math.round(final) + "₺";
     }
 
-    function updateStats() {
-        userStats.done++;
-        userStats.streak++; // Basit streak mantığı
-        localStorage.setItem('mf_stats', JSON.stringify(userStats));
-        document.getElementById('streakVal').innerText = userStats.streak;
-        document.getElementById('doneCount').innerText = userStats.done;
-    }
-
-    window.onload = loadData;
-    function resetAll() { if(confirm("Her şey silinecek?")) { localStorage.clear(); location.reload(); } }
+    function syncPrice() { document.getElementById('uPrice').value = document.getElementById('mType').value; }
+    
+    function resetSystem() { localStorage.clear(); location.reload(); }
+    
+    window.onload = () => {
+        const saved = localStorage.getItem('mf_elite_config');
+        if(saved) config = JSON.parse(saved);
+        document.getElementById('set_trans').value = config.trans;
+        document.getElementById('set_color').value = config.color;
+        document.getElementById('set_fixed').value = config.fixed;
+        document.getElementById('set_waste').value = config.waste;
+        updateUI();
+    };
 </script>
 </body>
 </html>
