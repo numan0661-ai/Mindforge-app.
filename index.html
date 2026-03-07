@@ -21,12 +21,19 @@
         
         .btn { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: none; padding: 15px; border-radius: 14px; width: 100%; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 14px; margin-top: 5px; }
         .btn:active { transform: scale(0.98); }
+        .btn-uv { background: linear-gradient(135deg, var(--purple), var(--uv)); }
         .btn-outline { background: var(--surface); border: 1px solid #333; color: white; min-height: 50px; }
         
         input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #2d2d44; background: #0b0b1a; color: white; box-sizing: border-box; }
         
         .lvl-bar-bg { width: 100%; height: 6px; background: #2d2d44; border-radius: 3px; margin-top: 8px; }
-        .lvl-bar-fill { height: 100%; background: var(--gold); width: 0%; transition: 0.5s ease; border-radius: 3px; box-shadow: 0 0 10px var(--gold); }
+        .lvl-bar-fill { height: 100%; background: var(--gold); width: 0%; transition: 0.5s ease; border-radius: 3px; }
+
+        /* UV Akademi Spesifik */
+        .uv-header { color: var(--uv); font-size: 18px; font-weight: bold; border-left: 4px solid var(--uv); padding-left: 10px; margin: 20px 0 10px; }
+        .uv-lesson { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 12px; margin-bottom: 10px; }
+        .uv-lesson b { color: var(--gold); display: block; margin-bottom: 4px; font-size: 14px; }
+        .uv-lesson p { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin: 0; }
 
         .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(22, 22, 45, 0.98); display: flex; justify-content: space-around; padding: 15px 0 25px; backdrop-filter: blur(10px); border-top: 1px solid #2d2d44; z-index: 1000; }
         .nav-item { font-size: 24px; cursor: pointer; opacity: 0.4; transition: 0.3s; }
@@ -35,12 +42,6 @@
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-top: 10px; }
         .cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 10px; border-radius: 6px; background: rgba(255,255,255,0.05); }
         .cal-day.done { background: var(--success); color: white; font-weight: bold; }
-        
-        /* UV Akademi Stilleri */
-        .uv-lesson { border-left: 4px solid var(--uv); padding-left: 15px; margin-bottom: 20px; }
-        .uv-lesson h4 { color: var(--uv); margin: 0 0 5px 0; font-size: 16px; }
-        .uv-lesson p { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin: 0; }
-        .uv-warning { border: 1px solid var(--danger); background: rgba(239, 68, 68, 0.1); padding: 10px; border-radius: 10px; color: var(--danger); font-size: 12px; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -50,100 +51,66 @@
     <div class="screen active" id="homeScreen">
         <h2 style="color:var(--accent)">MindForge Master</h2>
         <div class="card" style="border: 1px solid var(--gold);">
-            <div style="font-size: 10px; background: var(--gold); color: black; padding: 2px 8px; border-radius: 10px; font-weight: bold; position: absolute; top: 15px; right: 15px;">KALFA</div>
+            <div style="font-size: 10px; background: var(--gold); color: black; padding: 2px 8px; border-radius: 10px; font-weight: bold; position: absolute; top: 15px; right: 15px;" id="rankBadge">USTA YOLU</div>
             <h4 style="margin:0; color:var(--gold);">Gelişim Seviyesi</h4>
             <div style="font-size: 12px; margin-top: 5px;">Lvl: <span id="lvlLabel">1</span> | EXP: <span id="expLabel">0</span>/100</div>
             <div class="lvl-bar-bg"><div class="lvl-bar-fill" id="lvlFill"></div></div>
         </div>
 
-        <div class="card" onclick="showScreen('uvScreen')" style="background: linear-gradient(135deg, #16162d, #3b0066); border: 2px solid var(--uv);">
-            <div style="display:flex; align-items:center; gap:15px;">
-                <span style="font-size:30px;">🟣</span>
-                <div>
-                    <h3 style="margin:0; color:white;">UV AKADEMİ</h3>
-                    <small style="color:var(--accent)">A'dan Z'ye Uzmanlık</small>
-                </div>
-            </div>
+        <div class="card" onclick="showScreen('uvAcademyScreen')" style="background: linear-gradient(135deg, #16162d, #3b0066); border: 2px solid var(--uv); text-align:center;">
+            <span style="font-size:30px;">🧪</span>
+            <h3 style="margin:5px 0 0 0; color:white;">UV AKADEMİ (A-Z)</h3>
+            <small style="color:var(--uv)">Teknik Uzmanlık Müfredatı</small>
         </div>
 
         <div class="grid-2">
             <div class="card" onclick="showScreen('corelScreen')" style="text-align:center; border:1px solid var(--corel)">🎨<br><small>CorelMaster</small></div>
             <div class="card" onclick="showScreen('wordScreen')" style="text-align:center; border:1px solid var(--purple)">📚<br><small>5 Kelime</small></div>
             <div class="card" onclick="showScreen('exerciseScreen')" style="text-align:center;">🏋️‍♂️<br><small>Egzersiz</small></div>
-            <div class="card" onclick="showScreen('logicScreen')" style="text-align:center;">⚡<br><small>Zekâ</small></div>
+            <div class="card" onclick="showScreen('businessScreen')" style="text-align:center;">📊<br><small>Maliyet</small></div>
         </div>
     </div>
 
-    <div class="screen" id="uvScreen">
+    <div class="screen" id="uvAcademyScreen">
         <button class="btn" style="background:none; color:var(--accent); text-align:left; padding:0;" onclick="showScreen('homeScreen')">← Geri</button>
-        <h2 style="color:var(--uv)">UV Baskı Ansiklopedisi</h2>
+        <h2 style="color:var(--uv)">UV Teknik Müfredatı</h2>
         
-        <div class="card">
-            <div class="uv-lesson">
-                <h4>1. Donanım Anatomisi</h4>
-                <p><b>Kürlenme:</b> UV ışığı boyayı anında polimerleştirir. Lamba gücü malzemeye göre seçilmelidir.</p>
-            </div>
-            <div class="uv-lesson">
-                <h4>2. Corel Hazırlığı</h4>
-                <p><b>White (Beyaz) Katmanı:</b> Şeffaf zeminde RD_WHITE spot rengiyle tanımlanan alan en alta basılır.</p>
-            </div>
-            <div class="uv-lesson">
-                <h4>3. Yapışma (Adhezyon)</h4>
-                <p><b>Primer:</b> Cam ve metalde boyanın dökülmemesi için baskı öncesi astar sürülmelidir.</p>
-            </div>
-            <div class="uv-lesson">
-                <h4>4. Bakım ve Kafa Sağlığı</h4>
-                <p><b>Çalkalama:</b> Beyaz boya ağırdır, çöker. Her sabah tankları çalkalamak hayati önem taşır.</p>
-            </div>
-            <div class="uv-warning">
-                <b>DİKKAT:</b> Kafa yüksekliği (Gap) her zaman 1.5mm - 2mm olmalıdır.
-            </div>
+        <div class="uv-header">Bölüm 1: Fizik ve Kimya</div>
+        <div class="uv-lesson">
+            <b>UV Kürlenme Süreci</b>
+            <p>Boyanın içindeki foto-başlatıcılar UV ışığıyla polimerleşir. Boya kurumaz, plastikleşir. Bu yüzden anında dokunulabilir.</p>
         </div>
-        <button class="btn btn-uv" style="background:var(--uv)" onclick="addExp(100); alert('UV Ustalığı Puanı Alındı! +100 EXP');">Eğitimi Tamamla</button>
-    </div>
+        <div class="uv-lesson">
+            <b>Yüzey Gerilimi (Adhezyon)</b>
+            <p>Boya neden atar? Pleksinin yüzey enerjisi düşüktür. İzopropil alkol ile silmek boyanın zemine "tutunmasını" sağlar.</p>
+        </div>
 
-    <div class="screen" id="corelScreen">
-        <button class="btn" style="background:none; color:var(--accent);" onclick="showScreen('homeScreen')">← Geri</button>
-        <div class="card">
-            <h4 style="color:var(--corel); margin-top:0;">⚡ Kısayol Testi</h4>
-            <div id="corelQuest" style="text-align:center; margin:15px 0; font-weight:bold;"></div>
-            <div id="corelOpts" class="grid-2"></div>
+        <div class="uv-header">Bölüm 2: Tasarım ve RIP</div>
+        <div class="uv-lesson">
+            <b>White (Beyaz) Katmanı</b>
+            <p>Şeffaf zeminde renklerin uçmaması için alta beyaz basılır. Corel'de nesneyi seçip RD_WHITE spot rengini atamalısın.</p>
         </div>
-    </div>
+        <div class="uv-lesson">
+            <b>Multiple Pass (Kabartma)</b>
+            <p>Aynı noktaya 3-4 kez baskı yaparak gerçek 3D kabartma (Emboss) etkisi yaratılır. Genelde Varnish ile yapılır.</p>
+        </div>
 
-    <div class="screen" id="wordScreen">
-        <button class="btn" style="background:none; color:var(--accent);" onclick="showScreen('homeScreen')">← Geri</button>
-        <div class="card">
-            <h4 style="color:var(--purple); margin:0;">📚 Günün 5 Kelimesi</h4>
-            <div id="wordListBody" style="margin-top:10px;"></div>
-            <button class="btn" style="background:var(--purple); margin-top:15px;" onclick="renderWords()">Kelimeleri Yenile</button>
+        <div class="uv-header">Bölüm 3: Arıza ve Bakım</div>
+        <div class="uv-lesson">
+            <b>Kafa Yüksekliği (Gap)</b>
+            <p>Kafa ile malzeme arası 1.5mm-2mm olmalıdır. Mesafe artarsa baskı tozlu (overspray) çıkar.</p>
         </div>
-    </div>
+        <div class="uv-lesson" style="border-left: 4px solid var(--danger);">
+            <b style="color:var(--danger);">Kafa Çiziyor (Banding)</b>
+            <p>Hava kabarcığı veya kafa tıkanıklığıdır. Acil "Flush" (kafa temizliği) gerektirir. Beyaz boyayı her sabah çalkala!</p>
+        </div>
 
-    <div class="screen" id="exerciseScreen">
-        <button class="btn" style="background:none; color:var(--accent);" onclick="showScreen('homeScreen')">← Geri</button>
-        <div class="card">
-            <h4 id="exTitle" style="color:var(--gold);">Program</h4>
-            <div id="exListBody" style="line-height:2; margin:15px 0;"></div>
-            <button class="btn" onclick="logWorkout()">Antrenmanı Tamamla ✅</button>
-        </div>
-        <div class="card">
-            <h4 style="margin:0">📆 Devamlılık Takvimi</h4>
-            <div class="calendar-grid" id="mainCalendar"></div>
-        </div>
-    </div>
-
-    <div class="screen" id="logicScreen">
-        <button class="btn" style="background:none; color:var(--accent);" onclick="showScreen('homeScreen')">← Geri</button>
-        <div class="card">
-            <h4 style="color:var(--primary); margin:0;">⚡ Zekâ (Lvl: <span id="logicLvlDisplay">1</span>)</h4>
-            <div id="logicQuest" style="font-size:32px; text-align:center; margin:25px; font-weight:bold;"></div>
-            <div id="logicOpts" class="grid-2"></div>
-        </div>
+        <button class="btn btn-uv" onclick="addExp(150); alert('UV Ustalığı Puanı: +150 EXP');">EĞİTİMİ TAMAMLA</button>
     </div>
 
     <div class="screen" id="businessScreen">
-        <h2 style="color:var(--accent); margin-left:15px;">BusinessForge</h2>
+        <button class="btn" style="background:none; color:var(--accent);" onclick="showScreen('homeScreen')">← Geri</button>
+        <h2>BusinessForge</h2>
         <div class="card">
             <div class="grid-2"><input type="number" id="w" placeholder="En (cm)"><input type="number" id="h" placeholder="Boy (cm)"></div>
             <select id="mType" onchange="syncPrice()"></select>
@@ -153,13 +120,29 @@
         </div>
     </div>
 
+    <div class="screen" id="corelScreen">
+        <button class="btn" style="background:none; color:var(--accent);" onclick="showScreen('homeScreen')">← Geri</button>
+        <div class="card"><h4>⚡ Corel Quiz</h4><div id="corelQuest" style="text-align:center; margin:15px 0; font-weight:bold;"></div><div id="corelOpts" class="grid-2"></div></div>
+    </div>
+
+    <div class="screen" id="wordScreen">
+        <button class="btn" style="background:none; color:var(--accent);" onclick="showScreen('homeScreen')">← Geri</button>
+        <div class="card"><h4>📚 Günün 5 Kelimesi</h4><div id="wordListBody"></div><button class="btn" style="background:var(--purple); margin-top:15px;" onclick="renderWords()">Yenile</button></div>
+    </div>
+
+    <div class="screen" id="exerciseScreen">
+        <button class="btn" style="background:none; color:var(--accent);" onclick="showScreen('homeScreen')">← Geri</button>
+        <div class="card"><h4>🏋️‍♂️ Antrenman</h4><div id="exListBody" style="line-height:2;"></div><button class="btn" onclick="logWorkout()">Tamamla ✅</button></div>
+        <div class="card"><h4>📆 Takvim</h4><div class="calendar-grid" id="mainCalendar"></div></div>
+    </div>
+
     <div class="screen" id="settingsScreen">
         <h2>Ayarlar</h2>
         <div class="card">
-            <label>Şeffaf m² (₺)</label><input type="number" id="set_trans" oninput="saveConfig()">
-            <label>Renkli m² (₺)</label><input type="number" id="set_color" oninput="saveConfig()">
+            <label>Şeffaf m²</label><input type="number" id="set_trans" oninput="saveConfig()">
+            <label>Renkli m²</label><input type="number" id="set_color" oninput="saveConfig()">
         </div>
-        <button class="btn" style="background:var(--danger)" onclick="resetSystem()">Sistemi Sıfırla</button>
+        <button class="btn" style="background:var(--danger)" onclick="resetSystem()">Sıfırla</button>
     </div>
 
     <div class="nav-bar">
@@ -170,11 +153,10 @@
 </div>
 
 <script>
-    let stats = JSON.parse(localStorage.getItem('mf_stats')) || { exp: 0, lvl: 1, logicLvl: 1 };
+    let stats = JSON.parse(localStorage.getItem('mf_stats')) || { exp: 0, lvl: 1 };
     let config = { trans: 450, color: 600, fixed: 50 };
     let workoutHistory = JSON.parse(localStorage.getItem('mf_workout_history')) || [];
 
-    // --- TEMEL SİSTEMLER ---
     function showScreen(id, el) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
@@ -182,16 +164,15 @@
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
         }
-        if(id === 'homeScreen') renderCalendar();
+        if(id === 'homeScreen' || id === 'exerciseScreen') renderCalendar();
         if(id === 'corelScreen') initCorelQuiz();
         if(id === 'wordScreen') renderWords();
-        if(id === 'logicScreen') initLogicGame();
-        if(id === 'exerciseScreen') { renderWorkout(); renderCalendar(); }
+        if(id === 'exerciseScreen') renderWorkout();
     }
 
     function addExp(amount) {
         stats.exp += amount;
-        if(stats.exp >= stats.lvl * 100) { stats.exp = 0; stats.lvl++; alert("Level Atladın!"); }
+        if(stats.exp >= stats.lvl * 100) { stats.exp = 0; stats.lvl++; alert("Level Atladın! 🔥"); }
         updateMasteryUI();
     }
 
@@ -202,32 +183,24 @@
         localStorage.setItem('mf_stats', JSON.stringify(stats));
     }
 
-    // --- MODÜL FONKSİYONLARI ---
-    const corelData = [{q:"Sayfaya MERKEZLEMEK?", a:"P", o:["P","C","E","M"]}, {q:"Gruplama (Group)?", a:"Ctrl+G", o:["Ctrl+G","Ctrl+U","Ctrl+L","Ctrl+K"]}];
+    // Modül Fonksiyonları
+    const corelData = [{q:"Sayfaya MERKEZLEMEK?", a:"P", o:["P","C","E","M"]}, {q:"Gruplama?", a:"Ctrl+G", o:["Ctrl+G","Ctrl+U","Ctrl+K","Ctrl+L"]}];
     function initCorelQuiz() {
         const q = corelData[Math.floor(Math.random()*corelData.length)];
         document.getElementById('corelQuest').innerText = q.q;
-        document.getElementById('corelOpts').innerHTML = q.o.map(o => `<button class="btn btn-outline" onclick="if('${o}'=='${q.a}'){addExp(15);initCorelQuiz();}else{alert('Yanlış');initCorelQuiz();}">${o}</button>`).join('');
+        document.getElementById('corelOpts').innerHTML = q.o.map(o => `<button class="btn btn-outline" onclick="if('${o}'=='${q.a}'){addExp(15);initCorelQuiz();}else{initCorelQuiz();}">${o}</button>`).join('');
     }
 
-    const wordsBank = [{w:"Liyakat", m:"Layık olma."}, {w:"İntizam", m:"Düzen."}, {w:"Maharet", m:"Ustalık."}, {w:"Dirayet", m:"İrade."}, {w:"Muvaffak", m:"Başarılı."}];
+    const wordsBank = [{w:"Liyakat", m:"Layık olma."}, {w:"İntizam", m:"Düzen."}, {w:"Maharet", m:"Ustalık."}, {w:"Dirayet", m:"Güçlü irade."}, {w:"Basiret", m:"Sezgi."}];
     function renderWords() {
         const shuffled = wordsBank.sort(() => 0.5 - Math.random()).slice(0, 5);
-        document.getElementById('wordListBody').innerHTML = shuffled.map(w => `<div style="border-bottom:1px solid #333; padding:10px 0;"><b>${w.w}:</b> ${w.m}</div>`).join('');
-    }
-
-    function initLogicGame() {
-        document.getElementById('logicLvlDisplay').innerText = stats.logicLvl;
-        const w = Math.floor(Math.random()*(10+stats.logicLvl))+5, h = Math.floor(Math.random()*(10+stats.logicLvl))+5;
-        const ans = w * h; document.getElementById('logicQuest').innerText = `${w} x ${h} = ?`;
-        const opts = [ans, ans+10, ans-5].sort(()=>Math.random()-0.5);
-        document.getElementById('logicOpts').innerHTML = opts.map(o => `<button class="btn btn-outline" onclick="if(${o}==${ans}){stats.logicLvl++;addExp(20);initLogicGame();}else{stats.logicLvl=1;initLogicGame();}">${o}</button>`).join('');
+        document.getElementById('wordListBody').innerHTML = shuffled.map(w => `<div style="border-bottom:1px solid #333; padding:8px 0;"><b>${w.w}:</b> ${w.m}</div>`).join('');
     }
 
     function renderWorkout() { document.getElementById('exListBody').innerHTML = "• Şınav: 4x12<br>• Squat: 3x15<br>• Plank: 45sn"; }
     function renderCalendar() {
-        const cal = document.getElementById('mainCalendar'); if(!cal) return;
-        cal.innerHTML = ""; const now = new Date(); const days = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+        const cal = document.getElementById('mainCalendar'); if(!cal) return; cal.innerHTML = "";
+        const now = new Date(); const days = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
         for(let i=1; i<=days; i++){
             const dateStr = new Date(now.getFullYear(), now.getMonth(), i).toLocaleDateString('tr-TR');
             const d = document.createElement('div'); d.className = `cal-day ${workoutHistory.includes(dateStr)?'done':''}`;
@@ -237,10 +210,14 @@
     function logWorkout() {
         const d = new Date().toLocaleDateString('tr-TR');
         if(!workoutHistory.includes(d)){ workoutHistory.push(d); localStorage.setItem('mf_workout_history', JSON.stringify(workoutHistory)); addExp(50); }
-        alert("Harika! ✅"); renderCalendar();
+        alert("Tamamlandı! ✅"); renderCalendar();
     }
 
-    // --- BUSINESS & SETTINGS ---
+    function calculate() {
+        const w = document.getElementById('w').value, h = document.getElementById('h').value;
+        const res = (((w*h)/10000)*document.getElementById('uPrice').value) + config.fixed;
+        document.getElementById('finalRes').innerText = Math.round(res) + "₺"; addExp(5);
+    }
     function saveConfig() {
         config = { trans: document.getElementById('set_trans').value, color: document.getElementById('set_color').value, fixed: 50 };
         localStorage.setItem('mf_elite_config', JSON.stringify(config)); updateUI();
@@ -250,11 +227,6 @@
         sel.innerHTML = `<option value="${config.trans}">Şeffaf</option><option value="${config.color}">Renkli</option>`;
         document.getElementById('uPrice').value = sel.value;
     }
-    function calculate() {
-        const w = document.getElementById('w').value, h = document.getElementById('h').value;
-        const res = (((w*h)/10000)*document.getElementById('uPrice').value) + config.fixed;
-        document.getElementById('finalRes').innerText = Math.round(res) + "₺"; addExp(5);
-    }
     function syncPrice() { document.getElementById('uPrice').value = document.getElementById('mType').value; }
 
     window.onload = () => {
@@ -263,7 +235,7 @@
         document.getElementById('set_color').value = config.color;
         updateUI(); updateMasteryUI(); renderCalendar();
     };
-    function resetSystem() { if(confirm("Her şey silinsin mi?")){ localStorage.clear(); location.reload(); } }
+    function resetSystem() { localStorage.clear(); location.reload(); }
 </script>
 </body>
 </html>
