@@ -10,28 +10,44 @@
             --surface: #16162d; --text: #ffffff; --text-muted: #94a3b8;
             --success: #10b981; --gold: #f59e0b; --purple: #a855f7; --danger: #ef4444; --corel: #4caf50;
         }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 90px; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 95px; }
         .app-container { max-width: 430px; margin: 0 auto; padding: 15px; }
         .screen { display: none; min-height: 100vh; }
         .screen.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .card { background: var(--surface); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        
+        /* Kartlar */
+        .card { background: var(--surface); border-radius: 20px; padding: 18px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
         .btn { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: none; padding: 15px; border-radius: 14px; width: 100%; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 14px;}
-        .btn:active { transform: scale(0.98); }
         input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #2d2d44; background: #0b0b1a; color: white; box-sizing: border-box; }
+
+        /* Navigasyon */
         .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(22, 22, 45, 0.96); display: flex; justify-content: space-around; padding: 15px 0 25px; backdrop-filter: blur(10px); border-top: 1px solid #2d2d44; z-index: 1000; }
-        .nav-item { font-size: 24px; cursor: pointer; opacity: 0.4; transition: 0.3s; }
+        .nav-item { font-size: 24px; cursor: pointer; opacity: 0.4; }
         .nav-item.active { opacity: 1; color: var(--accent); }
+
+        /* Takvim & Ölçü Spesifik */
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 10px; }
+        .cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 11px; border-radius: 8px; background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid transparent; }
+        .cal-day.done { background: var(--success); color: white; font-weight: bold; box-shadow: 0 0 10px rgba(16, 185, 129, 0.3); }
+        .cal-day.today { border-color: var(--accent); color: var(--accent); }
+        
+        .measure-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #2d2d44; font-size: 13px; }
         .shortcut { background: #2d2d44; padding: 2px 6px; border-radius: 4px; color: var(--gold); font-family: monospace; font-weight: bold; }
-        .quiz-option { background: var(--surface); border: 1px solid #333; padding: 12px; border-radius: 10px; margin-bottom: 8px; cursor: pointer; text-align: center; font-weight: bold; }
+        .ex-img { width: 100%; height: 120px; border-radius: 12px; margin: 10px 0; object-fit: cover; border: 1px solid var(--primary); }
     </style>
 </head>
 <body>
 
 <div class="app-container">
+    
     <div class="screen active" id="homeScreen">
         <h2 style="color:var(--accent)">MindForge Master</h2>
-        <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div class="card" onclick="showScreen('exerciseScreen')">
+            <h4 style="margin:0">📆 Antrenman Takvimi</h4>
+            <div class="calendar-grid" id="mainCalendar"></div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
             <div class="card" onclick="showScreen('corelScreen')" style="text-align:center; border: 1px solid var(--corel);">🎨<br><small>CorelMaster</small></div>
             <div class="card" onclick="showScreen('wordScreen')" style="text-align:center; border: 1px solid var(--purple);">📚<br><small>Kelimeler</small></div>
             <div class="card" onclick="showScreen('exerciseScreen')" style="text-align:center;">🏋️‍♂️<br><small>Egzersiz</small></div>
@@ -41,25 +57,45 @@
         </div>
     </div>
 
+    <div class="screen" id="exerciseScreen">
+        <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer; margin-bottom:10px;">← Geri</button>
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <button class="btn" style="flex:1;" onclick="toggleExSub('workout')">Program</button>
+            <button class="btn" style="flex:1; background:var(--surface); border:1px solid var(--purple);" onclick="toggleExSub('measure')">Ölçüler</button>
+        </div>
+
+        <div id="workoutSub">
+            <div class="card">
+                <h4 id="exTitle" style="color:var(--gold); margin:0;">Program Yükleniyor...</h4>
+                <div id="exListBody"></div>
+                <button class="btn" style="margin-top:15px;" onclick="logWorkout()">Bugünü Tamamla ✅</button>
+            </div>
+        </div>
+
+        <div id="measureSub" style="display:none;">
+            <div class="card">
+                <h4>Yeni Ölçü Kaydı</h4>
+                <input type="number" id="m_kilo" placeholder="Kilo (kg)">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <input type="number" id="m_kol" placeholder="Kol (cm)">
+                    <input type="number" id="m_bel" placeholder="Bel (cm)">
+                </div>
+                <button class="btn" onclick="saveMeasures()" style="background:var(--purple); margin-top:10px;">Verileri Kaydet</button>
+            </div>
+            <div class="card">
+                <h4 style="margin:0 0 10px 0;">Gelişim Tarihçesi</h4>
+                <div id="measureList"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="screen" id="corelScreen">
         <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer; margin-bottom:10px;">← Geri</button>
         <h2>Corel Master</h2>
-        
         <div id="corelQuizBox" class="card">
-            <h4 style="color:var(--gold); margin-top:0;">⚡ Kısayol Yarışması</h4>
-            <div id="quizQuestion" style="font-size:16px; margin-bottom:15px; text-align:center;">Soru yükleniyor...</div>
+            <h4 style="color:var(--gold); margin:0 0 10px 0;">⚡ Hızlı Kısayol Testi</h4>
+            <div id="quizQuestion" style="font-size:14px; margin-bottom:12px;"></div>
             <div id="quizOptions"></div>
-        </div>
-
-        <div class="card">
-            <h4 style="color:var(--corel); margin-top:0;">📚 Kısayol Listesi</h4>
-            <div style="font-size:13px; max-height: 200px; overflow-y: auto;">
-                <div style="display:flex; justify-content:space-between; padding:5px 0;"><span>Seçim Aracı</span><span class="shortcut">Space</span></div>
-                <div style="display:flex; justify-content:space-between; padding:5px 0;"><span>Grupla</span><span class="shortcut">Ctrl+G</span></div>
-                <div style="display:flex; justify-content:space-between; padding:5px 0;"><span>Curvele</span><span class="shortcut">Ctrl+Q</span></div>
-                <div style="display:flex; justify-content:space-between; padding:5px 0;"><span>Sayfaya Ortala</span><span class="shortcut">P</span></div>
-                <div style="display:flex; justify-content:space-between; padding:5px 0;"><span>Break Apart</span><span class="shortcut">Ctrl+K</span></div>
-            </div>
         </div>
     </div>
 
@@ -90,11 +126,6 @@
         <button class="btn" style="background:var(--danger)" onclick="resetSystem()">SIFIRLA</button>
     </div>
 
-    <div class="screen" id="exerciseScreen"><button onclick="showScreen('homeScreen')">← Geri</button><h2>Egzersiz</h2></div>
-    <div class="screen" id="dictionScreen"><button onclick="showScreen('homeScreen')">← Geri</button><h2>Diksiyon</h2></div>
-    <div class="screen" id="logicScreen"><button onclick="showScreen('homeScreen')">← Geri</button><h2>Zeka</h2></div>
-    <div class="screen" id="confidenceScreen"><button onclick="showScreen('homeScreen')">← Geri</button><h2>Özgüven</h2></div>
-
     <div class="nav-bar">
         <div class="nav-item active" onclick="showScreen('homeScreen', this)">🏠</div>
         <div class="nav-item" onclick="showScreen('businessScreen', this)">📊</div>
@@ -104,6 +135,8 @@
 
 <script>
     let config = { trans: 450, color: 600, fixed: 50 };
+    let workoutHistory = JSON.parse(localStorage.getItem('mf_workout_history')) || [];
+    let measures = JSON.parse(localStorage.getItem('mf_measures')) || [];
 
     function showScreen(id, el) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -112,49 +145,80 @@
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
         }
+        if(id === 'homeScreen') renderCalendar();
+        if(id === 'exerciseScreen') { renderWorkout(); renderMeasures(); }
         if(id === 'corelScreen') initQuiz();
         if(id === 'wordScreen') renderWords();
     }
 
-    // --- COREL QUIZ SİSTEMİ ---
-    const corelShortcuts = [
-        { q: "Nesneleri GRUPLAMAK için hangisi kullanılır?", a: "Ctrl+G", o: ["Ctrl+G", "Ctrl+U", "Ctrl+L", "Ctrl+K"] },
-        { q: "Nesneyi SAYFAYA MERKEZLEMEK için hangi harfe basılır?", a: "P", o: ["C", "E", "P", "M"] },
-        { q: "Objeyi CURVELEMEK için hangisi kullanılır?", a: "Ctrl+Q", o: ["Ctrl+Q", "Ctrl+L", "Ctrl+K", "Ctrl+G"] },
-        { q: "Objeleri PARÇALARA AYIRMAK (Break Apart) için?", a: "Ctrl+K", o: ["Ctrl+K", "Ctrl+L", "Ctrl+U", "Ctrl+G"] },
-        { q: "Çizgileri BİRLEŞTİRMEK (Combine) için hangisi?", a: "Ctrl+L", o: ["Ctrl+L", "Ctrl+Q", "Ctrl+G", "Ctrl+J"] }
-    ];
+    // --- TAKVİM VE EGZERSİZ ---
+    function logWorkout() {
+        const today = new Date().toLocaleDateString('tr-TR');
+        if(!workoutHistory.includes(today)) {
+            workoutHistory.push(today);
+            localStorage.setItem('mf_workout_history', JSON.stringify(workoutHistory));
+            alert("Harika! Takvimine bir başarı günü daha ekledin. 🚀");
+            renderCalendar();
+        } else alert("Bugün zaten çalıştın, usta!");
+    }
 
+    function renderCalendar() {
+        const cal = document.getElementById('mainCalendar');
+        if(!cal) return;
+        cal.innerHTML = "";
+        const now = new Date();
+        const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+        const today = now.getDate();
+        
+        for(let i=1; i<=daysInMonth; i++) {
+            const dateStr = new Date(now.getFullYear(), now.getMonth(), i).toLocaleDateString('tr-TR');
+            const dayDiv = document.createElement('div');
+            dayDiv.className = `cal-day ${workoutHistory.includes(dateStr) ? 'done' : ''} ${i === today ? 'today' : ''}`;
+            dayDiv.innerText = i;
+            cal.appendChild(dayDiv);
+        }
+    }
+
+    function toggleExSub(sub) {
+        document.getElementById('workoutSub').style.display = sub === 'workout' ? 'block' : 'none';
+        document.getElementById('measureSub').style.display = sub === 'measure' ? 'block' : 'none';
+    }
+
+    const exData = {
+        0: { title: "İtiş Günü", moves: [{n:"Şınav", r:"4x12", g:"https://media.giphy.com/media/26ueYUlPAmUkTBAM8/giphy.gif"}] },
+        1: { title: "Çekiş Günü", moves: [{n:"Barfiks", r:"3xMax", g:"https://media.giphy.com/media/3o7TKLJ3KL3lG3L9Gg/giphy.gif"}] }
+    };
+    function renderWorkout() {
+        const d = exData[new Date().getDay() % 2];
+        document.getElementById('exTitle').innerText = d.title;
+        document.getElementById('exListBody').innerHTML = d.moves.map(m => `<div style="border-bottom:1px solid #333; padding:10px 0;"><img src="${m.g}" class="ex-img"><b>${m.n}</b> - ${m.r}</div>`).join('');
+    }
+
+    // --- ÖLÇÜLER ---
+    function saveMeasures() {
+        const m = { d: new Date().toLocaleDateString('tr-TR'), k: document.getElementById('m_kilo').value, c: document.getElementById('m_kol').value, b: document.getElementById('m_bel').value };
+        if(!m.k) return alert("Kilo girilmelidir.");
+        measures.unshift(m);
+        localStorage.setItem('mf_measures', JSON.stringify(measures));
+        renderMeasures();
+        alert("Kaydedildi!");
+    }
+    function renderMeasures() {
+        document.getElementById('measureList').innerHTML = measures.map(m => `<div class="measure-item"><span>${m.d}</span><span>${m.k}kg / ${m.c}cm / ${m.b}cm</span></div>`).join('');
+    }
+
+    // --- COREL QUIZ ---
+    const corelQ = [{q:"Gruplama kısayolu?", a:"Ctrl+G", o:["Ctrl+G","Ctrl+U","Ctrl+K","Ctrl+L"]}];
     function initQuiz() {
-        const quest = corelShortcuts[Math.floor(Math.random() * corelShortcuts.length)];
-        document.getElementById('quizQuestion').innerText = quest.q;
-        const optsBody = document.getElementById('quizOptions');
-        optsBody.innerHTML = quest.o.map(opt => `<div class="quiz-option" onclick="checkQuiz('${opt}', '${quest.a}')">${opt}</div>`).join('');
+        const q = corelQ[0];
+        document.getElementById('quizQuestion').innerText = q.q;
+        document.getElementById('quizOptions').innerHTML = q.o.map(o => `<div class="quiz-option" style="background:var(--bg); border:1px solid #333; padding:10px; margin:5px; border-radius:10px; text-align:center; cursor:pointer;" onclick="checkQ('${o}','${q.a}')">${o}</div>`).join('');
     }
+    function checkQ(s, a) { alert(s===a ? "Doğru!" : "Yanlış!"); initQuiz(); }
 
-    function checkQuiz(selected, correct) {
-        if(selected === correct) { alert("🎯 Harika! Tam bir lazer ustasısın."); } 
-        else { alert("❌ Yanlış! Doğru cevap: " + correct); }
-        initQuiz();
-    }
-
-    // --- KELİME SİSTEMİ ---
-    const allWords = [
-        { word: "Liyakat", meaning: "Bir işe layık olma durumu.", example: "Liyakatli usta, malzemeyi fire vermeden kullanandır." },
-        { word: "İntizam", meaning: "Düzenli olma durumu.", example: "Çizimlerdeki intizam, UV baskının kalitesini belirler." }
-    ];
-    function renderWords() {
-        const body = document.getElementById('wordListBody');
-        body.innerHTML = allWords.map(w => `<div class="card"><b>${w.word}:</b> ${w.meaning}<br><small>"${w.example}"</small></div>`).join('');
-    }
-
-    // --- BUSINESS & AYARLAR ---
+    // --- TEMEL ---
     function saveConfig() {
-        config = {
-            trans: document.getElementById('set_trans').value || 450,
-            color: document.getElementById('set_color').value || 600,
-            fixed: document.getElementById('set_fixed').value || 50
-        };
+        config = { trans: document.getElementById('set_trans').value, color: document.getElementById('set_color').value, fixed: document.getElementById('set_fixed').value };
         localStorage.setItem('mf_master_config', JSON.stringify(config));
         updateUI();
     }
@@ -165,23 +229,19 @@
             document.getElementById('uPrice').value = sel.value;
         }
     }
-    function syncPrice() { document.getElementById('uPrice').value = document.getElementById('mType').value; }
     function calculate() {
-        const w = parseFloat(document.getElementById('w').value) || 0;
-        const h = parseFloat(document.getElementById('h').value) || 0;
-        const final = (((w * h) / 10000) * document.getElementById('uPrice').value) + parseFloat(config.fixed);
-        document.getElementById('finalRes').innerText = Math.round(final) + "₺";
+        const w = document.getElementById('w').value, h = document.getElementById('h').value;
+        const res = (((w*h)/10000)*document.getElementById('uPrice').value) + parseFloat(config.fixed);
+        document.getElementById('finalRes').innerText = Math.round(res) + "₺";
     }
-
+    function syncPrice() { document.getElementById('uPrice').value = document.getElementById('mType').value; }
     window.onload = () => {
-        const saved = localStorage.getItem('mf_master_config');
-        if(saved) config = JSON.parse(saved);
+        const s = localStorage.getItem('mf_master_config'); if(s) config = JSON.parse(s);
         document.getElementById('set_trans').value = config.trans;
         document.getElementById('set_color').value = config.color;
         document.getElementById('set_fixed').value = config.fixed;
-        updateUI();
+        updateUI(); renderCalendar();
     };
-
     function resetSystem() { localStorage.clear(); location.reload(); }
 </script>
 </body>
