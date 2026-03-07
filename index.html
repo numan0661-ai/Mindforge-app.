@@ -2089,3 +2089,1060 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeMindForge();
 });
 </script>
+<!-- FitForge Modal -->
+<div id="fitforge-modal" class="modal">
+  <div class="modal-content workout-container">
+    <div class="workout-header">
+      <h2>💪 FitForge</h2>
+      <button onclick="closeFitForge()" class="close-btn">✕</button>
+    </div>
+
+    <div class="workout-selector">
+      <button onclick="selectWorkout('pushup')" class="workout-btn active">Push-up</button>
+      <button onclick="selectWorkout('squat')" class="workout-btn">Squat</button>
+      <button onclick="selectWorkout('plank')" class="workout-btn">Plank</button>
+    </div>
+
+    <div class="workout-display">
+      <div class="exercise-info">
+        <h3 id="exercise-name">Push-up</h3>
+        <p id="exercise-target">3 Set × 12 Tekrar</p>
+      </div>
+
+      <div class="set-tracker">
+        <div class="set" id="set-1">
+          <span class="set-num">Set 1</span>
+          <div class="rep-counter">
+            <button onclick="adjustRep(1, -1)">-</button>
+            <span id="rep-count-1">0</span>/12
+            <button onclick="adjustRep(1, 1)">+</button>
+          </div>
+          <button onclick="completeSet(1)" class="complete-btn" id="btn-1">✓</button>
+        </div>
+        <div class="set" id="set-2">
+          <span class="set-num">Set 2</span>
+          <div class="rep-counter">
+            <button onclick="adjustRep(2, -1)">-</button>
+            <span id="rep-count-2">0</span>/12
+            <button onclick="adjustRep(2, 1)">+</button>
+          </div>
+          <button onclick="completeSet(2)" class="complete-btn" id="btn-2">✓</button>
+        </div>
+        <div class="set" id="set-3">
+          <span class="set-num">Set 3</span>
+          <div class="rep-counter">
+            <button onclick="adjustRep(3, -1)">-</button>
+            <span id="rep-count-3">0</span>/12
+            <button onclick="adjustRep(3, 1)">+</button>
+          </div>
+          <button onclick="completeSet(3)" class="complete-btn" id="btn-3">✓</button>
+        </div>
+      </div>
+
+      <div class="rest-timer" id="rest-section" style="display:none;">
+        <h4>Dinlenme</h4>
+        <div id="rest-countdown">01:30</div>
+        <button onclick="skipRest()">Atla</button>
+      </div>
+    </div>
+
+    <div class="workout-stats">
+      <div>Bugün: <span id="today-total">0</span> egzersiz</div>
+      <div>Seri: <span id="streak-days">🔥 5</span> gün</div>
+    </div>
+  </div>
+</div>
+
+<style>
+.workout-container {
+  background: linear-gradient(135deg, #2d1b4e 0%, #1a1a2e 100%);
+  max-width: 400px;
+}
+
+.workout-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.workout-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.workout-btn.active {
+  background: #e94560;
+}
+
+.exercise-info {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.exercise-info h3 {
+  color: #00d9ff;
+  margin: 0 0 5px 0;
+}
+
+.set-tracker {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.set {
+  background: rgba(255,255,255,0.05);
+  padding: 15px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s;
+}
+
+.set.completed {
+  background: rgba(0,255,136,0.1);
+  border: 1px solid #00ff88;
+}
+
+.set-num {
+  color: #888;
+  font-weight: bold;
+}
+
+.rep-counter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+}
+
+.rep-counter button {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: #0f3460;
+  color: #fff;
+  cursor: pointer;
+}
+
+.rep-counter span {
+  font-size: 20px;
+  font-weight: bold;
+  color: #00d9ff;
+}
+
+.complete-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #00ff88;
+  background: transparent;
+  color: #00ff88;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.complete-btn:hover, .complete-btn.completed {
+  background: #00ff88;
+  color: #1a1a2e;
+}
+
+.rest-timer {
+  text-align: center;
+  padding: 20px;
+  background: rgba(233,69,96,0.1);
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
+#rest-countdown {
+  font-size: 48px;
+  color: #e94560;
+  font-weight: bold;
+  margin: 10px 0;
+}
+</style>
+
+<script>
+let currentWorkout = {
+  type: 'pushup',
+  sets: [{reps: 0, completed: false}, {reps: 0, completed: false}, {reps: 0, completed: false}],
+  targetReps: 12,
+  restTime: 90
+};
+
+const workouts = {
+  pushup: { name: 'Push-up', target: '3 Set × 12 Tekrar', reps: 12, rest: 90 },
+  squat: { name: 'Squat', target: '3 Set × 15 Tekrar', reps: 15, rest: 60 },
+  plank: { name: 'Plank', target: '3 Set × 45 Saniye', reps: 45, rest: 60 }
+};
+
+function openFitForge() {
+  document.getElementById('fitforge-modal').classList.add('active');
+  loadProgress();
+}
+
+function closeFitForge() {
+  document.getElementById('fitforge-modal').classList.remove('active');
+}
+
+function selectWorkout(type) {
+  currentWorkout.type = type;
+  currentWorkout.sets = [{reps: 0, completed: false}, {reps: 0, completed: false}, {reps: 0, completed: false}];
+  currentWorkout.targetReps = workouts[type].reps;
+  
+  document.querySelectorAll('.workout-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  
+  document.getElementById('exercise-name').textContent = workouts[type].name;
+  document.getElementById('exercise-target').textContent = workouts[type].target;
+  
+  // Reset UI
+  for(let i=1; i<=3; i++) {
+    document.getElementById(`set-${i}`).classList.remove('completed');
+    document.getElementById(`rep-count-${i}`).textContent = '0';
+    document.getElementById(`btn-${i}`).classList.remove('completed');
+    document.getElementById(`btn-${i}`).textContent = '✓';
+  }
+}
+
+function adjustRep(setNum, delta) {
+  let newReps = currentWorkout.sets[setNum-1].reps + delta;
+  if(newReps < 0) newReps = 0;
+  if(newReps > currentWorkout.targetReps * 2) newReps = currentWorkout.targetReps * 2;
+  
+  currentWorkout.sets[setNum-1].reps = newReps;
+  document.getElementById(`rep-count-${setNum}`).textContent = newReps;
+}
+
+function completeSet(setNum) {
+  if(currentWorkout.sets[setNum-1].completed) return;
+  
+  currentWorkout.sets[setNum-1].completed = true;
+  document.getElementById(`set-${setNum}`).classList.add('completed');
+  document.getElementById(`btn-${setNum}`).classList.add('completed');
+  
+  // Dinlenme zamanlayıcısı
+  if(setNum < 3) {
+    startRestTimer();
+  } else {
+    finishWorkout();
+  }
+  
+  saveProgress();
+}
+
+let restInterval;
+function startRestTimer() {
+  document.getElementById('rest-section').style.display = 'block';
+  let seconds = currentWorkout.restTime;
+  
+  restInterval = setInterval(() => {
+    seconds--;
+    const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const secs = (seconds % 60).toString().padStart(2, '0');
+    document.getElementById('rest-countdown').textContent = `${mins}:${secs}`;
+    
+    if(seconds <= 0) {
+      clearInterval(restInterval);
+      document.getElementById('rest-section').style.display = 'none';
+      // Ses bildirimi
+      new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZSA0PVanu87plHQUuh9Dz2YU2Bhxqv+zplkcODVGm5O+4ZSAEMYrO89GFNwYdcfDr4ZdJDQtPp+XysWUeBjiS1/LNfi0GI33R8tOENAcdcO/r4phJDQxPp+XyxWUeBjiS1/LNfi0GI33R8tOENAcdcO/r4phJDQxPp+XyxWUeBjiS1/LNfi0GI33R8tOENAcdcO/r4phJDQxPp+XyxWUeBjiS1/LNfi0GI33R8tOENAcdcO/r4phJDQw==').play();
+    }
+  }, 1000);
+}
+
+function skipRest() {
+  clearInterval(restInterval);
+  document.getElementById('rest-section').style.display = 'none';
+}
+
+function finishWorkout() {
+  const totalReps = currentWorkout.sets.reduce((sum, set) => sum + set.reps, 0);
+  alert(`🎉 Tebrikler! ${totalReps} tekrar tamamladınız!`);
+  
+  // Streak güncelle
+  updateStreak();
+}
+
+function updateStreak() {
+  const today = new Date().toDateString();
+  const lastWorkout = localStorage.getItem('fitforge_last');
+  let streak = parseInt(localStorage.getItem('fitforge_streak') || '0');
+  
+  if(lastWorkout !== today) {
+    if(lastWorkout === new Date(Date.now() - 86400000).toDateString()) {
+      streak++;
+    } else {
+      streak = 1;
+    }
+    localStorage.setItem('fitforge_streak', streak);
+    localStorage.setItem('fitforge_last', today);
+    document.getElementById('streak-days').textContent = `🔥 ${streak}`;
+  }
+}
+
+function loadProgress() {
+  const streak = localStorage.getItem('fitforge_streak') || '0';
+  document.getElementById('streak-days').textContent = `🔥 ${streak}`;
+}
+
+function saveProgress() {
+  const completed = currentWorkout.sets.filter(s => s.completed).length;
+  const percentage = (completed / 3) * 100;
+  localStorage.setItem('fitforge_progress', percentage);
+}
+</script>
+<!-- VoiceForge Modal -->
+<div id="voiceforge-modal" class="modal">
+  <div class="modal-content voice-container">
+    <div class="voice-header">
+      <h2>🗣️ VoiceForge</h2>
+      <button onclick="closeVoiceForge()" class="close-btn">✕</button>
+    </div>
+
+    <div class="difficulty-selector">
+      <button onclick="setDifficulty('easy')" class="diff-btn active">Kolay</button>
+      <button onclick="setDifficulty('medium')" class="diff-btn">Orta</button>
+      <button onclick="setDifficulty('hard')" class="diff-btn">Zor</button>
+    </div>
+
+    <div class="text-display" id="text-to-read">
+      "Bugün hava çok güzel ve dışarı çıkmak için harika bir gün."
+    </div>
+
+    <div class="voice-controls">
+      <button onclick="startRecording()" id="record-btn" class="record-btn">
+        🎤 Kaydet
+      </button>
+      <button onclick="nextText()" class="next-btn">Sonraki →</button>
+    </div>
+
+    <div class="recording-indicator" id="recording-indicator" style="display:none;">
+      <div class="pulse-ring"></div>
+      <span>Kaydediliyor...</span>
+    </div>
+
+    <div class="analysis-result" id="analysis-result" style="display:none;">
+      <h4>Analiz Sonucu</h4>
+      <div class="metrics">
+        <div class="metric">
+          <span>Hız</span>
+          <div class="metric-bar"><div id="speed-bar" style="width:0%"></div></div>
+        </div>
+        <div class="metric">
+          <span>Açıklık</span>
+          <div class="metric-bar"><div id="clarity-bar" style="width:0%"></div></div>
+        </div>
+        <div class="metric">
+          <span>Tonlama</span>
+          <div class="metric-bar"><div id="tone-bar" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div class="score" id="total-score">0/100</div>
+    </div>
+
+    <div class="breathing-exercise">
+      <h4>Nefes Egzersizi</h4>
+      <div class="breath-circle" id="breath-circle">
+        <span id="breath-text">Nefes Al</span>
+      </div>
+      <button onclick="startBreathing()" class="breath-btn">Başlat</button>
+    </div>
+  </div>
+</div>
+
+<style>
+.voice-container {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  max-width: 450px;
+}
+
+.difficulty-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.diff-btn {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  cursor: pointer;
+}
+
+.diff-btn.active {
+  background: #ffd700;
+  color: #1a1a2e;
+}
+
+.text-display {
+  background: rgba(255,255,255,0.1);
+  padding: 20px;
+  border-radius: 12px;
+  font-size: 18px;
+  line-height: 1.6;
+  color: #fff;
+  margin-bottom: 20px;
+  min-height: 80px;
+}
+
+.voice-controls {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.record-btn {
+  flex: 1;
+  padding: 15px;
+  border: none;
+  border-radius: 50px;
+  background: #e94560;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.record-btn.recording {
+  background: #ff0000;
+  animation: pulse 1s infinite;
+}
+
+.next-btn {
+  padding: 15px 25px;
+  border: none;
+  border-radius: 50px;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  cursor: pointer;
+}
+
+.recording-indicator {
+  text-align: center;
+  color: #e94560;
+  margin-bottom: 20px;
+}
+
+.pulse-ring {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #e94560;
+  margin: 0 auto 10px;
+  animation: pulse-ring 1s infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+.analysis-result {
+  background: rgba(0,0,0,0.3);
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.metric {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.metric span {
+  width: 80px;
+  color: #888;
+}
+
+.metric-bar {
+  flex: 1;
+  height: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.metric-bar div {
+  height: 100%;
+  background: linear-gradient(90deg, #00ff88, #00d9ff);
+  transition: width 1s ease;
+}
+
+.score {
+  text-align: center;
+  font-size: 36px;
+  color: #ffd700;
+  font-weight: bold;
+}
+
+.breathing-exercise {
+  text-align: center;
+  padding: 20px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+}
+
+.breath-circle {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 3px solid #00d9ff;
+  margin: 20px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 4s ease;
+}
+
+.breath-circle.inhale {
+  transform: scale(1.3);
+  border-color: #00ff88;
+}
+
+.breath-circle.exhale {
+  transform: scale(1);
+  border-color: #e94560;
+}
+
+.breath-btn {
+  padding: 10px 30px;
+  border: none;
+  border-radius: 25px;
+  background: #00d9ff;
+  color: #1a1a2e;
+  cursor: pointer;
+}
+</style>
+
+<script>
+const texts = {
+  easy: [
+    "Bugün hava çok güzel.",
+    "Kitap okumayı seviyorum.",
+    "Kahvaltı yapmayı unutma.",
+    "Spor sağlık için önemlidir.",
+    "Müzik dinlemek rahatlatır."
+  ],
+  medium: [
+    "Diksiyon, konuşma sanatının temel taşıdır ve doğru nefes teknikleriyle gelişir.",
+    "Toplum içinde etkili iletişim kurabilmek için ses tonlaması kritik öneme sahiptir.",
+    "Günlük pratik yaparak konuşma yeteneğinizi önemli ölçüde geliştirebilirsiniz.",
+    "Diyafram nefesi, sesinizi güçlendirir ve yorulmanızı önler."
+  ],
+  hard: [
+    "Şiir, dilin müziğidir ve her kelime bir nota, her cümle bir armoni oluşturur.",
+    "Retorik sanatı, Antik Yunan'dan beri demokrasinin ve kamu hayatının vazgeçilmezidir.",
+    "Etkili bir konuşmacı, sadece söyledikleriyle değil, susuşlarıyla da anlatır."
+  ]
+};
+
+let currentDifficulty = 'easy';
+let currentIndex = 0;
+let recognition;
+let isRecording = false;
+
+function openVoiceForge() {
+  document.getElementById('voiceforge-modal').classList.add('active');
+  if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.lang = 'tr-TR';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      analyzeSpeech(transcript);
+    };
+  }
+}
+
+function closeVoiceForge() {
+  document.getElementById('voiceforge-modal').classList.remove('active');
+  if(recognition) recognition.stop();
+}
+
+function setDifficulty(level) {
+  currentDifficulty = level;
+  currentIndex = 0;
+  document.querySelectorAll('.diff-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  updateText();
+}
+
+function updateText() {
+  document.getElementById('text-to-read').textContent = 
+    `"${texts[currentDifficulty][currentIndex]}"`;
+}
+
+function nextText() {
+  currentIndex = (currentIndex + 1) % texts[currentDifficulty].length;
+  updateText();
+  document.getElementById('analysis-result').style.display = 'none';
+}
+
+function startRecording() {
+  if(!recognition) {
+    alert('Tarayıcınız ses tanımayı desteklemiyor. Chrome kullanın.');
+    return;
+  }
+  
+  if(isRecording) {
+    recognition.stop();
+    isRecording = false;
+    document.getElementById('record-btn').classList.remove('recording');
+    document.getElementById('record-btn').textContent = '🎤 Kaydet';
+    document.getElementById('recording-indicator').style.display = 'none';
+  } else {
+    recognition.start();
+    isRecording = true;
+    document.getElementById('record-btn').classList.add('recording');
+    document.getElementById('record-btn').textContent = '⏹ Durdur';
+    document.getElementById('recording-indicator').style.display = 'block';
+  }
+}
+
+function analyzeSpeech(transcript) {
+  isRecording = false;
+  document.getElementById('record-btn').classList.remove('recording');
+  document.getElementById('record-btn').textContent = '🎤 Kaydet';
+  document.getElementById('recording-indicator').style.display = 'none';
+  
+  const targetText = texts[currentDifficulty][currentIndex];
+  const similarity = calculateSimilarity(transcript, targetText);
+  
+  // Simüle edilmiş metrikler (gerçek AI ile değiştirilebilir)
+  const speed = Math.floor(Math.random() * 20) + 70;
+  const clarity = Math.floor(similarity * 100);
+  const tone = Math.floor(Math.random() * 15) + 75;
+  const total = Math.floor((speed + clarity + tone) / 3);
+  
+  document.getElementById('analysis-result').style.display = 'block';
+  document.getElementById('speed-bar').style.width = speed + '%';
+  document.getElementById('clarity-bar').style.width = clarity + '%';
+  document.getElementById('tone-bar').style.width = tone + '%';
+  document.getElementById('total-score').textContent = total + '/100';
+  
+  // İlerlemeyi kaydet
+  saveVoiceProgress(total);
+}
+
+function calculateSimilarity(str1, str2) {
+  // Basit benzerlik hesaplama
+  const s1 = str1.toLowerCase().replace(/[.,!?]/g, '');
+  const s2 = str2.toLowerCase().replace(/[.,!?]/g, '');
+  const words1 = s1.split(' ');
+  const words2 = s2.split(' ');
+  const matches = words1.filter(w => words2.includes(w)).length;
+  return Math.max(matches / Math.max(words1.length, words2.length), 0.5);
+}
+
+function saveVoiceProgress(score) {
+  let progress = JSON.parse(localStorage.getItem('voiceforge_scores') || '[]');
+  progress.push({date: new Date().toISOString(), score: score});
+  localStorage.setItem('voiceforge_scores', JSON.stringify(progress.slice(-10)));
+}
+
+// Nefes Egzersizi
+let breathInterval;
+function startBreathing() {
+  const circle = document.getElementById('breath-circle');
+  const text = document.getElementById('breath-text');
+  
+  let phase = 0; // 0: inhale, 1: hold, 2: exhale
+  
+  function cycle() {
+    if(phase === 0) {
+      circle.classList.add('inhale');
+      circle.classList.remove('exhale');
+      text.textContent = 'Nefes Al (4sn)';
+      setTimeout(() => { phase = 1; cycle(); }, 4000);
+    } else if(phase === 1) {
+      text.textContent = 'Tut (4sn)';
+      setTimeout(() => { phase = 2; cycle(); }, 4000);
+    } else {
+      circle.classList.remove('inhale');
+      circle.classList.add('exhale');
+      text.textContent = 'Nefes Ver (4sn)';
+      setTimeout(() => { phase = 0; cycle(); }, 4000);
+    }
+  }
+  
+  cycle();
+}
+</script>
+<!-- LogicForge Modal -->
+<div id="logicforge-modal" class="modal">
+  <div class="modal-content sudoku-container">
+    <div class="sudoku-header">
+      <h2>🧩 LogicForge</h2>
+      <button onclick="closeLogicForge()" class="close-btn">✕</button>
+    </div>
+
+    <div class="game-controls">
+      <button onclick="newGame('easy')" class="control-btn">Kolay</button>
+      <button onclick="newGame('medium')" class="control-btn active">Orta</button>
+      <button onclick="newGame('hard')" class="control-btn">Zor</button>
+      <button onclick="checkSolution()" class="control-btn check">Kontrol</button>
+    </div>
+
+    <div class="sudoku-grid" id="sudoku-grid">
+      <!-- 9x9 grid generated by JS -->
+    </div>
+
+    <div class="number-pad">
+      <button onclick="selectNumber(1)" class="num-btn">1</button>
+      <button onclick="selectNumber(2)" class="num-btn">2</button>
+      <button onclick="selectNumber(3)" class="num-btn">3</button>
+      <button onclick="selectNumber(4)" class="num-btn">4</button>
+      <button onclick="selectNumber(5)" class="num-btn">5</button>
+      <button onclick="selectNumber(6)" class="num-btn">6</button>
+      <button onclick="selectNumber(7)" class="num-btn">7</button>
+      <button onclick="selectNumber(8)" class="num-btn">8</button>
+      <button onclick="selectNumber(9)" class="num-btn">9</button>
+      <button onclick="selectNumber(0)" class="num-btn erase">Sil</button>
+    </div>
+
+    <div class="sudoku-stats">
+      <span>Zorluk: <span id="current-diff">Orta</span></span>
+      <span>Hata: <span id="error-count">0</span>/3</span>
+      <span>Süre: <span id="sudoku-timer">00:00</span></span>
+    </div>
+  </div>
+</div>
+
+<style>
+.sudoku-container {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  max-width: 500px;
+}
+
+.game-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.control-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.control-btn.active {
+  background: #00d9ff;
+  color: #1a1a2e;
+}
+
+.control-btn.check {
+  background: #00ff88;
+  color: #1a1a2e;
+  margin-left: auto;
+}
+
+.sudoku-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 1px;
+  background: #0f3460;
+  padding: 2px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.sudoku-cell {
+  aspect-ratio: 1;
+  background: rgba(255,255,255,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sudoku-cell:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.sudoku-cell.fixed {
+  background: rgba(0,217,255,0.2);
+  color: #00d9ff;
+  cursor: default;
+}
+
+.sudoku-cell.selected {
+  background: #e94560;
+}
+
+.sudoku-cell.highlight {
+  background: rgba(233,69,96,0.3);
+}
+
+.sudoku-cell.error {
+  background: rgba(255,0,0,0.3);
+  color: #ff6b6b;
+}
+
+/* 3x3 blokları ayır */
+.sudoku-cell:nth-child(3n) {
+  border-right: 2px solid #0f3460;
+}
+.sudoku-cell:nth-child(9n) {
+  border-right: none;
+}
+.sudoku-cell:nth-child(n+19):nth-child(-n+27),
+.sudoku-cell:nth-child(n+46):nth-child(-n+54) {
+  border-bottom: 2px solid #0f3460;
+}
+
+.number-pad {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.num-btn {
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.num-btn:hover {
+  background: #00d9ff;
+  color: #1a1a2e;
+}
+
+.num-btn.erase {
+  background: #e94560;
+  grid-column: span 2;
+}
+
+.sudoku-stats {
+  display: flex;
+  justify-content: space-between;
+  color: #888;
+  font-size: 14px;
+}
+</style>
+
+<script>
+let sudokuGrid = [];
+let solution = [];
+let selectedCell = null;
+let selectedNumber = 1;
+let errors = 0;
+let timerInterval;
+let seconds = 0;
+
+function openLogicForge() {
+  document.getElementById('logicforge-modal').classList.add('active');
+  newGame('medium');
+}
+
+function closeLogicForge() {
+  document.getElementById('logicforge-modal').classList.remove('active');
+  clearInterval(timerInterval);
+}
+
+function generateSudoku(difficulty) {
+  // Basit sudoku oluşturucu (gerçek uygulamada daha karmaşık algoritma gerekir)
+  const base = [
+    [5,3,4,6,7,8,9,1,2],
+    [6,7,2,1,9,5,3,4,8],
+    [1,9,8,3,4,2,5,6,7],
+    [8,5,9,7,6,1,4,2,3],
+    [4,2,6,8,5,3,7,9,1],
+    [7,1,3,9,2,4,8,5,6],
+    [9,6,1,5,3,7,2,8,4],
+    [2,8,7,4,1,9,6,3,5],
+    [3,4,5,2,8,6,1,7,9]
+  ];
+  
+  solution = JSON.parse(JSON.stringify(base));
+  
+  // Karıştır
+  for(let i=0; i<10; i++) {
+    const row1 = Math.floor(Math.random() * 9);
+    const row2 = Math.floor(Math.random() * 9);
+    [base[row1], base[row2]] = [base[row2], base[row1]];
+  }
+  
+  // Zorluğa göre hücreleri boşalt
+  const cellsToRemove = difficulty === 'easy' ? 30 : difficulty === 'medium' ? 45 : 55;
+  sudokuGrid = JSON.parse(JSON.stringify(base));
+  
+  let removed = 0;
+  while(removed < cellsToRemove) {
+    const row = Math.floor(Math.random() * 9);
+    const col = Math.floor(Math.random() * 9);
+    if(sudokuGrid[row][col] !== 0) {
+      sudokuGrid[row][col] = 0;
+      removed++;
+    }
+  }
+}
+
+function renderGrid() {
+  const container = document.getElementById('sudoku-grid');
+  container.innerHTML = '';
+  
+  for(let row=0; row<9; row++) {
+    for(let col=0; col<9; col++) {
+      const cell = document.createElement('div');
+      cell.className = 'sudoku-cell';
+      cell.dataset.row = row;
+      cell.dataset.col = col;
+      
+      if(sudokuGrid[row][col] !== 0) {
+        cell.textContent = sudokuGrid[row][col];
+        cell.classList.add('fixed');
+      }
+      
+      cell.onclick = () => selectCell(row, col);
+      container.appendChild(cell);
+    }
+  }
+}
+
+function selectCell(row, col) {
+  if(sudokuGrid[row][col] !== 0) return; // Sabit hücreye dokunma
+  
+  document.querySelectorAll('.sudoku-cell').forEach(c => c.classList.remove('selected'));
+  selectedCell = {row, col};
+  
+  const cells = document.querySelectorAll('.sudoku-cell');
+  const index = row * 9 + col;
+  cells[index].classList.add('selected');
+}
+
+function selectNumber(num) {
+  selectedNumber = num;
+  
+  if(!selectedCell) return;
+  
+  const {row, col} = selectedCell;
+  const cells = document.querySelectorAll('.sudoku-cell');
+  const index = row * 9 + col;
+  const cell = cells[index];
+  
+  if(num === 0) {
+    cell.textContent = '';
+    cell.classList.remove('error');
+  } else {
+    cell.textContent = num;
+    
+    // Kontrol et
+    if(solution[row][col] !== num) {
+      cell.classList.add('error');
+      errors++;
+      document.getElementById('error-count').textContent = errors;
+      
+      if(errors >= 3) {
+        alert('3 hata yaptınız! Oyun bitti.');
+        newGame(document.getElementById('current-diff').textContent.toLowerCase());
+      }
+    } else {
+      cell.classList.remove('error');
+      checkWin();
+    }
+  }
+}
+
+function checkWin() {
+  const cells = document.querySelectorAll('.sudoku-cell');
+  let filled = 0;
+  cells.forEach(cell => {
+    if(cell.textContent && !cell.classList.contains('error')) filled++;
+  });
+  
+  if(filled === 81) {
+    clearInterval(timerInterval);
+    const time = document.getElementById('sudoku-timer').textContent;
+    alert(`🎉 Tebrikler! Süre: ${time}`);
+    saveSudokuProgress();
+  }
+}
+
+function newGame(difficulty) {
+  clearInterval(timerInterval);
+  seconds = 0;
+  errors = 0;
+  document.getElementById('error-count').textContent = '0';
+  document.getElementById('current-diff').textContent = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
+  
+  generateSudoku(difficulty);
+  renderGrid();
+  
+  // Timer başlat
+  timerInterval = setInterval(() => {
+    seconds++;
+    const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const secs = (seconds % 60).toString().padStart(2, '0');
+    document.getElementById('sudoku-timer').textContent = `${mins}:${secs}`;
+  }, 1000);
+}
+
+function checkSolution() {
+  // Tüm hataları göster
+  const cells = document.querySelectorAll('.sudoku-cell');
+  let hasError = false;
+  
+  cells.forEach((cell, index) => {
+    const row = Math.floor(index / 9);
+    const col = index % 9;
+    const val = parseInt(cell.textContent) || 0;
+    
+    if(val !== 0 && val !== solution[row][col]) {
+      cell.classList.add('error');
+      hasError = true;
+    }
+  });
+  
+  if(!hasError) alert('Harika! Hata yok.');
+}
+
+function saveSudokuProgress() {
+  const difficulty = document.getElementById('current-diff').textContent.toLowerCase();
+  const key = `logicforge_${difficulty}_wins`;
+  const wins = parseInt(localStorage.getItem(key) || '0') + 1;
+  localStorage.setItem(key, wins);
+}
+</script>
+
