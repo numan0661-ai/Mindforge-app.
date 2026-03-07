@@ -12,123 +12,149 @@
         }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 90px; overflow-x: hidden; }
         .app-container { max-width: 430px; margin: 0 auto; padding: 15px; }
-        
         .screen { display: none; min-height: 100vh; }
         .screen.active { display: block; animation: fadeIn 0.2s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
         .card { background: var(--surface); border-radius: 18px; padding: 18px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
-        
-        /* Modül Kartları */
         .module-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .module-card { padding: 20px; text-align: center; border-radius: 20px; background: var(--surface); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
-        .module-icon { font-size: 28px; margin-bottom: 10px; display: block; }
-        
-        /* Input ve Butonlar */
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #2d2d44; background: #0b0b1a; color: white; box-sizing: border-box; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #2d2d44; background: #0b0b1a; color: white; box-sizing: border-box; font-size: 14px; }
         .btn { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .btn:active { transform: scale(0.98); }
-
-        /* Navigasyon */
         .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(22, 22, 45, 0.95); display: flex; justify-content: space-around; padding: 15px 0 25px; backdrop-filter: blur(10px); border-top: 1px solid #2d2d44; z-index: 1000; }
         .nav-item { font-size: 22px; cursor: pointer; opacity: 0.4; transition: 0.3s; }
         .nav-item.active { opacity: 1; color: var(--accent); }
-
-        /* Egzersiz Listesi */
         .ex-item { display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #333; padding: 15px 0; }
         .ex-img { width: 70px; height: 70px; border-radius: 12px; border: 2px solid var(--primary); object-fit: cover; }
+        label { font-size: 12px; color: var(--text-muted); display: block; margin-top: 5px; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    
     <div class="screen active" id="homeScreen">
         <h2 style="border-left: 4px solid var(--primary); padding-left: 10px;">Gelişim Paneli</h2>
         <div class="module-list">
-            <div class="module-card" onclick="showScreen('exerciseScreen')">
-                <span class="module-icon">🏋️‍♂️</span>
-                <small>Egzersiz</small>
+            <div class="module-card" onclick="showScreen('exerciseScreen')"><span>🏋️‍♂️</span><br><small>Egzersiz</small></div>
+            <div class="module-card" onclick="showScreen('dictionScreen')"><span>🗣️</span><br><small>Diksiyon</small></div>
+            <div class="module-card" onclick="showScreen('logicScreen')"><span>⚡</span><br><small>Hızlı Düşünme</small></div>
+            <div class="module-card" onclick="showScreen('confidenceScreen')"><span>💎</span><br><small>Özgüven</small></div>
+            <div class="module-card" onclick="showScreen('mentalScreen')" style="grid-column: span 2;"><span>🧘‍♂️</span><br><small>Mental Sağlık</small></div>
+        </div>
+    </div>
+
+    <div class="screen" id="businessScreen">
+        <h2>BusinessForge</h2>
+        <div class="card">
+            <label>Ölçüler (cm)</label>
+            <div style="display: flex; gap: 8px;">
+                <input type="number" id="w" placeholder="En">
+                <input type="number" id="h" placeholder="Boy">
             </div>
-            <div class="module-card" onclick="showScreen('dictionScreen')">
-                <span class="module-icon">🗣️</span>
-                <small>Diksiyon</small>
-            </div>
-            <div class="module-card" onclick="showScreen('logicScreen')">
-                <span class="module-icon">⚡</span>
-                <small>Hızlı Düşünme</small>
-            </div>
-            <div class="module-card" onclick="showScreen('confidenceScreen')">
-                <span class="module-icon">💎</span>
-                <small>Özgüven</small>
-            </div>
-            <div class="module-card" onclick="showScreen('mentalScreen')" style="grid-column: span 2;">
-                <span class="module-icon">🧘‍♂️</span>
-                <small>Mental Sağlık</small>
+            <label>Malzeme & Fire</label>
+            <select id="mType" onchange="syncPrice()"></select>
+            <input type="number" id="uPrice" placeholder="m² Birim Fiyatı">
+            <input type="number" id="waste" placeholder="Fire (%)">
+            <label>Kâr Marjı</label>
+            <select id="margin">
+                <option value="1.5">%50 Kâr</option>
+                <option value="2" selected>%100 Kâr</option>
+                <option value="2.5">%150 Kâr</option>
+                <option value="3">%200 Kâr</option>
+            </select>
+            <button class="btn" onclick="calculate()">HASSAS HESAPLA</button>
+            <div style="text-align:center; margin-top:15px; border-top:1px solid #333; padding-top:10px;">
+                <div id="areaRes" style="font-size:12px; color:var(--text-muted)">Alan: 0 m²</div>
+                <div id="res" style="font-size:28px; color:var(--success); font-weight:bold;">0.00 ₺</div>
             </div>
         </div>
     </div>
 
     <div class="screen" id="exerciseScreen">
         <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer;">← Geri</button>
-        <h2>Vücut Ağırlığı Antrenmanı</h2>
+        <h2>Egzersiz Modülü</h2>
         <div class="card" id="levelSelector">
-            <p style="font-size:14px; color:var(--text-muted);">Seviyeni seç ve forma gir:</p>
-            <button class="btn" style="margin-bottom:10px; background:var(--surface); border:1px solid var(--primary);" onclick="startWorkout('beginner')">Başlangıç</button>
-            <button class="btn" style="margin-bottom:10px; background:var(--surface); border:1px solid var(--accent);" onclick="startWorkout('intermediate')">Orta Seviye</button>
-            <button class="btn" style="background:var(--surface); border:1px solid var(--purple);" onclick="startWorkout('advanced')">İleri Seviye</button>
+            <button class="btn" style="margin-bottom:10px;" onclick="startWorkout('beginner')">Başlangıç</button>
+            <button class="btn" style="margin-bottom:10px;" onclick="startWorkout('intermediate')">Orta Seviye</button>
+            <button class="btn" onclick="startWorkout('advanced')">İleri Seviye</button>
         </div>
         <div id="workoutDisplay" style="display:none;">
             <div class="card" id="exerciseList"></div>
-            <button class="btn" onclick="closeWorkout()">Antrenmanı Bitir</button>
+            <button class="btn" onclick="closeWorkout()">Bitir</button>
         </div>
     </div>
 
     <div class="screen" id="dictionScreen">
         <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer;">← Geri</button>
         <h2>Diksiyon Pratikleri</h2>
-        <div class="card"><p>İçerik yükleniyor...</p></div>
+        <div class="card">
+            <h4 style="color:var(--gold);">👅 Tekerleme</h4>
+            <div id="tekerlemeBox" style="font-style:italic; margin-bottom:10px;">"Şu köşe yaz köşesi..."</div>
+            <button class="btn" onclick="nextTekerleme()">Yeni Getir</button>
+        </div>
+        <div class="card">
+            <h4 style="color:var(--success);">🫁 Nefes Egzersizi</h4>
+            <div id="breathTimer" style="text-align:center; font-size:24px;">30</div>
+            <button class="btn" onclick="startBreathing()">Başlat</button>
+        </div>
     </div>
 
     <div class="screen" id="logicScreen">
         <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer;">← Geri</button>
-        <h2>Hızlı Düşünme Testleri</h2>
-        <div class="card"><p>İçerik yükleniyor...</p></div>
+        <h2>Hızlı Düşünme</h2>
+        <div class="card">
+            <div id="logicTask" style="font-size:20px; text-align:center; margin-bottom:15px;">Hazır mısın?</div>
+            <div id="logicOptions" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;"></div>
+            <button id="logicStartBtn" class="btn" onclick="startLogicRound()">Oyunu Başlat</button>
+        </div>
     </div>
 
     <div class="screen" id="confidenceScreen">
         <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer;">← Geri</button>
-        <h2>Özgüven Kazanımı</h2>
-        <div class="card"><p>İçerik yükleniyor...</p></div>
+        <h2>Özgüven</h2>
+        <div class="card">
+            <h4 color="var(--accent)">🧍‍♂️ Güç Duruşu</h4>
+            <div id="confTimer" style="text-align:center; font-size:24px;">02:00</div>
+            <button class="btn" onclick="startConfidenceTimer(120)">Başlat</button>
+        </div>
+        <div class="card">
+            <h4>💰 Fiyat Söyleme Mantrası</h4>
+            <div id="mantraBox" style="text-align:center; font-style:italic;">"Bu işin bedeli 1.500 ₺'dir."</div>
+            <button class="btn" onclick="nextMantra()">Yeni Senaryo</button>
+        </div>
     </div>
 
     <div class="screen" id="mentalScreen">
         <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer;">← Geri</button>
-        <h2>Mental Sağlık & Meditasyon</h2>
-        <div class="card"><p>İçerik yükleniyor...</p></div>
+        <h2>Mental Sağlık</h2>
+        <div class="card">
+            <h4 style="color:var(--accent)">🌬️ Kutu Nefesi</h4>
+            <div id="boxBreathIndicator" style="width:60px; height:60px; border:2px solid var(--accent); margin:10px auto; display:flex; align-items:center; justify-content:center;">DUR</div>
+            <button class="btn" onclick="startBoxBreathing()">Başlat</button>
+        </div>
     </div>
 
-    <div class="screen" id="businessScreen">
-        <h2>BusinessForge</h2>
+    <div class="screen" id="settingsScreen">
+        <h2>Ayarlar</h2>
         <div class="card">
-            <div style="display: flex; gap: 8px;">
-                <input type="number" id="w" placeholder="En (cm)">
-                <input type="number" id="h" placeholder="Boy (cm)">
-            </div>
-            <select id="mType"><option value="450">Şeffaf Pleksi</option><option value="600">Renkli Pleksi</option></select>
-            <button class="btn" onclick="calculate()">Hesapla</button>
-            <div id="res" style="text-align:center; margin-top:15px; font-size:24px; color:var(--success); font-weight:bold;">0 ₺</div>
+            <label>Şeffaf Pleksi</label><input type="number" id="set_trans" oninput="saveConfig()">
+            <label>Renkli Pleksi</label><input type="number" id="set_color" oninput="saveConfig()">
+            <label>Ahşap/MDF</label><input type="number" id="set_wood" oninput="saveConfig()">
+            <label>Sabit Gider (₺)</label><input type="number" id="set_fixed" oninput="saveConfig()">
+            <label>Varsayılan Fire (%)</label><input type="number" id="set_waste" oninput="saveConfig()">
         </div>
+        <button class="btn" style="background:var(--danger)" onclick="resetSystem()">Sıfırla</button>
     </div>
 
     <div class="nav-bar">
         <div class="nav-item active" onclick="showScreen('homeScreen', this)">🏠</div>
         <div class="nav-item" onclick="showScreen('businessScreen', this)">📊</div>
+        <div class="nav-item" onclick="showScreen('settingsScreen', this)">⚙️</div>
     </div>
 </div>
 
 <script>
-    // --- TEMEL SİSTEM ---
+    let config = { trans: 450, color: 600, wood: 250, fixed: 50, waste: 10 };
+
     function showScreen(id, el) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
@@ -138,340 +164,112 @@
         }
     }
 
-    // --- EGZERSİZ VERİLERİ VE MOTORU ---
-    const workoutData = {
-        beginner: [
-            { name: "Şınav", reps: "3x10", gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueXo1bmZ4NjZidHh6YTN4bmZ4NjZidHh6YTN4bmZ4NjZidHh6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/26ueYUlPAmUkTBAM8/giphy.gif" },
-            { name: "Squat", reps: "3x15", gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueXo1bmZ4NjZidHh6YTN4bmZ4NjZidHh6YTN4bmZ4NjZidHh6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/l3q2XhfQ8oCkm1Ts4/giphy.gif" }
-        ],
-        intermediate: [
-            { name: "Diamond Push-up", reps: "4x12", gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueXo1bmZ4NjZidHh6YTN4bmZ4NjZidHh6YTN4bmZ4NjZidHh6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/l0HlU9D26bM9r3A8I/giphy.gif" },
-            { name: "Leg Raise", reps: "4x15", gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueXo1bmZ4NjZidHh6YTN4bmZ4NjZidHh6YTN4bmZ4NjZidHh6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/3o7TKLJ3KL3lG3L9Gg/giphy.gif" }
-        ],
-        advanced: [
-            { name: "Pistol Squat", reps: "3x5", gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueXo1bmZ4NjZidHh6YTN4bmZ4NjZidHh6YTN4bmZ4NjZidHh6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/l3q2XhfQ8oCkm1Ts4/giphy.gif" },
-            { name: "Burpee", reps: "4x12", gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueXo1bmZ4NjZidHh6YTN4bmZ4NjZidHh6YTN4bmZ4NjZidHh6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/26ueYQJpYmUlTBAM8/giphy.gif" }
-        ]
-    };
-
-    function startWorkout(level) {
-        const list = document.getElementById('exerciseList');
-        document.getElementById('levelSelector').style.display = 'none';
-        document.getElementById('workoutDisplay').style.display = 'block';
-        
-        list.innerHTML = `<h3>${level.toUpperCase()} PROGRAMI</h3>`;
-        workoutData[level].forEach(ex => {
-            list.innerHTML += `
-                <div class="ex-item">
-                    <img src="${ex.gif}" class="ex-img" onerror="this.src='https://via.placeholder.com/70?text=Fit'">
-                    <div>
-                        <strong>${ex.name}</strong><br>
-                        <small style="color:var(--success)">${ex.reps}</small>
-                    </div>
-                </div>`;
-        });
+    // BUSINESS & SETTINGS
+    function saveConfig() {
+        config = {
+            trans: document.getElementById('set_trans').value || 450,
+            color: document.getElementById('set_color').value || 600,
+            wood: document.getElementById('set_wood').value || 250,
+            fixed: document.getElementById('set_fixed').value || 50,
+            waste: document.getElementById('set_waste').value || 10
+        };
+        localStorage.setItem('mf_master_config', JSON.stringify(config));
+        updateUI();
     }
-
-    function closeWorkout() {
-        document.getElementById('workoutDisplay').style.display = 'none';
-        document.getElementById('levelSelector').style.display = 'block';
+    function loadConfig() {
+        const saved = localStorage.getItem('mf_master_config');
+        if(saved) config = JSON.parse(saved);
+        document.getElementById('set_trans').value = config.trans;
+        document.getElementById('set_color').value = config.color;
+        document.getElementById('set_wood').value = config.wood;
+        document.getElementById('set_fixed').value = config.fixed;
+        document.getElementById('set_waste').value = config.waste;
+        updateUI();
     }
-
-    // --- BUSINESS MOTORU ---
+    function updateUI() {
+        const sel = document.getElementById('mType');
+        sel.innerHTML = `<option value="${config.trans}">Şeffaf (${config.trans}₺)</option><option value="${config.color}">Renkli (${config.color}₺)</option><option value="${config.wood}">Ahşap (${config.wood}₺)</option>`;
+        document.getElementById('uPrice').value = sel.value;
+        document.getElementById('waste').value = config.waste;
+    }
+    function syncPrice() { document.getElementById('uPrice').value = document.getElementById('mType').value; }
     function calculate() {
         const w = parseFloat(document.getElementById('w').value) || 0;
         const h = parseFloat(document.getElementById('h').value) || 0;
-        const u = parseFloat(document.getElementById('mType').value);
-        const res = Math.round(((w * h) / 10000) * u * 2); // Örnek %100 karli hesap
-        document.getElementById('res').innerText = res + " ₺";
-    }
-</script>
-
-</body>
-</html>
-<div class="screen" id="dictionScreen">
-    <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer;">← Geri</button>
-    <h2>Diksiyon ve Hitabet</h2>
-    
-    <div class="card">
-        <h4 style="margin-top:0; color:var(--success);">🫁 Diyafram Nefesi</h4>
-        <p style="font-size:12px; color:var(--text-muted);">Sesinin titrememesi ve gür çıkması için: Burnundan 4 saniye nefes al, 8 saniye boyunca "S" sesiyle ver.</p>
-        <button class="btn" style="padding:8px; font-size:12px;" onclick="startBreathing()">Egzersizi Başlat (30sn)</button>
-        <div id="breathTimer" style="text-align:center; font-weight:bold; margin-top:5px; color:var(--accent);"></div>
-    </div>
-
-    <div class="card">
-        <h4 style="margin-top:0; color:var(--gold);">👅 Dil Çevikliği (Tekerlemeler)</h4>
-        <div id="tekerlemeBox" style="min-height:60px; font-style:italic; font-size:14px; margin-bottom:10px;">
-            "Şu köşe yaz köşesi, şu köşe kış köşesi, ortada su şişesi."
-        </div>
-        <button class="btn" style="background:var(--surface); border:1px solid var(--gold); color:var(--gold);" onclick="nextTekerleme()">Yeni Tekerleme Getir</button>
-    </div>
-
-    <div class="card">
-        <h4 style="margin-top:0; color:var(--primary);">🤝 Müşteriyle Konuşma Altın Kuralları</h4>
-        <ul style="font-size:12px; padding-left:15px; line-height:1.6; color:var(--text-muted);">
-            <li><b>Gülümseyerek Konuş:</b> Ses tonuna yansır ve güven verir.</li>
-            <li><b>Vurgulara Dikkat Et:</b> Fiyat söylerken net ve kendinden emin ol.</li>
-            <li><b>Asalak Kelimeleri At:</b> "Şey", "yani", "ee" gibi kelimeleri kullanmamaya çalış.</li>
-        </ul>
-    </div>
-</div>
-
-<script>
-    // --- DİKSİYON VERİLERİ ---
-    const tekerlemeler = [
-        "Bir berber bir berbere, bre berber gel beraber bir berber dükkanı açalım demiş.",
-        "Şu yoğurdu sarımsaklasak da mı saklasak, sarımsaklamasak da mı saklasak?",
-        "Kartal kalkar dal sarkar, dal sarkar kartal kalkar.",
-        "Al bu takatukaları takatukacıya takatukalatmaya götür.",
-        "Pireli peyniri perhizli pireler tepelerse pireli peynirler de pır pır ederler."
-    ];
-
-    function nextTekerleme() {
-        const box = document.getElementById('tekerlemeBox');
-        const rand = Math.floor(Math.random() * tekerlemeler.length);
-        box.innerText = `"${tekerlemeler[rand]}"`;
+        const area = (w * h) / 10000;
+        const final = ((area * parseFloat(document.getElementById('uPrice').value) * (1 + document.getElementById('waste').value/100)) + parseFloat(config.fixed)) * document.getElementById('margin').value;
+        document.getElementById('areaRes').innerText = `Alan: ${area.toFixed(4)} m²`;
+        document.getElementById('res').innerText = final.toFixed(2) + " ₺";
     }
 
+    // EGZERSİZ
+    const workoutData = {
+        beginner: [{ name: "Şınav", reps: "3x10", gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueXo1bmZ4NjZidHh6YTN4bmZ4NjZidHh6YTN4bmZ4NjZidHh6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/26ueYUlPAmUkTBAM8/giphy.gif" }],
+        intermediate: [{ name: "Diamond Push-up", reps: "4x12", gif: "https://media.giphy.com/media/l0HlU9D26bM9r3A8I/giphy.gif" }],
+        advanced: [{ name: "Burpee", reps: "4x12", gif: "https://media.giphy.com/media/26ueYQJpYmUlTBAM8/giphy.gif" }]
+    };
+    function startWorkout(l) {
+        document.getElementById('levelSelector').style.display = 'none';
+        document.getElementById('workoutDisplay').style.display = 'block';
+        const list = document.getElementById('exerciseList');
+        list.innerHTML = "";
+        workoutData[l].forEach(ex => {
+            list.innerHTML += `<div class="ex-item"><img src="${ex.gif}" class="ex-img"><div><strong>${ex.name}</strong><br><small>${ex.reps}</small></div></div>`;
+        });
+    }
+    function closeWorkout() { document.getElementById('workoutDisplay').style.display='none'; document.getElementById('levelSelector').style.display='block'; }
+
+    // DİKSİYON
+    const tekerlemeler = ["Bir berber bir berbere...", "Şu köşe yaz köşesi...", "Kartal kalkar dal sarkar..."];
+    function nextTekerleme() { document.getElementById('tekerlemeBox').innerText = tekerlemeler[Math.floor(Math.random()*tekerlemeler.length)]; }
     function startBreathing() {
-        let timer = 30;
-        const btn = event.target;
-        const display = document.getElementById('breathTimer');
-        btn.disabled = true;
-        
-        const interval = setInterval(() => {
-            display.innerText = `Kalan: ${timer} saniye`;
-            timer--;
-            if(timer < 0) {
-                clearInterval(interval);
-                display.innerText = "Egzersiz Tamamlandı!";
-                btn.disabled = false;
-            }
+        let t = 30;
+        const itv = setInterval(() => {
+            t--; document.getElementById('breathTimer').innerText = t;
+            if(t<=0) clearInterval(itv);
         }, 1000);
     }
-</script>
-<div class="screen" id="logicScreen">
-    <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer;">← Geri</button>
-    <h2>Hızlı Düşünme (Zihin Çevikliği)</h2>
-    
-    <div class="card" id="logicGameBox">
-        <h4 style="margin-top:0; color:var(--purple);">🔢 Hızlı Maliyet Tahmini</h4>
-        <p style="font-size:12px; color:var(--text-muted);">Ekrana gelen ölçülerin m² alanını 5 saniye içinde tahmin etmeye çalış!</p>
-        <div id="logicTask" style="font-size:24px; font-weight:bold; text-align:center; margin:20px 0; color:var(--accent);">
-            Hazır mısın?
-        </div>
-        <div id="logicOptions" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-            </div>
-        <button id="logicStartBtn" class="btn" style="margin-top:15px;" onclick="startLogicRound()">Testi Başlat</button>
-    </div>
 
-    <div class="card">
-        <h4 style="margin-top:0; color:var(--success);">🚦 3 Saniye Kuralı</h4>
-        <p style="font-size:12px; color:var(--text-muted);">Bir karar vermen gerektiğinde "1, 2, 3" diyerek doğrudan aksiyona geçme pratiği yap. Bu modül, atölyedeki ertelemeyi bitirir.</p>
-        <button class="btn" style="background:var(--surface); border:1px solid var(--success); color:var(--success);" onclick="triggerThreeSecondRule()">Alıştırmayı Çalıştır</button>
-        <div id="threeSecondTimer" style="text-align:center; font-size:30px; font-weight:bold; margin-top:10px;"></div>
-    </div>
-
-    <div class="card" style="border: 1px dashed var(--accent);">
-        <small style="color:var(--accent);">💡 İpucu:</small>
-        <p style="font-size:11px; margin-top:5px;">Hızlı düşünmek, acele etmek değildir. Hızlı düşünmek, gereksiz bilgileri saniyeler içinde eleyip öze odaklanmaktır.</p>
-    </div>
-</div>
-
-<script>
-    // --- HIZLI DÜŞÜNME VERİLERİ VE OYUNU ---
-    let correctLogicAnswer = 0;
-
+    // HIZLI DÜŞÜNME
+    let correctAns = 0;
     function startLogicRound() {
-        const taskBox = document.getElementById('logicTask');
-        const optionsBox = document.getElementById('logicOptions');
-        const startBtn = document.getElementById('logicStartBtn');
-
-        startBtn.style.display = 'none';
-        optionsBox.innerHTML = '';
-
-        // Rastgele ölçüler (Örn: 20x30 cm)
-        const w = Math.floor(Math.random() * 40) + 10;
-        const h = Math.floor(Math.random() * 40) + 10;
-        const area = (w * h); // cm2 cinsinden
-        correctLogicAnswer = area;
-
-        taskBox.innerText = `${w} x ${h} cm = ? cm²`;
-
-        // Seçenekleri oluştur (Biri doğru, diğerleri yakın yanlışlar)
-        let choices = [area, area + 50, area - 30, area + 100];
-        choices = choices.sort(() => Math.random() - 0.5);
-
-        choices.forEach(choice => {
-            const btn = document.createElement('button');
-            btn.className = 'btn';
-            btn.style.background = 'var(--surface)';
-            btn.style.border = '1px solid #333';
-            btn.innerText = choice;
-            btn.onclick = () => checkLogicAnswer(choice);
-            optionsBox.appendChild(btn);
+        document.getElementById('logicStartBtn').style.display = 'none';
+        const w = Math.floor(Math.random()*30)+10, h = Math.floor(Math.random()*30)+10;
+        correctAns = w * h;
+        document.getElementById('logicTask').innerText = `${w} x ${h} = ?`;
+        const opts = [correctAns, correctAns+20, correctAns-15, correctAns+50].sort(()=>Math.random()-0.5);
+        const box = document.getElementById('logicOptions');
+        box.innerHTML = "";
+        opts.forEach(o => {
+            const b = document.createElement('button'); b.className = 'btn'; b.innerText = o;
+            b.onclick = () => { alert(o===correctAns ? "Doğru!" : "Yanlış!"); startLogicRound(); };
+            box.appendChild(b);
         });
     }
 
-    function checkLogicAnswer(val) {
-        const taskBox = document.getElementById('logicTask');
-        if(val === correctLogicAnswer) {
-            taskBox.innerText = "TEBRİKLER! 🎯";
-            taskBox.style.color = "var(--success)";
-        } else {
-            taskBox.innerText = `DOĞRUSU: ${correctLogicAnswer}`;
-            taskBox.style.color = "var(--danger)";
-        }
-        
-        setTimeout(() => {
-            taskBox.style.color = "var(--accent)";
-            startLogicRound();
-        }, 1500);
-    }
-
-    function triggerThreeSecondRule() {
-        let count = 3;
-        const display = document.getElementById('threeSecondTimer');
-        const interval = setInterval(() => {
-            display.innerText = count;
-            count--;
-            if(count < 0) {
-                clearInterval(interval);
-                display.innerText = "ŞİMDİ YAP! 🚀";
-                setTimeout(() => display.innerText = "", 2000);
-            }
+    // ÖZGÜVEN
+    const mantras = ["Bu işin bedeli 1.500 ₺'dir.", "Kalitemiz dökme pleksidir.", "Termin süremiz 3 gündür."];
+    function nextMantra() { document.getElementById('mantraBox').innerText = mantras[Math.floor(Math.random()*mantras.length)]; }
+    function startConfidenceTimer(s) {
+        let t = s;
+        const itv = setInterval(() => {
+            t--; 
+            let m = Math.floor(t/60), sec = t%60;
+            document.getElementById('confTimer').innerText = `${m}:${sec<10?'0':''}${sec}`;
+            if(t<=0) clearInterval(itv);
         }, 1000);
     }
-</script>
-<div class="screen" id="confidenceScreen">
-    <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer;">← Geri</button>
-    <h2>Özgüven ve Karizma</h2>
-    
-    <div class="card">
-        <h4 style="margin-top:0; color:var(--accent);">🧍‍♂️ Güç Duruşu (2 Dakika)</h4>
-        <p style="font-size:12px; color:var(--text-muted);">Önemli bir görüşme veya fiyat teklifi öncesi: Elleri beline koy, omuzları dikleştir ve 2 dakika böyle dur. Testosteron artar, kortizol düşer.</p>
-        <button class="btn" onclick="startConfidenceTimer(120)">Duruş Zamanlayıcısını Başlat</button>
-        <div id="confTimer" style="text-align:center; font-size:20px; font-weight:bold; margin-top:10px; color:var(--gold);"></div>
-    </div>
 
-    <div class="card">
-        <h4 style="margin-top:0; color:var(--success);">💰 Fiyat Dik duruşu</h4>
-        <p style="font-size:12px; color:var(--text-muted);">Müşteriye fiyat söylerken cümlenin sonuna "uygun mu?" veya "isterseniz indirim yaparım" ekleme. Sadece rakamı söyle ve bekle.</p>
-        <div id="mantraBox" style="background:#0b0b1a; padding:10px; border-radius:8px; font-style:italic; font-size:13px; text-align:center; margin-bottom:10px;">
-            "Bu ürünün bedeli 1.500 ₺'dir."
-        </div>
-        <button class="btn" style="background:var(--surface); border:1px solid var(--success); color:var(--success);" onclick="nextMantra()">Farklı Senaryo Deneyin</button>
-    </div>
-
-    <div class="card">
-        <h4 style="margin-top:0; color:var(--purple);">🧠 Başarı Çapası</h4>
-        <p style="font-size:12px; color:var(--text-muted);">En gurur duyduğun işi (en iyi kestiğin pleksi veya en büyük siparişin) hatırla. O andaki hissini şu anki işine aktar.</p>
-        <ul style="font-size:11px; color:var(--text-muted); padding-left:15px;">
-            <li>Gözlerini kapat ve o anı gör.</li>
-            <li>Elinle bir işaret yap (yumruk sıkmak gibi).</li>
-            <li>Özgüvene ihtiyaç duyduğunda aynı işareti tekrarla.</li>
-        </ul>
-    </div>
-</div>
-
-<script>
-    // --- ÖZGÜVEN VERİLERİ ---
-    const mantras = [
-        "Bu tasarımın işçilik bedeli 2.500 ₺'dir.",
-        "Üretim takvimimiz dolu, size en erken haftaya teslim edebilirim.",
-        "Kullandığım malzeme birinci sınıf dökme pleksidir, kalitesi budur.",
-        "Ödeme peşin alındıktan sonra tasarıma başlıyoruz.",
-        "Bu modelin piyasa değeri budur, işçiliğimin arkasındayım."
-    ];
-
-    function nextMantra() {
-        const box = document.getElementById('mantraBox');
-        const rand = Math.floor(Math.random() * mantras.length);
-        box.innerText = `"${mantras[rand]}"`;
-    }
-
-    function startConfidenceTimer(seconds) {
-        let timer = seconds;
-        const display = document.getElementById('confTimer');
-        const interval = setInterval(() => {
-            let mins = Math.floor(timer / 60);
-            let secs = timer % 60;
-            display.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-            timer--;
-            if(timer < 0) {
-                clearInterval(interval);
-                display.innerText = "ŞİMDİ DAHA GÜÇLÜSÜN! 🦁";
-            }
-        }, 1000);
-    }
-</script>
-<div class="screen" id="mentalScreen">
-    <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer;">← Geri</button>
-    <h2>Zihinsel Berraklık ve Reset</h2>
-    
-    <div class="card">
-        <h4 style="margin-top:0; color:var(--accent);">🌬️ Kutu Nefesi (4-4-4-4)</h4>
-        <p style="font-size:12px; color:var(--text-muted);">Öfkelendiğinde veya strese girdiğinde: 4sn Al, 4sn Tut, 4sn Ver, 4sn Bekle.</p>
-        <div id="boxBreathIndicator" style="width:60px; height:60px; border:3px solid var(--accent); margin:15px auto; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:10px; transition: 4s linear;">DUR</div>
-        <button class="btn" onclick="startBoxBreathing()">Egzersizi Başlat</button>
-    </div>
-
-    <div class="card">
-        <h4 style="margin-top:0; color:var(--purple);">📵 Derin Odak (Pomodoro)</h4>
-        <p style="font-size:12px; color:var(--text-muted);">Lazer kesim veya tasarım yaparken telefon bildirimlerinden uzaklaş. 25 dakika sadece işe odaklan.</p>
-        <div id="focusTimer" style="text-align:center; font-size:32px; font-weight:bold; margin:10px 0; color:var(--purple);">25:00</div>
-        <button id="focusBtn" class="btn" style="background:var(--surface); border:1px solid var(--purple); color:var(--purple);" onclick="startFocusTimer()">Odaklanmayı Başlat</button>
-    </div>
-
-    <div class="card">
-        <h4 style="margin-top:0; color:var(--success);">🌙 Gün Sonu Muhasebesi</h4>
-        <p style="font-size:12px; color:var(--text-muted);">Atölyeden çıkmadan önce kendine şu 3 soruyu sor:</p>
-        <ul style="font-size:11px; color:var(--text-muted); padding-left:15px; line-height:1.6;">
-            <li>Bugün kontrolümde olan neleri iyi yaptım?</li>
-            <li>Kontrolümde olmayan hangi duruma gereksiz üzüldüm?</li>
-            <li>Yarın işleri %1 daha kolaylaştırmak için ne yapabilirim?</li>
-        </ul>
-    </div>
-</div>
-
-<script>
-    // --- MENTAL SAĞLIK FONKSİYONLARI ---
-    
-    // Kutu Nefesi Animasyon Mantığı
+    // MENTAL
     function startBoxBreathing() {
         const box = document.getElementById('boxBreathIndicator');
-        const phases = ["NEFES AL", "TUT", "NEFES VER", "BEKLE"];
+        const phases = ["AL", "TUT", "VER", "BEKLE"];
         let i = 0;
-        box.innerText = phases[i];
-        
-        setInterval(() => {
-            i = (i + 1) % 4;
-            box.innerText = phases[i];
-            box.style.transform = i % 2 === 0 ? "scale(1.2)" : "scale(1)";
-            box.style.borderColor = i > 1 ? "var(--purple)" : "var(--accent)";
-        }, 4000);
+        setInterval(() => { box.innerText = phases[i]; i=(i+1)%4; }, 4000);
     }
 
-    // Odak Zamanlayıcı (Pomodoro)
-    let focusInterval;
-    function startFocusTimer() {
-        let time = 25 * 60;
-        const display = document.getElementById('focusTimer');
-        const btn = document.getElementById('focusBtn');
-        btn.disabled = true;
-
-        focusInterval = setInterval(() => {
-            let mins = Math.floor(time / 60);
-            let secs = time % 60;
-            display.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-            time--;
-            
-            if(time < 0) {
-                clearInterval(focusInterval);
-                display.innerText = "MOLA VAKTİ! 🔥";
-                btn.disabled = false;
-            }
-        }, 1000);
-    }
+    function resetSystem() { localStorage.clear(); location.reload(); }
+    window.onload = loadConfig;
 </script>
+</body>
+</html>
