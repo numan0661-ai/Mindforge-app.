@@ -160,6 +160,10 @@
         .btn-secondary { background: var(--surface-light); border: 1px solid rgba(255,255,255,0.1); }
         .btn-success { background: linear-gradient(135deg, var(--success), #059669); }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-outline { 
+            background: transparent; border: 2px solid var(--uv); 
+            color: var(--uv); margin-top: 10px;
+        }
         
         /* Code/Command Blocks */
         .code-block {
@@ -252,6 +256,63 @@
         }
         .checklist li.checked::before { content: '✓'; color: var(--success); }
         .checklist li.checked { color: var(--text-muted); text-decoration: line-through; }
+        
+        /* Input Styles */
+        input, select {
+            width: 100%; padding: 14px; margin: 8px 0;
+            border-radius: 12px; border: 1px solid #2d2d44;
+            background: var(--bg); color: white; font-size: 15px;
+            box-sizing: border-box;
+        }
+        input:focus, select:focus {
+            outline: none; border-color: var(--uv);
+            box-shadow: 0 0 0 3px rgba(191, 0, 255, 0.1);
+        }
+        
+        /* Grid */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
+        /* Calendar */
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-top: 10px; }
+        .cal-day { 
+            aspect-ratio: 1; display: flex; align-items: center;
+            justify-content: center; font-size: 11px; border-radius: 8px;
+            background: rgba(255,255,255,0.05); cursor: pointer;
+        }
+        .cal-day.done { background: var(--success); color: white; font-weight: bold; }
+        .cal-day:hover { background: rgba(255,255,255,0.1); }
+        
+        /* Exercise Specific */
+        .exercise-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 15px; background: rgba(255,255,255,0.03);
+            border-radius: 12px; margin-bottom: 10px;
+        }
+        .exercise-name { font-weight: bold; }
+        .exercise-sets { color: var(--text-muted); font-size: 13px; }
+        .exercise-check {
+            width: 28px; height: 28px; border-radius: 50%;
+            border: 2px solid var(--success); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .exercise-check.completed { background: var(--success); }
+        
+        /* Price Settings */
+        .price-display {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+            border: 1px solid var(--success); border-radius: 12px;
+            padding: 20px; text-align: center; margin-top: 15px;
+        }
+        .price-amount { font-size: 36px; font-weight: bold; color: var(--success); }
+        .price-detail { font-size: 12px; color: var(--text-muted); margin-top: 5px; }
+        
+        .settings-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .settings-label { font-weight: bold; }
+        .settings-value { color: var(--text-muted); }
     </style>
 </head>
 <body>
@@ -259,7 +320,7 @@
 <div class="app-container">
     
     <!-- UV AKADEMİ ANA EKRAN -->
-    <div class="screen active" id="uvAcademyMain">
+    <div class="screen" id="uvAcademyMain">
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
             <button class="btn btn-secondary" style="flex:0; padding:12px 16px;" onclick="showScreen('homeScreen')">←</button>
             <h2 style="margin:0; color:var(--uv)">🧪 UV Akademi</h2>
@@ -279,17 +340,12 @@
             </div>
         </div>
         
-        <div id="modulesList">
-            <!-- Modüller JS ile oluşturulacak -->
-        </div>
+        <div id="modulesList"></div>
     </div>
 
     <!-- MODÜL DETAY EKRANI -->
     <div class="screen" id="moduleDetail">
-        <div class="lesson-container" id="lessonContent">
-            <!-- İçerik JS ile doldurulacak -->
-        </div>
-        
+        <div class="lesson-container" id="lessonContent"></div>
         <div class="nav-buttons" id="lessonNav">
             <button class="btn btn-secondary" onclick="prevLesson()">← Önceki</button>
             <button class="btn" id="nextBtn" onclick="nextLesson()">Sonraki →</button>
@@ -307,8 +363,8 @@
         </div>
     </div>
 
-    <!-- DİĞER EKRANLAR (Önceki özellikler korundu) -->
-    <div class="screen" id="homeScreen">
+    <!-- ANA EKRAN -->
+    <div class="screen active" id="homeScreen">
         <h2 style="color:var(--accent)">MindForge Master</h2>
         <div class="progress-header" style="border-color:var(--gold);">
             <div style="font-size:12px; color:var(--gold); margin-bottom:5px;">USTA YOLU</div>
@@ -338,40 +394,144 @@
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
             <div class="module-card" onclick="showScreen('businessScreen')" style="text-align:center;">
                 <div style="font-size:30px;">📊</div>
-                <div class="module-title" style="font-size:16px;">Maliyet</div>
+                <div class="module-title" style="font-size:16px;">Maliyet Hesaplama</div>
             </div>
             <div class="module-card" onclick="showScreen('exerciseScreen')" style="text-align:center;">
                 <div style="font-size:30px;">🏋️</div>
-                <div class="module-title" style="font-size:16px;">Egzersiz</div>
+                <div class="module-title" style="font-size:16px;">Antrenman</div>
             </div>
         </div>
     </div>
 
-    <!-- Diğer ekranlar önceki gibi... -->
+    <!-- MALİYET HESAPLAMA EKRANI -->
     <div class="screen" id="businessScreen">
-        <button class="btn btn-secondary" onclick="showScreen('homeScreen')">← Geri</button>
-        <h2>BusinessForge</h2>
+        <button class="btn btn-secondary" onclick="showScreen('homeScreen')" style="margin-bottom:20px;">← Ana Menü</button>
+        <h2 style="margin-bottom:20px;">📊 Maliyet Hesaplama</h2>
+        
         <div class="lesson-container">
-            <div class="grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <input type="number" id="w" placeholder="En (cm)">
-                <input type="number" id="h" placeholder="Boy (cm)">
+            <h3 style="margin-top:0; color:var(--accent);">Ölçüler</h3>
+            <div class="grid-2">
+                <div>
+                    <label style="font-size:12px; color:var(--text-muted);">En (cm)</label>
+                    <input type="number" id="w" placeholder="Örn: 50" oninput="calculate()">
+                </div>
+                <div>
+                    <label style="font-size:12px; color:var(--text-muted);">Boy (cm)</label>
+                    <input type="number" id="h" placeholder="Örn: 70" oninput="calculate()">
+                </div>
             </div>
-            <select id="mType" style="width:100%; padding:12px; margin:10px 0; border-radius:10px; background:var(--bg); color:white; border:1px solid #333;">
-                <option value="450">Şeffaf Malzeme (450₺/m²)</option>
-                <option value="600">Renkli Malzeme (600₺/m²)</option>
+            
+            <h3 style="color:var(--accent); margin-top:20px;">Malzeme ve Fiyat</h3>
+            <select id="mType" onchange="updatePriceFromSelection()">
+                <option value="">Malzeme Seçin...</option>
+                <option value="trans">Şeffaf Pleksi</option>
+                <option value="color">Opak/Renkli Malzeme</option>
+                <option value="custom">Özel Fiyat</option>
             </select>
-            <input type="number" id="uPrice" placeholder="Birim Fiyat" style="width:100%; padding:12px; margin-bottom:10px; border-radius:10px; background:var(--bg); color:white; border:1px solid #333;">
-            <button class="btn" onclick="calculate()">HESAPLA</button>
-            <h2 id="finalRes" style="text-align:center; color:var(--success); margin-top:20px; font-size:32px;">0₺</h2>
+            
+            <div id="customPriceArea" style="display:none;">
+                <label style="font-size:12px; color:var(--text-muted);">Özel Fiyat (₺/m²)</label>
+                <input type="number" id="customPrice" placeholder="Örn: 750" oninput="calculate()">
+            </div>
+            
+            <label style="font-size:12px; color:var(--text-muted);">Birim Fiyat (₺/m²)</label>
+            <input type="number" id="uPrice" placeholder="Fiyat seçin veya girin" oninput="calculate()">
+            
+            <label style="font-size:12px; color:var(--text-muted);">Sabit Maliyet (₺)</label>
+            <input type="number" id="fixedCost" value="50" oninput="calculate()">
+            
+            <div class="price-display">
+                <div class="price-amount" id="finalRes">0₺</div>
+                <div class="price-detail" id="calcDetail">0 m² × 0₺ + 50₺ sabit</div>
+            </div>
+            
+            <button class="btn" onclick="saveCalculation()" style="margin-top:15px;">💾 Hesaplamayı Kaydet</button>
+        </div>
+        
+        <div class="lesson-container" style="margin-top:15px;">
+            <h3 style="margin-top:0; color:var(--gold);">⚙️ Fiyat Ayarları</h3>
+            <div class="settings-row">
+                <span class="settings-label">Şeffaf m² Fiyatı</span>
+                <input type="number" id="set_trans" value="450" style="width:100px; text-align:right;" onchange="savePriceSettings()">
+            </div>
+            <div class="settings-row">
+                <span class="settings-label">Renkli m² Fiyatı</span>
+                <input type="number" id="set_color" value="600" style="width:100px; text-align:right;" onchange="savePriceSettings()">
+            </div>
+            <div class="settings-row">
+                <span class="settings-label">Sabit Maliyet</span>
+                <input type="number" id="set_fixed" value="50" style="width:100px; text-align:right;" onchange="savePriceSettings()">
+            </div>
+            <p style="font-size:12px; color:var(--text-muted); margin-top:10px;">
+                * Bu fiyatlar varsayılan olarak kullanılır
+            </p>
         </div>
     </div>
 
+    <!-- EGZERSİZ EKRANI -->
     <div class="screen" id="exerciseScreen">
-        <button class="btn btn-secondary" onclick="showScreen('homeScreen')">← Geri</button>
-        <h2>Antrenman</h2>
+        <button class="btn btn-secondary" onclick="showScreen('homeScreen')" style="margin-bottom:20px;">← Ana Menü</button>
+        <h2 style="margin-bottom:20px;">🏋️ Antrenman Programı</h2>
+        
         <div class="lesson-container">
-            <div id="exListBody" style="line-height:2;"></div>
-            <button class="btn" onclick="logWorkout()" style="margin-top:20px;">Tamamla ✅</button>
+            <h3 style="margin-top:0; color:var(--success);">Bugünkü Program</h3>
+            <div id="exerciseList">
+                <div class="exercise-item">
+                    <div>
+                        <div class="exercise-name">Şınav (Push-up)</div>
+                        <div class="exercise-sets">4 set × 12 tekrar</div>
+                    </div>
+                    <div class="exercise-check" onclick="toggleExercise(this)"></div>
+                </div>
+                <div class="exercise-item">
+                    <div>
+                        <div class="exercise-name">Squat</div>
+                        <div class="exercise-sets">3 set × 15 tekrar</div>
+                    </div>
+                    <div class="exercise-check" onclick="toggleExercise(this)"></div>
+                </div>
+                <div class="exercise-item">
+                    <div>
+                        <div class="exercise-name">Plank</div>
+                        <div class="exercise-sets">3 set × 45 saniye</div>
+                    </div>
+                    <div class="exercise-check" onclick="toggleExercise(this)"></div>
+                </div>
+                <div class="exercise-item">
+                    <div>
+                        <div class="exercise-name">Lunges</div>
+                        <div class="exercise-sets">3 set × 10 tekrar (her bacak)</div>
+                    </div>
+                    <div class="exercise-check" onclick="toggleExercise(this)"></div>
+                </div>
+            </div>
+            
+            <div style="margin-top:20px; padding:15px; background:rgba(16,185,129,0.1); border-radius:12px; text-align:center;">
+                <div style="font-size:14px; color:var(--text-muted);">Tamamlanan</div>
+                <div style="font-size:24px; font-weight:bold; color:var(--success);">
+                    <span id="completedCount">0</span> / 4
+                </div>
+            </div>
+            
+            <button class="btn btn-success" onclick="logWorkout()" id="completeWorkoutBtn" disabled>
+                Antrenmanı Tamamla ✅
+            </button>
+            <button class="btn btn-secondary" onclick="resetExercises()" style="margin-top:10px;">
+                Sıfırla
+            </button>
+        </div>
+        
+        <div class="lesson-container" style="margin-top:15px;">
+            <h3 style="margin-top:0; color:var(--accent);">📆 Bu Ayın Takvimi</h3>
+            <div class="calendar-grid" id="mainCalendar"></div>
+            <div style="display:flex; gap:15px; margin-top:15px; font-size:12px; justify-content:center;">
+                <span style="display:flex; align-items:center; gap:5px;">
+                    <span style="width:12px; height:12px; background:var(--success); border-radius:3px;"></span> Tamamlandı
+                </span>
+                <span style="display:flex; align-items:center; gap:5px;">
+                    <span style="width:12px; height:12px; background:rgba(255,255,255,0.05); border-radius:3px;"></span> Boş
+                </span>
+            </div>
         </div>
     </div>
 
@@ -385,6 +545,7 @@
         <div class="nav-item active" onclick="showScreen('homeScreen', this)">🏠</div>
         <div class="nav-item" onclick="showScreen('uvAcademyMain', this)">🧪<span class="badge" id="navBadge" style="display:none;">!</span></div>
         <div class="nav-item" onclick="showScreen('businessScreen', this)">📊</div>
+        <div class="nav-item" onclick="showScreen('exerciseScreen', this)">🏋️</div>
     </div>
 </div>
 
@@ -439,8 +600,6 @@ const uvCurriculum = [
                             <p>UV ışığı (365-405nm) foto-başlatıcıları uyarınca, monomerler <span class="tooltip">polimerleşir<span class="tooltip-text">Küçük moleküllerin büyük zincirler oluşturması</span></span> ve katı, plastik bir tabaka oluşur. Bu sürece <strong>kürlenme (curing)</strong> denir.</p>
                         </div>
                     </div>
-
-                    <div class="img-placeholder">[UV Kürlenme Animasyonu]</div>
                 `
             },
             {
@@ -467,7 +626,7 @@ const uvCurriculum = [
                                     <td>Şeffaf/renkli yüzeyler</td>
                                 </tr>
                                 <tr>
-                                    <td><strong>Varnish ( Vernik)</strong></td>
+                                    <td><strong>Varnish (Vernik)</strong></td>
                                     <td>Şeffaf koruyucu/kabartma</td>
                                     <td>3D efekt, parlaklık</td>
                                 </tr>
@@ -491,23 +650,6 @@ const uvCurriculum = [
                             </ul>
                             <br>
                             <strong>Beyaz mürekkep kullanılmazsa:</strong> Renkler soluk, cansız ve şeffaf çıkar!
-                        </div>
-                    </div>
-
-                    <div class="step-guide">
-                        <div class="step-item">
-                            <div class="step-number">1</div>
-                            <div class="step-title">Beyaz Katmanı Ne Zaman Altta?</div>
-                            <div class="step-content">
-                                Renkli baskının <strong>altına</strong> beyaz basılır. Bu sayede renkler canlı görünür. Örnek: Şeffaf pleksi üzerine logo.
-                            </div>
-                        </div>
-                        <div class="step-item">
-                            <div class="step-number">2</div>
-                            <div class="step-title">Beyaz Katmanı Ne Zaman Üstte?</div>
-                            <div class="step-content">
-                                Renkli baskının <strong>üstüne</strong> beyaz basılır. Bu teknik "buzlu cam" efekti verir. Örnek: Dekoratif cam panolar.
-                            </div>
                         </div>
                     </div>
                 `
@@ -549,61 +691,6 @@ const uvCurriculum = [
                             </table>
                         </div>
                     </div>
-
-                    <div class="content-block warning">
-                        <div class="block-title">⚠️ Pleksi (Akrilik) Sorunu</div>
-                        <div class="block-content">
-                            <p>Pleksi düşük yüzey enerjisine sahiptir (≈38 dyn/cm). Fabrika çıkışlı koruyucu film ve statik elektrik tutunmayı zorlaştırır.</p>
-                            <br>
-                            <strong>Çözüm:</strong> %99 İzopropil Alkol (IPA) ile silme
-                        </div>
-                    </div>
-
-                    <div class="step-guide">
-                        <div class="step-item">
-                            <div class="step-number">1</div>
-                            <div class="step-title">Temizlik Adımları</div>
-                            <div class="step-content">
-                                <ul class="checklist">
-                                    <li>Toz ve partikülleri üfleyici ile kaldır</li>
-                                    <li>Lint-free bez (tüysüz) hazırla</li>
-                                    <li>IPA'ya hafifçe batır (drenched değil damp)</li>
-                                    <li>Bir yönde sil (dairesel değil)</li>
-                                    <li>2-3 dakika kurumasını bekle</li>
-                                    <li>Ellerinle dokunma!</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "Statik Elektrik Kontrolü",
-                subtitle: "Toz çekme ve baskı hatalarını önleme",
-                content: `
-                    <div class="content-block danger">
-                        <div class="block-title">🚨 Statik Elektrik = Baskı Düşmanı</div>
-                        <div class="block-content">
-                            <p>Plastik malzemeler statik yük biriktirir ve:</p>
-                            <ul>
-                                <li>Çevredeki tozu çeker (beyaz noktalar)</li>
-                                <li>Boya damlacıklarının yönünü değiştirir</li>
-                                <li>Kafa çarpmasına neden olur</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="content-block info">
-                        <div class="block-title">💡 Çözüm Yöntemleri</div>
-                        <div class="block-content">
-                            <ol>
-                                <li><strong>İyonize Hava Tabancası:</strong> Statik nötralizasyon (en etkili)</li>
-                                <li><strong>Anti-statik bez:</strong> Mikrofiber özel bezler</li>
-                                <li><strong>Nemlendirme:</strong> Ortam nemini %50-60'a çıkar</li>
-                                <li><strong>Topraklama:</strong> Malzeme ve makine topraklama kablosu</li>
-                            </ol>
-                        </div>
-                    </div>
                 `
             }
         ],
@@ -634,67 +721,6 @@ const uvCurriculum = [
                                 <li><strong>RD_WHITE:</strong> Beyaz mürekkep kanalı</li>
                                 <li><strong>RD_VARNISH:</strong> Vernik/kabartma kanalı</li>
                                 <li><strong>RD_PRIMER:</strong> Astar kanalı</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="code-block">
-<span class="code-comment">' CorelDRAW VBA Macro - White Katman Oluşturma</span>
-Sub CreateWhiteLayer()
-    ActiveDocument.Unit = cdrMillimeter
-    Set s = ActiveSelection
-    s.Fill.UniformColor.CMYKAssign 0, 0, 0, 0  <span class="code-comment">' Beyaz</span>
-    s.Fill.UniformColor.Name = "RD_WHITE"      <span class="code-highlight">' Spot renk adı</span>
-    s.OrderToBack                              <span class="code-comment">' Altta kalması için</span>
-End Sub
-                    </div>
-
-                    <div class="step-guide">
-                        <div class="step-item">
-                            <div class="step-number">1</div>
-                            <div class="step-title">White Katmanı Oluşturma</div>
-                            <div class="step-content">
-                                <ol>
-                                    <li>Tüm objeleri seç (Ctrl+A)</li>
-                                    <li>Kopyala (Ctrl+C) → Yapıştır (Ctrl+V)</li>
-                                    <li>Üstteki kopyayı seç</li>
-                                    <li>Dolgu: %100 Beyaz (CMYK 0,0,0,0)</li>
-                                    <li>Renk paletinden: "Spot Renk Olarak Tanımla"</li>
-                                    <li>İsim: <strong>RD_WHITE</strong></li>
-                                    <li>Alttaki renkli objeye göre hizala</li>
-                                </ol>
-                            </div>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "Multiple Pass (Çoklu Geçiş)",
-                subtitle: "3D kabartma efekti oluşturma",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">🥽 3D Kabartma Tekniği</div>
-                        <div class="block-content">
-                            <p>Aynı alana birden fazla vernik katmanı basarak <strong>gözle görülür kabartma</strong> oluşturulur.</p>
-                            <br>
-                            <strong>Standart Geçişler:</strong>
-                            <ul>
-                                <li>1 Pass: 0.02mm yükseklik (parlaklık)</li>
-                                <li>3 Pass: 0.15mm yükseklik (hafif kabartma)</li>
-                                <li>5 Pass: 0.4mm yükseklik (belirgin 3D)</li>
-                                <li>8+ Pass: 1mm+ (braille, dokulu)</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="content-block warning">
-                        <div class="block-title">⚠️ Sınırlandırmalar</div>
-                        <div class="block-content">
-                            <ul>
-                                <li>Her pass 2-3 dakika kuruma süresi gerektirir</li>
-                                <li>Çok kalın katmanlar çatlayabilir</li>
-                                <li>Küçük detaylarda "kule" efekti oluşabilir</li>
-                                <li>Maliyeti artırır (vernik pahalıdır)</li>
                             </ul>
                         </div>
                     </div>
@@ -734,44 +760,6 @@ End Sub
                             </ul>
                         </div>
                     </div>
-
-                    <div class="content-block danger">
-                        <div class="block-title">🚨 Beyaz Mürekkep Uyarısı</div>
-                        <div class="block-content">
-                            <p>Beyaz mürekkep <strong>pigment içerir</strong> ve çökelir. Çalkalamazsanız:</p>
-                            <ul>
-                                <li>İlk baskılar gri/soluk çıkar</li>
-                                <li>Nozzle tıkanır</li>
-                                <li>Kafa hasar görebilir</li>
-                            </ul>
-                            <br>
-                            <strong>Kural:</strong> Her sabir 10 saniye çalkala, gece "white circulate" modu açık bırak!
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "Kafa Yüksekliği (Gap) Ayarı",
-                subtitle: "Mesafe = Kalite",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">📏 Optimal Mesafe</div>
-                        <div class="block-content">
-                            <table class="data-table">
-                                <tr><th>Mesafe</th><th>Sonuç</th><th>Risk</th></tr>
-                                <tr><td>&lt;1mm</td><td>Keskin baskı</td><td>Kafa çarpması YÜKSEK</td></tr>
-                                <tr><td>1.5mm</td><td>İdeal denge</td><td>Minimal</td></tr>
-                                <tr><td>2-3mm</td><td>Güvenli</td><td>Tozlanma, overspray</td></tr>
-                                <tr><td>&gt;3mm</td><td>Bulanık, tozlu</td><td>Boya israfı</td></tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="interactive-demo">
-                        <div class="demo-title">🎮 Gap Ölçümü</div>
-                        <p>Malzeme üzerine A4 kağıdı koy, kafayı indir.</p>
-                        <p>Kağıt hafifçe sürtünmeli ama zorlanmadan çekilebilmeli.</p>
-                    </div>
                 `
             }
         ],
@@ -802,44 +790,6 @@ End Sub
                             <br>
                             <p><strong>Kafa Hizalama Kayması:</strong> Passlar arası uyumsuzluk</p>
                             <p style="margin-left:20px;">→ Çözüm: Bidirectional calibration</p>
-                            <br>
-                            <p><strong>Nozzle Tıkanıklığı:</strong> Bazı jetler çalışmıyor</p>
-                            <p style="margin-left:20px;">→ Çözüm: Cleaning, flushing, son çare kafa değişimi</p>
-                        </div>
-                    </div>
-
-                    <div class="step-guide">
-                        <div class="step-item">
-                            <div class="step-number">1</div>
-                            <div class="step-title">Hızlı Teşhis</div>
-                            <div class="step-content">
-                                <ol>
-                                    <li>Nozzle check pattern'i incele</li>
-                                    <li>Eksik jetler varsa → Cleaning</li>
-                                    <li>Jetler tam ama çizgi varsa → Hizalama</li>
-                                    <li>Düzenli aralıklıysa → Encoder strip kirli</li>
-                                </ol>
-                            </div>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "Renk Problemleri",
-                subtitle: "Soluk, yamuk veya uçan renkler",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">🎨 Renk Kalibrasyonu</div>
-                        <div class="block-content">
-                            <p><strong>ICC Profilleri:</strong> Her malzeme-boya kombinasyonu için özel profil gerekir.</p>
-                            <br>
-                            <p><strong>Soluk Renkler:</strong></p>
-                            <ul>
-                                <li>White katmanı eksik/yanlış</li>
-                                <li>UV lamba gücü düşük (tam kürlenmemiş)</li>
-                                <li>Boya son kullanma tarihi geçmiş</li>
-                                <li>Pass sayısı düşük (hız modu)</li>
-                            </ul>
                         </div>
                     </div>
                 `
@@ -964,6 +914,18 @@ let userProgress = JSON.parse(localStorage.getItem('uv_progress')) || {
     totalXP: 0
 };
 
+let priceSettings = JSON.parse(localStorage.getItem('mf_price_settings')) || {
+    trans: 450,
+    color: 600,
+    fixed: 50
+};
+
+let workoutHistory = JSON.parse(localStorage.getItem('mf_workout_history')) || [];
+let todayExercises = JSON.parse(localStorage.getItem('mf_today_exercises')) || {
+    date: new Date().toLocaleDateString('tr-TR'),
+    completed: [false, false, false, false]
+};
+
 function initUVAcademy() {
     renderModules();
     updateProgress();
@@ -1004,7 +966,6 @@ function updateProgress() {
     document.getElementById('completedModules').textContent = `${completed}/${total} Modül`;
     document.getElementById('totalPoints').textContent = `${userProgress.totalXP} XP Kazanıldı`;
     
-    // Nav badge
     const hasNew = uvCurriculum.some(m => m.id === userProgress.currentModule && !userProgress.completedModules.includes(m.id));
     document.getElementById('navBadge').style.display = hasNew ? 'block' : 'none';
 }
@@ -1036,7 +997,6 @@ function showLesson() {
         ${lesson.content}
     `;
     
-    // Nav butonları güncelle
     const prevBtn = document.querySelector('#lessonNav .btn-secondary');
     const nextBtn = document.getElementById('nextBtn');
     
@@ -1116,16 +1076,12 @@ function completeModule() {
         userProgress.completedModules.push(mod.id);
         userProgress.totalXP += mod.xp;
         
-        // Sonraki modülü aç
         if (mod.id < uvCurriculum.length) {
             userProgress.currentModule = mod.id + 1;
         }
         
         localStorage.setItem('uv_progress', JSON.stringify(userProgress));
-        
-        // Ana oyuna XP ekle
         addExp(mod.xp);
-        
         showAchievement(`${mod.title} Tamamlandı! +${mod.xp} XP`);
     }
     
@@ -1177,7 +1133,7 @@ function startFinalQuiz() {
     };
     
     function showFinalResult() {
-        const passed = score >= 2; // 3 soruda 2 doğru
+        const passed = score >= 2;
         const percent = Math.round((score / mod.finalQuiz.length) * 100);
         
         document.getElementById('quizContent').innerHTML = `
@@ -1210,6 +1166,205 @@ function showAchievement(text) {
 }
 
 // ==========================================
+// MALİYET HESAPLAMA MODÜLÜ
+// ==========================================
+
+function loadPriceSettings() {
+    document.getElementById('set_trans').value = priceSettings.trans;
+    document.getElementById('set_color').value = priceSettings.color;
+    document.getElementById('set_fixed').value = priceSettings.fixed;
+    document.getElementById('fixedCost').value = priceSettings.fixed;
+}
+
+function savePriceSettings() {
+    priceSettings = {
+        trans: parseFloat(document.getElementById('set_trans').value) || 450,
+        color: parseFloat(document.getElementById('set_color').value) || 600,
+        fixed: parseFloat(document.getElementById('set_fixed').value) || 50
+    };
+    localStorage.setItem('mf_price_settings', JSON.stringify(priceSettings));
+    
+    // Anlık hesaplamayı güncelle
+    document.getElementById('fixedCost').value = priceSettings.fixed;
+    calculate();
+    showAchievement('Fiyat ayarları kaydedildi!');
+}
+
+function updatePriceFromSelection() {
+    const type = document.getElementById('mType').value;
+    const customArea = document.getElementById('customPriceArea');
+    const priceInput = document.getElementById('uPrice');
+    
+    if (type === 'trans') {
+        priceInput.value = priceSettings.trans;
+        customArea.style.display = 'none';
+    } else if (type === 'color') {
+        priceInput.value = priceSettings.color;
+        customArea.style.display = 'none';
+    } else if (type === 'custom') {
+        customArea.style.display = 'block';
+        priceInput.value = '';
+        document.getElementById('customPrice').focus();
+    } else {
+        priceInput.value = '';
+        customArea.style.display = 'none';
+    }
+    calculate();
+}
+
+function calculate() {
+    const w = parseFloat(document.getElementById('w').value) || 0;
+    const h = parseFloat(document.getElementById('h').value) || 0;
+    const unitPrice = parseFloat(document.getElementById('uPrice').value) || 0;
+    const fixed = parseFloat(document.getElementById('fixedCost').value) || 0;
+    
+    const area = (w * h) / 10000; // cm²'den m²'ye
+    const materialCost = area * unitPrice;
+    const total = materialCost + fixed;
+    
+    document.getElementById('finalRes').innerText = Math.round(total) + "₺";
+    document.getElementById('calcDetail').innerText = 
+        `${area.toFixed(3)} m² × ${unitPrice}₺ + ${fixed}₺ sabit = ${Math.round(materialCost)}₺ + ${fixed}₺`;
+    
+    // Otomatik XP ekleme (ilk hesaplama için)
+    if (w > 0 && h > 0 && unitPrice > 0 && !window.calcXPAdded) {
+        addExp(5);
+        window.calcXPAdded = true;
+        setTimeout(() => { window.calcXPAdded = false; }, 5000); // 5 saniye sonra reset
+    }
+}
+
+function saveCalculation() {
+    const calc = {
+        date: new Date().toLocaleString('tr-TR'),
+        dimensions: `${document.getElementById('w').value}x${document.getElementById('h').value} cm`,
+        price: document.getElementById('finalRes').innerText,
+        type: document.getElementById('mType').options[document.getElementById('mType').selectedIndex].text
+    };
+    
+    let history = JSON.parse(localStorage.getItem('mf_calc_history')) || [];
+    history.unshift(calc);
+    if (history.length > 10) history = history.slice(0, 10); // Son 10 kayıt
+    localStorage.setItem('mf_calc_history', JSON.stringify(history));
+    
+    showAchievement('Hesaplama kaydedildi!');
+    addExp(10);
+}
+
+// ==========================================
+// EGZERSİZ MODÜLÜ
+// ==========================================
+
+function initExercise() {
+    // Gün kontrolü - yeni günse sıfırla
+    const today = new Date().toLocaleDateString('tr-TR');
+    if (todayExercises.date !== today) {
+        todayExercises = {
+            date: today,
+            completed: [false, false, false, false]
+        };
+        localStorage.setItem('mf_today_exercises', JSON.stringify(todayExercises));
+    }
+    
+    // Checkbox'ları güncelle
+    const checks = document.querySelectorAll('.exercise-check');
+    checks.forEach((check, idx) => {
+        if (todayExercises.completed[idx]) {
+            check.classList.add('completed');
+            check.innerHTML = '✓';
+        } else {
+            check.classList.remove('completed');
+            check.innerHTML = '';
+        }
+    });
+    
+    updateExerciseProgress();
+    renderCalendar();
+}
+
+function toggleExercise(element) {
+    const index = Array.from(document.querySelectorAll('.exercise-check')).indexOf(element);
+    const isCompleted = element.classList.contains('completed');
+    
+    if (isCompleted) {
+        element.classList.remove('completed');
+        element.innerHTML = '';
+        todayExercises.completed[index] = false;
+    } else {
+        element.classList.add('completed');
+        element.innerHTML = '✓';
+        todayExercises.completed[index] = true;
+        addExp(5); // Her egzersiz için 5 XP
+    }
+    
+    localStorage.setItem('mf_today_exercises', JSON.stringify(todayExercises));
+    updateExerciseProgress();
+}
+
+function updateExerciseProgress() {
+    const completed = todayExercises.completed.filter(x => x).length;
+    const total = todayExercises.completed.length;
+    
+    document.getElementById('completedCount').innerText = completed;
+    
+    const btn = document.getElementById('completeWorkoutBtn');
+    if (completed === total) {
+        btn.disabled = false;
+        btn.style.opacity = '1';
+    } else {
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+    }
+}
+
+function logWorkout() {
+    const today = new Date().toLocaleDateString('tr-TR');
+    
+    if (!workoutHistory.includes(today)) {
+        workoutHistory.push(today);
+        localStorage.setItem('mf_workout_history', JSON.stringify(workoutHistory));
+        addExp(50); // Tamamlama bonusu
+        showAchievement('Antrenman Tamamlandı! +50 XP');
+    } else {
+        showAchievement('Bugünkü antrenman zaten kaydedilmiş!');
+    }
+    
+    renderCalendar();
+}
+
+function resetExercises() {
+    todayExercises.completed = [false, false, false, false];
+    localStorage.setItem('mf_today_exercises', JSON.stringify(todayExercises));
+    initExercise();
+}
+
+function renderCalendar() {
+    const cal = document.getElementById('mainCalendar');
+    if (!cal) return;
+    
+    cal.innerHTML = '';
+    const now = new Date();
+    const days = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    
+    for (let i = 1; i <= days; i++) {
+        const dateStr = new Date(now.getFullYear(), now.getMonth(), i).toLocaleDateString('tr-TR');
+        const isDone = workoutHistory.includes(dateStr);
+        const isToday = i === now.getDate();
+        
+        const d = document.createElement('div');
+        d.className = `cal-day ${isDone ? 'done' : ''}`;
+        d.innerText = i;
+        
+        if (isToday) {
+            d.style.border = '2px solid var(--accent)';
+            d.style.fontWeight = 'bold';
+        }
+        
+        cal.appendChild(d);
+    }
+}
+
+// ==========================================
 // GENEL UYGULAMA FONKSİYONLARI
 // ==========================================
 
@@ -1222,10 +1377,13 @@ function showScreen(id, el) {
         el.classList.add('active');
     }
     
+    // Ekran spesifik init
     if (id === 'uvAcademyMain') initUVAcademy();
+    if (id === 'businessScreen') loadPriceSettings();
+    if (id === 'exerciseScreen') initExercise();
 }
 
-// Gamification (Önceki sistem)
+// Gamification
 let stats = JSON.parse(localStorage.getItem('mf_stats')) || { exp: 0, lvl: 1 };
 
 function addExp(amount) {
@@ -1233,38 +1391,27 @@ function addExp(amount) {
     if (stats.exp >= stats.lvl * 100) {
         stats.exp -= stats.lvl * 100;
         stats.lvl++;
-        showAchievement(`Seviye Atladın! Level ${stats.lvl}`);
+        showAchievement(`Seviye Atladın! Level ${stats.lvl} 🔥`);
     }
     updateMasteryUI();
+    localStorage.setItem('mf_stats', JSON.stringify(stats));
 }
 
 function updateMasteryUI() {
     document.getElementById('lvlLabel').innerText = stats.lvl;
     document.getElementById('expLabel').innerText = stats.exp;
     document.getElementById('lvlFill').style.width = (stats.exp / (stats.lvl * 100)) * 100 + "%";
-    localStorage.setItem('mf_stats', JSON.stringify(stats));
-}
-
-// Diğer modüller (Business, Exercise)
-function calculate() {
-    const w = document.getElementById('w').value;
-    const h = document.getElementById('h').value;
-    const price = document.getElementById('mType').value;
-    const res = (((w*h)/10000)*price) + 50;
-    document.getElementById('finalRes').innerText = Math.round(res) + "₺";
-    addExp(5);
-}
-
-function logWorkout() {
-    addExp(50);
-    showAchievement("Antrenman Tamamlandı! +50 XP");
-    showScreen('homeScreen');
 }
 
 // Init
 window.onload = () => {
     updateMasteryUI();
-    initUVAcademy();
+    loadPriceSettings();
+    
+    // Varsayılan ekran
+    if (document.querySelector('.screen.active') === null) {
+        showScreen('homeScreen');
+    }
 };
 </script>
 
