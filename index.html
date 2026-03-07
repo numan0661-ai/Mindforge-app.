@@ -264,3 +264,104 @@
         if(score > 50) showToast("Ticari zekan çok keskin! 🔥");
     }
 </script>
+<div class="screen" id="settingsScreen">
+    <div class="screen-header">
+        <button class="back-btn" onclick="goHome()">←</button>
+        <div class="screen-title">Ayarlar</div>
+        <div class="screen-subtitle">Birim Fiyatlar ve Sistem Ayarları</div>
+    </div>
+    
+    <div class="exercise-list">
+        <div class="card" style="background: var(--surface); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05);">
+            <h4 style="color: var(--accent); margin-top: 0;">💰 Malzeme m² Fiyatları</h4>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div>
+                    <label style="font-size: 11px; color: var(--text-muted);">Şeffaf Pleksi</label>
+                    <input type="number" id="set_trans" style="width:100%; padding:10px; border-radius:8px; background:#0f0f23; color:white; border:1px solid #333;" oninput="saveSettings()">
+                </div>
+                <div>
+                    <label style="font-size: 11px; color: var(--text-muted);">Renkli Pleksi</label>
+                    <input type="number" id="set_color" style="width:100%; padding:10px; border-radius:8px; background:#0f0f23; color:white; border:1px solid #333;" oninput="saveSettings()">
+                </div>
+                <div>
+                    <label style="font-size: 11px; color: var(--text-muted);">Ahşap/MDF</label>
+                    <input type="number" id="set_wood" style="width:100%; padding:10px; border-radius:8px; background:#0f0f23; color:white; border:1px solid #333;" oninput="saveSettings()">
+                </div>
+                <div>
+                    <label style="font-size: 11px; color: var(--text-muted);">Özel Malzeme</label>
+                    <input type="number" id="set_custom" style="width:100%; padding:10px; border-radius:8px; background:#0f0f23; color:white; border:1px solid #333;" oninput="saveSettings()">
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="background: var(--surface); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); margin-top: 15px;">
+            <h4 style="color: var(--accent); margin-top: 0;">⚡ İşletme Giderleri</h4>
+            <label style="font-size: 11px; color: var(--text-muted);">Sabit Gider (Kargo/Elektrik ₺)</label>
+            <input type="number" id="set_fixed" style="width:100%; padding:10px; border-radius:8px; background:#0f0f23; color:white; border:1px solid #333;" oninput="saveSettings()">
+            
+            <label style="font-size: 11px; color: var(--text-muted); display:block; margin-top:10px;">Varsayılan Fire (%)</label>
+            <input type="number" id="set_waste" style="width:100%; padding:10px; border-radius:8px; background:#0f0f23; color:white; border:1px solid #333;" oninput="saveSettings()">
+        </div>
+        
+        <button class="btn" style="margin-top: 20px; background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; width:100%; padding:15px; border-radius:12px; font-weight:bold;" onclick="resetSettings()">Ayarları Sıfırla</button>
+    </div>
+</div>
+
+<script>
+    const defaultSettings = {
+        trans: 450, color: 600, wood: 250, custom: 500,
+        fixed: 50, waste: 10
+    };
+
+    // Ayarları tarayıcıya kaydet
+    function saveSettings() {
+        const config = {
+            trans: document.getElementById('set_trans').value,
+            color: document.getElementById('set_color').value,
+            wood: document.getElementById('set_wood').value,
+            custom: document.getElementById('set_custom').value,
+            fixed: document.getElementById('set_fixed').value,
+            waste: document.getElementById('set_waste').value
+        };
+        localStorage.setItem('mindforge_config', JSON.stringify(config));
+        applySettingsToApp(config);
+    }
+
+    // Kayıtlı ayarları yükle
+    function loadSettings() {
+        const saved = localStorage.getItem('mindforge_config');
+        const config = saved ? JSON.parse(saved) : defaultSettings;
+
+        document.getElementById('set_trans').value = config.trans;
+        document.getElementById('set_color').value = config.color;
+        document.getElementById('set_wood').value = config.wood;
+        document.getElementById('set_custom').value = config.custom;
+        document.getElementById('set_fixed').value = config.fixed;
+        document.getElementById('set_waste').value = config.waste;
+
+        applySettingsToApp(config);
+    }
+
+    // Ayarları Business Screen (hesaplayıcı) kısmına gönder
+    function applySettingsToApp(config) {
+        const sel = document.getElementById('mType'); // Malzeme seçim kutun
+        if(sel) {
+            sel.options[0].text = `Şeffaf Pleksi (${config.trans}₺)`;
+            sel.options[0].value = config.trans;
+            sel.options[1].text = `Renkli Pleksi (${config.color}₺)`;
+            sel.options[1].value = config.color;
+            sel.options[2].text = `Ahşap/MDF (${config.wood}₺)`;
+            sel.options[2].value = config.wood;
+        }
+    }
+
+    function resetSettings() {
+        if(confirm("Tüm fiyat ayarları sıfırlansın mı?")) {
+            localStorage.removeItem('mindforge_config');
+            loadSettings();
+        }
+    }
+
+    // Sayfa açıldığında ayarları yükle
+    window.addEventListener('load', loadSettings);
+</script>
