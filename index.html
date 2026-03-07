@@ -10,159 +10,71 @@
             --surface: #16162d; --text: #ffffff; --text-muted: #94a3b8;
             --success: #10b981; --gold: #f59e0b; --purple: #a855f7; --danger: #ef4444;
         }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 90px; overflow-x: hidden; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 90px; }
         .app-container { max-width: 430px; margin: 0 auto; padding: 15px; }
-        
-        /* Ekran Yönetimi */
         .screen { display: none; min-height: 100vh; }
         .screen.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Kartlar ve Modüller */
         .card { background: var(--surface); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .module-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .module-card { padding: 25px 20px; text-align: center; border-radius: 20px; background: var(--surface); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s; }
-        .module-card:active { transform: scale(0.97); background: rgba(255,255,255,0.03); }
-        .module-icon { font-size: 30px; margin-bottom: 10px; display: block; }
-
-        /* Input ve Butonlar */
-        input, select { width: 100%; padding: 14px; margin: 8px 0; border-radius: 12px; border: 1px solid #2d2d44; background: #0b0b1a; color: white; box-sizing: border-box; font-size: 14px; }
-        .btn { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: none; padding: 16px; border-radius: 14px; width: 100%; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 15px; }
-        .btn:active { transform: scale(0.98); opacity: 0.9; }
-        .btn-back { background: none; border: none; color: var(--accent); cursor: pointer; padding: 0; margin-bottom: 15px; font-size: 14px; display: flex; align-items: center; gap: 5px; }
-
-        /* Navigasyon (Buraya Dikkat) */
+        .btn { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: none; padding: 15px; border-radius: 14px; width: 100%; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 14px;}
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #2d2d44; background: #0b0b1a; color: white; box-sizing: border-box; }
         .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(22, 22, 45, 0.96); display: flex; justify-content: space-around; padding: 15px 0 25px; backdrop-filter: blur(10px); border-top: 1px solid #2d2d44; z-index: 1000; }
-        .nav-item { font-size: 24px; cursor: pointer; opacity: 0.4; transition: 0.3s; padding: 10px; border-radius: 50%; }
-        .nav-item:active { background: rgba(255,255,255,0.05); }
-        .nav-item.active { opacity: 1; color: var(--accent); background: rgba(6, 182, 212, 0.1); }
-
-        /* Egzersiz Listesi */
-        .ex-item { display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #333; padding: 15px 0; }
-        .ex-img { width: 70px; height: 70px; border-radius: 12px; border: 2px solid var(--primary); object-fit: cover; background: #0b0b1a; }
+        .nav-item { font-size: 24px; cursor: pointer; opacity: 0.4; transition: 0.3s; }
+        .nav-item.active { opacity: 1; color: var(--accent); }
         
-        /* Diğerleri */
-        label { font-size: 12px; color: var(--text-muted); display: block; margin-top: 5px; margin-left: 2px; }
-        .logic-option { background: var(--surface); border: 1px solid #333; color: white; padding: 15px; border-radius: 12px; cursor: pointer; transition: 0.2s; text-align: center; font-weight: bold; }
-        .logic-option:active { transform: scale(0.97); background: #2d2d44; }
+        /* Kelime Modülü Stilleri */
+        .word-card { border-left: 4px solid var(--purple); padding-left: 15px; margin-bottom: 20px; }
+        .word-title { color: var(--purple); font-size: 18px; font-weight: bold; margin-bottom: 5px; }
+        .word-meaning { font-size: 14px; color: var(--text); margin-bottom: 5px; }
+        .word-example { font-size: 13px; font-style: italic; color: var(--text-muted); border-top: 1px solid #2d2d44; padding-top: 5px; margin-top: 5px; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    
     <div class="screen active" id="homeScreen">
-        <h2 style="border-left: 4px solid var(--primary); padding-left: 10px;">Gelişim Paneli</h2>
-        <div class="module-list">
-            <div class="module-card" onclick="showScreen('exerciseScreen')">
-                <span class="module-icon">🏋️‍♂️</span>
-                <small>Egzersiz</small>
-            </div>
-            <div class="module-card" onclick="showScreen('dictionScreen')">
-                <span class="module-icon">🗣️</span>
-                <small>Diksiyon</small>
-            </div>
-            <div class="module-card" onclick="showScreen('logicScreen')">
-                <span class="module-icon">⚡</span>
-                <small>Hızlı Düşünme</small>
-            </div>
-            <div class="module-card" onclick="showScreen('confidenceScreen')">
-                <span class="module-icon">💎</span>
-                <small>Özgüven</small>
-            </div>
-            <div class="module-card" onclick="showScreen('mentalScreen')" style="grid-column: span 2;">
-                <span class="module-icon">🧘‍♂️</span>
-                <small>Mental Sağlık</small>
-            </div>
+        <h2 style="color:var(--accent)">Gelişim Paneli</h2>
+        
+        <div class="card" onclick="showScreen('wordScreen')" style="background: linear-gradient(45deg, #16162d, #2e1a47); border: 1px solid var(--purple);">
+            <h4 style="margin:0">📚 Günün Kelimeleri</h4>
+            <p style="font-size: 12px; color: var(--text-muted); margin: 5px 0 0 0;">Kelime haznene bugün 3 yeni güç ekle.</p>
         </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="card" onclick="showScreen('exerciseScreen')" style="text-align:center;">🏋️‍♂️<br><small>Egzersiz</small></div>
+            <div class="card" onclick="showScreen('dictionScreen')" style="text-align:center;">🗣️<br><small>Diksiyon</small></div>
+            <div class="card" onclick="showScreen('logicScreen')" style="text-align:center;">⚡<br><small>Zeka</small></div>
+            <div class="card" onclick="showScreen('confidenceScreen')" style="text-align:center;">💎<br><small>Özgüven</small></div>
+        </div>
+    </div>
+
+    <div class="screen" id="wordScreen">
+        <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer; margin-bottom:10px;">← Geri</button>
+        <h2>Günün Kelimeleri</h2>
+        <div id="wordListBody">
+            </div>
+        <button class="btn" style="background: var(--purple);" onclick="refreshWords()">Yarınki Kelimeleri Göster (Demo)</button>
     </div>
 
     <div class="screen" id="businessScreen">
         <h2>BusinessForge</h2>
         <div class="card">
-            <label>Ölçüler (cm)</label>
-            <div style="display: flex; gap: 8px;">
-                <input type="number" id="w" placeholder="En">
-                <input type="number" id="h" placeholder="Boy">
-            </div>
-            <label>Malzeme Seçimi</label>
+            <div style="display:flex; gap:10px;"><input type="number" id="w" placeholder="En"><input type="number" id="h" placeholder="Boy"></div>
             <select id="mType" onchange="syncPrice()"></select>
-            <input type="number" id="uPrice" placeholder="m² Birim Fiyatı (₺)">
-            <label>Kâr Marjı</label>
-            <select id="margin">
-                <option value="1.5">%50 Kâr</option>
-                <option value="2" selected>%100 Kâr</option>
-                <option value="2.5">%150 Kâr</option>
-                <option value="3">%200 Kâr</option>
-            </select>
+            <input type="number" id="uPrice" placeholder="₺/m²">
             <button class="btn" onclick="calculate()">HESAPLA</button>
-            <div style="text-align:center; margin-top:15px; border-top:1px solid #333; padding-top:15px;">
-                <div id="areaRes" style="font-size:12px; color:var(--text-muted)">Alan: 0 m²</div>
-                <div id="resPrice" style="font-size:32px; color:var(--success); font-weight:bold;">0 ₺</div>
-            </div>
+            <div id="finalRes" style="text-align:center; font-size:32px; color:var(--success); font-weight:bold; margin-top:15px;">0₺</div>
         </div>
     </div>
 
     <div class="screen" id="settingsScreen">
-        <h2>Atölye Ayarları</h2>
+        <h2>Ayarlar</h2>
         <div class="card">
-            <h4 style="color:var(--accent); margin:0 0 10px 0;">💰 Birim Fiyatlar (₺/m²)</h4>
-            <label>Şeffaf Pleksi</label><input type="number" id="set_trans" oninput="saveConfig()">
-            <label>Renkli Pleksi</label><input type="number" id="set_color" oninput="saveConfig()">
-            <label>Ahşap/MDF</label><input type="number" id="set_wood" oninput="saveConfig()">
+            <label>Şeffaf m²</label><input type="number" id="set_trans" oninput="saveConfig()">
+            <label>Renkli m²</label><input type="number" id="set_color" oninput="saveConfig()">
             <label>Sabit Gider (₺)</label><input type="number" id="set_fixed" oninput="saveConfig()">
         </div>
-        <button class="btn" style="background:var(--danger)" onclick="resetSystem()">SİSTEMİ SIFIRLA</button>
-    </div>
-
-    <div class="screen" id="exerciseScreen">
-        <button class="btn-back" onclick="showScreen('homeScreen')">← Geri</button>
-        <h2>Vücut Geliştirme</h2>
-        <div class="card" id="exProgCard">
-            <h4 id="exTitle" style="color:var(--gold); margin:0;">Gün: İtiş (Göğüs & Kol)</h4>
-            <div id="exListBody"></div>
-            <button class="btn" style="margin-top:15px;" onclick="alert('Antrenman Tamamlandı! 🔥')">Antrenmanı Bitir</button>
-        </div>
-    </div>
-
-    <div class="screen" id="dictionScreen">
-        <button class="btn-back" onclick="showScreen('homeScreen')">← Geri</button>
-        <h2>Diksiyon Pratikleri</h2>
-        <div class="card">
-            <h4 style="margin-top:0; color:var(--gold);">🗣️ Tekerleme</h4>
-            <div id="tekerlemeBox" style="font-style:italic; min-height:40px; margin-bottom:10px;">"Şu köşe yaz köşesi, şu köşe kış köşesi..."</div>
-            <button class="btn" style="background:var(--surface); border:1px solid var(--gold); color:var(--gold);" onclick="nextTekerleme()">Yeni Tekerleme</button>
-        </div>
-    </div>
-
-    <div class="screen" id="logicScreen">
-        <button class="btn-back" onclick="showScreen('homeScreen')">← Geri</button>
-        <h2>Hızlı Düşünme</h2>
-        <div class="card" style="text-align:center;">
-            <div id="logicTask" style="font-size:24px; font-weight:bold; margin-bottom:20px; color:var(--accent);">Hazır mısın?</div>
-            <div id="logicOptions" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;"></div>
-            <button id="logicStartBtn" class="btn" style="margin-top:10px;" onclick="startLogicRound()">Oyunu Başlat</button>
-        </div>
-    </div>
-
-    <div class="screen" id="confidenceScreen">
-        <button class="btn-back" onclick="showScreen('homeScreen')">← Geri</button>
-        <h2>Özgüven Kazanımı</h2>
-        <div class="card">
-            <h4 style="margin-top:0; color:var(--success);">💰 Fiyat Söyleme Pratiği</h4>
-            <div id="mantraBox" style="text-align:center; font-style:italic; margin-bottom:10px;">"Bu ürünün bedeli 1.500 ₺'dir."</div>
-            <button class="btn" style="background:var(--surface); border:1px solid var(--success); color:var(--success);" onclick="nextMantra()">Yeni Senaryo</button>
-        </div>
-    </div>
-
-    <div class="screen" id="mentalScreen">
-        <button class="btn-back" onclick="showScreen('homeScreen')">← Geri</button>
-        <h2>Mental Sağlık</h2>
-        <div class="card">
-            <h4 style="margin-top:0; color:var(--accent);">🌬️ Kutu Nefesi (4-4-4-4)</h4>
-            <div id="boxBreathIndicator" style="width:60px; height:60px; border:2px solid var(--accent); margin:10px auto; display:flex; align-items:center; justify-content:center; font-weight:bold;">DUR</div>
-            <button class="btn" onclick="startBoxBreathing()">Egzersizi Başlat</button>
-        </div>
+        <button class="btn" style="background:var(--danger)" onclick="resetSystem()">SIFIRLA</button>
     </div>
 
     <div class="nav-bar">
@@ -173,145 +85,86 @@
 </div>
 
 <script>
-    // --- TEMEL AYARLAR VE HAFIZA ---
-    let config = { trans: 450, color: 600, wood: 250, fixed: 50 };
+    let config = { trans: 450, color: 600, fixed: 50 };
 
-    // EKRAN GÖSTERME FONKSİYONU (Kritik Tamir)
-    function showScreen(id, el) {
-        // Tüm ekranları gizle
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        // Hedef ekranı göster
-        const targetScreen = document.getElementById(id);
-        if (targetScreen) {
-            targetScreen.classList.add('active');
-            window.scrollTo(0, 0); // Sayfayı yukarı taşı
-        }
+    // --- KELİME VERİSİ ---
+    const allWords = [
+        { word: "Liyakat", meaning: "Bir işe layık olma, yaraşma durumu.", example: "Atölyemizde liyakat sahibi ustalarla çalışmaya özen gösteriyoruz." },
+        { word: "İntizam", bottom: "Düzenli olma, düzgünlük.", example: "Pleksi kesimlerinde yakaladığımız intizam, ürün kalitemizi artırıyor." },
+        { word: "Nezaket", meaning: "Başkalarına karşı saygılı ve ince davranma.", example: "Müşterilerimizle kurduğumuz nezaket odaklı iletişim, güvenimizi tazeliyor." },
+        { word: "Dirayet", meaning: "Güçlüklerin üstesinden gelme yeteneği, akıllılık.", example: "Sipariş yoğunluğunda gösterdiğimiz dirayet sayesinde hiçbir işi aksatmadık." },
+        { word: "Maharet", meaning: "Elinden iş gelme, beceriklilik.", example: "UV baskıdaki maharetimiz, ürünlerin görselliğini bir üst seviyeye taşıyor." },
+        { word: "Muvaffakiyet", meaning: "Başarı.", example: "Yeni tasarımlarımızla sektörde büyük bir muvaffakiyet elde ettik." }
+    ];
 
-        // Navigasyon ikonlarını güncelle
-        if(el && el.classList.contains('nav-item')) {
-            document.querySelectorAll('.nav-bar .nav-item').forEach(i => i.classList.remove('active'));
-            el.classList.add('active');
-        } else if (id === 'homeScreen') {
-            // Geri tuşuyla dönüldüyse ev ikonunu aktif et
-            document.querySelectorAll('.nav-bar .nav-item').forEach(i => i.classList.remove('active'));
-            document.querySelector('.nav-bar .nav-item:nth-child(1)').classList.add('active');
-        }
+    function renderWords() {
+        const body = document.getElementById('wordListBody');
+        // Her gün farklı 3 kelime seçme mantığı (basit rastgelelik)
+        const shuffled = [...allWords].sort(() => 0.5 - Math.random());
+        const selected = shuffled.slice(0, 3);
 
-        // Özel ekran yüklemeleri
-        if(id === 'exerciseScreen') renderWorkout();
+        body.innerHTML = selected.map(w => `
+            <div class="card word-card">
+                <div class="word-title">${w.word}</div>
+                <div class="word-meaning"><strong>Anlamı:</strong> ${w.meaning}</div>
+                <div class="word-example"><strong>Örnek:</strong> "${w.example}"</div>
+            </div>
+        `).join('');
     }
 
-    // --- AYARLAR YÖNETİMİ ---
+    function refreshWords() {
+        renderWords();
+        window.scrollTo(0,0);
+    }
+
+    // --- TEMEL SİSTEM ---
+    function showScreen(id, el) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        if(el) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+        }
+        if(id === 'wordScreen') renderWords();
+    }
+
     function saveConfig() {
         config = {
             trans: document.getElementById('set_trans').value || 450,
             color: document.getElementById('set_color').value || 600,
-            wood: document.getElementById('set_wood').value || 250,
             fixed: document.getElementById('set_fixed').value || 50
         };
         localStorage.setItem('mf_master_config', JSON.stringify(config));
         updateBusinessUI();
     }
 
-    function loadConfig() {
-        const saved = localStorage.getItem('mf_master_config');
-        if(saved) config = JSON.parse(saved);
-        
-        // Ayarlar inputlarını doldur
-        document.getElementById('set_trans').value = config.trans;
-        document.getElementById('set_color').value = config.color;
-        document.getElementById('set_wood').value = config.wood;
-        document.getElementById('set_fixed').value = config.fixed;
-        
-        updateBusinessUI();
-    }
-
-    // BusinessForge Ekranını Güncelle
     function updateBusinessUI() {
         const sel = document.getElementById('mType');
-        if (sel) {
-            sel.innerHTML = `
-                <option value="${config.trans}">Şeffaf Pleksi (${config.trans}₺)</option>
-                <option value="${config.color}">Renkli Pleksi (${config.color}₺)</option>
-                <option value="${config.wood}">Ahşap/MDF (${config.wood}₺)</option>
-            `;
-            syncPrice(); // İlk fiyatı inputa yaz
+        if(sel) {
+            sel.innerHTML = `<option value="${config.trans}">Şeffaf (${config.trans}₺)</option><option value="${config.color}">Renkli (${config.color}₺)</option>`;
+            document.getElementById('uPrice').value = sel.value;
         }
     }
 
-    function syncPrice() {
-        const sel = document.getElementById('mType');
-        const pri = document.getElementById('uPrice');
-        if (sel && pri) pri.value = sel.value;
-    }
-
-    // MALİYET HESAPLAMA
+    function syncPrice() { document.getElementById('uPrice').value = document.getElementById('mType').value; }
+    
     function calculate() {
         const w = parseFloat(document.getElementById('w').value) || 0;
         const h = parseFloat(document.getElementById('h').value) || 0;
-        const up = parseFloat(document.getElementById('uPrice').value) || 0;
-        const mrg = parseFloat(document.getElementById('margin').value) || 1;
-        
-        const area = (w * h) / 10000;
-        const finalPrice = Math.round(((area * up) + parseFloat(config.fixed)) * mrg);
-        
-        document.getElementById('areaRes').innerText = `Alan: ${area.toFixed(4)} m²`;
-        document.getElementById('resPrice').innerText = finalPrice + " ₺";
+        const final = (((w * h) / 10000) * document.getElementById('uPrice').value) + parseFloat(config.fixed);
+        document.getElementById('finalRes').innerText = Math.round(final) + "₺";
     }
 
-    // --- GELİŞİM MODÜLLERİ İÇERİKLERİ ---
-    
-    // Egzersiz
-    const exercises = [
-        { name: "Şınav", reps: "4x12", gif: "https://media.giphy.com/media/26ueYUlPAmUkTBAM8/giphy.gif" },
-        { name: "Squat", reps: "3x15", gif: "https://media.giphy.com/media/l3q2XhfQ8oCkm1Ts4/giphy.gif" },
-        { name: "Plank", reps: "3x45sn", gif: "https://media.giphy.com/media/l0HlJjwX40879fP3W/giphy.gif" }
-    ];
-    function renderWorkout() {
-        const list = document.getElementById('exListBody');
-        list.innerHTML = exercises.map(ex => `
-            <div class="ex-item">
-                <img src="${ex.gif}" class="ex-img" onerror="this.src='https://via.placeholder.com/70?text=Fit'">
-                <div><strong>${ex.name}</strong><br><small style="color:var(--success)">${ex.reps}</small></div>
-            </div>
-        `).join('');
-    }
+    window.onload = () => {
+        const saved = localStorage.getItem('mf_master_config');
+        if(saved) config = JSON.parse(saved);
+        document.getElementById('set_trans').value = config.trans;
+        document.getElementById('set_color').value = config.color;
+        document.getElementById('set_fixed').value = config.fixed;
+        updateBusinessUI();
+    };
 
-    // Diksiyon
-    const tekerlemeler = ["Kartal kalkar dal sarkar...", "Şu yoğurdu sarımsaklasak...", "Bir berber bir berbere..."];
-    function nextTekerleme() { document.getElementById('tekerlemeBox').innerText = tekerlemeler[Math.floor(Math.random()*tekerlemeler.length)]; }
-
-    // Hızlı Düşünme
-    let correctLogicAns = 0;
-    function startLogicRound() {
-        document.getElementById('logicStartBtn').style.display = 'none';
-        const w = Math.floor(Math.random()*20)+10, h = Math.floor(Math.random()*20)+10;
-        correctLogicAns = w * h;
-        document.getElementById('logicTask').innerText = `${w} x ${h} = ?`;
-        const opts = [correctLogicAns, correctLogicAns+15, correctLogicAns-10, correctLogicAns+30].sort(()=>Math.random()-0.5);
-        const box = document.getElementById('logicOptions');
-        box.innerHTML = opts.map(o => `<div class="logic-option" onclick="checkLogic(${o})">${o}</div>`).join('');
-    }
-    function checkLogic(v) { alert(v === correctLogicAns ? "Doğru! 🎯" : "Yanlış! 😢"); startLogicRound(); }
-
-    // Özgüven
-    const mantras = ["Bu ürünün bedeli 2.500 ₺'dir.", "Termin süremiz 3 gündür.", "Kalitemiz dökme pleksidir."];
-    function nextMantra() { document.getElementById('mantraBox').innerText = mantras[Math.floor(Math.random()*mantras.length)]; }
-
-    // Mental Sağlık
-    function startBoxBreathing() {
-        const box = document.getElementById('boxBreathIndicator');
-        const phases = ["AL", "TUT", "VER", "BEKLE"];
-        let i = 0;
-        setInterval(() => { box.innerText = phases[i]; i=(i+1)%4; }, 4000);
-    }
-
-    // SİSTEMİ SIFIRLA
-    function resetSystem() { if(confirm("Tüm veriler silinsin mi?")) { localStorage.clear(); location.reload(); } }
-
-    // YÜKLEME
-    window.onload = loadConfig;
+    function resetSystem() { localStorage.clear(); location.reload(); }
 </script>
-
 </body>
 </html>
