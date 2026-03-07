@@ -8,7 +8,7 @@
         :root {
             --primary: #6366f1; --accent: #06b6d4; --bg: #0b0b1a;
             --surface: #16162d; --text: #ffffff; --text-muted: #94a3b8;
-            --success: #10b981; --gold: #f59e0b; --purple: #a855f7; --danger: #ef4444;
+            --success: #10b981; --gold: #f59e0b; --purple: #a855f7; --danger: #ef4444; --corel: #4caf50;
         }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 90px; }
         .app-container { max-width: 430px; margin: 0 auto; padding: 15px; }
@@ -22,25 +22,26 @@
         .nav-item { font-size: 24px; cursor: pointer; opacity: 0.4; transition: 0.3s; }
         .nav-item.active { opacity: 1; color: var(--accent); }
         
-        /* Kelime Modülü Stilleri */
-        .word-card { border-left: 4px solid var(--purple); padding-left: 15px; margin-bottom: 20px; }
-        .word-title { color: var(--purple); font-size: 18px; font-weight: bold; margin-bottom: 5px; }
-        .word-meaning { font-size: 14px; color: var(--text); margin-bottom: 5px; }
-        .word-example { font-size: 13px; font-style: italic; color: var(--text-muted); border-top: 1px solid #2d2d44; padding-top: 5px; margin-top: 5px; }
+        /* Corel Tablo Stili */
+        .corel-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+        .corel-table th { text-align: left; color: var(--corel); padding: 8px; border-bottom: 1px solid #333; }
+        .corel-table td { padding: 10px 8px; border-bottom: 1px solid #222; }
+        .shortcut { background: #2d2d44; padding: 2px 6px; border-radius: 4px; color: var(--gold); font-family: monospace; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     <div class="screen active" id="homeScreen">
-        <h2 style="color:var(--accent)">Gelişim Paneli</h2>
+        <h2 style="color:var(--accent)">MindForge Master</h2>
         
-        <div class="card" onclick="showScreen('wordScreen')" style="background: linear-gradient(45deg, #16162d, #2e1a47); border: 1px solid var(--purple);">
-            <h4 style="margin:0">📚 Günün Kelimeleri</h4>
-            <p style="font-size: 12px; color: var(--text-muted); margin: 5px 0 0 0;">Kelime haznene bugün 3 yeni güç ekle.</p>
-        </div>
-
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="card" onclick="showScreen('corelScreen')" style="text-align:center; border: 1px solid var(--corel);">
+                <span style="font-size:24px;">🎨</span><br><small>Corel Kılavuzu</small>
+            </div>
+            <div class="card" onclick="showScreen('wordScreen')" style="text-align:center; border: 1px solid var(--purple);">
+                <span style="font-size:24px;">📚</span><br><small>Kelime Haznesi</small>
+            </div>
             <div class="card" onclick="showScreen('exerciseScreen')" style="text-align:center;">🏋️‍♂️<br><small>Egzersiz</small></div>
             <div class="card" onclick="showScreen('dictionScreen')" style="text-align:center;">🗣️<br><small>Diksiyon</small></div>
             <div class="card" onclick="showScreen('logicScreen')" style="text-align:center;">⚡<br><small>Zeka</small></div>
@@ -48,12 +49,52 @@
         </div>
     </div>
 
+    <div class="screen" id="corelScreen">
+        <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer; margin-bottom:10px;">← Geri</button>
+        <h2>CorelDraw Ustalık Kılavuzu</h2>
+        
+        <div class="card">
+            <h4 style="color:var(--corel); margin-top:0;">🚀 En Çok Kullanılanlar</h4>
+            <table class="corel-table">
+                <tr><th>İngilizce</th><th>Türkçe</th><th>Kısayol</th></tr>
+                <tr><td>Pick Tool</td><td>Seçim Aracı</td><td><span class="shortcut">Space</span></td></tr>
+                <tr><td>Shape Tool</td><td>Şekil Aracı</td><td><span class="shortcut">F10</span></td></tr>
+                <tr><td>Group</td><td>Grupla</td><td><span class="shortcut">Ctrl+G</span></td></tr>
+                <tr><td>Ungroup</td><td>Grubu Dağıt</td><td><span class="shortcut">Ctrl+U</span></td></tr>
+                <tr><td>Combine</td><td>Birleştir</td><td><span class="shortcut">Ctrl+L</span></td></tr>
+                <tr><td>Break Apart</td><td>Parçalara Ayır</td><td><span class="shortcut">Ctrl+K</span></td></tr>
+                <tr><td>Convert to Curves</td><td>Curvele (Çizgiye Dönüştür)</td><td><span class="shortcut">Ctrl+Q</span></td></tr>
+            </table>
+        </div>
+
+        <div class="card">
+            <h4 style="color:var(--gold); margin-top:0;">🎯 Hizalama (Align)</h4>
+            <div style="font-size: 13px; color: var(--text-muted);">Nesneleri seçtikten sonra bas:</div>
+            <table class="corel-table">
+                <tr><td>Merkezle (Sayfa)</td><td><span class="shortcut">P</span></td></tr>
+                <tr><td>Sola Hizala (Left)</td><td><span class="shortcut">L</span></td></tr>
+                <tr><td>Sağa Hizala (Right)</td><td><span class="shortcut">R</span></td></tr>
+                <tr><td>Üste Hizala (Top)</td><td><span class="shortcut">T</span></td></tr>
+                <tr><td>Alta Hizala (Bottom)</td><td><span class="shortcut">B</span></td></tr>
+                <tr><td>Yatay Merkez (Center)</td><td><span class="shortcut">E</span></td></tr>
+                <tr><td>Dikey Merkez (Center)</td><td><span class="shortcut">C</span></td></tr>
+            </table>
+        </div>
+
+        <div class="card">
+            <h4 style="color:var(--danger); margin-top:0;">⚠️ Lazerci Notları</h4>
+            <ul style="font-size:12px; line-height:1.6; padding-left:15px; color:var(--text-muted);">
+                <li><b>Hairline:</b> Lazerin kesmesi için çizgi kalınlığı her zaman "Hairline" olmalıdır.</li>
+                <li><b>Weld:</b> Objeleri birbirine kaynatır, lazerin iç içe geçmesini engeller.</li>
+                <li><b>Outline Pen:</b> Kesim yollarını belirlemek için <span class="shortcut">F12</span>'ye bas.</li>
+            </ul>
+        </div>
+    </div>
+
     <div class="screen" id="wordScreen">
         <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer; margin-bottom:10px;">← Geri</button>
         <h2>Günün Kelimeleri</h2>
-        <div id="wordListBody">
-            </div>
-        <button class="btn" style="background: var(--purple);" onclick="refreshWords()">Yarınki Kelimeleri Göster (Demo)</button>
+        <div id="wordListBody"></div>
     </div>
 
     <div class="screen" id="businessScreen">
@@ -68,7 +109,7 @@
     </div>
 
     <div class="screen" id="settingsScreen">
-        <h2>Ayarlar</h2>
+        <h2>Atölye Ayarları</h2>
         <div class="card">
             <label>Şeffaf m²</label><input type="number" id="set_trans" oninput="saveConfig()">
             <label>Renkli m²</label><input type="number" id="set_color" oninput="saveConfig()">
@@ -87,37 +128,6 @@
 <script>
     let config = { trans: 450, color: 600, fixed: 50 };
 
-    // --- KELİME VERİSİ ---
-    const allWords = [
-        { word: "Liyakat", meaning: "Bir işe layık olma, yaraşma durumu.", example: "Atölyemizde liyakat sahibi ustalarla çalışmaya özen gösteriyoruz." },
-        { word: "İntizam", bottom: "Düzenli olma, düzgünlük.", example: "Pleksi kesimlerinde yakaladığımız intizam, ürün kalitemizi artırıyor." },
-        { word: "Nezaket", meaning: "Başkalarına karşı saygılı ve ince davranma.", example: "Müşterilerimizle kurduğumuz nezaket odaklı iletişim, güvenimizi tazeliyor." },
-        { word: "Dirayet", meaning: "Güçlüklerin üstesinden gelme yeteneği, akıllılık.", example: "Sipariş yoğunluğunda gösterdiğimiz dirayet sayesinde hiçbir işi aksatmadık." },
-        { word: "Maharet", meaning: "Elinden iş gelme, beceriklilik.", example: "UV baskıdaki maharetimiz, ürünlerin görselliğini bir üst seviyeye taşıyor." },
-        { word: "Muvaffakiyet", meaning: "Başarı.", example: "Yeni tasarımlarımızla sektörde büyük bir muvaffakiyet elde ettik." }
-    ];
-
-    function renderWords() {
-        const body = document.getElementById('wordListBody');
-        // Her gün farklı 3 kelime seçme mantığı (basit rastgelelik)
-        const shuffled = [...allWords].sort(() => 0.5 - Math.random());
-        const selected = shuffled.slice(0, 3);
-
-        body.innerHTML = selected.map(w => `
-            <div class="card word-card">
-                <div class="word-title">${w.word}</div>
-                <div class="word-meaning"><strong>Anlamı:</strong> ${w.meaning}</div>
-                <div class="word-example"><strong>Örnek:</strong> "${w.example}"</div>
-            </div>
-        `).join('');
-    }
-
-    function refreshWords() {
-        renderWords();
-        window.scrollTo(0,0);
-    }
-
-    // --- TEMEL SİSTEM ---
     function showScreen(id, el) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
@@ -128,6 +138,18 @@
         if(id === 'wordScreen') renderWords();
     }
 
+    // --- KELİME SİSTEMİ ---
+    const allWords = [
+        { word: "Liyakat", meaning: "Bir işe layık olma durumu.", example: "Atölyemizde liyakatli ustalarla çalışıyoruz." },
+        { word: "İntizam", meaning: "Düzenli olma, düzgünlük.", example: "Corel çizimlerindeki intizam, kesim hızını artırır." },
+        { word: "Maharet", meaning: "Elinden iş gelme, beceriklilik.", example: "UV baskıdaki maharetimiz ürünleri farklı kılıyor." }
+    ];
+    function renderWords() {
+        const body = document.getElementById('wordListBody');
+        body.innerHTML = allWords.map(w => `<div class="card"><b>${w.word}:</b> ${w.meaning}<br><small style="color:var(--text-muted)">"${w.example}"</small></div>`).join('');
+    }
+
+    // --- BUSINESS & SETTINGS ---
     function saveConfig() {
         config = {
             trans: document.getElementById('set_trans').value || 450,
@@ -137,7 +159,6 @@
         localStorage.setItem('mf_master_config', JSON.stringify(config));
         updateBusinessUI();
     }
-
     function updateBusinessUI() {
         const sel = document.getElementById('mType');
         if(sel) {
@@ -145,9 +166,7 @@
             document.getElementById('uPrice').value = sel.value;
         }
     }
-
     function syncPrice() { document.getElementById('uPrice').value = document.getElementById('mType').value; }
-    
     function calculate() {
         const w = parseFloat(document.getElementById('w').value) || 0;
         const h = parseFloat(document.getElementById('h').value) || 0;
