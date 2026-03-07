@@ -3145,4 +3145,39 @@ function saveSudokuProgress() {
   localStorage.setItem(key, wins);
 }
 </script>
+<!-- Ana sayfadaki modül kartlarına tıklama olayları -->
+<script>
+// LocalStorage'dan ilerlemeleri yükle
+function loadAllProgress() {
+  // MindForge
+  const mindProgress = localStorage.getItem('mindforge_best');
+  if(mindProgress) {
+    document.querySelector('.module-mindforge .progress-percent').textContent = 
+      Math.max(45, Math.round((500 - mindProgress) / 3)) + '%';
+  }
+  
+  // FitForge
+  const fitStreak = localStorage.getItem('fitforge_streak');
+  if(fitStreak) {
+    document.querySelector('.module-fitforge .progress-percent').textContent = 
+      Math.min(100, fitStreak * 10) + '%';
+  }
+  
+  // VoiceForge
+  const voiceScores = JSON.parse(localStorage.getItem('voiceforge_scores') || '[]');
+  if(voiceScores.length > 0) {
+    const avg = voiceScores.reduce((a,b) => a + b.score, 0) / voiceScores.length;
+    document.querySelector('.module-voiceforge .progress-percent').textContent = Math.round(avg) + '%';
+  }
+  
+  // LogicForge
+  const logicWins = parseInt(localStorage.getItem('logicforge_medium_wins') || '0') +
+                   parseInt(localStorage.getItem('logicforge_hard_wins') || '0');
+  document.querySelector('.module-logicforge .progress-percent').textContent = 
+    Math.min(100, logicWins * 15) + '%';
+}
+
+// Sayfa yüklendiğinde çalıştır
+window.onload = loadAllProgress;
+</script>
 
