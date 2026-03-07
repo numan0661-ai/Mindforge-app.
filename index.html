@@ -1713,3 +1713,379 @@
     </script>
 </body>
 </html>
+<!-- MindForge Oyun Modali -->
+<div id="mindforge-modal" class="modal">
+  <div class="modal-content game-container">
+    <div class="game-header">
+      <h2>⚡ Refleks Testi</h2>
+      <button onclick="closeMindForge()" class="close-btn">✕</button>
+    </div>
+    
+    <div class="game-stats">
+      <div class="stat-box">
+        <span class="stat-label">Deneme</span>
+        <span id="attempt-count" class="stat-value">1/5</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">Ortalama</span>
+        <span id="avg-time" class="stat-value">-</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">En İyi</span>
+        <span id="best-time" class="stat-value">-</span>
+      </div>
+    </div>
+
+    <div id="reaction-area" class="reaction-area" onclick="handleClick()">
+      <div id="game-status" class="status-text">BAŞLATMAK İÇİN TIKLA</div>
+      <div id="reaction-time" class="reaction-display"></div>
+    </div>
+
+    <div class="game-history">
+      <h3>Son Sonuçlar:</h3>
+      <div id="results-list" class="results-grid"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.game-container {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 20px;
+  padding: 30px;
+  width: 90%;
+  max-width: 500px;
+  border: 2px solid #0f3460;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.game-header h2 {
+  color: #e94560;
+  margin: 0;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.game-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.stat-box {
+  background: rgba(255,255,255,0.05);
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  color: #888;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.stat-value {
+  display: block;
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.reaction-area {
+  width: 100%;
+  height: 300px;
+  background: #0f3460;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.reaction-area.waiting {
+  background: #e94560;
+}
+
+.reaction-area.ready {
+  background: #00d9ff;
+  animation: pulse 0.5s infinite alternate;
+}
+
+.reaction-area.success {
+  background: #00ff88;
+}
+
+.reaction-area.too-soon {
+  background: #ff6b6b;
+}
+
+@keyframes pulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.02); }
+}
+
+.status-text {
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.reaction-display {
+  color: #fff;
+  font-size: 48px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.results-grid {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.result-item {
+  background: rgba(0,217,255,0.2);
+  padding: 8px 15px;
+  border-radius: 20px;
+  color: #00d9ff;
+  font-weight: bold;
+}
+
+.result-item.excellent { background: rgba(0,255,136,0.2); color: #00ff88; }
+.result-item.good { background: rgba(0,217,255,0.2); color: #00d9ff; }
+.result-item.average { background: rgba(255,193,7,0.2); color: #ffc107; }
+</style>
+
+<script>
+// MindForge Oyun Durumu
+let gameState = {
+  phase: 'idle', // idle, waiting, ready, finished
+  attempts: [],
+  currentAttempt: 0,
+  maxAttempts: 5,
+  startTime: null,
+  timeoutId: null
+};
+
+// LocalStorage'dan en iyi skoru al
+let bestScore = localStorage.getItem('mindforge_best') || '-';
+
+function openMindForge() {
+  document.getElementById('mindforge-modal').classList.add('active');
+  document.getElementById('best-time').textContent = bestScore + 'ms';
+  resetGame();
+}
+
+function closeMindForge() {
+  document.getElementById('mindforge-modal').classList.remove('active');
+  clearTimeout(gameState.timeoutId);
+}
+
+function resetGame() {
+  gameState = {
+    phase: 'idle',
+    attempts: [],
+    currentAttempt: 0,
+    maxAttempts: 5,
+    startTime: null,
+    timeoutId: null
+  };
+  updateDisplay();
+  updateResults();
+}
+
+function handleClick() {
+  const area = document.getElementById('reaction-area');
+  const status = document.getElementById('game-status');
+  const display = document.getElementById('reaction-time');
+
+  if (gameState.phase === 'idle') {
+    // Oyunu başlat
+    startWaiting();
+  } else if (gameState.phase === 'waiting') {
+    // Çok erken tıkladı!
+    tooSoon();
+  } else if (gameState.phase === 'ready') {
+    // Başarılı! Süreyi kaydet
+    recordTime();
+  }
+}
+
+function startWaiting() {
+  const area = document.getElementById('reaction-area');
+  const status = document.getElementById('game-status');
+  
+  gameState.phase = 'waiting';
+  area.className = 'reaction-area waiting';
+  status.textContent = 'YEŞİL IŞIK İÇİN BEKLE...';
+  document.getElementById('reaction-time').textContent = '';
+
+  // Rastgele süre bekle (2-6 saniye)
+  const waitTime = Math.random() * 4000 + 2000;
+  
+  gameState.timeoutId = setTimeout(() => {
+    gameState.phase = 'ready';
+    gameState.startTime = Date.now();
+    area.className = 'reaction-area ready';
+    status.textContent = 'ŞİMDİ TIKLA!';
+  }, waitTime);
+}
+
+function tooSoon() {
+  clearTimeout(gameState.timeoutId);
+  const area = document.getElementById('reaction-area');
+  const status = document.getElementById('game-status');
+  
+  area.className = 'reaction-area too-soon';
+  status.textContent = 'ÇOK ERKEN! TEKRAR DENE';
+  
+  setTimeout(() => {
+    gameState.phase = 'idle';
+    area.className = 'reaction-area';
+    status.textContent = 'BAŞLATMAK İÇİN TIKLA';
+  }, 1500);
+}
+
+function recordTime() {
+  const reactionTime = Date.now() - gameState.startTime;
+  gameState.attempts.push(reactionTime);
+  gameState.currentAttempt++;
+  
+  const area = document.getElementById('reaction-area');
+  const status = document.getElementById('game-status');
+  const display = document.getElementById('reaction-time');
+  
+  area.className = 'reaction-area success';
+  status.textContent = 'HARİKA!';
+  display.textContent = reactionTime + 'ms';
+  
+  // En iyi skoru güncelle
+  if (bestScore === '-' || reactionTime < parseInt(bestScore)) {
+    bestScore = reactionTime;
+    localStorage.setItem('mindforge_best', bestScore);
+    document.getElementById('best-time').textContent = bestScore + 'ms';
+  }
+  
+  updateDisplay();
+  updateResults();
+  
+  // 5 deneme tamamlandı mı?
+  if (gameState.currentAttempt >= gameState.maxAttempts) {
+    setTimeout(finishGame, 1500);
+  } else {
+    setTimeout(() => {
+      gameState.phase = 'idle';
+      area.className = 'reaction-area';
+      status.textContent = 'BAŞLATMAK İÇİN TIKLA';
+      display.textContent = '';
+    }, 1500);
+  }
+}
+
+function updateDisplay() {
+  document.getElementById('attempt-count').textContent = 
+    `${gameState.currentAttempt + 1}/${gameState.maxAttempts}`;
+  
+  if (gameState.attempts.length > 0) {
+    const avg = Math.round(gameState.attempts.reduce((a,b) => a+b) / gameState.attempts.length);
+    document.getElementById('avg-time').textContent = avg + 'ms';
+  }
+}
+
+function updateResults() {
+  const container = document.getElementById('results-list');
+  container.innerHTML = '';
+  
+  gameState.attempts.forEach((time, index) => {
+    const div = document.createElement('div');
+    div.className = 'result-item';
+    
+    // Renklendirme
+    if (time < 250) div.classList.add('excellent');
+    else if (time < 350) div.classList.add('good');
+    else div.classList.add('average');
+    
+    div.textContent = `#${index + 1}: ${time}ms`;
+    container.appendChild(div);
+  });
+}
+
+function finishGame() {
+  const avg = Math.round(gameState.attempts.reduce((a,b) => a+b) / gameState.attempts.length);
+  const status = document.getElementById('game-status');
+  
+  let message = '';
+  if (avg < 250) message = '🏆 USTASIN!';
+  else if (avg < 300) message = '⭐ ÇOK İYİ!';
+  else if (avg < 400) message = '👍 İYİ!';
+  else message = '💪 PRATİK YAP!';
+  
+  status.innerHTML = `${message}<br>Ortalama: ${avg}ms<br><br>TEKRAR OYNAMAK İÇİN TIKLA`;
+  
+  // İlerlemeyi güncelle (ana sayfadaki %45'i artır)
+  updateProgress('mindforge', avg);
+  
+  gameState.phase = 'finished';
+}
+
+function updateProgress(module, score) {
+  // Skora göre ilerleme yüzdesi hesapla
+  // 200ms = 100%, 500ms = 0%
+  let percentage = Math.max(0, Math.min(100, Math.round((500 - score) / 3)));
+  
+  // LocalStorage'a kaydet
+  let progress = JSON.parse(localStorage.getItem('mindforge_progress') || '{}');
+  progress[module] = percentage;
+  localStorage.setItem('mindforge_progress', JSON.stringify(progress));
+  
+  // Ana sayfadaki ilerleme çubuğunu güncelle (varsa)
+  const progressBar = document.querySelector('.module-mindforge .progress');
+  if (progressBar) {
+    progressBar.style.width = percentage + '%';
+    progressBar.textContent = percentage + '%';
+  }
+}
+
+// ESC tuşu ile kapatma
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeMindForge();
+});
+</script>
