@@ -364,4 +364,261 @@
 
     // Sayfa açıldığında ayarları yükle
     window.addEventListener('load', loadSettings);
+    
 </script>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MindForge Pro</title>
+    <style>
+        :root {
+            --primary: #6366f1; --accent: #06b6d4; --bg: #0f0f23;
+            --surface: #1a1a2e; --text: #f8fafc; --text-muted: #94a3b8;
+            --success: #10b981; --danger: #ef4444;
+        }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 90px; overflow-x: hidden; }
+        .app-container { max-width: 430px; margin: 0 auto; padding: 20px; }
+        .screen { display: none; min-height: 100vh; }
+        .screen.active { display: block; animation: fadeIn 0.3s; }
+        .card { background: var(--surface); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .module-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; }
+        input, select { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #333; background: #0b0b1a; color: white; box-sizing: border-box; font-size: 14px; }
+        .btn { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: none; padding: 15px; border-radius: 14px; width: 100%; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn:active { transform: scale(0.98); }
+        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(26, 26, 46, 0.95); display: flex; justify-content: space-around; padding: 15px 0 30px; backdrop-filter: blur(15px); border-top: 1px solid rgba(255,255,255,0.05); z-index: 1000; }
+        .nav-item { font-size: 24px; cursor: pointer; opacity: 0.5; transition: 0.3s; }
+        .nav-item.active { opacity: 1; transform: translateY(-3px); color: var(--accent); }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    
+    <div class="screen active" id="homeScreen">
+        <h1 style="color: var(--accent); margin-bottom: 5px;">MindForge</h1>
+        <p style="color: var(--text-muted); margin-bottom: 30px;">İş ve Kişisel Gelişim Paneli</p>
+        <div class="module-grid">
+            <div class="card" onclick="showScreen('businessScreen', document.querySelectorAll('.nav-item')[1])">
+                <div style="font-size:32px; margin-bottom:10px;">💼</div>
+                <h3 style="margin:0;">Business</h3>
+                <p style="font-size:11px; color:var(--text-muted);">Maliyet & Fiyat</p>
+            </div>
+            <div class="card" onclick="showScreen('logicScreen', document.querySelectorAll('.nav-item')[2])">
+                <div style="font-size:32px; margin-bottom:10px;">🧠</div>
+                <h3 style="margin:0;">Logic</h3>
+                <p style="font-size:11px; color:var(--text-muted);">Zeka Testi</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="screen" id="businessScreen">
+        <h2 style="margin-top:0;">BusinessForge</h2>
+        <div class="card">
+            <label>Ölçüler (cm)</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="number" id="w" placeholder="En">
+                <input type="number" id="h" placeholder="Boy">
+            </div>
+            
+            <label>Malzeme Seçimi</label>
+            <select id="mType" onchange="syncPriceWithSelect()">
+                <option value="450">Şeffaf Pleksi</option>
+                <option value="600">Renkli Pleksi</option>
+                <option value="250">Ahşap/MDF</option>
+                <option value="custom">Özel Fiyat Gir...</option>
+            </select>
+            
+            <input type="number" id="uPrice" placeholder="m² Birim Fiyatı (₺)">
+            
+            <label>Kâr Marjı</label>
+            <select id="margin">
+                <option value="1.5">%50 Kâr</option>
+                <option value="2">%100 Kâr</option>
+                <option value="2.5">%150 Kâr</option>
+                <option value="3">%200 Kâr</option>
+            </select>
+
+            <button class="btn" onclick="calculate()">HASSAS HESAPLA</button>
+            
+            <div id="res" style="margin-top: 20px; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                <div id="areaText" style="color: var(--text-muted); font-size: 13px;">Alan: 0.00 m²</div>
+                <div id="priceText" style="font-size: 28px; font-weight: 800; color: var(--success); margin-top: 5px;">0 ₺</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="screen" id="logicScreen">
+        <h2 style="margin-top:0;">LogicForge</h2>
+        <div class="card">
+            <div id="gameStatus" style="text-align:center; color:var(--accent); font-weight:bold; margin-bottom:15px;">Hızlı Hesapla!</div>
+            <div id="questBox" style="display:none; text-align:center;">
+                <p id="questText" style="font-weight:bold; font-size:16px;"></p>
+                <input type="number" id="userGuess" placeholder="Tahminin (₺)">
+                <button class="btn" onclick="checkGuess()">CEVAPLA</button>
+            </div>
+            <button id="startLogicBtn" class="btn" onclick="startLogicGame()">OYUNU BAŞLAT</button>
+            <div style="display:flex; justify-content:space-around; margin-top:20px; font-size:12px; color:var(--text-muted);">
+                <span>Puan: <b id="logicScore">0</b></span>
+                <span>Süre: <b id="logicTimer">30s</b></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="screen" id="settingsScreen">
+        <h2 style="margin-top:0;">Ayarlar</h2>
+        <div class="card">
+            <h4 style="color:var(--accent); margin:0 0 15px 0;">💰 Birim Fiyatlar (₺/m²)</h4>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div><label>Şeffaf</label><input type="number" id="set_trans" oninput="saveSettings()"></div>
+                <div><label>Renkli</label><input type="number" id="set_color" oninput="saveSettings()"></div>
+                <div><label>Ahşap</label><input type="number" id="set_wood" oninput="saveSettings()"></div>
+                <div><label>Sabit Gider</label><input type="number" id="set_fixed" oninput="saveSettings()"></div>
+            </div>
+            <label style="margin-top:10px;">Varsayılan Fire (%)</label>
+            <input type="number" id="set_waste" oninput="saveSettings()">
+        </div>
+        <button class="btn" style="background:var(--danger);" onclick="resetSettings()">FABRİKA AYARLARINA DÖN</button>
+    </div>
+
+    <div class="nav-bar">
+        <div class="nav-item active" onclick="showScreen('homeScreen', this)">🏠</div>
+        <div class="nav-item" onclick="showScreen('businessScreen', this)">📊</div>
+        <div class="nav-item" onclick="showScreen('logicScreen', this)">🧩</div>
+        <div class="nav-item" onclick="showScreen('settingsScreen', this)">⚙️</div>
+    </div>
+
+</div>
+
+<script>
+    // --- KONFİGÜRASYON ---
+    const defaults = { trans: 450, color: 600, wood: 250, fixed: 50, waste: 10 };
+    let config = { ...defaults };
+
+    function showScreen(id, el) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        if(el) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+        }
+    }
+
+    // --- AYARLARIN KAYDI VE YÜKLENMESİ ---
+    function saveSettings() {
+        config = {
+            trans: document.getElementById('set_trans').value || 0,
+            color: document.getElementById('set_color').value || 0,
+            wood: document.getElementById('set_wood').value || 0,
+            fixed: document.getElementById('set_fixed').value || 0,
+            waste: document.getElementById('set_waste').value || 0
+        };
+        localStorage.setItem('mf_pro_config_v2', JSON.stringify(config));
+        syncUIWithSettings();
+    }
+
+    function loadSettings() {
+        const saved = localStorage.getItem('mf_pro_config_v2');
+        if(saved) config = JSON.parse(saved);
+        
+        document.getElementById('set_trans').value = config.trans;
+        document.getElementById('set_color').value = config.color;
+        document.getElementById('set_wood').value = config.wood;
+        document.getElementById('set_fixed').value = config.fixed;
+        document.getElementById('set_waste').value = config.waste;
+        
+        syncUIWithSettings();
+    }
+
+    function syncUIWithSettings() {
+        const sel = document.getElementById('mType');
+        sel.options[0].text = `Şeffaf Pleksi (${config.trans}₺)`;
+        sel.options[1].text = `Renkli Pleksi (${config.color}₺)`;
+        sel.options[2].text = `Ahşap/MDF (${config.wood}₺)`;
+        syncPriceWithSelect();
+    }
+
+    function syncPriceWithSelect() {
+        const sel = document.getElementById('mType');
+        const pri = document.getElementById('uPrice');
+        if(sel.selectedIndex === 0) pri.value = config.trans;
+        else if(sel.selectedIndex === 1) pri.value = config.color;
+        else if(sel.selectedIndex === 2) pri.value = config.wood;
+    }
+
+    // --- HESAPLAMA MOTORU ---
+    function calculate() {
+        const w = parseFloat(document.getElementById('w').value) || 0;
+        const h = parseFloat(document.getElementById('h').value) || 0;
+        const unit = parseFloat(document.getElementById('uPrice').value) || 0;
+        const margin = parseFloat(document.getElementById('margin').value) || 1;
+
+        const area = (w * h) / 10000;
+        const materialCost = area * unit * (1 + config.waste / 100);
+        const totalCost = materialCost + parseFloat(config.fixed);
+        const final = Math.round(totalCost * margin);
+
+        document.getElementById('areaText').innerHTML = `Alan: ${area.toFixed(4)} m² | Maliyet: ${totalCost.toFixed(2)} ₺`;
+        document.getElementById('priceText').innerHTML = final + " ₺";
+    }
+
+    // --- LOGIC OYUNU ---
+    let gameActive = false, score = 0, timeLeft = 30, timerInterval, curPrice = 0;
+
+    function startLogicGame() {
+        gameActive = true; score = 0; timeLeft = 30;
+        document.getElementById('logicScore').innerText = score;
+        document.getElementById('startLogicBtn').style.display = 'none';
+        document.getElementById('questBox').style.display = 'block';
+        nextQuest();
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            document.getElementById('logicTimer').innerText = timeLeft + "s";
+            if(timeLeft <= 0) endGame();
+        }, 1000);
+    }
+
+    function nextQuest() {
+        const rw = Math.floor(Math.random() * 30) + 15;
+        const rh = Math.floor(Math.random() * 30) + 15;
+        const area = (rw * rh) / 10000;
+        const cost = (area * config.trans * (1 + config.waste / 100)) + parseFloat(config.fixed);
+        curPrice = Math.round(cost * 2);
+        document.getElementById('questText').innerText = `${rw}x${rh} cm Şeffaf Pleksi (%100 Kâr) Fiyatı?`;
+        document.getElementById('userGuess').value = "";
+        document.getElementById('userGuess').focus();
+    }
+
+    function checkGuess() {
+        const guess = parseInt(document.getElementById('userGuess').value);
+        if(Math.abs(guess - curPrice) < (curPrice * 0.15)) {
+            score += 10;
+            document.getElementById('gameStatus').innerText = "DOĞRU! 🎯";
+            document.getElementById('gameStatus').style.color = "var(--success)";
+        } else {
+            document.getElementById('gameStatus').innerText = `Hata! Doğrusu: ${curPrice}₺`;
+            document.getElementById('gameStatus').style.color = "var(--danger)";
+        }
+        document.getElementById('logicScore').innerText = score;
+        setTimeout(nextQuest, 1200);
+    }
+
+    function endGame() {
+        clearInterval(timerInterval);
+        gameActive = false;
+        document.getElementById('questBox').style.display = 'none';
+        document.getElementById('startLogicBtn').style.display = 'block';
+        document.getElementById('gameStatus').innerText = `Süre Bitti! Puan: ${score}`;
+    }
+
+    function resetSettings() { if(confirm("Tüm ayarlar sıfırlansın mı?")) { localStorage.clear(); location.reload(); } }
+    
+    // Uygulama başladığında ayarları yükle
+    window.onload = loadSettings;
+</script>
+
+</body>
+</html>
