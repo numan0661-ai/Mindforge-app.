@@ -1412,4 +1412,128 @@ async function initVoiceForge() {
         showToast("Mikrofon erişimi gerekli!");
     }
 }
+<div class="section-title">İş ve Strateji</div>
+<div class="modules-grid">
+    <div class="module-card" style="background: linear-gradient(135deg, #00b09b, #96c93d);" onclick="openModule('business')">
+        <div class="module-icon">💼</div>
+        <div class="module-title">BusinessForge</div>
+        <div class="module-desc">Maliyet hesapla ve siparişlerini yönet</div>
+    </div>
+    
+    <div class="module-card" style="background: linear-gradient(135deg, #8e2de2, #4a00e0);" onclick="openModule('logic_advanced')">
+        <div class="module-icon">🧠</div>
+        <div class="module-title">Strateji Odası</div>
+        <div class="module-desc">Hızlı karar verme ve zeka oyunları</div>
+    </div>
+</div>
+<div class="screen" id="businessScreen">
+    <div class="screen-header">
+        <button class="back-btn" onclick="goHome()">←</button>
+        <div class="screen-title">BusinessForge</div>
+        <div class="screen-subtitle">Maliyet ve Sipariş Yönetimi</div>
+    </div>
+    
+    <div class="exercise-list">
+        <div class="exercise-card" style="border-left: 5px solid var(--success);">
+            <div class="exercise-name">💰 Hızlı Fiyat Teklifi</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
+                <input type="number" id="matCost" placeholder="Malzeme (₺)" style="padding: 10px; border-radius: 8px; border: 1px solid #333; background: #0f0f23; color: white;">
+                <input type="number" id="timeMin" placeholder="Süre (Dakika)" style="padding: 10px; border-radius: 8px; border: 1px solid #333; background: #0f0f23; color: white;">
+                <input type="number" id="shipping" placeholder="Kargo (₺)" value="0" style="padding: 10px; border-radius: 8px; border: 1px solid #333; background: #0f0f23; color: white;">
+                <select id="profitMargin" style="padding: 10px; border-radius: 8px; border: 1px solid #333; background: #0f0f23; color: white;">
+                    <option value="1.5">%50 Kâr</option>
+                    <option value="2">%100 Kâr</option>
+                    <option value="2.5">%150 Kâr</option>
+                </select>
+            </div>
+            <button class="exercise-btn" style="margin-top: 15px;" onclick="calculatePrice()">Hesapla</button>
+            <div id="priceResult" style="margin-top: 15px; font-size: 20px; font-weight: 800; color: var(--success); text-align: center;"></div>
+        </div>
+
+        <div class="section-title">📦 Aktif Siparişler</div>
+        <div id="orderList">
+            </div>
+        <button class="exercise-btn" style="background: var(--surface-light); border: 1px dashed var(--text-muted);" onclick="addNewOrder()">+ Yeni Sipariş Ekle</button>
+    </div>
+</div>
+function calculatePrice() {
+    const mat = parseFloat(document.getElementById('matCost').value) || 0;
+    const time = parseFloat(document.getElementById('timeMin').value) || 0;
+    const ship = parseFloat(document.getElementById('shipping').value) || 0;
+    const margin = parseFloat(document.getElementById('profitMargin').value);
+    
+    const minuteRate = 5; // Lazer makinesinin dakikada yaktığı elektrik/amortisman (Ayarlanabilir)
+    
+    const totalCost = mat + ship + (time * minuteRate);
+    const finalPrice = Math.round(totalCost * margin);
+    
+    document.getElementById('priceResult').innerHTML = `Önerilen Satış: ${finalPrice} ₺ <br> <small style="font-size: 12px; color: grey;">Maliyet: ${totalCost.toFixed(2)} ₺</small>`;
+}
+
+function addNewOrder() {
+    const customer = prompt("Müşteri Adı ve Ürün:");
+    if (customer) {
+        const orderId = Date.now();
+        const order = { id: orderId, name: customer, status: 'Beklemede' };
+        // IndexedDB veya LocalStorage'a kaydetme işlemi buraya gelecek
+        showToast("Sipariş listeye eklendi!");
+        renderOrders();
+    }
+}
+<div class="exercise-card" style="border-left: 5px solid var(--accent);">
+    <div class="exercise-name">📏 Akıllı Ölçü ve Fiyat</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
+        <input type="number" id="widthCm" placeholder="En (cm)" style="padding: 12px; border-radius: 8px; border: 1px solid #333; background: #1a1a2e; color: white;">
+        <input type="number" id="heightCm" placeholder="Boy (cm)" style="padding: 12px; border-radius: 8px; border: 1px solid #333; background: #1a1a2e; color: white;">
+        
+        <select id="materialType" onchange="updateUnitPrice()" style="padding: 12px; border-radius: 8px; border: 1px solid #333; background: #1a1a2e; color: white; grid-column: span 2;">
+            <option value="450">3mm Şeffaf Pleksi (450₺/m²)</option>
+            <option value="600">3mm Renkli Pleksi (600₺/m²)</option>
+            <option value="250">3mm Ahşap/MDF (250₺/m²)</option>
+            <option value="custom">Özel Birim Fiyat Gir...</option>
+        </select>
+        
+        <input type="number" id="unitPrice" placeholder="m² Fiyatı (₺)" style="padding: 12px; border-radius: 8px; border: 1px solid #333; background: #1a1a2e; color: white;">
+        <input type="number" id="wasteFactor" placeholder="Fire Payı (%)" value="10" style="padding: 12px; border-radius: 8px; border: 1px solid #333; background: #1a1a2e; color: white;">
+    </div>
+    
+    <div id="areaDisplay" style="margin-top: 10px; font-size: 13px; color: var(--text-muted); text-align: center;">
+        Hesaplanan Alan: 0 m²
+    </div>
+    
+    <button class="exercise-btn" style="margin-top: 15px; background: linear-gradient(135deg, var(--accent), var(--primary));" onclick="calculateSmartPrice()">
+        Hassas Hesapla
+    </button>
+</div>
+function updateUnitPrice() {
+    const select = document.getElementById('materialType');
+    const unitInput = document.getElementById('unitPrice');
+    if (select.value !== "custom") {
+        unitInput.value = select.value;
+    }
+}
+
+function calculateSmartPrice() {
+    const w = parseFloat(document.getElementById('widthCm').value) || 0;
+    const h = parseFloat(document.getElementById('heightCm').value) || 0;
+    const unitP = parseFloat(document.getElementById('unitPrice').value) || 0;
+    const waste = parseFloat(document.getElementById('wasteFactor').value) || 0;
+    const margin = parseFloat(document.getElementById('profitMargin').value) || 1.5;
+    
+    // Alanı m² cinsinden hesapla (1 m² = 10,000 cm²)
+    const areaM2 = (w * h) / 10000;
+    
+    // Fireli Malzeme Maliyeti
+    const materialCost = areaM2 * unitP * (1 + waste / 100);
+    
+    // Diğer sabit giderler (Kargo vb. yukarıdaki fonksiyondan çekilebilir)
+    const totalCost = materialCost + 50; // Örnek kargo + sabit gider
+    const finalPrice = Math.round(totalCost * margin);
+
+    // Sonucu Yazdır
+    document.getElementById('areaDisplay').innerHTML = `Alan: ${areaM2.toFixed(4)} m² | Malzeme: ${materialCost.toFixed(2)} ₺`;
+    document.getElementById('priceResult').innerHTML = `Önerilen Satış: ${finalPrice} ₺`;
+    
+    showToast("Fiyat başarıyla güncellendi!");
+}
 
