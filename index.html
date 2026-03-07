@@ -1346,17 +1346,7 @@
             lastTouchEnd = now;
         }, false);
     </script>
-</body>
-</html>
-<div class="voice-analyzer-container" style="padding: 20px; text-align: center; background: var(--surface-light); border-radius: 24px; margin: 0 20px 20px;">
-    <canvas id="visualizer" style="width: 100%; height: 100px; border-radius: 12px;"></canvas>
-    <div id="voiceStatus" style="margin-top: 10px; font-size: 14px; color: var(--accent);">Mikrofon Hazır</div>
-    <div class="voice-controls" style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
-        <button id="recordBtn" class="control-btn primary" style="padding: 10px 20px;">🎤 Kaydı Başlat</button>
-        <button id="playBtn" class="control-btn secondary" style="padding: 10px 20px; display: none;">▶️ Dinle</button>
-    </div>
-</div>
-let audioCtx;
+    let audioCtx;
 let analyser;
 let source;
 let stream;
@@ -1412,6 +1402,42 @@ async function initVoiceForge() {
         showToast("Mikrofon erişimi gerekli!");
     }
 }
+            </bufferLengthscript>
+    function calculatePrice() {
+    const mat = parseFloat(document.getElementById('matCost').value) || 0;
+    const time = parseFloat(document.getElementById('timeMin').value) || 0;
+    const ship = parseFloat(document.getElementById('shipping').value) || 0;
+    const margin = parseFloat(document.getElementById('profitMargin').value);
+    
+    const minuteRate = 5; // Lazer makinesinin dakikada yaktığı elektrik/amortisman (Ayarlanabilir)
+    
+    const totalCost = mat + ship + (time * minuteRate);
+    const finalPrice = Math.round(totalCost * margin);
+    
+    document.getElementById('priceResult').innerHTML = `Önerilen Satış: ${finalPrice} ₺ <br> <small style="font-size: 12px; color: grey;">Maliyet: ${totalCost.toFixed(2)} ₺</small>`;
+}
+
+function addNewOrder() {
+    const customer = prompt("Müşteri Adı ve Ürün:");
+    if (customer) {
+        const orderId = Date.now();
+        const order = { id: orderId, name: customer, status: 'Beklemede' };
+        // IndexedDB veya LocalStorage'a kaydetme işlemi buraya gelecek
+        showToast("Sipariş listeye eklendi!");
+        renderOrders();
+    }
+}
+
+</body>
+</html>
+<div class="voice-analyzer-container" style="padding: 20px; text-align: center; background: var(--surface-light); border-radius: 24px; margin: 0 20px 20px;">
+    <canvas id="visualizer" style="width: 100%; height: 100px; border-radius: 12px;"></canvas>
+    <div id="voiceStatus" style="margin-top: 10px; font-size: 14px; color: var(--accent);">Mikrofon Hazır</div>
+    <div class="voice-controls" style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+        <button id="recordBtn" class="control-btn primary" style="padding: 10px 20px;">🎤 Kaydı Başlat</button>
+        <button id="playBtn" class="control-btn secondary" style="padding: 10px 20px; display: none;">▶️ Dinle</button>
+    </div>
+</div>
 <div class="section-title">İş ve Strateji</div>
 <div class="modules-grid">
     <div class="module-card" style="background: linear-gradient(135deg, #00b09b, #96c93d);" onclick="openModule('business')">
@@ -1456,30 +1482,6 @@ async function initVoiceForge() {
         <button class="exercise-btn" style="background: var(--surface-light); border: 1px dashed var(--text-muted);" onclick="addNewOrder()">+ Yeni Sipariş Ekle</button>
     </div>
 </div>
-function calculatePrice() {
-    const mat = parseFloat(document.getElementById('matCost').value) || 0;
-    const time = parseFloat(document.getElementById('timeMin').value) || 0;
-    const ship = parseFloat(document.getElementById('shipping').value) || 0;
-    const margin = parseFloat(document.getElementById('profitMargin').value);
-    
-    const minuteRate = 5; // Lazer makinesinin dakikada yaktığı elektrik/amortisman (Ayarlanabilir)
-    
-    const totalCost = mat + ship + (time * minuteRate);
-    const finalPrice = Math.round(totalCost * margin);
-    
-    document.getElementById('priceResult').innerHTML = `Önerilen Satış: ${finalPrice} ₺ <br> <small style="font-size: 12px; color: grey;">Maliyet: ${totalCost.toFixed(2)} ₺</small>`;
-}
-
-function addNewOrder() {
-    const customer = prompt("Müşteri Adı ve Ürün:");
-    if (customer) {
-        const orderId = Date.now();
-        const order = { id: orderId, name: customer, status: 'Beklemede' };
-        // IndexedDB veya LocalStorage'a kaydetme işlemi buraya gelecek
-        showToast("Sipariş listeye eklendi!");
-        renderOrders();
-    }
-}
 <div class="exercise-card" style="border-left: 5px solid var(--accent);">
     <div class="exercise-name">📏 Akıllı Ölçü ve Fiyat</div>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
@@ -1503,9 +1505,8 @@ function addNewOrder() {
     
     <button class="exercise-btn" style="margin-top: 15px; background: linear-gradient(135deg, var(--accent), var(--primary));" onclick="calculateSmartPrice()">
         Hassas Hesapla
-    </button>
-</div>
-function updateUnitPrice() {
+    </script>
+        function updateUnitPrice() {
     const select = document.getElementById('materialType');
     const unitInput = document.getElementById('unitPrice');
     if (select.value !== "custom") {
@@ -1537,3 +1538,5 @@ function calculateSmartPrice() {
     showToast("Fiyat başarıyla güncellendi!");
 }
 
+    </button>
+</div>
