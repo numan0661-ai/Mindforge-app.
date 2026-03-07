@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MindForge UV Pro-Master</title>
+    <title>MindForge UV Master Elite</title>
     <style>
         :root {
             --primary: #6366f1; --accent: #06b6d4; --bg: #0b0b1a;
@@ -34,14 +34,14 @@
         .nav-item { font-size: 24px; cursor: pointer; opacity: 0.4; transition: 0.3s; }
         .nav-item.active { opacity: 1; color: var(--accent); }
 
-        /* UV Spesifik */
-        .uv-header { color: var(--uv); border-left: 4px solid var(--uv); padding-left: 10px; margin-bottom: 20px; }
-        .trouble-item { border-bottom: 1px solid #2d2d44; padding: 10px 0; }
-        .trouble-item b { color: var(--danger); display: block; margin-bottom: 4px; }
-        .trouble-item p { font-size: 13px; color: var(--success); margin: 0; }
-        .uv-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
-        .uv-table th { color: var(--uv); text-align: left; padding: 5px; border-bottom: 1px solid #333; }
-        .uv-table td { padding: 8px 5px; border-bottom: 1px solid #222; }
+        /* UV Akademi Detay */
+        .uv-section-title { color: var(--uv); font-weight: bold; border-bottom: 1px solid var(--uv); padding-bottom: 5px; margin-bottom: 15px; display: block; font-size: 16px; }
+        .lesson-box { padding: 12px; border-radius: 12px; background: rgba(255,255,255,0.03); margin-bottom: 10px; border-left: 3px solid var(--purple); }
+        .lesson-box b { color: var(--gold); font-size: 13px; display: block; margin-bottom: 4px; }
+        .lesson-box p { font-size: 12px; margin: 0; color: var(--text-muted); line-height: 1.5; }
+        .uv-table { width: 100%; font-size: 11px; margin-top: 10px; border-collapse: collapse; }
+        .uv-table td, .uv-table th { padding: 8px; border: 1px solid #333; }
+        .uv-table th { background: #222; color: var(--uv); }
     </style>
 </head>
 <body>
@@ -50,17 +50,25 @@
     
     <div class="screen active" id="homeScreen">
         <h2 style="color:var(--accent)">MindForge Master</h2>
+        
         <div class="card" style="border: 1px solid var(--gold);">
-            <div style="font-size: 10px; background: var(--gold); color: black; padding: 2px 8px; border-radius: 10px; font-weight: bold; position: absolute; top: 15px; right: 15px;" id="rankTag">ÇIRAK</div>
+            <div style="font-size: 10px; background: var(--gold); color: black; padding: 2px 8px; border-radius: 10px; font-weight: bold; position: absolute; top: 15px; right: 15px;">KALFA</div>
             <h4 style="margin:0; color:var(--gold);">Gelişim Seviyesi</h4>
             <div style="font-size: 12px; margin-top: 5px;">Lvl: <span id="lvlLabel">1</span> | EXP: <span id="expLabel">0</span>/100</div>
             <div class="lvl-bar-bg"><div class="lvl-bar-fill" id="lvlFill"></div></div>
         </div>
 
-        <div class="grid-2">
-            <div class="card" onclick="showScreen('uvScreen')" style="text-align:center; border: 1px solid var(--uv); grid-column: span 2; background: linear-gradient(145deg, #16162d, #25103a);">
-                <span style="font-size:28px;">🟣</span><br><b>UV Pro-Master</b><br><small style="color:var(--text-muted)">Teknik Rehber & Sorun Giderici</small>
+        <div class="card" onclick="showScreen('uvAcademyScreen')" style="background: linear-gradient(135deg, #16162d, #3b0066); border: 2px solid var(--uv);">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <span style="font-size:40px;">🟣</span>
+                <div>
+                    <h3 style="margin:0; color:white;">UV AKADEMİ</h3>
+                    <small style="color:var(--uv-neon); font-weight:bold;">0'dan Ustalığa Eğitim</small>
+                </div>
             </div>
+        </div>
+
+        <div class="grid-2">
             <div class="card" onclick="showScreen('corelScreen')" style="text-align:center;">🎨<br><small>CorelMaster</small></div>
             <div class="card" onclick="showScreen('wordScreen')" style="text-align:center;">📚<br><small>5 Kelime</small></div>
             <div class="card" onclick="showScreen('exerciseScreen')" style="text-align:center;">🏋️‍♂️<br><small>Egzersiz</small></div>
@@ -68,70 +76,94 @@
         </div>
     </div>
 
-    <div class="screen" id="uvScreen">
+    <div class="screen" id="uvAcademyScreen">
         <button class="btn" style="background:none; color:var(--accent); text-align:left; padding:0;" onclick="showScreen('homeScreen')">← Geri</button>
-        <h2 class="uv-header">UV Teknik Eğitim & Arıza Rehberi</h2>
-        
+        <h2 style="color:var(--uv); margin-bottom:5px;">UV Baskı Ansiklopedisi</h2>
+        <p style="font-size:11px; color:var(--text-muted); margin-bottom:20px;">Bir "Usta"nın bilmesi gereken tüm teknik detaylar.</p>
+
         <div class="card">
-            <h4 style="margin:0 0 10px 0; color:var(--gold);">📍 İdeal Baskı Ayarları</h4>
+            <span class="uv-section-title">01. Cihaz Anatomisi</span>
+            <div class="lesson-box">
+                <b>Baskı Kafası (Printhead)</b>
+                <p>Milyonlarca mikronluk delikten boyayı püskürten en pahalı parçadır. Boyanın kurumaması için sürekli "yaş" kalmalıdır.</p>
+            </div>
+            <div class="lesson-box">
+                <b>UV LED Lamba</b>
+                <p>Boyayı saniyeler içinde donduran (kürleyen) kısımdır. Dalga boyu boyanın yapısıyla eşleşmelidir.</p>
+            </div>
+            <div class="lesson-box">
+                <b>Capping Station & Vakum</b>
+                <p>Kafanın dinlendiği ve temizlendiği yerdir. Buradaki sızdırmazlık, kafanın hava alıp kurumasını engeller.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <span class="uv-section-title">02. Corel'de Katman Mantığı</span>
+            <div class="lesson-box">
+                <b>Beyaz (White) Katmanı</b>
+                <p>Corel'de boyanacak alanı seçip "Spot Color" (genelde RD_WHITE) olarak tanımlamalısın. Bu, şeffaf plekside renklerin görünmesini sağlar.</p>
+            </div>
+            <div class="lesson-box">
+                <b>Lak (Varnish) Hazırlığı</b>
+                <p>Ürüne kabartma vermek için aynı beyaz gibi "RD_VARNISH" katmanı oluşturulur. Işıkla birleşince parlar.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <span class="uv-section-title">03. Malzeme ve Primer</span>
             <table class="uv-table">
-                <tr><th>Malzeme</th><th>Kafa Yük.</th><th>Lamba</th><th>Primer</th></tr>
-                <tr><td>Pleksi</td><td>2.0 mm</td><td>%60</td><td>Gerekmez</td></tr>
-                <tr><td>Ahşap</td><td>2.5 mm</td><td>%80</td><td>Gerekmez</td></tr>
-                <tr><td>Cam</td><td>1.8 mm</td><td>%70</td><td>ŞART</td></tr>
-                <tr><td>Metal</td><td>1.8 mm</td><td>%90</td><td>ŞART</td></tr>
+                <tr><th>Malzeme</th><th>Sorun</th><th>Çözüm</th></tr>
+                <tr><td>Cam/Metal</td><td>Boya Dökülür</td><td>Cam Primeri sür</td></tr>
+                <tr><td>Pleksi</td><td>Toz Çeker</td><td>Antistatik Alkol</td></tr>
+                <tr><td>Ahşap</td><td>Boya Emer</td><td>Çift Kat Beyaz bas</td></tr>
             </table>
         </div>
 
         <div class="card">
-            <h4 style="margin:0 0 10px 0; color:var(--danger);">⚠️ Sorun Giderme (Usta Notları)</h4>
-            <div class="trouble-item">
-                <b>Boya Pleksiden Soyuluyor?</b>
-                <p>Yüzeyi İzopropil Alkol ile temizlemedin veya statik elektrik var. Antistatik bez kullan.</p>
+            <span class="uv-section-title">04. Arıza & Müdahale</span>
+            <div class="lesson-box" style="border-left-color:var(--danger);">
+                <b style="color:var(--danger);">Kafa Çiziyor (Banding)</b>
+                <p>Neden: Bazı nozzlar tıkalı.<br>Çözüm: Flush/Temizlik yap. Mürekkep hattında hava var mı bak.</p>
             </div>
-            <div class="trouble-item">
-                <b>Baskıda Çizgiler (Banding) Var?</b>
-                <p>Kafa tıkalı veya Step ayarı bozuk. Nozzle Check yap, gerekirse kafa temizliği (Flush) yap.</p>
-            </div>
-            <div class="trouble-item">
-                <b>Beyaz Renk Sarımtırak Çıkıyor?</b>
-                <p>Beyaz boya çökmüş olabilir. Tankı hafifçe çalkala ve devirdaim yaptır.</p>
+            <div class="lesson-box" style="border-left-color:var(--danger);">
+                <b style="color:var(--danger);">Boya Püskürmesi (Sprey)</b>
+                <p>Neden: Statik elektrik veya kafa çok yüksek.<br>Çözüm: Kafa mesafesini 2mm'ye indir. Yüzeyi alkolle sil.</p>
             </div>
         </div>
 
-        <button class="btn btn-uv" onclick="addExp(100); alert('UV Master eğitimini okudun. +100 EXP');">BİLGİYİ ONAYLA</button>
+        <button class="btn btn-uv" onclick="addExp(100); alert('Tebrikler! UV Ansiklopedisi başarıyla tamamlandı. Rütben yükseliyor! +100 EXP');">EĞİTİMİ BİTİR</button>
+    </div>
+
+    <div class="screen" id="corelScreen">
+        <button class="btn" style="background:none; color:var(--accent);" onclick="showScreen('homeScreen')">← Geri</button>
+        <div class="card"><h4>⚡ Corel Quiz</h4><div id="corelQuest" style="text-align:center; margin:15px 0; font-weight:bold;"></div><div id="corelOpts" class="grid-2"></div></div>
+    </div>
+    
+    <div class="screen" id="wordScreen">
+        <button class="btn" style="background:none; color:var(--accent);" onclick="showScreen('homeScreen')">← Geri</button>
+        <div class="card"><h4>📚 Günün 5 Kelimesi</h4><div id="wordListBody"></div><button class="btn" style="background:var(--purple)" onclick="renderWords()">Yenile</button></div>
+    </div>
+
+    <div class="screen" id="exerciseScreen">
+        <button class="btn" style="background:none; color:var(--accent);" onclick="showScreen('homeScreen')">← Geri</button>
+        <div class="card"><h4>🏋️‍♂️ Antrenman</h4><div id="exListBody" style="line-height:1.8;"></div><button class="btn" onclick="logWorkout()">Tamamla ✅</button></div>
     </div>
 
     <div class="screen" id="businessScreen">
-        <button class="btn" style="background:none; color:var(--accent);" onclick="showScreen('homeScreen')">← Geri</button>
-        <h2>BusinessForge 2.5</h2>
+        <h2>BusinessForge</h2>
         <div class="card">
-            <label>En x Boy (cm)</label>
             <div class="grid-2"><input type="number" id="w" placeholder="En"><input type="number" id="h" placeholder="Boy"></div>
-            <label>Malzeme Seçimi</label><select id="mType" onchange="syncPrice()"></select>
+            <select id="mType" onchange="syncPrice()"></select>
             <input type="number" id="uPrice" placeholder="₺/m²">
-            <div style="margin: 10px 0; padding: 10px; border: 1px solid var(--uv); border-radius: 10px;">
-                <label style="color:var(--uv); font-weight:bold;">
-                    <input type="checkbox" id="uvCheck" onchange="calculate()"> UV Baskı Dahil mi?
-                </label>
-            </div>
             <button class="btn" onclick="calculate()">HESAPLA</button>
             <h2 id="finalRes" style="text-align:center; color:var(--success); margin-top:20px;">0₺</h2>
         </div>
     </div>
 
-    <div class="screen" id="corelScreen"><button class="btn" onclick="showScreen('homeScreen')">Geri</button><div class="card"><div id="corelQuest"></div><div id="corelOpts" class="grid-2"></div></div></div>
-    <div class="screen" id="wordScreen"><button class="btn" onclick="showScreen('homeScreen')">Geri</button><div class="card" id="wordListBody"></div></div>
-    <div class="screen" id="exerciseScreen"><button class="btn" onclick="showScreen('homeScreen')">Geri</button><div class="card" id="exListBody"></div><button class="btn" onclick="logWorkout()">Bitti</button></div>
-
     <div class="screen" id="settingsScreen">
         <h2>Ayarlar</h2>
-        <div class="card">
-            <label>Şeffaf m²</label><input type="number" id="set_trans" oninput="saveConfig()">
-            <label>Renkli m²</label><input type="number" id="set_color" oninput="saveConfig()">
-            <label>Sabit Gider</label><input type="number" id="set_fixed" oninput="saveConfig()">
-        </div>
-        <button class="btn" style="background:var(--danger)" onclick="resetSystem()">Sıfırla</button>
+        <div class="card"><label>Şeffaf m²</label><input type="number" id="set_trans" oninput="saveConfig()"><label>Renkli m²</label><input type="number" id="set_color" oninput="saveConfig()"></div>
+        <button class="btn" style="background:var(--danger)" onclick="resetSystem()">SIFIRLA</button>
     </div>
 
     <div class="nav-bar">
@@ -167,48 +199,56 @@
     function updateMasteryUI() {
         document.getElementById('lvlLabel').innerText = stats.lvl;
         document.getElementById('lvlFill').style.width = (stats.exp / (stats.lvl * 100)) * 100 + "%";
-        const ranks = ["ÇIRAK", "KALFA", "USTA", "ÜSTAT", "EFSANE"];
-        document.getElementById('rankTag').innerText = ranks[Math.min(Math.floor(stats.lvl/5), 4)];
         localStorage.setItem('mf_stats', JSON.stringify(stats));
     }
 
-    function calculate() {
-        const w = document.getElementById('w').value || 0;
-        const h = document.getElementById('h').value || 0;
-        const up = document.getElementById('uPrice').value || 0;
-        const area = (w * h) / 10000;
-        let base = (area * up) + parseFloat(config.fixed);
-        if(document.getElementById('uvCheck').checked) base += (area * 300); // Sabit UV m2 maliyeti 300tl eklendi
-        document.getElementById('finalRes').innerText = Math.round(base) + "₺";
-        addExp(5);
-    }
-
-    // Yardımıcı Fonksiyonlar
+    // --- COREL QUIZ ---
+    const corelData = [{q:"Sayfaya MERKEZLEMEK?", a:"P", o:["P","C","E","M"]}, {q:"Gruplama?", a:"Ctrl+G", o:["Ctrl+G","Ctrl+U","Ctrl+K","Ctrl+L"]}];
     function initCorelQuiz() {
-        document.getElementById('corelQuest').innerText = "Nesneyi SAYFAYA MERKEZLEMEK?";
-        document.getElementById('corelOpts').innerHTML = `<button class="btn" onclick="addExp(10);initCorelQuiz()">P</button><button class="btn" onclick="initCorelQuiz()">C</button>`;
-    }
-    function renderWords() {
-        document.getElementById('wordListBody').innerHTML = "<b>Liyakat:</b> Layık olma.<br><b>İntizam:</b> Düzen.";
-    }
-    function renderWorkout() {
-        document.getElementById('exListBody').innerHTML = "Şınav: 4x12<br>Mekik: 3x20";
-    }
-    function logWorkout() { 
-        workoutHistory.push(new Date().toLocaleDateString()); 
-        localStorage.setItem('mf_workout_history', JSON.stringify(workoutHistory)); 
-        addExp(50); alert("İşlendi!"); 
+        const q = corelData[Math.floor(Math.random()*corelData.length)];
+        document.getElementById('corelQuest').innerText = q.q;
+        document.getElementById('corelOpts').innerHTML = q.o.map(o => `<button class="btn btn-outline" onclick="if('${o}'=='${q.a}'){addExp(15);initCorelQuiz();}else{alert('Hata');initCorelQuiz();}">${o}</button>`).join('');
     }
 
+    // --- KELİMELER ---
+    const wordsBank = [{w:"Liyakat", m:"Layık olma."}, {w:"İntizam", m:"Düzen."}, {w:"Maharet", m:"Ustalık."}];
+    function renderWords() {
+        const shuffled = wordsBank.sort(() => 0.5 - Math.random()).slice(0, 3);
+        document.getElementById('wordListBody').innerHTML = shuffled.map(w => `<div style="border-bottom:1px solid #333; padding:10px 0;"><b>${w.w}:</b> ${w.m}</div>`).join('');
+    }
+
+    // --- EGZERSİZ ---
+    function renderWorkout() { document.getElementById('exListBody').innerHTML = "• Şınav: 4x12<br>• Squat: 3x15<br>• Plank: 45sn"; }
+    function logWorkout() {
+        const d = new Date().toLocaleDateString('tr-TR');
+        if(!workoutHistory.includes(d)){ workoutHistory.push(d); localStorage.setItem('mf_workout_history', JSON.stringify(workoutHistory)); addExp(50); }
+        alert("Başarıyla İşlendi! ✅");
+    }
+
+    function renderCalendar() {
+        const cal = document.getElementById('mainCalendar'); cal.innerHTML = "";
+        const now = new Date(); const days = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+        for(let i=1; i<=days; i++){
+            const dateStr = new Date(now.getFullYear(), now.getMonth(), i).toLocaleDateString('tr-TR');
+            const d = document.createElement('div'); d.className = `cal-day ${workoutHistory.includes(dateStr)?'done':''}`;
+            d.innerText = i; cal.appendChild(d);
+        }
+    }
+
+    // --- BUSINESS & SETTINGS ---
     function saveConfig() {
-        config = { trans: document.getElementById('set_trans').value, color: document.getElementById('set_color').value, fixed: document.getElementById('set_fixed').value };
-        localStorage.setItem('mf_elite_config', JSON.stringify(config));
-        updateUI();
+        config = { trans: document.getElementById('set_trans').value, color: document.getElementById('set_color').value, fixed: 50 };
+        localStorage.setItem('mf_elite_config', JSON.stringify(config)); updateUI();
     }
     function updateUI() {
         const sel = document.getElementById('mType');
         sel.innerHTML = `<option value="${config.trans}">Şeffaf</option><option value="${config.color}">Renkli</option>`;
         document.getElementById('uPrice').value = sel.value;
+    }
+    function calculate() {
+        const w = document.getElementById('w').value, h = document.getElementById('h').value;
+        const res = (((w*h)/10000)*document.getElementById('uPrice').value) + config.fixed;
+        document.getElementById('finalRes').innerText = Math.round(res) + "₺"; addExp(5);
     }
     function syncPrice() { document.getElementById('uPrice').value = document.getElementById('mType').value; }
 
@@ -216,8 +256,7 @@
         const saved = localStorage.getItem('mf_elite_config'); if(saved) config = JSON.parse(saved);
         document.getElementById('set_trans').value = config.trans;
         document.getElementById('set_color').value = config.color;
-        document.getElementById('set_fixed').value = config.fixed;
-        updateUI(); updateMasteryUI();
+        updateUI(); updateMasteryUI(); renderCalendar();
     };
     function resetSystem() { localStorage.clear(); location.reload(); }
 </script>
