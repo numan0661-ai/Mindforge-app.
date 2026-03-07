@@ -172,3 +172,95 @@
 
 </body>
 </html>
+<div class="screen" id="logicScreen">
+    <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:white; font-size:20px; cursor:pointer;">← Geri</button>
+    <h2>LogicForge: Hız Testi</h2>
+    
+    <div class="card" id="gameArea">
+        <div id="gameStatus" style="text-align:center; margin-bottom:15px; color:var(--accent); font-weight:bold;">Hazır mısın?</div>
+        
+        <div id="questBox" style="background:rgba(255,255,255,0.05); padding:20px; border-radius:15px; text-align:center; display:none;">
+            <div style="font-size:14px; color:var(--text-muted);">Senaryo:</div>
+            <div id="questText" style="font-size:18px; margin:10px 0; font-weight:bold;"></div>
+            <input type="number" id="userGuess" placeholder="Fiyat Tahmini (₺)">
+            <button class="btn" style="margin-top:10px;" onclick="checkGuess()">CEVAPLA</button>
+        </div>
+
+        <button id="startLogicBtn" class="btn" onclick="startLogicGame()">OYUNU BAŞLAT</button>
+        
+        <div id="logicStats" style="margin-top:20px; display:flex; justify-content:space-around; font-size:14px; color:var(--text-muted);">
+            <span>Puan: <b id="logicScore" style="color:var(--success);">0</b></span>
+            <span>Süre: <b id="logicTimer">0s</b></span>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentQuest = {};
+    let score = 0;
+    let gameActive = false;
+    let timeLeft = 30;
+    let timerInterval;
+
+    function startLogicGame() {
+        gameActive = true;
+        score = 0;
+        timeLeft = 30;
+        document.getElementById('logicScore').innerText = score;
+        document.getElementById('startLogicBtn').style.display = 'none';
+        document.getElementById('questBox').style.display = 'block';
+        document.getElementById('gameStatus').innerText = "Hızlı Hesapla!";
+        
+        nextQuest();
+        
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            document.getElementById('logicTimer').innerText = timeLeft + "s";
+            if(timeLeft <= 0) endGame();
+        }, 1000);
+    }
+
+    function nextQuest() {
+        const w = Math.floor(Math.random() * 50) + 10;
+        const h = Math.floor(Math.random() * 50) + 10;
+        const unitPrice = 400; // Standart m2 fiyatı baz alındı
+        const area = (w * h) / 10000;
+        const cost = (area * unitPrice) + 50; // + Sabit gider
+        const correctPrice = Math.round(cost * 2); // %100 kar hedefi
+
+        currentQuest = { price: correctPrice };
+        document.getElementById('questText').innerText = `${w}x${h} cm Pleksi için %100 karlı fiyat nedir?`;
+        document.getElementById('userGuess').value = "";
+        document.getElementById('userGuess').focus();
+    }
+
+    function checkGuess() {
+        if(!gameActive) return;
+        const guess = parseInt(document.getElementById('userGuess').value);
+        const diff = Math.abs(guess - currentQuest.price);
+
+        if(diff <= (currentQuest.price * 0.1)) { // %10 tolerans payı
+            score += 10;
+            document.getElementById('gameStatus').innerText = "Harika! Tam isabet.";
+            document.getElementById('gameStatus').style.color = "var(--success)";
+        } else {
+            document.getElementById('gameStatus').innerText = "Hatalı! Doğrusu: " + currentQuest.price + "₺";
+            document.getElementById('gameStatus').style.color = "#ef4444";
+        }
+        
+        document.getElementById('logicScore').innerText = score;
+        setTimeout(nextQuest, 1000);
+    }
+
+    function endGame() {
+        clearInterval(timerInterval);
+        gameActive = false;
+        document.getElementById('questBox').style.display = 'none';
+        document.getElementById('startLogicBtn').style.display = 'block';
+        document.getElementById('startLogicBtn').innerText = "TEKRAR DENE";
+        document.getElementById('gameStatus').innerText = "Oyun Bitti! Toplam Puan: " + score;
+        
+        // Gelişmiş AI Analizi (Basit versiyon)
+        if(score > 50) showToast("Ticari zekan çok keskin! 🔥");
+    }
+</script>
