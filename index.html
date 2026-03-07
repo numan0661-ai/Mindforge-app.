@@ -3,42 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MindForge Master</title>
+    <title>MindForge Elite</title>
     <style>
         :root {
             --primary: #6366f1; --accent: #06b6d4; --bg: #0b0b1a;
             --surface: #16162d; --text: #ffffff; --text-muted: #94a3b8;
             --success: #10b981; --gold: #f59e0b; --purple: #a855f7; --danger: #ef4444;
         }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 90px; overflow-x: hidden; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 90px; }
         .app-container { max-width: 430px; margin: 0 auto; padding: 15px; }
         .screen { display: none; min-height: 100vh; }
-        .screen.active { display: block; animation: fadeIn 0.2s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        .card { background: var(--surface); border-radius: 18px; padding: 18px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
-        .module-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .module-card { padding: 20px; text-align: center; border-radius: 20px; background: var(--surface); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #2d2d44; background: #0b0b1a; color: white; box-sizing: border-box; font-size: 14px; }
-        .btn { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .screen.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .card { background: var(--surface); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .btn { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: none; padding: 15px; border-radius: 14px; width: 100%; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn:active { transform: scale(0.98); }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #2d2d44; background: #0b0b1a; color: white; box-sizing: border-box; }
         .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(22, 22, 45, 0.95); display: flex; justify-content: space-around; padding: 15px 0 25px; backdrop-filter: blur(10px); border-top: 1px solid #2d2d44; z-index: 1000; }
-        .nav-item { font-size: 22px; cursor: pointer; opacity: 0.4; transition: 0.3s; }
+        .nav-item { font-size: 22px; cursor: pointer; opacity: 0.4; }
         .nav-item.active { opacity: 1; color: var(--accent); }
-        .ex-item { display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #333; padding: 15px 0; }
-        .ex-img { width: 70px; height: 70px; border-radius: 12px; border: 2px solid var(--primary); object-fit: cover; }
-        label { font-size: 12px; color: var(--text-muted); display: block; margin-top: 5px; }
+        
+        /* Gelişim Modülleri */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .stat-box { text-align: center; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 15px; }
+        .progress-bar { height: 8px; background: #2d2d44; border-radius: 4px; overflow: hidden; margin: 10px 0; }
+        .progress-fill { height: 100%; background: var(--success); width: 0%; transition: 0.5s; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     <div class="screen active" id="homeScreen">
-        <h2 style="border-left: 4px solid var(--primary); padding-left: 10px;">Gelişim Paneli</h2>
-        <div class="module-list">
-            <div class="module-card" onclick="showScreen('exerciseScreen')"><span>🏋️‍♂️</span><br><small>Egzersiz</small></div>
-            <div class="module-card" onclick="showScreen('dictionScreen')"><span>🗣️</span><br><small>Diksiyon</small></div>
-            <div class="module-card" onclick="showScreen('logicScreen')"><span>⚡</span><br><small>Hızlı Düşünme</small></div>
-            <div class="module-card" onclick="showScreen('confidenceScreen')"><span>💎</span><br><small>Özgüven</small></div>
-            <div class="module-card" onclick="showScreen('mentalScreen')" style="grid-column: span 2;"><span>🧘‍♂️</span><br><small>Mental Sağlık</small></div>
+        <h2 style="color:var(--accent)">Hoş Geldin, Usta</h2>
+        <div class="card">
+            <div id="dailyQuote" style="font-style:italic; font-size:14px; color:var(--text-muted)">"Zihin bir kas gibidir, çalıştıkça gelişir."</div>
+        </div>
+        <div class="grid-2">
+            <div class="stat-box"><small>Seri (Gün)</small><div id="streakVal" style="font-size:24px; font-weight:bold; color:var(--gold)">0</div></div>
+            <div class="stat-box"><small>Tamamlanan</small><div id="doneCount" style="font-size:24px; font-weight:bold; color:var(--success)">0</div></div>
+        </div>
+        <h3>Gelişim Modülleri</h3>
+        <div class="grid-2">
+            <div class="card" onclick="showScreen('exerciseScreen')" style="text-align:center;">🏋️‍♂️<br><small>Fiziksel</small></div>
+            <div class="card" onclick="showScreen('dictionScreen')" style="text-align:center;">🗣️<br><small>Hitabet</small></div>
+            <div class="card" onclick="showScreen('logicScreen')" style="text-align:center;">⚡<br><small>Zeka</small></div>
+            <div class="card" onclick="showScreen('confidenceScreen')" style="text-align:center;">💎<br><small>Karakter</small></div>
+        </div>
+    </div>
+
+    <div class="screen" id="exerciseScreen">
+        <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer;">← Geri</button>
+        <h2>Vücut Geliştirme (PPL)</h2>
+        <div class="card">
+            <div id="workoutDayTitle" style="font-weight:bold; color:var(--gold)">Bugün: İtiş (Göğüs/Omuz/Triceps)</div>
+            <div class="progress-bar"><div class="progress-fill" id="workoutProgress"></div></div>
+            <div id="exerciseList"></div>
+            <button class="btn" style="margin-top:10px;" onclick="completeWorkout()">Bugünü Tamamla</button>
+        </div>
+    </div>
+
+    <div class="screen" id="dictionScreen">
+        <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer;">← Geri</button>
+        <h2>Profesyonel Diksiyon</h2>
+        <div class="card">
+            <h4 style="color:var(--accent)">1. Fonetik Pratiği (Artikülasyon)</h4>
+            <p style="font-size:12px;">Kalem ağızda 1 dakika boyunca şu metni oku:</p>
+            <div style="background:#0b0b1a; padding:10px; border-radius:8px; font-size:13px; margin-bottom:10px;">
+                "Diksiyon, seslerin doğru boğumlanması ve kelimelerin ahenkle dizilmesidir."
+            </div>
+            <button class="btn" onclick="startDictionTimer(60)">Zamanlayıcıyı Başlat</button>
+        </div>
+    </div>
+
+    <div class="screen" id="logicScreen">
+        <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer;">← Geri</button>
+        <h2>Zihinsel Çeviklik</h2>
+        <div id="logicIntro" class="card">
+            <h4 style="color:var(--purple)">Seviye 1: Görsel Tahmin</h4>
+            <p style="font-size:13px;">Hızlı düşünmek, veriyi süzmektir. Şimdi sana gelen alanları çarpmadan, en yakın onluğa yuvarlayarak tahmin etmeye çalış.</p>
+            <button class="btn" onclick="startLogicLevel(1)">Anladım, Başla</button>
+        </div>
+        <div id="logicGame" class="card" style="display:none; text-align:center;">
+            <div id="logicQuest" style="font-size:24px; font-weight:bold; margin-bottom:20px;"></div>
+            <div id="logicOptions" class="grid-2"></div>
+        </div>
+    </div>
+
+    <div class="screen" id="confidenceScreen">
+        <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer;">← Geri</button>
+        <h2>Sosyal Mühendislik</h2>
+        <div class="card">
+            <h4 style="color:var(--success)">Günlük Özgüven Görevi</h4>
+            <div id="confTask" style="font-style:italic; margin-bottom:15px;">"Bugün tanımadığın birine içten bir iltifat et veya bir esnafa işlerin nasıl gittiğini sor."</div>
+            <button class="btn" onclick="completeTask('conf')">Görevi Yaptım</button>
         </div>
     </div>
 
@@ -46,103 +103,25 @@
         <h2>BusinessForge</h2>
         <div class="card">
             <label>Ölçüler (cm)</label>
-            <div style="display: flex; gap: 8px;">
-                <input type="number" id="w" placeholder="En">
-                <input type="number" id="h" placeholder="Boy">
-            </div>
-            <label>Malzeme & Fire</label>
+            <div style="display:flex; gap:8px;"><input type="number" id="w" placeholder="En"><input type="number" id="h" placeholder="Boy"></div>
+            <label>Malzeme & Birim Fiyat</label>
             <select id="mType" onchange="syncPrice()"></select>
-            <input type="number" id="uPrice" placeholder="m² Birim Fiyatı">
-            <input type="number" id="waste" placeholder="Fire (%)">
-            <label>Kâr Marjı</label>
-            <select id="margin">
-                <option value="1.5">%50 Kâr</option>
-                <option value="2" selected>%100 Kâr</option>
-                <option value="2.5">%150 Kâr</option>
-                <option value="3">%200 Kâr</option>
-            </select>
-            <button class="btn" onclick="calculate()">HASSAS HESAPLA</button>
-            <div style="text-align:center; margin-top:15px; border-top:1px solid #333; padding-top:10px;">
-                <div id="areaRes" style="font-size:12px; color:var(--text-muted)">Alan: 0 m²</div>
-                <div id="res" style="font-size:28px; color:var(--success); font-weight:bold;">0.00 ₺</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="screen" id="exerciseScreen">
-        <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer;">← Geri</button>
-        <h2>Egzersiz Modülü</h2>
-        <div class="card" id="levelSelector">
-            <button class="btn" style="margin-bottom:10px;" onclick="startWorkout('beginner')">Başlangıç</button>
-            <button class="btn" style="margin-bottom:10px;" onclick="startWorkout('intermediate')">Orta Seviye</button>
-            <button class="btn" onclick="startWorkout('advanced')">İleri Seviye</button>
-        </div>
-        <div id="workoutDisplay" style="display:none;">
-            <div class="card" id="exerciseList"></div>
-            <button class="btn" onclick="closeWorkout()">Bitir</button>
-        </div>
-    </div>
-
-    <div class="screen" id="dictionScreen">
-        <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer;">← Geri</button>
-        <h2>Diksiyon Pratikleri</h2>
-        <div class="card">
-            <h4 style="color:var(--gold);">👅 Tekerleme</h4>
-            <div id="tekerlemeBox" style="font-style:italic; margin-bottom:10px;">"Şu köşe yaz köşesi..."</div>
-            <button class="btn" onclick="nextTekerleme()">Yeni Getir</button>
-        </div>
-        <div class="card">
-            <h4 style="color:var(--success);">🫁 Nefes Egzersizi</h4>
-            <div id="breathTimer" style="text-align:center; font-size:24px;">30</div>
-            <button class="btn" onclick="startBreathing()">Başlat</button>
-        </div>
-    </div>
-
-    <div class="screen" id="logicScreen">
-        <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer;">← Geri</button>
-        <h2>Hızlı Düşünme</h2>
-        <div class="card">
-            <div id="logicTask" style="font-size:20px; text-align:center; margin-bottom:15px;">Hazır mısın?</div>
-            <div id="logicOptions" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;"></div>
-            <button id="logicStartBtn" class="btn" onclick="startLogicRound()">Oyunu Başlat</button>
-        </div>
-    </div>
-
-    <div class="screen" id="confidenceScreen">
-        <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer;">← Geri</button>
-        <h2>Özgüven</h2>
-        <div class="card">
-            <h4 color="var(--accent)">🧍‍♂️ Güç Duruşu</h4>
-            <div id="confTimer" style="text-align:center; font-size:24px;">02:00</div>
-            <button class="btn" onclick="startConfidenceTimer(120)">Başlat</button>
-        </div>
-        <div class="card">
-            <h4>💰 Fiyat Söyleme Mantrası</h4>
-            <div id="mantraBox" style="text-align:center; font-style:italic;">"Bu işin bedeli 1.500 ₺'dir."</div>
-            <button class="btn" onclick="nextMantra()">Yeni Senaryo</button>
-        </div>
-    </div>
-
-    <div class="screen" id="mentalScreen">
-        <button onclick="showScreen('homeScreen')" style="background:none; border:none; color:var(--accent); cursor:pointer;">← Geri</button>
-        <h2>Mental Sağlık</h2>
-        <div class="card">
-            <h4 style="color:var(--accent)">🌬️ Kutu Nefesi</h4>
-            <div id="boxBreathIndicator" style="width:60px; height:60px; border:2px solid var(--accent); margin:10px auto; display:flex; align-items:center; justify-content:center;">DUR</div>
-            <button class="btn" onclick="startBoxBreathing()">Başlat</button>
+            <input type="number" id="uPrice" placeholder="₺/m²">
+            <label>Kâr & Sabit Gider</label>
+            <select id="margin"><option value="2">100% Kâr</option><option value="2.5">150% Kâr</option></select>
+            <button class="btn" onclick="calculate()">HESAPLA</button>
+            <div id="res" style="text-align:center; font-size:28px; color:var(--success); font-weight:bold; margin-top:15px;">0₺</div>
         </div>
     </div>
 
     <div class="screen" id="settingsScreen">
-        <h2>Ayarlar</h2>
+        <h2>Atölye Ayarları</h2>
         <div class="card">
-            <label>Şeffaf Pleksi</label><input type="number" id="set_trans" oninput="saveConfig()">
-            <label>Renkli Pleksi</label><input type="number" id="set_color" oninput="saveConfig()">
-            <label>Ahşap/MDF</label><input type="number" id="set_wood" oninput="saveConfig()">
+            <label>Şeffaf m²</label><input type="number" id="set_trans" oninput="saveConfig()">
+            <label>Renkli m²</label><input type="number" id="set_color" oninput="saveConfig()">
             <label>Sabit Gider (₺)</label><input type="number" id="set_fixed" oninput="saveConfig()">
-            <label>Varsayılan Fire (%)</label><input type="number" id="set_waste" oninput="saveConfig()">
         </div>
-        <button class="btn" style="background:var(--danger)" onclick="resetSystem()">Sıfırla</button>
+        <button class="btn" style="background:var(--danger)" onclick="resetAll()">TÜM VERİLERİ SIFIRLA</button>
     </div>
 
     <div class="nav-bar">
@@ -153,7 +132,8 @@
 </div>
 
 <script>
-    let config = { trans: 450, color: 600, wood: 250, fixed: 50, waste: 10 };
+    let config = { trans: 450, color: 600, fixed: 50 };
+    let userStats = { streak: 0, done: 0, lastDate: "" };
 
     function showScreen(id, el) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -162,114 +142,107 @@
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
         }
+        if(id === 'exerciseScreen') renderWorkout();
     }
 
-    // BUSINESS & SETTINGS
+    // --- EGZERSİZ SİSTEMİ (ARTIRILDI) ---
+    const dailyWorkouts = [
+        { title: "İtiş", moves: ["Şınav: 4x12", "Dips: 3x10", "Pike Pushup: 3x8"] },
+        { title: "Çekiş", moves: ["Barfiks (veya Kapı Çekiş): 3xMax", "Ters Lunge: 4x12"] },
+        { title: "Bacak/Core", moves: ["Squat: 4x20", "Plank: 3x45sn", "L-Sit: 3x15sn"] }
+    ];
+
+    function renderWorkout() {
+        const dayIdx = new Date().getDay() % 3;
+        const workout = dailyWorkouts[dayIdx];
+        document.getElementById('workoutDayTitle').innerText = "Bugün: " + workout.title;
+        const list = document.getElementById('exerciseList');
+        list.innerHTML = workout.moves.map(m => `<div style="padding:10px 0; border-bottom:1px solid #333;">${m}</div>`).join('');
+    }
+
+    function completeWorkout() {
+        updateStats();
+        document.getElementById('workoutProgress').style.width = "100%";
+        alert("Harika! Fiziksel kapasiten arttı.");
+    }
+
+    // --- HIZLI DÜŞÜNME (SEVİYELİ) ---
+    let curLvl = 1;
+    function startLogicLevel(lvl) {
+        document.getElementById('logicIntro').style.display = 'none';
+        document.getElementById('logicGame').style.display = 'block';
+        nextLogicQuest();
+    }
+
+    function nextLogicQuest() {
+        const quest = document.getElementById('logicQuest');
+        const options = document.getElementById('logicOptions');
+        const w = Math.floor(Math.random()*20)+10;
+        const h = Math.floor(Math.random()*20)+10;
+        const ans = w * h;
+        quest.innerText = `${w} x ${h} = ?`;
+        const opts = [ans, ans+15, ans-10, ans+30].sort(()=>Math.random()-0.5);
+        options.innerHTML = opts.map(o => `<button class="btn" style="background:var(--surface); border:1px solid #333" onclick="checkLogic(${o}, ${ans})">${o}</button>`).join('');
+    }
+
+    function checkLogic(v, a) {
+        if(v === a) { alert("🎯 Müthiş Hız!"); nextLogicQuest(); }
+        else alert("Yanlış! Odaklan.");
+    }
+
+    // --- İŞ & AYARLAR (DÜZELTİLDİ) ---
     function saveConfig() {
         config = {
             trans: document.getElementById('set_trans').value || 450,
             color: document.getElementById('set_color').value || 600,
-            wood: document.getElementById('set_wood').value || 250,
-            fixed: document.getElementById('set_fixed').value || 50,
-            waste: document.getElementById('set_waste').value || 10
+            fixed: document.getElementById('set_fixed').value || 50
         };
-        localStorage.setItem('mf_master_config', JSON.stringify(config));
-        updateUI();
+        localStorage.setItem('mf_elite_config', JSON.stringify(config));
+        updateBusinessUI();
     }
-    function loadConfig() {
-        const saved = localStorage.getItem('mf_master_config');
-        if(saved) config = JSON.parse(saved);
+
+    function loadData() {
+        const savedCfg = localStorage.getItem('mf_elite_config');
+        if(savedCfg) config = JSON.parse(savedCfg);
         document.getElementById('set_trans').value = config.trans;
         document.getElementById('set_color').value = config.color;
-        document.getElementById('set_wood').value = config.wood;
         document.getElementById('set_fixed').value = config.fixed;
-        document.getElementById('set_waste').value = config.waste;
-        updateUI();
+        
+        const savedStats = localStorage.getItem('mf_stats');
+        if(savedStats) userStats = JSON.parse(savedStats);
+        document.getElementById('streakVal').innerText = userStats.streak;
+        document.getElementById('doneCount').innerText = userStats.done;
+        
+        updateBusinessUI();
     }
-    function updateUI() {
+
+    function updateBusinessUI() {
         const sel = document.getElementById('mType');
-        sel.innerHTML = `<option value="${config.trans}">Şeffaf (${config.trans}₺)</option><option value="${config.color}">Renkli (${config.color}₺)</option><option value="${config.wood}">Ahşap (${config.wood}₺)</option>`;
+        sel.innerHTML = `<option value="${config.trans}">Şeffaf (${config.trans}₺)</option><option value="${config.color}">Renkli (${config.color}₺)</option>`;
         document.getElementById('uPrice').value = sel.value;
-        document.getElementById('waste').value = config.waste;
     }
+
     function syncPrice() { document.getElementById('uPrice').value = document.getElementById('mType').value; }
+
     function calculate() {
         const w = parseFloat(document.getElementById('w').value) || 0;
         const h = parseFloat(document.getElementById('h').value) || 0;
-        const area = (w * h) / 10000;
-        const final = ((area * parseFloat(document.getElementById('uPrice').value) * (1 + document.getElementById('waste').value/100)) + parseFloat(config.fixed)) * document.getElementById('margin').value;
-        document.getElementById('areaRes').innerText = `Alan: ${area.toFixed(4)} m²`;
-        document.getElementById('res').innerText = final.toFixed(2) + " ₺";
+        const up = parseFloat(document.getElementById('uPrice').value) || 0;
+        const mrg = parseFloat(document.getElementById('margin').value) || 1;
+        const final = (((w * h) / 10000) * up + parseFloat(config.fixed)) * mrg;
+        document.getElementById('res').innerText = Math.round(final) + "₺";
     }
 
-    // EGZERSİZ
-    const workoutData = {
-        beginner: [{ name: "Şınav", reps: "3x10", gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueXo1bmZ4NjZidHh6YTN4bmZ4NjZidHh6YTN4bmZ4NjZidHh6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/26ueYUlPAmUkTBAM8/giphy.gif" }],
-        intermediate: [{ name: "Diamond Push-up", reps: "4x12", gif: "https://media.giphy.com/media/l0HlU9D26bM9r3A8I/giphy.gif" }],
-        advanced: [{ name: "Burpee", reps: "4x12", gif: "https://media.giphy.com/media/26ueYQJpYmUlTBAM8/giphy.gif" }]
-    };
-    function startWorkout(l) {
-        document.getElementById('levelSelector').style.display = 'none';
-        document.getElementById('workoutDisplay').style.display = 'block';
-        const list = document.getElementById('exerciseList');
-        list.innerHTML = "";
-        workoutData[l].forEach(ex => {
-            list.innerHTML += `<div class="ex-item"><img src="${ex.gif}" class="ex-img"><div><strong>${ex.name}</strong><br><small>${ex.reps}</small></div></div>`;
-        });
-    }
-    function closeWorkout() { document.getElementById('workoutDisplay').style.display='none'; document.getElementById('levelSelector').style.display='block'; }
-
-    // DİKSİYON
-    const tekerlemeler = ["Bir berber bir berbere...", "Şu köşe yaz köşesi...", "Kartal kalkar dal sarkar..."];
-    function nextTekerleme() { document.getElementById('tekerlemeBox').innerText = tekerlemeler[Math.floor(Math.random()*tekerlemeler.length)]; }
-    function startBreathing() {
-        let t = 30;
-        const itv = setInterval(() => {
-            t--; document.getElementById('breathTimer').innerText = t;
-            if(t<=0) clearInterval(itv);
-        }, 1000);
+    function updateStats() {
+        userStats.done++;
+        userStats.streak++; // Basit streak mantığı
+        localStorage.setItem('mf_stats', JSON.stringify(userStats));
+        document.getElementById('streakVal').innerText = userStats.streak;
+        document.getElementById('doneCount').innerText = userStats.done;
     }
 
-    // HIZLI DÜŞÜNME
-    let correctAns = 0;
-    function startLogicRound() {
-        document.getElementById('logicStartBtn').style.display = 'none';
-        const w = Math.floor(Math.random()*30)+10, h = Math.floor(Math.random()*30)+10;
-        correctAns = w * h;
-        document.getElementById('logicTask').innerText = `${w} x ${h} = ?`;
-        const opts = [correctAns, correctAns+20, correctAns-15, correctAns+50].sort(()=>Math.random()-0.5);
-        const box = document.getElementById('logicOptions');
-        box.innerHTML = "";
-        opts.forEach(o => {
-            const b = document.createElement('button'); b.className = 'btn'; b.innerText = o;
-            b.onclick = () => { alert(o===correctAns ? "Doğru!" : "Yanlış!"); startLogicRound(); };
-            box.appendChild(b);
-        });
-    }
-
-    // ÖZGÜVEN
-    const mantras = ["Bu işin bedeli 1.500 ₺'dir.", "Kalitemiz dökme pleksidir.", "Termin süremiz 3 gündür."];
-    function nextMantra() { document.getElementById('mantraBox').innerText = mantras[Math.floor(Math.random()*mantras.length)]; }
-    function startConfidenceTimer(s) {
-        let t = s;
-        const itv = setInterval(() => {
-            t--; 
-            let m = Math.floor(t/60), sec = t%60;
-            document.getElementById('confTimer').innerText = `${m}:${sec<10?'0':''}${sec}`;
-            if(t<=0) clearInterval(itv);
-        }, 1000);
-    }
-
-    // MENTAL
-    function startBoxBreathing() {
-        const box = document.getElementById('boxBreathIndicator');
-        const phases = ["AL", "TUT", "VER", "BEKLE"];
-        let i = 0;
-        setInterval(() => { box.innerText = phases[i]; i=(i+1)%4; }, 4000);
-    }
-
-    function resetSystem() { localStorage.clear(); location.reload(); }
-    window.onload = loadConfig;
+    window.onload = loadData;
+    function resetAll() { if(confirm("Her şey silinecek?")) { localStorage.clear(); location.reload(); } }
 </script>
 </body>
 </html>
