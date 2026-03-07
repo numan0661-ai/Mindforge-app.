@@ -3180,4 +3180,829 @@ function loadAllProgress() {
 // Sayfa yüklendiğinde çalıştır
 window.onload = loadAllProgress;
 </script>
+<!-- FitForge Modal -->
+<div id="fitforge-modal" class="modal">
+  <div class="modal-content fitforge-container">
+    
+    <!-- Header -->
+    <div class="fitforge-header">
+      <h2>💪 FitForge</h2>
+      <div class="header-stats">
+        <span class="streak-badge">🔥 <span id="streak-count">5</span> gün</span>
+        <button onclick="closeFitForge()" class="close-btn">✕</button>
+      </div>
+    </div>
+
+    <!-- Kategori Seçici -->
+    <div class="category-tabs">
+      <button onclick="switchCategory('strength')" class="cat-btn active" data-cat="strength">
+        <span>🏋️</span> Güç
+      </button>
+      <button onclick="switchCategory('cardio')" class="cat-btn" data-cat="cardio">
+        <span>🏃</span> Kardiyo
+      </button>
+      <button onclick="switchCategory('flexibility')" class="cat-btn" data-cat="flexibility">
+        <span>🧘</span> Esneklik
+      </button>
+      <button onclick="switchCategory('hiit')" class="cat-btn" data-cat="hiit">
+        <span>⚡</span> HIIT
+      </button>
+    </div>
+
+    <!-- Egzersiz Listesi -->
+    <div class="exercise-library" id="exercise-list">
+      <!-- Dinamik olarak doldurulacak -->
+    </div>
+
+    <!-- Aktif Egzersiz Paneli -->
+    <div class="active-workout" id="active-workout" style="display:none;">
+      <div class="workout-progress-bar">
+        <div class="progress-fill" id="workout-progress"></div>
+      </div>
+      
+      <div class="exercise-display">
+        <div class="exercise-visual" id="exercise-visual">🏋️</div>
+        <h3 id="active-exercise-name">Push-up</h3>
+        <p id="active-exercise-target">3 Set × 12 Tekrar</p>
+      </div>
+
+      <div class="set-tracker-advanced" id="set-tracker">
+        <!-- Set kartları -->
+      </div>
+
+      <div class="rest-panel" id="rest-panel" style="display:none;">
+        <div class="rest-circle">
+          <svg viewBox="0 0 100 100">
+            <circle class="rest-bg" cx="50" cy="50" r="45"/>
+            <circle class="rest-progress" id="rest-ring" cx="50" cy="50" r="45"/>
+          </svg>
+          <div class="rest-time" id="rest-time">01:30</div>
+        </div>
+        <p class="rest-text">Set arası dinlenme</p>
+        <button onclick="skipRest()" class="skip-btn">Atla ⏭</button>
+      </div>
+
+      <div class="workout-controls">
+        <button onclick="pauseWorkout()" class="control-btn" id="pause-btn">⏸ Duraklat</button>
+        <button onclick="finishWorkoutEarly()" class="control-btn finish">✓ Bitir</button>
+      </div>
+    </div>
+
+    <!-- Günlük Özet -->
+    <div class="daily-summary" id="daily-summary">
+      <h4>📊 Bugünkü Aktivite</h4>
+      <div class="summary-stats">
+        <div class="sum-stat">
+          <span class="sum-value" id="today-exercises">0</span>
+          <span class="sum-label">Egzersiz</span>
+        </div>
+        <div class="sum-stat">
+          <span class="sum-value" id="today-sets">0</span>
+          <span class="sum-label">Set</span>
+        </div>
+        <div class="sum-stat">
+          <span class="sum-value" id="today-reps">0</span>
+          <span class="sum-label">Tekrar</span>
+        </div>
+        <div class="sum-stat">
+          <span class="sum-value" id="today-calories">0</span>
+          <span class="sum-label">Kalori</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+.fitforge-container {
+  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.fitforge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.fitforge-header h2 {
+  color: #00ff88;
+  margin: 0;
+  font-size: 28px;
+}
+
+.header-stats {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.streak-badge {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  padding: 8px 15px;
+  border-radius: 20px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.category-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.cat-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 12px 5px;
+  border: none;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.05);
+  color: #888;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 12px;
+}
+
+.cat-btn span {
+  font-size: 24px;
+}
+
+.cat-btn.active {
+  background: #00ff88;
+  color: #1a1a2e;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(0,255,136,0.3);
+}
+
+.exercise-library {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.exercise-card {
+  background: rgba(255,255,255,0.05);
+  border-radius: 15px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: 2px solid transparent;
+}
+
+.exercise-card:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: #00ff88;
+  transform: translateX(5px);
+}
+
+.exercise-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  background: rgba(0,255,136,0.1);
+}
+
+.exercise-info h4 {
+  color: #fff;
+  margin: 0 0 5px 0;
+  font-size: 16px;
+}
+
+.exercise-meta {
+  display: flex;
+  gap: 15px;
+  color: #888;
+  font-size: 13px;
+}
+
+.exercise-meta span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.difficulty-dots {
+  display: flex;
+  gap: 3px;
+  margin-left: auto;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+}
+
+.dot.active { background: #ffd700; }
+
+.active-workout {
+  background: rgba(0,0,0,0.3);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.workout-progress-bar {
+  height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00ff88, #00d9ff);
+  width: 0%;
+  transition: width 0.5s ease;
+}
+
+.exercise-display {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.exercise-visual {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #00ff88, #00d9ff);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  margin: 0 auto 15px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.exercise-display h3 {
+  color: #fff;
+  margin: 0 0 5px 0;
+  font-size: 24px;
+}
+
+.exercise-display p {
+  color: #00d9ff;
+  margin: 0;
+  font-size: 16px;
+}
+
+.set-tracker-advanced {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.set-card {
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.3s;
+}
+
+.set-card.current {
+  border: 2px solid #00ff88;
+  background: rgba(0,255,136,0.1);
+}
+
+.set-card.completed {
+  opacity: 0.5;
+  border-color: #00ff88;
+}
+
+.set-card.completed .set-status {
+  background: #00ff88;
+  color: #1a1a2e;
+}
+
+.set-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.set-number {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: bold;
+}
+
+.set-card.current .set-number {
+  background: #00ff88;
+  color: #1a1a2e;
+}
+
+.set-target {
+  color: #888;
+  font-size: 14px;
+}
+
+.rep-control {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.rep-btn {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.rep-btn:hover {
+  background: #00d9ff;
+  color: #1a1a2e;
+}
+
+.rep-count {
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
+  min-width: 40px;
+  text-align: center;
+}
+
+.set-status {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 2px solid #00ff88;
+  background: transparent;
+  color: #00ff88;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.rest-panel {
+  text-align: center;
+  padding: 30px;
+  background: rgba(233,69,96,0.1);
+  border-radius: 15px;
+  margin-bottom: 20px;
+}
+
+.rest-circle {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 20px;
+}
+
+.rest-circle svg {
+  transform: rotate(-90deg);
+  width: 100%;
+  height: 100%;
+}
+
+.rest-bg {
+  fill: none;
+  stroke: rgba(255,255,255,0.1);
+  stroke-width: 8;
+}
+
+.rest-progress {
+  fill: none;
+  stroke: #e94560;
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 283;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1s linear;
+}
+
+.rest-time {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 32px;
+  font-weight: bold;
+  color: #e94560;
+}
+
+.rest-text {
+  color: #888;
+  margin-bottom: 15px;
+}
+
+.skip-btn {
+  padding: 10px 25px;
+  border: 2px solid #e94560;
+  background: transparent;
+  color: #e94560;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.skip-btn:hover {
+  background: #e94560;
+  color: #fff;
+}
+
+.workout-controls {
+  display: flex;
+  gap: 15px;
+}
+
+.workout-controls .control-btn {
+  flex: 1;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.workout-controls .control-btn:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.workout-controls .control-btn.finish {
+  background: #00ff88;
+  color: #1a1a2e;
+  font-weight: bold;
+}
+
+.daily-summary {
+  background: rgba(255,255,255,0.03);
+  border-radius: 15px;
+  padding: 20px;
+}
+
+.daily-summary h4 {
+  color: #888;
+  margin: 0 0 15px 0;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.summary-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+.sum-stat {
+  text-align: center;
+}
+
+.sum-value {
+  display: block;
+  font-size: 28px;
+  font-weight: bold;
+  color: #00ff88;
+}
+
+.sum-label {
+  font-size: 12px;
+  color: #888;
+}
+</style>
+
+<script>
+// Egzersiz Veritabanı
+const exerciseDB = {
+  strength: [
+    { id: 'pushup', name: 'Push-up', icon: '💪', target: '3×12', rest: 90, difficulty: 2, calories: 8, unit: 'tekrar' },
+    { id: 'squat', name: 'Squat', icon: '🦵', target: '3×15', rest: 90, difficulty: 2, calories: 10, unit: 'tekrar' },
+    { id: 'lunge', name: 'Lunge', icon: '🚶', target: '3×12', rest: 60, difficulty: 2, calories: 9, unit: 'tekrar' },
+    { id: 'plank', name: 'Plank', icon: '📏', target: '3×45sn', rest: 60, difficulty: 2, calories: 5, unit: 'saniye' },
+    { id: 'burpee', name: 'Burpee', icon: '🔥', target: '3×10', rest: 120, difficulty: 3, calories: 15, unit: 'tekrar' },
+    { id: 'dips', name: 'Bench Dips', icon: '🪑', target: '3×12', rest: 60, difficulty: 2, calories: 7, unit: 'tekrar' }
+  ],
+  cardio: [
+    { id: 'jumpingjack', name: 'Jumping Jack', icon: '⭐', target: '3×30', rest: 60, difficulty: 1, calories: 12, unit: 'tekrar' },
+    { id: 'highknees', name: 'High Knees', icon: '🏃', target: '3×20', rest: 60, difficulty: 2, calories: 14, unit: 'tekrar' },
+    { id: 'mountain', name: 'Mountain Climber', icon: '⛰️', target: '3×20', rest: 60, difficulty: 2, calories: 13, unit: 'tekrar' },
+    { id: 'skipping', name: 'İp Atlama', icon: '⚡', target: '3×50', rest: 90, difficulty: 2, calories: 16, unit: 'tekrar' }
+  ],
+  flexibility: [
+    { id: 'stretch', name: 'Tam Vücut Esnetme', icon: '🧘', target: '10dk', rest: 0, difficulty: 1, calories: 3, unit: 'dakika' },
+    { id: 'yoga', name: 'Yoga Flow', icon: '🕉️', target: '15dk', rest: 0, difficulty: 2, calories: 5, unit: 'dakika' },
+    { id: 'pilates', name: 'Pilates', icon: '🤸', target: '20dk', rest: 0, difficulty: 2, calories: 6, unit: 'dakika' }
+  ],
+  hiit: [
+    { id: 'tabata', name: 'Tabata 4dk', icon: '⏱️', target: '20sn/10sn×8', rest: 0, difficulty: 3, calories: 20, unit: 'round' },
+    { id: 'circuit', name: 'Devre Antrenmanı', icon: '🔁', target: '5 egzersiz', rest: 0, difficulty: 3, calories: 25, unit: 'round' }
+  ]
+};
+
+// Durum yönetimi
+let currentCategory = 'strength';
+let activeExercise = null;
+let currentSet = 0;
+let setData = [];
+let restTimer = null;
+let workoutStartTime = null;
+let todayStats = {
+  exercises: 0,
+  sets: 0,
+  reps: 0,
+  calories: 0
+};
+
+function openFitForge() {
+  document.getElementById('fitforge-modal').classList.add('active');
+  loadTodayStats();
+  renderExerciseList();
+  updateStreakDisplay();
+}
+
+function closeFitForge() {
+  document.getElementById('fitforge-modal').classList.remove('active');
+  clearInterval(restTimer);
+}
+
+function switchCategory(cat) {
+  currentCategory = cat;
+  
+  // Tab butonlarını güncelle
+  document.querySelectorAll('.cat-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.cat === cat);
+  });
+  
+  renderExerciseList();
+}
+
+function renderExerciseList() {
+  const container = document.getElementById('exercise-list');
+  container.innerHTML = '';
+  
+  exerciseDB[currentCategory].forEach(ex => {
+    const card = document.createElement('div');
+    card.className = 'exercise-card';
+    card.onclick = () => startExercise(ex);
+    
+    card.innerHTML = `
+      <div class="exercise-icon">${ex.icon}</div>
+      <div class="exercise-info">
+        <h4>${ex.name}</h4>
+        <div class="exercise-meta">
+          <span>⏱️ ${ex.target}</span>
+          <span>🔥 ~${ex.calories} kal</span>
+        </div>
+      </div>
+      <div class="difficulty-dots">
+        ${Array(3).fill(0).map((_,i) => 
+          `<div class="dot ${i < ex.difficulty ? 'active' : ''}"></div>`
+        ).join('')}
+      </div>
+    `;
+    
+    container.appendChild(card);
+  });
+}
+
+function startExercise(exercise) {
+  activeExercise = exercise;
+  currentSet = 0;
+  workoutStartTime = Date.now();
+  
+  // Set verisini başlat
+  const setCount = parseInt(exercise.target.split('×')[0]) || 1;
+  setData = Array(setCount).fill(0);
+  
+  // UI güncelle
+  document.getElementById('exercise-list').style.display = 'none';
+  document.getElementById('daily-summary').style.display = 'none';
+  document.getElementById('active-workout').style.display = 'block';
+  
+  document.getElementById('active-exercise-name').textContent = exercise.name;
+  document.getElementById('active-exercise-target').textContent = exercise.target;
+  document.getElementById('exercise-visual').textContent = exercise.icon;
+  
+  renderSetTracker();
+  updateProgressBar();
+}
+
+function renderSetTracker() {
+  const container = document.getElementById('set-tracker');
+  container.innerHTML = '';
+  
+  const [targetSets, targetReps] = activeExercise.target.split('×').map(s => parseInt(s) || 0);
+  const unit = activeExercise.unit;
+  
+  setData.forEach((reps, index) => {
+    const isCurrent = index === currentSet;
+    const isCompleted = index < currentSet;
+    
+    const card = document.createElement('div');
+    card.className = `set-card ${isCurrent ? 'current' : ''} ${isCompleted ? 'completed' : ''}`;
+    
+    card.innerHTML = `
+      <div class="set-info">
+        <div class="set-number">${index + 1}</div>
+        <div>
+          <div style="color:#fff;font-weight:bold">Set ${index + 1}</div>
+          <div class="set-target">Hedef: ${targetReps} ${unit}</div>
+        </div>
+      </div>
+      <div class="rep-control">
+        <button class="rep-btn" onclick="adjustRep(${index}, -1)" ${!isCurrent ? 'disabled' : ''}>-</button>
+        <span class="rep-count" id="rep-display-${index}">${reps}</span>
+        <button class="rep-btn" onclick="adjustRep(${index}, 1)" ${!isCurrent ? 'disabled' : ''}>+</button>
+      </div>
+      <button class="set-status" onclick="completeSet(${index})" ${!isCurrent ? 'disabled' : ''}>
+        ${isCompleted ? '✓' : '✓'}
+      </button>
+    `;
+    
+    container.appendChild(card);
+  });
+}
+
+function adjustRep(setIndex, delta) {
+  if(setIndex !== currentSet) return;
+  
+  let newVal = setData[setIndex] + delta;
+  if(newVal < 0) newVal = 0;
+  
+  setData[setIndex] = newVal;
+  document.getElementById(`rep-display-${setIndex}`).textContent = newVal;
+}
+
+function completeSet(setIndex) {
+  if(setIndex !== currentSet) return;
+  if(setData[setIndex] === 0) {
+    alert('En az 1 tekrar yapmalısınız!');
+    return;
+  }
+  
+  // İstatistikleri güncelle
+  todayStats.sets++;
+  todayStats.reps += setData[setIndex];
+  todayStats.calories += Math.round(activeExercise.calories / setData.length);
+  
+  currentSet++;
+  updateProgressBar();
+  
+  if(currentSet >= setData.length) {
+    finishExercise();
+  } else {
+    startRest();
+  }
+}
+
+function startRest() {
+  document.getElementById('set-tracker').style.display = 'none';
+  document.getElementById('rest-panel').style.display = 'block';
+  
+  const restSeconds = activeExercise.rest;
+  let remaining = restSeconds;
+  
+  const ring = document.getElementById('rest-ring');
+  const totalLength = 283; // 2×π×45
+  ring.style.strokeDashoffset = 0;
+  
+  restTimer = setInterval(() => {
+    remaining--;
+    
+    const mins = Math.floor(remaining / 60).toString().padStart(2, '0');
+    const secs = (remaining % 60).toString().padStart(2, '0');
+    document.getElementById('rest-time').textContent = `${mins}:${secs}`;
+    
+    const offset = totalLength - (remaining / restSeconds) * totalLength;
+    ring.style.strokeDashoffset = offset;
+    
+    if(remaining <= 0) {
+      clearInterval(restTimer);
+      endRest();
+    }
+  }, 1000);
+}
+
+function skipRest() {
+  clearInterval(restTimer);
+  endRest();
+}
+
+function endRest() {
+  document.getElementById('rest-panel').style.display = 'none';
+  document.getElementById('set-tracker').style.display = 'flex';
+  renderSetTracker();
+}
+
+function updateProgressBar() {
+  const progress = (currentSet / setData.length) * 100;
+  document.getElementById('workout-progress').style.width = progress + '%';
+}
+
+function finishExercise() {
+  todayStats.exercises++;
+  saveTodayStats();
+  
+  // Tebrik mesajı
+  const totalReps = setData.reduce((a,b) => a+b, 0);
+  alert(`🎉 ${activeExercise.name} tamamlandı!\n${setData.length} set × ${totalReps} tekrar`);
+  
+  // Ana menüye dön
+  document.getElementById('active-workout').style.display = 'none';
+  document.getElementById('exercise-list').style.display = 'grid';
+  document.getElementById('daily-summary').style.display = 'block';
+  
+  updateStreak();
+  loadTodayStats();
+}
+
+function finishWorkoutEarly() {
+  if(confirm('Antrenmanı erken bitirmek istiyor musunuz?')) {
+    clearInterval(restTimer);
+    finishExercise();
+  }
+}
+
+function pauseWorkout() {
+  alert('Duraklatıldı. Devam etmek için OK\'a basın.');
+}
+
+// Streak sistemi
+function updateStreak() {
+  const today = new Date().toDateString();
+  const lastWorkout = localStorage.getItem('fitforge_last');
+  let streak = parseInt(localStorage.getItem('fitforge_streak') || '0');
+  
+  if(lastWorkout !== today) {
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+    if(lastWorkout === yesterday) {
+      streak++;
+    } else if(!lastWorkout || lastWorkout !== yesterday) {
+      streak = 1;
+    }
+    
+    localStorage.setItem('fitforge_streak', streak);
+    localStorage.setItem('fitforge_last', today);
+    updateStreakDisplay();
+  }
+}
+
+function updateStreakDisplay() {
+  const streak = localStorage.getItem('fitforge_streak') || '0';
+  document.getElementById('streak-count').textContent = streak;
+}
+
+// Günlük istatistikler
+function loadTodayStats() {
+  const today = new Date().toDateString();
+  const saved = localStorage.getItem(`fitforge_stats_${today}`);
+  
+  if(saved) {
+    todayStats = JSON.parse(saved);
+  }
+  
+  document.getElementById('today-exercises').textContent = todayStats.exercises;
+  document.getElementById('today-sets').textContent = todayStats.sets;
+  document.getElementById('today-reps').textContent = todayStats.reps;
+  document.getElementById('today-calories').textContent = todayStats.calories;
+}
+
+function saveTodayStats() {
+  const today = new Date().toDateString();
+  localStorage.setItem(`fitforge_stats_${today}`, JSON.stringify(todayStats));
+}
+</script>
 
