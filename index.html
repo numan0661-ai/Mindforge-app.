@@ -1,364 +1,2382 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MindForge UV Master</title>
-<style>
-:root{--p:#6366f1;--a:#06b6d4;--b:#0b0b1a;--s:#16162d;--sl:#1e1e3f;--t:#fff;--tm:#94a3b8;--ok:#10b981;--g:#f59e0b;--pr:#a855f7;--uv:#bf00ff;--er:#ef4444;--co:#ff6600;}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--b);color:var(--t);margin:0;padding-bottom:95px;overflow-x:hidden}
-.app-container{max-width:430px;margin:0 auto;padding:15px}
-.screen{display:none;min-height:100vh}
-.screen.active{display:block;animation:fadeIn .4s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
-.vid-wrap{margin:20px 0;background:var(--s);border-radius:16px;padding:15px;border:2px solid var(--uv)}
-.vid-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#ff0000,#cc0000);color:white;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:bold;margin-bottom:12px}
-.vid-container{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;background:#000}
-.vid-container iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:12px}
-.vid-thumb{width:100%;border-radius:12px;cursor:pointer;transition:transform .3s}
-.vid-thumb:hover{transform:scale(1.02)}
-.play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:80px;height:80px;background:rgba(255,0,0,.9);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.5)}
-.play-btn::after{content:'';width:0;height:0;border-left:25px solid white;border-top:15px solid transparent;border-bottom:15px solid transparent;margin-left:5px}
-.hdr{background:linear-gradient(135deg,var(--s),var(--sl));border-radius:16px;padding:20px;margin-bottom:20px;border:1px solid rgba(191,0,255,.2)}
-.bar{width:100%;height:8px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden;margin-top:10px}
-.fill{height:100%;background:linear-gradient(90deg,var(--uv),var(--pr));width:0%;transition:width .8s ease}
-.mod{background:var(--s);border-radius:20px;padding:20px;margin-bottom:15px;border:1px solid rgba(255,255,255,.05);cursor:pointer;transition:all .3s ease;position:relative}
-.mod:hover{transform:translateY(-2px);border-color:var(--uv)}
-.mod.lock{opacity:.5;pointer-events:none;filter:grayscale(.8)}
-.mod.ok{border-color:var(--ok)}
-.mod.ok::after{content:'✓';position:absolute;top:15px;right:15px;background:var(--ok);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold}
-.vid-ind{display:inline-flex;align-items:center;gap:5px;background:rgba(255,0,0,.2);color:#ff4444;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:bold;margin-left:auto}
-.lesson{background:var(--s);border-radius:20px;padding:25px;margin-bottom:20px}
-.lesson-hdr{border-bottom:2px solid rgba(191,0,255,.3);padding-bottom:15px;margin-bottom:20px}
-.badge{display:inline-block;background:rgba(191,0,255,.2);color:var(--uv);padding:4px 12px;border-radius:12px;font-size:11px;font-weight:bold;margin-bottom:8px}
-.title{font-size:22px;margin:0 0 10px 0}
-.sub{color:var(--tm);font-size:14px}
-.block{background:rgba(255,255,255,.03);border-radius:12px;padding:20px;margin-bottom:15px;border-left:4px solid var(--uv)}
-.block-title{color:var(--g);font-size:14px;font-weight:bold;margin-bottom:10px}
-.block-c{font-size:14px;color:var(--tm);line-height:1.8}
-.block-c strong{color:var(--t)}
-.quiz{margin-top:25px}
-.q{background:var(--sl);padding:20px;border-radius:12px;font-weight:bold;margin-bottom:15px;font-size:15px}
-.opts{display:flex;flex-direction:column;gap:10px}
-.opt{background:rgba(255,255,255,.05);border:2px solid transparent;padding:15px;border-radius:12px;cursor:pointer;transition:all .2s;font-size:14px}
-.opt:hover{border-color:var(--uv);background:rgba(191,0,255,.1)}
-.opt.ok{border-color:var(--ok);background:rgba(16,185,129,.2)}
-.opt.no{border-color:var(--er);background:rgba(239,68,68,.2)}
-.opt.dis{pointer-events:none;opacity:.6}
-.nav-btns{display:flex;gap:10px;margin-top:30px}
-.btn{flex:1;background:linear-gradient(135deg,var(--p),var(--a));color:white;border:none;padding:16px;border-radius:14px;font-weight:bold;cursor:pointer;transition:all .2s;font-size:14px}
-.btn:active{transform:scale(.98)}
-.btn-sec{background:var(--sl);border:1px solid rgba(255,255,255,.1)}
-.btn-ok{background:linear-gradient(135deg,var(--ok),#059669)}
-.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(22,22,45,.98);display:flex;justify-content:space-around;padding:15px 0 25px;backdrop-filter:blur(10px);border-top:1px solid #2d2d44;z-index:1000}
-.nav-item{font-size:24px;cursor:pointer;opacity:.4;transition:.3s;position:relative}
-.nav-item.active{opacity:1;color:var(--a)}
-.nav-item .bdg{position:absolute;top:-5px;right:-5px;background:var(--er);color:white;font-size:10px;padding:2px 6px;border-radius:10px;font-weight:bold}
-.pop{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-100px);background:linear-gradient(135deg,var(--g),#d97706);color:white;padding:15px 25px;border-radius:12px;box-shadow:0 10px 40px rgba(245,158,11,.3);z-index:2000;transition:transform .5s ease;display:flex;align-items:center;gap:10px;font-weight:bold}
-.pop.show{transform:translateX(-50%) translateY(0)}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-input,select{width:100%;padding:14px;margin:8px 0;border-radius:12px;border:1px solid #2d2d44;background:var(--b);color:white;font-size:15px}
-input:focus,select:focus{outline:none;border-color:var(--uv);box-shadow:0 0 0 3px rgba(191,0,255,.1)}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0b0b1a">
+    <meta name="description" content="UV Baskı teknolojisi eğitim platformu - Sıfırdan uzmanlığa">
+    <title>MindForge UV Master Pro</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --accent: #06b6d4;
+            --bg: #0b0b1a;
+            --surface: #16162d;
+            --surface-light: #1e1e3f;
+            --surface-hover: #252550;
+            --text: #ffffff;
+            --text-muted: #94a3b8;
+            --text-secondary: #64748b;
+            --success: #10b981;
+            --gold: #f59e0b;
+            --purple: #a855f7;
+            --uv: #bf00ff;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --corel: #ff6600;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.4);
+            --shadow-glow: 0 0 30px rgba(191, 0, 255, 0.3);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --transition-fast: 0.15s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .loading-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--surface);
+            border-top-color: var(--uv);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+            animation: pulse 1.5s ease infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .app-container { 
+            max-width: 430px; 
+            margin: 0 auto; 
+            padding: 15px;
+            padding-bottom: 100px;
+            position: relative;
+        }
+
+        .screen { 
+            display: none; 
+            min-height: 100vh;
+            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .screen.active { 
+            display: block; 
+        }
+
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-top: 10px;
+        }
+
+        .page-header h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .back-btn {
+            background: var(--surface);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text);
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-size: 18px;
+        }
+
+        .back-btn:hover {
+            background: var(--surface-light);
+            transform: translateX(-2px);
+        }
+
+        .progress-header {
+            background: linear-gradient(135deg, var(--surface), var(--surface-light));
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(191, 0, 255, 0.2);
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--uv), var(--purple));
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 12px;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--uv), var(--purple), var(--accent));
+            width: 0%;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .module-status {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: all var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255,255,255,0.12);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card.featured {
+            background: linear-gradient(135deg, rgba(191, 0, 255, 0.15), rgba(99, 102, 241, 0.1));
+            border: 2px solid rgba(191, 0, 255, 0.3);
+        }
+
+        .module-card {
+            background: var(--surface);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255,255,255,0.06);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-card:hover { 
+            transform: translateY(-3px); 
+            border-color: var(--uv);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .module-card.locked { 
+            opacity: 0.5; 
+            pointer-events: none; 
+            filter: grayscale(0.8);
+        }
+
+        .module-card.completed { 
+            border-color: var(--success);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), var(--surface));
+        }
+
+        .module-card.completed::after {
+            content: '✓';
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: var(--success);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .module-number {
+            display: inline-flex;
+            align-items: center;
+            background: var(--uv);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .module-title { 
+            font-size: 20px; 
+            font-weight: 700; 
+            margin: 8px 0;
+            letter-spacing: -0.3px;
+        }
+
+        .module-desc { 
+            font-size: 14px; 
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .module-meta {
+            display: flex;
+            gap: 16px;
+            margin-top: 16px;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .content-block {
+            background: rgba(255,255,255,0.03);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--uv);
+            transition: all var(--transition-fast);
+        }
+
+        .content-block:hover {
+            background: rgba(255,255,255,0.05);
+            transform: translateX(4px);
+        }
+
+        .content-block.warning { border-left-color: var(--warning); background: rgba(245, 158, 11, 0.05); }
+        .content-block.danger { border-left-color: var(--danger); background: rgba(239, 68, 68, 0.05); }
+        .content-block.info { border-left-color: var(--info); background: rgba(59, 130, 246, 0.05); }
+        .content-block.success { border-left-color: var(--success); background: rgba(16, 185, 129, 0.05); }
+        .content-block.corel { border-left-color: var(--corel); background: rgba(255, 102, 0, 0.05); }
+
+        .block-title {
+            color: var(--gold);
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .block-content { 
+            font-size: 15px; 
+            color: var(--text-muted); 
+            line-height: 1.8;
+        }
+
+        .quiz-container { margin-top: 32px; }
+
+        .quiz-question {
+            background: var(--surface-light);
+            padding: 24px;
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 16px;
+            line-height: 1.6;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .quiz-options { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+        }
+
+        .quiz-option {
+            background: rgba(255,255,255,0.05);
+            border: 2px solid transparent;
+            padding: 18px 20px;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .quiz-option::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--text-muted);
+            border-radius: 50%;
+            transition: all var(--transition-fast);
+            flex-shrink: 0;
+        }
+
+        .quiz-option:hover { 
+            border-color: var(--uv); 
+            background: rgba(191, 0, 255, 0.1);
+            transform: translateX(4px);
+        }
+
+        .quiz-option.correct { 
+            border-color: var(--success); 
+            background: rgba(16, 185, 129, 0.15);
+        }
+
+        .quiz-option.wrong { 
+            border-color: var(--danger); 
+            background: rgba(239, 68, 68, 0.15);
+        }
+
+        .quiz-option.disabled { 
+            pointer-events: none; 
+            opacity: 0.7;
+        }
+
+        .shortcut-card {
+            background: rgba(255, 102, 0, 0.08);
+            border: 1px solid rgba(255, 102, 0, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 18px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .shortcut-card:hover { 
+            background: rgba(255, 102, 0, 0.15); 
+            transform: translateX(8px);
+        }
+
+        .shortcut-keys {
+            background: var(--corel);
+            color: white;
+            padding: 8px 14px;
+            border-radius: var(--radius-md);
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            font-weight: 700;
+            font-size: 13px;
+            box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-size: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary { 
+            background: var(--surface-light);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .btn-success { 
+            background: linear-gradient(135deg, var(--success), #059669);
+        }
+
+        .btn-corel { 
+            background: linear-gradient(135deg, var(--corel), #e55c00);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+            position: sticky;
+            bottom: 20px;
+        }
+
+        .nav-buttons .btn {
+            flex: 1;
+        }
+
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(22, 22, 45, 0.98);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0 28px;
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.08);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            font-size: 24px;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: all var(--transition-fast);
+            position: relative;
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+        }
+
+        .nav-item.active { 
+            opacity: 1; 
+            color: var(--accent);
+            background: rgba(6, 182, 212, 0.1);
+        }
+
+        .achievement-popup {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-120px);
+            background: linear-gradient(135deg, var(--gold), #d97706);
+            color: white;
+            padding: 16px 28px;
+            border-radius: var(--radius-xl);
+            box-shadow: 0 10px 40px rgba(245, 158, 11, 0.4);
+            z-index: 2000;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .achievement-popup.show { 
+            transform: translateX(-50%) translateY(0); 
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 24px 0;
+        }
+
+        .stat-box {
+            background: rgba(255,255,255,0.03);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .stat-value { 
+            font-size: 28px; 
+            font-weight: 800; 
+            color: var(--corel);
+        }
+
+        .stat-label { 
+            font-size: 12px; 
+            color: var(--text-muted); 
+            margin-top: 6px;
+        }
+
+        .word-card {
+            background: rgba(168, 85, 247, 0.08);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: all var(--transition-fast);
+        }
+
+        .word-card.learned {
+            opacity: 0.6;
+            border-color: var(--success);
+        }
+
+        .difficulty-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .diff-btn {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: var(--surface);
+            color: var(--text-muted);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .diff-btn.active {
+            background: var(--uv);
+            color: white;
+            border-color: var(--uv);
+        }
+
+        .quiz-timer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--surface);
+            border: 3px solid var(--corel);
+            border-radius: 50%;
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 20px;
+            z-index: 100;
+        }
+
+        .price-display {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.05));
+            border: 1px solid var(--success);
+            border-radius: var(--radius-xl);
+            padding: 28px;
+            text-align: center;
+            margin-top: 24px;
+        }
+
+        .price-amount { 
+            font-size: 42px; 
+            font-weight: 800; 
+            color: var(--success);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 16px;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(255,255,255,0.1);
+            background: var(--bg);
+            color: white;
+            font-size: 15px;
+            transition: all var(--transition-fast);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--uv);
+            box-shadow: 0 0 0 3px rgba(191, 0, 255, 0.15);
+        }
+
+        .grid-2 { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 16px; 
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: var(--surface-light);
+            color: var(--text);
+            padding: 16px 24px;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            animation: slideDown 0.3s ease;
+            pointer-events: auto;
+            min-width: 300px;
+        }
+
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.error { border-left: 4px solid var(--danger); }
+
+        .offline-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--warning);
+            color: #000;
+            padding: 8px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 9999;
+            transform: translateY(-100%);
+            transition: transform 0.3s;
+        }
+
+        .offline-banner.show {
+            transform: translateY(0);
+        }
+
+        .settings-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .settings-row:last-child {
+            border-bottom: none;
+        }
+
+        .data-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .data-actions .btn {
+            flex: 1;
+            font-size: 13px;
+            padding: 12px;
+        }
+
+        .exercise-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px;
+            background: rgba(255,255,255,0.03);
+            border-radius: var(--radius-lg);
+            margin-bottom: 12px;
+            transition: all var(--transition-fast);
+        }
+
+        .exercise-check {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid var(--success);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+            background: transparent;
+            color: transparent;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .exercise-check.completed { 
+            background: var(--success);
+            color: white;
+        }
+
+        .calendar-grid { 
+            display: grid; 
+            grid-template-columns: repeat(7, 1fr); 
+            gap: 6px; 
+            margin-top: 16px; 
+        }
+
+        .cal-day { 
+            aspect-ratio: 1; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            border-radius: var(--radius-sm);
+            background: rgba(255,255,255,0.05);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .cal-day.done { 
+            background: var(--success); 
+            color: white;
+        }
+
+        @media (max-width: 480px) {
+            .app-container {
+                padding: 12px;
+                padding-bottom: 100px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<div class="app-container">
-
-<!-- UV Akademi Main -->
-<div class="screen" id="uvMain">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
-        <button class="btn btn-sec" style="flex:0;padding:12px 16px" onclick="go('home')">←</button>
-        <h2 style="margin:0;color:var(--uv)">🧪 UV Akademi</h2>
+    <div class="offline-banner" id="offlineBanner">
+        ⚠️ Çevrimdışı Modu - İnternet bağlantısı yok
     </div>
-    <div class="hdr">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
-            <span style="font-size:14px;font-weight:bold">Toplam İlerleme</span>
-            <span style="color:var(--uv);font-weight:bold" id="totProg">0%</span>
-        </div>
-        <div class="bar"><div class="fill" id="totBar"></div></div>
-        <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:12px;color:var(--tm)">
-            <span id="modCount">0/8 Modül</span>
-            <span id="totXP">0 XP</span>
-        </div>
-    </div>
-    <div id="modList"></div>
-</div>
 
-<!-- Lesson Detail -->
-<div class="screen" id="lesson">
-    <div class="lesson" id="lessonCont"></div>
-    <div class="nav-btns" id="lessonNav">
-        <button class="btn btn-sec" onclick="prev()">← Önceki</button>
-        <button class="btn" id="nextBtn" onclick="nextL()">Sonraki →</button>
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">MindForge UV Master Yükleniyor...</div>
     </div>
-</div>
 
-<!-- Quiz -->
-<div class="screen" id="quiz">
-    <div class="lesson">
-        <div class="lesson-hdr">
-            <span class="badge">MODÜL SONU SINAVI</span>
-            <h2 class="title" id="quizTitle">Bilgi Kontrolü</h2>
-        </div>
-        <div id="quizCont"></div>
+    <div class="toast-container" id="toastContainer"></div>
+    <div class="achievement-popup" id="achievementPopup">
+        <span style="font-size: 24px;">🏆</span>
+        <span id="achievementText">Başarım Kazanıldı!</span>
     </div>
-</div>
 
-<!-- Home -->
-<div class="screen active" id="home">
-    <h2 style="color:var(--a)">MindForge Master</h2>
-    <div class="hdr" style="border-color:var(--g)">
-        <div style="font-size:12px;color:var(--g);margin-bottom:5px">USTA YOLU</div>
-        <div style="display:flex;justify-content:space-between;align-items:center">
-            <div>
-                <div style="font-size:24px;font-weight:bold">Seviye <span id="lvl">1</span></div>
-                <div style="font-size:12px;color:var(--tm)"><span id="xp">0</span> / 100 XP</div>
+    <div class="app-container">
+        
+        <!-- UV AKADEMİ ANA EKRAN -->
+        <div class="screen" id="uvAcademyMain">
+            <div class="page-header">
+                <button class="back-btn" onclick="showScreen('homeScreen')" aria-label="Geri dön">←</button>
+                <h2 style="color:var(--uv)">🧪 UV Akademi</h2>
             </div>
-            <div style="font-size:40px">🏆</div>
+            
+            <div class="progress-header">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <span style="font-size:15px; font-weight:700;">Toplam İlerleme</span>
+                    <span style="color:var(--uv); font-weight:800; font-size:18px;" id="totalProgress">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="totalProgressBar"></div>
+                </div>
+                <div class="module-status">
+                    <span id="completedModules">0/8 Modül</span>
+                    <span id="totalPoints">0 XP Kazanıldı</span>
+                </div>
+            </div>
+            
+            <div id="modulesList"></div>
+
+            <div class="card" style="margin-top:24px;">
+                <h3 style="margin:0 0 16px 0; color:var(--text-muted); font-size:14px; text-transform:uppercase; letter-spacing:1px;">Veri Yönetimi</h3>
+                <div class="data-actions">
+                    <button class="btn btn-secondary" onclick="exportData()">💾 Dışa Aktar</button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📥 İçe Aktar</button>
+                    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)">
+                </div>
+                <button class="btn btn-secondary" onclick="resetAllData()" style="margin-top:12px; width:100%; color:var(--danger); border-color:var(--danger);">
+                    🗑️ Tüm Verileri Sıfırla
+                </button>
+            </div>
         </div>
-        <div class="bar" style="margin-top:15px"><div class="fill" id="lvlBar" style="background:linear-gradient(90deg,var(--g),#fbbf24)"></div></div>
+
+        <!-- MODÜL DETAY EKRANI -->
+        <div class="screen" id="moduleDetail">
+            <div class="page-header">
+                <button class="back-btn" onclick="showScreen('uvAcademyMain')">←</button>
+                <h2 id="moduleDetailTitle">Modül</h2>
+            </div>
+            <div class="card" id="lessonContent"></div>
+            <div class="nav-buttons" id="lessonNav">
+                <button class="btn btn-secondary" onclick="prevLesson()">← Önceki</button>
+                <button class="btn" id="nextBtn" onclick="nextLesson()">Sonraki →</button>
+            </div>
+        </div>
+
+        <!-- QUIZ EKRANI -->
+        <div class="screen" id="quizScreen">
+            <div class="card">
+                <div style="margin-bottom:24px;">
+                    <span style="background:var(--uv); color:white; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:700;">MODÜL SONU SINAVI</span>
+                    <h2 style="margin-top:12px; font-size:24px;" id="quizTitle">Bilgi Kontrolü</h2>
+                </div>
+                <div id="quizContent"></div>
+            </div>
+        </div>
+
+        <!-- ANA EKRAN -->
+        <div class="screen active" id="homeScreen">
+            <div style="margin-bottom:24px;">
+                <h1 style="font-size:28px; margin:0; letter-spacing:-1px;">MindForge <span style="color:var(--accent)">Master</span></h1>
+                <p style="color:var(--text-muted); margin:8px 0 0 0; font-size:14px;">UV Baskı Uzmanlık Platformu</p>
+            </div>
+
+            <div class="progress-header" style="border-color:var(--gold); background:linear-gradient(135deg, rgba(245,158,11,0.1), var(--surface));">
+                <div style="font-size:12px; color:var(--gold); margin-bottom:8px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Usta Yolu</div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-size:32px; font-weight:800; letter-spacing:-1px;">Seviye <span id="lvlLabel">1</span></div>
+                        <div style="font-size:13px; color:var(--text-muted); margin-top:4px;"><span id="expLabel">0</span> / 100 XP</div>
+                    </div>
+                    <div style="font-size:48px; filter:drop-shadow(0 4px 8px rgba(245,158,11,0.3));">🏆</div>
+                </div>
+                <div class="progress-bar" style="margin-top:16px; height:12px;">
+                    <div class="progress-fill" id="lvlFill" style="width:0%; background:linear-gradient(90deg, var(--gold), #fbbf24, var(--gold));"></div>
+                </div>
+            </div>
+
+            <div class="module-card featured" onclick="showScreen('uvAcademyMain')">
+                <div style="display:flex; align-items:center; gap:16px;">
+                    <span style="font-size:48px;">🧪</span>
+                    <div>
+                        <div class="module-title" style="margin:0; color:white;">UV AKADEMİ</div>
+                        <div class="module-desc" style="margin-top:4px;">Sıfırdan uzmanlığa UV baskı teknolojisi</div>
+                        <div class="module-meta" style="margin-top:12px;">
+                            <span>📚 8 Modül</span>
+                            <span>⏱️ 4 Saat</span>
+                            <span>🎯 Sertifikalı</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px;">
+                <div class="module-card" onclick="showScreen('corelScreen')" style="text-align:center; border:1px solid var(--corel);">
+                    <div style="font-size:36px; margin-bottom:8px;">🎨</div>
+                    <div class="module-title" style="font-size:16px; margin:0;">CorelMaster</div>
+                    <div style="font-size:12px; color:var(--text-muted);">Kısayollar & Quiz</div>
+                </div>
+                <div class="module-card" onclick="showScreen('businessScreen')" style="text-align:center;">
+                    <div style="font-size:36px; margin-bottom:8px;">📊</div>
+                    <div class="module-title" style="font-size:16px; margin:0;">Maliyet</div>
+                    <div style="font-size:12px; color:var(--text-muted);">Hesaplama</div>
+                </div>
+                <div class="module-card" onclick="showScreen('exerciseScreen')" style="text-align:center;">
+                    <div style="font-size:36px; margin-bottom:8px;">🏋️</div>
+                    <div class="module-title" style="font-size:16px; margin:0;">Antrenman</div>
+                    <div style="font-size:12px; color:var(--text-muted);">Günlük</div>
+                </div>
+                <div class="module-card" onclick="showScreen('wordScreen')" style="text-align:center; border:1px solid var(--purple);">
+                    <div style="font-size:36px; margin-bottom:8px;">📚</div>
+                    <div class="module-title" style="font-size:16px; margin:0;">5 Kelime</div>
+                    <div style="font-size:12px; color:var(--text-muted);">Sözlük</div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top:20px;">
+                <h3 style="margin:0 0 16px 0; font-size:14px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px;">Haftalık Özet</h3>
+                <div class="grid-2" style="text-align:center;">
+                    <div>
+                        <div style="font-size:24px; font-weight:700; color:var(--success);" id="weekModules">0</div>
+                        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Modül</div>
+                    </div>
+                    <div>
+                        <div style="font-size:24px; font-weight:700; color:var(--corel);" id="weekShortcuts">0</div>
+                        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Kısayol</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CORELMASTER EKRANI -->
+        <div class="screen" id="corelScreen">
+            <div class="page-header">
+                <button class="back-btn" onclick="showScreen('homeScreen')">←</button>
+                <h2 style="color:var(--corel); margin:0;">🎨 CorelMaster</h2>
+            </div>
+            
+            <div class="difficulty-selector">
+                <button class="diff-btn active" onclick="setDifficulty('easy', this)">Kolay</button>
+                <button class="diff-btn" onclick="setDifficulty('medium', this)">Orta</button>
+                <button class="diff-btn" onclick="setDifficulty('hard', this)">Zor</button>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value" id="corelTotalAnswered">0</div>
+                    <div class="stat-label">Cevaplanan</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="corelCorrectRate">0%</div>
+                    <div class="stat-label">Başarı</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="corelStreak">0</div>
+                    <div class="stat-label">Seri</div>
+                </div>
+            </div>
+
+            <div id="corelShortcutsList"></div>
+
+            <button class="btn btn-corel" onclick="startCorelQuiz()" style="width:100%; margin-top:20px;">
+                ⚡ Quiz Başlat
+            </button>
+        </div>
+
+        <!-- COREL QUIZ EKRANI -->
+        <div class="screen" id="corelQuizScreen">
+            <div class="quiz-timer" id="quizTimer">30</div>
+            <button class="back-btn" onclick="endCorelQuiz()" style="margin-bottom:20px;">←</button>
+            
+            <div class="card" style="margin-top:60px;">
+                <div style="margin-bottom:24px;">
+                    <span style="background:rgba(255,102,0,0.2); color:var(--corel); padding:4px 12px; border-radius:20px; font-size:12px; font-weight:700;">COREL QUIZ</span>
+                    <h2 style="margin-top:12px; font-size:20px;" id="corelQuizQuestion">Soru yükleniyor...</h2>
+                </div>
+                
+                <div class="quiz-options" id="corelQuizOptions"></div>
+                
+                <div style="margin-top:32px; text-align:center; padding:20px; background:rgba(255,255,255,0.03); border-radius:var(--radius-lg);">
+                    <div style="font-size:13px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px;">Skor</div>
+                    <div style="font-size:36px; font-weight:800; color:var(--corel); margin-top:8px;">
+                        <span id="currentScore">0</span> / <span id="totalQuestions">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5 KELİME EKRANI -->
+        <div class="screen" id="wordScreen">
+            <div class="page-header">
+                <button class="back-btn" onclick="showScreen('homeScreen')">←</button>
+                <h2 style="color:var(--purple); margin:0;">📚 Günün 5 Kelimesi</h2>
+            </div>
+            
+            <div class="card">
+                <div id="wordListBody"></div>
+                <button class="btn" style="background:var(--purple); margin-top:20px; width:100%;" onclick="renderWords()">
+                    🔄 Yeni Kelimeler
+                </button>
+            </div>
+            
+            <div class="card" style="margin-top:16px;">
+                <h3 style="margin:0 0 20px 0; color:var(--gold); font-size:16px;">📖 İstatistikler</h3>
+                <div class="stats-grid" style="margin:0;">
+                    <div class="stat-box">
+                        <div class="stat-value" id="totalWordsSeen">0</div>
+                        <div class="stat-label">Görülen</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="totalWordsLearned">0</div>
+                        <div class="stat-label">Öğrenilen</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="currentStreak">0</div>
+                        <div class="stat-label">Seri</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MALİYET HESAPLAMA EKRANI -->
+        <div class="screen" id="businessScreen">
+            <div class="page-header">
+                <button class="back-btn" onclick="showScreen('homeScreen')">←</button>
+                <h2 style="margin:0;">📊 Maliyet Hesaplama</h2>
+            </div>
+            
+            <div class="card">
+                <h3 style="margin:0 0 20px 0; color:var(--accent); font-size:16px;">Ölçüler</h3>
+                <div class="grid-2">
+                    <div class="form-group" style="margin:0;">
+                        <label class="form-label">En (cm)</label>
+                        <input type="number" id="w" placeholder="50" oninput="calculate()" step="0.1">
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                        <label class="form-label">Boy (cm)</label>
+                        <input type="number" id="h" placeholder="70" oninput="calculate()" step="0.1">
+                    </div>
+                </div>
+                
+                <h3 style="color:var(--accent); margin:24px 0 16px 0; font-size:16px;">Malzeme ve Fiyat</h3>
+                
+                <div class="form-group">
+                    <label class="form-label">Malzeme Tipi</label>
+                    <select id="mType" onchange="updatePriceFromSelection()">
+                        <option value="">Malzeme Seçin...</option>
+                        <option value="trans">Şeffaf Pleksi</option>
+                        <option value="color">Opak/Renkli Malzeme</option>
+                        <option value="custom">Özel Fiyat</option>
+                    </select>
+                </div>
+                
+                <div id="customPriceArea" style="display:none;" class="form-group">
+                    <label class="form-label">Özel Fiyat (₺/m²)</label>
+                    <input type="number" id="customPrice" placeholder="750" oninput="calculate()">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Birim Fiyat (₺/m²)</label>
+                    <input type="number" id="uPrice" placeholder="Fiyat seçin veya girin" oninput="calculate()">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Sabit Maliyet (₺)</label>
+                    <input type="number" id="fixedCost" value="50" oninput="calculate()">
+                </div>
+                
+                <div class="price-display">
+                    <div class="price-amount" id="finalRes">0₺</div>
+                    <div class="price-detail" id="calcDetail">0 m² × 0₺ + 50₺ sabit</div>
+                </div>
+                
+                <div class="data-actions" style="margin-top:20px;">
+                    <button class="btn" onclick="saveCalculation()" style="flex:1;">💾 Kaydet</button>
+                    <button class="btn btn-secondary" onclick="shareCalculation()" style="flex:1;">📤 Paylaş</button>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-top:16px;">
+                <h3 style="margin:0 0 16px 0; color:var(--gold); font-size:16px;">📜 Geçmiş</h3>
+                <div id="calcHistory" style="max-height:300px; overflow-y:auto;">
+                    <p style="color:var(--text-muted); text-align:center; padding:20px;">Henüz kayıt yok</p>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-top:16px;">
+                <h3 style="margin:0 0 20px 0; color:var(--gold); font-size:16px;">⚙️ Fiyat Ayarları</h3>
+                
+                <div class="settings-row">
+                    <span class="settings-label">Şeffaf m² Fiyatı</span>
+                    <input type="number" id="set_trans" value="450" style="width:120px; text-align:right;" onchange="savePriceSettings()">
+                </div>
+                <div class="settings-row">
+                    <span class="settings-label">Renkli m² Fiyatı</span>
+                    <input type="number" id="set_color" value="550" style="width:120px; text-align:right;" onchange="savePriceSettings()">
+                </div>
+            </div>
+        </div>
+
+        <!-- ANTRENMAN EKRANI -->
+        <div class="screen" id="exerciseScreen">
+            <div class="page-header">
+                <button class="back-btn" onclick="showScreen('homeScreen')">←</button>
+                <h2 style="margin:0;">🏋️ Günlük Antrenman</h2>
+            </div>
+
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <h3 style="margin:0; color:var(--success); font-size:16px;">Bugünkü Egzersizler</h3>
+                    <span style="background:var(--success); color:white; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:700;" id="exerciseProgress">0/5</span>
+                </div>
+                <div id="exerciseList"></div>
+            </div>
+
+            <div class="card" style="margin-top:16px;">
+                <h3 style="margin:0 0 20px 0; color:var(--accent); font-size:16px;">📅 Takvim</h3>
+                <div class="calendar-grid" id="exerciseCalendar"></div>
+            </div>
+        </div>
+
     </div>
 
-    <div class="mod" onclick="go('uvMain')" style="background:linear-gradient(135deg,#16162d,#3b0066);border:2px solid var(--uv)">
-        <span style="font-size:40px">🧪</span>
-        <div class="title" style="color:white;margin-top:10px">UV AKADEMİ</div>
-        <div style="font-size:13px;color:var(--tm)">Sıfırdan uzmanlığa UV baskı teknolojisi</div>
-        <div style="display:flex;gap:15px;margin-top:12px;font-size:12px;color:var(--tm)}">
-            <span>📚 8 Modül</span><span>⏱️ 4 Saat</span><span>🎯 Sertifikalı</span>
-        </div>
+    <div class="nav-bar">
+        <div class="nav-item active" onclick="showScreen('homeScreen')">🏠</div>
+        <div class="nav-item" onclick="showScreen('uvAcademyMain')">🧪</div>
+        <div class="nav-item" onclick="showScreen('corelScreen')">🎨</div>
+        <div class="nav-item" onclick="showScreen('businessScreen')">📊</div>
     </div>
 
-    <div class="grid-2" style="margin-top:15px">
-        <div class="mod" onclick="go('corel')" style="text-align:center;border:1px solid var(--co)">
-            <div style="font-size:30px">🎨</div>
-            <div class="title" style="font-size:16px">CorelMaster</div>
-        </div>
-        <div class="mod" onclick="go('biz')" style="text-align:center">
-            <div style="font-size:30px">📊</div>
-            <div class="title" style="font-size:16px">Maliyet</div>
-        </div>
-    </div>
-</div>
+    <script>
+        // ==================== STATE MANAGEMENT ====================
+        const AppState = {
+            currentUser: {
+                level: 1,
+                xp: 0,
+                totalXp: 0,
+                completedModules: [],
+                moduleProgress: {},
+                wordStats: {
+                    seen: 0,
+                    learned: 0,
+                    streak: 0,
+                    lastStudyDate: null,
+                    words: {}
+                },
+                corelStats: {
+                    answered: 0,
+                    correct: 0,
+                    streak: 0,
+                    difficulty: 'easy'
+                },
+                exercises: {},
+                calculations: [],
+                priceSettings: {
+                    trans: 450,
+                    color: 550
+                }
+            },
+            currentModule: null,
+            currentLesson: 0,
+            corelQuiz: {
+                active: false,
+                questions: [],
+                current: 0,
+                score: 0,
+                timer: null,
+                timeLeft: 30
+            }
+        };
 
-<!-- Corel -->
-<div class="screen" id="corel">
-    <button class="btn btn-sec" onclick="go('home')" style="margin-bottom:20px">← Ana Menü</button>
-    <h2 style="color:var(--co)">🎨 CorelMaster</h2>
-    <div id="corelList"></div>
-</div>
+        // ==================== UV MODULES DATA ====================
+        const UVModules = [
+            {
+                id: 1,
+                title: "UV Baskı Temelleri",
+                desc: "UV teknolojisinin temel prensipleri ve tarihçesi",
+                duration: "30 dk",
+                lessons: [
+                    {
+                        title: "UV Işınları Nedir?",
+                        content: `
+                            <div class="content-block">
+                                <div class="block-title">🌟 Temel Tanım</div>
+                                <div class="block-content">
+                                    UV (Ultraviyole) ışınları, elektromanyetik spektrumun 10-400 nm dalga boyu aralığındaki görünmez ışınlardır. 
+                                    UV baskı teknolojisinde genellikle <strong>UV-A (315-400 nm)</strong> aralığı kullanılır.
+                                </div>
+                            </div>
+                            <div class="content-block info">
+                                <div class="block-title">💡 Çalışma Prensibi</div>
+                                <div class="block-content">
+                                    UV mürekkepleri, UV ışığına maruz kaldığında anında polimerize olur (kurur). 
+                                    Bu süreç <strong>fotopolimerizasyon</strong> olarak adlandırılır.
+                                </div>
+                            </div>
+                        `
+                    },
+                    {
+                        title: "UV Baskının Avantajları",
+                        content: `
+                            <div class="content-block success">
+                                <div class="block-title">✅ Hız ve Verimlilik</div>
+                                <div class="block-content">
+                                    <ul>
+                                        <li>Anında kuruma - bekleme süresi yok</li>
+                                        <li>Saatte 100+ baskı kapasitesi</li>
+                                        <li>Isıya duyarlı malzemelere güvenli</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="content-block">
+                                <div class="block-title">🎨 Baskı Kalitesi</div>
+                                <div class="block-content">
+                                    UV baskı, geleneksel solvent bazlı baskılara göre:
+                                    <br>• Daha canlı renkler
+                                    <br>• Yüksek çözünürlük (1200 dpi+)
+                                    <br>• 3D efekt ve dokulu baskı imkanı
+                                </div>
+                            </div>
+                        `
+                    }
+                ],
+                quiz: {
+                    title: "Modül 1: Temel Bilgiler",
+                    questions: [
+                        {
+                            q: "UV baskıda kullanılan ışın tipi nedir?",
+                            options: ["UV-C (100-280 nm)", "UV-A (315-400 nm)", "UV-B (280-315 nm)", "Görünür ışık"],
+                            correct: 1
+                        },
+                        {
+                            q: "UV mürekkep kuruma süreci nedir?",
+                            options: ["Buharlaşma", "Fotopolimerizasyon", "Oksidasyon", "Soğuma"],
+                            correct: 1
+                        },
+                        {
+                            q: "UV baskının en büyük avantajı nedir?",
+                            options: ["Düşük maliyet", "Anında kuruma", "Sesiz çalışma", "Küçük boyut"],
+                            correct: 1
+                        }
+                    ]
+                }
+            },
+            {
+                id: 2,
+                title: "Mürekkep Türleri",
+                desc: "Farklı UV mürekkep çeşitleri ve kullanım alanları",
+                duration: "45 dk",
+                lessons: [
+                    {
+                        title: "Sert ve Esnek Mürekkepler",
+                        content: `
+                            <div class="content-block">
+                                <div class="block-title">🧱 Sert (Rigid) Mürekkepler</div>
+                                <div class="block-content">
+                                    <strong>Kullanım:</strong> Pleksi, metal, cam, seramik gibi sert yüzeyler
+                                    <br><strong>Özellik:</strong> Yüksek sertlik, çizilme direnci
+                                    <br><strong>Kuruma:</strong> 0.1-0.3 saniye
+                                </div>
+                            </div>
+                            <div class="content-block warning">
+                                <div class="block-title">🔄 Esnek (Flexible) Mürekkepler</div>
+                                <div class="block-content">
+                                    <strong>Kullanım:</strong> Deri, tekstil, PVC, streç malzemeler
+                                    <br><strong>Özellik:</strong> %300'e varan esneme kabiliyeti
+                                    <br><strong>Uygulama:</strong> Araç giydirme, bayrak, branda
+                                </div>
+                            </div>
+                        `
+                    }
+                ],
+                quiz: {
+                    title: "Modül 2: Mürekkepler",
+                    questions: [
+                        {
+                            q: "Araç giydirme için hangi mürekkep tipi uygundur?",
+                            options: ["Sert mürekkep", "Esnek mürekkep", "Seramik mürekkebi", "Gıda mürekkebi"],
+                            correct: 1
+                        },
+                        {
+                            q: "Sert mürekkep kuruma süresi nedir?",
+                            options: ["5-10 saniye", "1-2 dakika", "0.1-0.3 saniye", "30 dakika"],
+                            correct: 2
+                        }
+                    ]
+                }
+            },
+            {
+                id: 3,
+                title: "Baskı Öncesi Hazırlık",
+                desc: "CorelDRAW hazırlık, renk yönetimi ve rip yazılımı",
+                duration: "60 dk",
+                lessons: [
+                    {
+                        title: "CorelDRAW'da Hazırlık",
+                        content: `
+                            <div class="content-block corel">
+                                <div class="block-title">🎨 Vektör Hazırlık</div>
+                                <div class="block-content">
+                                    <strong>CMYK mod:</strong> UV baskıda CMYK+W (Beyaz) + V (Varnish) kullanılır
+                                    <br><strong>Çözünürlük:</strong> 300 dpi minimum, 600-1200 dpi önerilir
+                                    <br><strong>Kontur:</strong> 0.25 pt minimum çizgi kalınlığı
+                                </div>
+                            </div>
+                            <div class="content-block danger">
+                                <div class="block-title">⚠️ Beyaz Kanal Ayarı</div>
+                                <div class="block-content">
+                                    Şeffaf malzemelerde beyaz zemin için:
+                                    <br>1. Ayrı bir layer oluşturun
+                                    <br>2. Spot color olarak 'White' tanımlayın
+                                    <br>3. %100 coverage ile doldurun
+                                </div>
+                            </div>
+                        `
+                    }
+                ],
+                quiz: {
+                    title: "Modül 3: Hazırlık",
+                    questions: [
+                        {
+                            q: "UV baskı için minimum çözünürlük nedir?",
+                            options: ["72 dpi", "150 dpi", "300 dpi", "96 dpi"],
+                            correct: 2
+                        },
+                        {
+                            q: "Şeffaf plekside beyaz zemin için ne yapılmalıdır?",
+                            options: ["CMYK beyaz kullan", "Spot white kanalı oluştur", "Gri ton kullan", "Sarı mürekkep ekle"],
+                            correct: 1
+                        }
+                    ]
+                }
+            },
+            {
+                id: 4,
+                title: "Malzeme Bilgisi",
+                desc: "Baskı yapılabilecek malzemeler ve ön işlemler",
+                duration: "40 dk",
+                lessons: [
+                    {
+                        title: "Uygun Malzemeler",
+                        content: `
+                            <div class="content-block">
+                                <div class="block-title">✅ Doğrudan Baskı</div>
+                                <div class="block-content">
+                                    • Pleksi (Akrilik) - Temizleme ile
+                                    <br>• PVC Foamboard
+                                    <br>• Alüminyum kompozit panel
+                                    <br>• Seramik ve cam (özel primer ile)
+                                    <br>• Ahşap ve MDF
+                                </div>
+                            </div>
+                            <div class="content-block warning">
+                                <div class="block-title">⚠️ Ön İşlem Gerektirenler</div>
+                                <div class="block-content">
+                                    <strong>Cam/Metal:</strong> Korona veya flame treatment
+                                    <br><strong>PP/PE:</strong> Adhesion promoter (primer)
+                                    <br><strong>Deri:</strong> Yüzey temizliği ve sabitleme
+                                </div>
+                            </div>
+                        `
+                    }
+                ],
+                quiz: {
+                    title: "Modül 4: Malzemeler",
+                    questions: [
+                        {
+                            q: "Cam ve metal için ön işlem nedir?",
+                            options: ["Su ile yıkama", "Korona/flame treatment", "Zımparalama", "Kurutma"],
+                            correct: 1
+                        },
+                        {
+                            q: "Hangi malzeme doğrudan baskıya uygundur?",
+                            options: ["Ham demir", "Yağlı yüzey", "Pleksi", "Silikon"],
+                            correct: 2
+                        }
+                    ]
+                }
+            },
+            {
+                id: 5,
+                title: "Makine Ayarları",
+                desc: "Baskı kafası yüksekliği, pass sayısı ve hız ayarları",
+                duration: "50 dk",
+                lessons: [
+                    {
+                        title: "Teknik Parametreler",
+                        content: `
+                            <div class="content-block">
+                                <div class="block-title">📏 Kafa Yüksekliği</div>
+                                <div class="block-content">
+                                    <strong>Standart:</strong> 1.5-2 mm malzeme üzeri
+                                    <br><strong>3D efekt:</strong> 3-5 mm mesafe
+                                    <br><strong>Damla boyutu:</strong> 3.5-42 pL (picolitre) arası ayarlanabilir
+                                </div>
+                            </div>
+                            <div class="content-block info">
+                                <div class="block-title">🎯 Pass ve Hız</div>
+                                <div class="block-content">
+                                    <strong>4 Pass:</strong> Taslak/taslak baskı
+                                    <br><strong>8-12 Pass:</strong> Standart kalite
+                                    <br><strong>16+ Pass:</strong> Yüksek kalite/fotoğraf
+                                    <br><strong>Hız:</strong> 8-48 m²/saat arası değişir
+                                </div>
+                            </div>
+                        `
+                    }
+                ],
+                quiz: {
+                    title: "Modül 5: Ayarlar",
+                    questions: [
+                        {
+                            q: "Standart baskı için kafa yüksekliği nedir?",
+                            options: ["5-10 mm", "1.5-2 mm", "0.1 mm", "10-15 mm"],
+                            correct: 1
+                        },
+                        {
+                            q: "Yüksek kalite fotoğraf baskısı için kaç pass önerilir?",
+                            options: ["4 Pass", "8 Pass", "16+ Pass", "2 Pass"],
+                            correct: 2
+                        }
+                    ]
+                }
+            },
+            {
+                id: 6,
+                title: "Bakım ve Arıza",
+                desc: "Günlük bakım, nozül temizliği ve yayın sorunlar",
+                duration: "35 dk",
+                lessons: [
+                    {
+                        title: "Günlük Bakım Rutini",
+                        content: `
+                            <div class="content-block">
+                                <div class="block-title">🧹 Açılış Kontrolü</div>
+                                <div class="block-content">
+                                    1. Kapakları kapat, egzozu aç
+                                    <br>2. Mürekkep sıcaklığını kontrol et (20-25°C)
+                                    <br>3. Nozül check pattern'ini yazdır
+                                    <br>4. Eksik jet varsa temizlik yap
+                                </div>
+                            </div>
+                            <div class="content-block danger">
+                                <div class="block-title">🚨 Sık Karşılaşılan Sorunlar</div>
+                                <div class="block-content">
+                                    <strong>Bantlanma (Banding):</strong> Pass ayarlarını artır, kafaları hizala
+                                    <br><strong>Renk kayması:</strong> Media takip sistemini kontrol et
+                                    <br><strong>Pudra (Powdering):</strong> UV dozajını artır
+                                </div>
+                            </div>
+                        `
+                    }
+                ],
+                quiz: {
+                    title: "Modül 6: Bakım",
+                    questions: [
+                        {
+                            q: "Bantlanma sorunu için çözüm nedir?",
+                            options: ["Hızı artır", "Pass ayarını artır", "Rengi değiştir", "Mürekkep ekle"],
+                            correct: 1
+                        },
+                        {
+                            q: "Günlük açılışta ilk yapılması gereken nedir?",
+                            options: ["Baskıya başla", "Nozül check pattern", "Mürekkep değiştir", "Fiyat hesapla"],
+                            correct: 1
+                        }
+                    ]
+                }
+            },
+            {
+                id: 7,
+                title: "Kalite Kontrol",
+                desc: "Renk tutarlılığı, ölçüm cihazları ve testler",
+                duration: "45 dk",
+                lessons: [
+                    {
+                        title: "Kalite Standartları",
+                        content: `
+                            <div class="content-block">
+                                <div class="block-title">🎯 Delta E (ΔE) Değeri</div>
+                                <div class="block-content">
+                                    <strong>ΔE < 1:</strong> İnsan gözü fark edemez (mükemmel)
+                                    <br><strong>ΔE 1-2:</strong> Kabul edilebilir (iyi)
+                                    <br><strong>ΔE 2-4:</strong> Fark edilebilir (kabul edilebilir sınır)
+                                    <br><strong>ΔE > 4:</strong> Yeniden baskı gerekir
+                                </div>
+                            </div>
+                            <div class="content-block info">
+                                <div class="block-title">📊 ICC Profil Yönetimi</div>
+                                <div class="block-content">
+                                    Her malzeme için ayrı ICC profili oluşturulmalıdır.
+                                    X-Rite i1Pro veya benzeri spektrofotometre kullanılır.
+                                </div>
+                            </div>
+                        `
+                    }
+                ],
+                quiz: {
+                    title: "Modül 7: Kalite",
+                    questions: [
+                        {
+                            q: "Mükemmel renk tutarlılığı için Delta E değeri nedir?",
+                            options: ["< 1", "2-4", "> 5", "10+"],
+                            correct: 0
+                        },
+                        {
+                            q: "ICC profili hangi cihazla oluşturulur?",
+                            options: ["Mikroskop", "Spektrofotometre", "Termometre", "Tartı"],
+                            correct: 1
+                        }
+                    ]
+                }
+            },
+            {
+                id: 8,
+                title: "İleri Teknikler",
+                desc: "3D baskı, spot varnish ve özel efektler",
+                duration: "55 dk",
+                lessons: [
+                    {
+                        title: "Özel Efektler",
+                        content: `
+                            <div class="content-block">
+                                <div class="block-title">🔮 Spot Varnish</div>
+                                <div class="block-content">
+                                    Seçili alanlara parlak/mat vernik uygulama.
+                                    <br>Görsel derinlik ve dokulu his yaratır.
+                                    <br>Ayrı kanal olarak Corel'da hazırlanır.
+                                </div>
+                            </div>
+                            <div class="content-block success">
+                                <div class="block-title">📐 3D/Relief Baskı</div>
+                                <div class="block-content">
+                                    Katmanlı baskı ile 0.1-2 mm arası yükselti.
+                                    <br>Mimari modeller, braille, dekoratif objeler.
+                                    <br>Her katman 0.1 mm, 20+ pass gerekebilir.
+                                </div>
+                            </div>
+                        `
+                    }
+                ],
+                quiz: {
+                    title: "Modül 8: İleri Teknikler",
+                    questions: [
+                        {
+                            q: "Spot varnish ne işe yarar?",
+                            options: ["Hız artırır", "Görsel derinlik yaratır", "Maliyet düşürür", "Kurutur"],
+                            correct: 1
+                        },
+                        {
+                            q: "3D baskıda her katman kalınlığı nedir?",
+                            options: ["1 mm", "0.1 mm", "5 mm", "0.01 mm"],
+                            correct: 1
+                        }
+                    ]
+                }
+            }
+        ];
 
-<!-- Business -->
-<div class="screen" id="biz">
-    <button class="btn btn-sec" onclick="go('home')" style="margin-bottom:20px">← Ana Menü</button>
-    <h2>📊 Maliyet Hesaplama</h2>
-    <div class="lesson">
-        <div class="grid-2">
-            <div><label style="font-size:12px;color:var(--tm)">En (cm)</label><input type="number" id="w" placeholder="50" oninput="calc()"></div>
-            <div><label style="font-size:12px;color:var(--tm)">Boy (cm)</label><input type="number" id="h" placeholder="70" oninput="calc()"></div>
-        </div>
-        <select id="mType" onchange="updPrice()">
-            <option value="">Malzeme Seç...</option>
-            <option value="450">Şeffaf Pleksi (450₺/m²)</option>
-            <option value="600">Opak Malzeme (600₺/m²)</option>
-        </select>
-        <input type="number" id="price" placeholder="Fiyat" oninput="calc()">
-        <div style="background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(5,150,105,.1));border:1px solid var(--ok);border-radius:12px;padding:20px;text-align:center;margin-top:15px">
-            <div style="font-size:36px;font-weight:bold;color:var(--ok)" id="res">0₺</div>
-            <div style="font-size:12px;color:var(--tm)" id="det">0 m² × 0₺</div>
-        </div>
-    </div>
-</div>
+        // ==================== CORELDRAW SHORTCUTS ====================
+        const CorelShortcuts = {
+            easy: [
+                { keys: "Ctrl+N", name: "Yeni Dosya", desc: "Yeni belge oluşturur" },
+                { keys: "Ctrl+O", name: "Aç", desc: "Mevcut dosyayı açar" },
+                { keys: "Ctrl+S", name: "Kaydet", desc: "Dosyayı kaydeder" },
+                { keys: "Ctrl+Z", name: "Geri Al", desc: "Son işlemi iptal eder" },
+                { keys: "Ctrl+C", name: "Kopyala", desc: "Seçili objeyi kopyalar" },
+                { keys: "Ctrl+V", name: "Yapıştır", desc: "Panodakini yapıştırır" },
+                { keys: "F6", name: "Dikdörtgen", desc: "Dikdörtgen aracı" },
+                { keys: "F7", name: "Elips", desc: "Elips daire aracı" },
+                { keys: "F8", name: "Metin", desc: "Metin aracı" },
+                { keys: "Space", name: "Seçim", desc: "Pick tool'a geçer" }
+            ],
+            medium: [
+                { keys: "Ctrl+D", name: "Kopyala ve Offset", desc: "Seçili objeyi kopyalayıp kaydırır" },
+                { keys: "Ctrl+G", name: "Grupla", desc: "Seçili objeleri gruplar" },
+                { keys: "Ctrl+U", name: "Grubu Çöz", desc: "Grubu çözer" },
+                { keys: "Ctrl+Q", name: "Eğrilere Çevir", desc: "Metni vektöre çevirir" },
+                { keys: "F11", name: "Dolgu Rengi", desc: "Dolgu renk paleti" },
+                { keys: "Shift+F12", name: "Kontur Rengi", desc: "Çizgi renk paleti" },
+                { keys: "Ctrl+I", name: "İçe Aktar", desc: "Resim/dosya içe aktarır" },
+                { keys: "Ctrl+E", name: "Dışa Aktar", desc: "Dosyayı dışa aktarır" },
+                { keys: "P", name: "Sayfaya Ortala", desc: "Objeyi sayfa merkezine alır" },
+                { keys: "Ctrl+Shift+A", name: "Hizala ve Dağıt", desc: "Hizalama penceresi" }
+            ],
+            hard: [
+                { keys: "Ctrl+Shift+Q", name: "Konturu Objeye Çevir", desc: "Çizgiyi dolgulu obje yapar" },
+                { keys: "Alt+F7", name: "Konum Docker", desc: "Hassas konumlandırma" },
+                { keys: "Ctrl+F9", name: "Kontur Docker", desc: "Kontur efektleri" },
+                { keys: "Ctrl+F7", name: "Zarf Docker", desc: "Zarf/distortion efektleri" },
+                { keys: "Alt+F8", name: "Döndürme Docker", desc: "Döndürme penceresi" },
+                { keys: "Ctrl+Shift+D", name: "Adım ve Tekrar", desc: "Step and repeat" },
+                { keys: "Ctrl+1", name: "PowerClip", desc: "İçine yerleştir" },
+                { keys: "Ctrl+PgUp", name: "Bir Öne Getir", desc: "Sıralamada öne alır" },
+                { keys: "Ctrl+PgDn", name: "Bir Arkaya Gönder", desc: "Sıralamada arkaya alır" },
+                { keys: "Shift+F4", name: "Sayfaya Sığdır", desc: "Görünümü sayfaya sığdırır" }
+            ]
+        };
 
-<!-- Popup -->
-<div class="pop" id="pop"><span style="font-size:24px">🏆</span><span id="popTxt">Başarım!</span></div>
+        // ==================== VOCABULARY DATA ====================
+        const Vocabulary = [
+            { word: "Adhesion", meaning: "Yapışma, yapışkanlık - mürekkebin malzemeye tutunma kabiliyeti", category: "teknik" },
+            { word: "Curing", meaning: "Kürleme, sertleşme - UV ışığıyla mürekkebin donması",
+                         { word: "Curing", meaning: "Kürleme, sertleşme - UV ışığıyla mürekkebin donması", category: "teknik" },
+            { word: "Substrate", meaning: "Baskı altlığı, malzeme - üzerine baskı yapılan yüzey", category: "teknik" },
+            { word: "Nozzle", meaning: "Nozül, fıskiye - mürekkep püsküten kafadaki delik", category: "teknik" },
+            { word: "Pass", meaning: "Geçiş - baskı kafasının bir turu", category: "teknik" },
+            { word: "Resolution", meaning: "Çözünürlük - baskı kalitesi (dpi)", category: "teknik" },
+            { word: "Viscosity", meaning: "Viskozite, akışkanlık - mürekkep kalınlığı", category: "teknik" },
+            { word: "Opacity", meaning: "Opaklık, kapaticilik - ışık geçirmezlik", category: "teknik" },
+            { word: "Cyan", meaning: "Camgöbeği, mavi - CMYK renk modelinde C", category: "renk" },
+            { word: "Magenta", meaning: "Eflatun, pembe - CMYK renk modelinde M", category: "renk" },
+            { word: "Yellow", meaning: "Sarı - CMYK renk modelinde Y", category: "renk" },
+            { word: "Black", meaning: "Siyah - CMYK renk modelinde K (Key)", category: "renk" },
+            { word: "White Ink", meaning: "Beyaz mürekkep - şeffaf malzemelerde zemin", category: "malzeme" },
+            { word: "Varnish", meaning: "Vernik, şeffaf koruyucu katman", category: "malzeme" },
+            { word: "Primer", meaning: "Astar, tutucu katman - yapışmayı artırır", category: "malzeme" },
+            { word: "Plexiglass", meaning: "Pleksi, akrilik cam", category: "malzeme" },
+            { word: "PVC Foam", meaning: "Köpük PVC, hafif tabla malzemesi", category: "malzeme" },
+            { word: "Dibond", meaning: "Alüminyum kompozit panel", category: "malzeme" },
+            { word: "Polycarbonate", meaning: "Polikarbonat, darbeye dayanıklı şeffaf levha", category: "malzeme" },
+            { word: "Raster Image", meaning: "Piksel tabanlı görüntü (JPG, PNG)", category: "yazılım" },
+            { word: "Vector", meaning: "Vektör, matematiksel çizim (AI, CDR)", category: "yazılım" },
+            { word: "Bleed", meaning: "Taşma payı - kesim için ekstra alan", category: "yazılım" },
+            { word: "Crop Marks", meaning: "Kesme işaretleri", category: "yazılım" },
+            { word: "Color Profile", meaning: "Renk profili - ICC standardı", category: "yazılım" },
+            { word: "Rip Software", meaning: "Raster Image Processor - baskı sürücüsü", category: "yazılım" },
+            { word: "Drop Size", meaning: "Damlacık boyutu - pikolitre cinsinden", category: "teknik" },
+            { word: "Print Head", meaning: "Baskı kafası - nozülleri barındıran modül", category: "teknik" },
+            { word: "UV Lamp", meaning: "UV lambası - mürekkebi kurutan LED veya merkür", category: "teknik" },
+            { word: "DPI", meaning: "Dots Per Inch - inç başına nokta sayısı", category: "teknik" },
+            { word: "PPI", meaning: "Pixels Per Inch - inç başına piksel", category: "teknik" },
+            { word: "LPI", meaning: "Lines Per Inch - tarama çözünürlüğü", category: "teknik" },
+            { word: "Gamut", meaning: "Renk gamı - basılabilir renk aralığı", category: "renk" },
+            { word: "Spot Color", meaning: "Özel renk - Pantone gibi standart renk", category: "renk" },
+            { word: "Gradient", meaning: "Renk geçişi, degrade", category: "yazılım" },
+            { word: "Clipping Path", meaning: "Kırpma yolu - arka plan silme", category: "yazılım" },
+            { word: "Mask", meaning: "Maske - seçili alan kontrolü", category: "yazılım" },
+            { word: "Layer", meaning: "Katman - tasarım seviyesi", category: "yazılım" },
+            { word: "Registration", meaning: "Register, hizalama - renklerin üst üste binmesi", category: "teknik" },
+            { word: "Bandıng", meaning: "Bantlanma - yatay çizgi hatası", category: "teknik" },
+            { word: "Mottling", meaning: "Lekeleme, düzensiz renk dağılımı", category: "teknik" },
+            { word: "Cockling", meaning: "Kıvrılma, dalgalanma - malzeme deformasyonu", category: "teknik" },
+            { word: "Delamination", meaning: "Tabakalaşma - katman ayrılması", category: "teknik" }
+        ];
 
-<!-- Bottom Nav -->
-<div class="nav">
-    <div class="nav-item active" onclick="go('home',this)">🏠</div>
-    <div class="nav-item" onclick="go('uvMain',this)">🧪<span class="bdg" id="navBdg" style="display:none">!</span></div>
-    <div class="nav-item" onclick="go('corel',this)">🎨</div>
-    <div class="nav-item" onclick="go('biz',this)">📊</div>
-</div>
+        // ==================== EXERCISES DATA ====================
+        const Exercises = [
+            { id: 1, name: "UV Güvenlik Kontrolü", sets: "Günlük", desc: "Gözlük ve eldiven kontrolü" },
+            { id: 2, name: "Nozül Temizliği", sets: "Her baskı öncesi", desc: "Kafaları temizle ve check et" },
+            { id: 3, name: "Renk Kalibrasyonu", sets: "Haftalık", desc: "ICC profili doğrulama" },
+            { id: 4, name: "Malzeme Hazırlığı", sets: "Her iş", desc: "Temizlik ve primer kontrolü" },
+            { id: 5, name: "Mürekkep Sıcaklığı", sets: "Günlük", desc: "20-25°C aralığını kontrol et" }
+        ];
 
-</div>
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            initOfflineDetection();
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+                updateHomeScreen();
+                renderModules();
+                renderShortcuts();
+                renderWords();
+                renderExercises();
+                renderCalendar();
+            }, 1500);
+        });
 
-<script>
-// ==========================================
-// YOUTUBE VIDEO DATABASE
-// ==========================================
-const videoData = {
-    1: {id: "4nYz--Yhkb8", title: "What is UV Printing?"},
-    2: {id: "dQw4w9WgXcQ", title: "UV Printing Process"},
-    3: {id: "sI9p70_Wc6o", title: "Roland VersaUV Introduction"},
-    4: {id: "8Qn_v3A1a7U", title: "UV Printer Maintenance Tips"},
-    5: {id: "2X5R8J7K3M9", title: "White Ink UV Printing"},
-    6: {id: "9Q8r3wY5Z6c", title: "UV vs Screen Printing"},
-    7: {id: "7H4J2K8L5P9", title: "3D UV Printing Effects"},
-    8: {id: "3N6M9P2R5T8", title: "UV Printing Cost Analysis"}
-};
+        // ==================== NAVIGATION ====================
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if (screenId === 'homeScreen') document.querySelectorAll('.nav-item')[0].classList.add('active');
+            else if (screenId === 'uvAcademyMain') document.querySelectorAll('.nav-item')[1].classList.add('active');
+            else if (screenId === 'corelScreen') document.querySelectorAll('.nav-item')[2].classList.add('active');
+            else if (screenId === 'businessScreen') document.querySelectorAll('.nav-item')[3].classList.add('active');
+            
+            window.scrollTo(0, 0);
+        }
 
-// ==========================================
-// CURRICULUM DATA
-// ==========================================
-const curriculum=[
-{id:1,title:"UV Baskı Temelleri",desc:"Teknoloji temelleri",xp:100,lock:false,lessons:[
-{title:"UV Baskı Nedir?",sub:"Tanım ve tarihçe",cont:`<div class="block"><div class="block-title">📖 Tanım</div><div class="block-c"><strong>UV Baskı</strong>, UV ışınlarıyla anında kuruyan dijital baskı teknolojisidir. Geleneksel baskı saatler sürerken, UV baskı <strong>saniyeler</strong> içinde kurur.</div></div><div class="block"><div class="block-title">💡 Avantajlar</div><div class="block-c"><ul><li>Anında kuruma</li><li>1440 dpi çözünürlük</li><li>Cam, metal, plastik üzerine baskı</li><li>Su ve çizilmeye dayanıklı</li></ul></div></div>`},
-{title:"Boya Türleri",sub:"Mürekkep çeşitleri",cont:`<div class="block"><div class="block-title">🎨 Türler</div><div class="block-c"><table style="width:100%;font-size:13px"><tr style="background:rgba(191,0,255,.2);color:var(--uv)"><th>Tür</th><th>Kullanım</th></tr><tr><td><strong>CMYK</strong></td><td>Temel renkler</td></tr><tr><td><strong>White</strong></td><td>Şeffaf yüzeyler</td></tr><tr><td><strong>Varnish</strong></td><td>3D efekt</td></tr></table></div></div>`}
-],quiz:{q:"Şeffaf pleksiye renkli baskı için beyaz katmanı nereye basmalısınız?",opts:["Sadece üste","Sadece alta","Hem alta hem üste","Hiçbir yere"],ans:1,exp:"Renklerin canlı görünmesi için önce beyaz zemin basılır."}},
-{id:2,title:"Yüzey Hazırlığı",desc:"Tutunma prensipleri",xp:120,lock:true,lessons:[
-{title:"Yüzey Enerjisi",sub:"Boya neden tutunur?",cont:`<div class="block"><div class="block-title">🔬 Bilimsel Temel</div><div class="block-c">Her malzemenin <strong>yüzey enerjisi</strong> vardır. Boya tutunması için: Boya Gerilimi < Malzeme Enerjisi<br><br><strong>Değerler:</strong><br>• Paslanmaz Çelik: 700-1000 dyn/cm ✅<br>• Alüminyum: 500-800 dyn/cm ✅<br>• PP: 29 dyn/cm ❌ (Primer şart)</div></div>`}
-],quiz:{q:"PP malzemeye baskı için ne şarttır?",opts:["Silmek","Primer/Corona","Sıcak tutmak","Hiçbir şey"],ans:1,exp:"PP düşük enerjili malzemedir, primer şarttır."}},
-{id:3,title:"CorelDRAW Hazırlık",desc:"Dosya hazırlama",xp:150,lock:true,lessons:[
-{title:"Spot Renkler",sub:"White/Varnish tanımlama",cont:`<div class="block" style="border-color:var(--co);background:rgba(255,102,0,.05)"><div class="block-title" style="color:var(--co)">🎯 RD_WHITE Tanımlama</div><div class="block-c">RIP yazılımı <strong>RD_WHITE</strong> spot rengini tanır:<br>1. Nesneyi seç<br>2. Spot Renk seç<br>3. Renk adı: <code>RD_WHITE</code><br>4. CMYK: 0,0,0,0</div></div><div class="block"><div class="block-title">⚡ Kısayollar</div><div class="block-c"><strong>Ctrl+Shift+Q:</strong> Kontur ver<br><strong>Ctrl+W:</strong> PowerClip<br><strong>P:</strong> Sayfaya merkezle</div></div>`}
-],quiz:{q:"Corel'de beyaz katman nasıl tanımlanır?",opts:["Sadece beyaz renk","Spot renk 'RD_WHITE'","Alt katmana koy","RIP'te ayarla"],ans:1,exp:"RIP 'RD_WHITE' adını otomatik beyaz kanalına yönlendirir."}},
-{id:4,title:"Makine Operasyonu",desc:"Bakım ve ayarlar",xp:150,lock:true,lessons:[
-{title:"Sabah Rutini",sub:"Günlük prosedür",cont:`<div class="block"><div class="block-title">☀️ Her Gün</div><div class="block-c"><ul><li>Makineyi aç, ısın (5 dk)</li><li>Beyaz mürekkebi çalkala (10 sn)</li><li>Nozzle check yap</li><li>Light cleaning yap</li><li>Test baskısı yap</li></ul></div></div><div class="block" style="border-color:var(--er);background:rgba(239,68,68,.05)"><div class="block-title" style="color:var(--er)">🚨 Beyaz Mürekkep</div><div class="block-c">Pigment içerir ve <strong>çökelir</strong>! Çalkalamazsanız:<br>• Gri/soluk baskı<br>• Nozzle tıkanıklığı<br>• Kafa hasarı<br><br><strong>Her sabah 10 saniye çalkala!</strong></div></div>`}
-],quiz:{q:"Beyaz mürekkep neden çalkalanır?",opts:["Hava için","Pigment çökelmesi","Koku","Renk açma"],ans:1,exp:"Titanyum dioksit pigmenti çökelir, homojen dağılım için çalkalanır."}},
-{id:5,title:"Arıza Tespiti",desc:"Banding ve çözümler",xp:150,lock:true,lessons:[
-{title:"Banding",sub:"Çizgili baskı",cont:`<div class="block" style="border-color:var(--er)"><div class="block-title" style="color:var(--er)">🚨 Nedenleri</div><div class="block-c"><strong>Ink Starvation:</strong> Mürekkep yetmezliği → Damper kontrolü<br><br><strong>Hizalama Kayması:</strong> Bidirectional calibration<br><br><strong>Nozzle Tıkanıklığı:</strong> Cleaning/flushing</div></div>`}
-],quiz:{q:"Düzenli aralıklı çizgilerin sebebi?",opts:["Nozzle tıkanıklığı","Encoder strip kiri","Yanlış ICC","Düşük UV"],ans:1,exp:"Encoder strip kirliyse kafa pozisyonunu yanlış okur."}},
-{id:6,title:"İleri Teknikler",desc:"Mirror ve 3D",xp:130,lock:true,lessons:[
-{title:"Mirror Print",sub:"Ayna baskı",cont:`<div class="block"><div class="block-title">🪞 Uygulama</div><div class="block-c">Cam üzerine baskıda görsel <strong>arkadan</strong> izlenir:<br><br>1. Resmi yatay çevir (Mirror)<br>2. Önce renkli katmanı bas<br>3. Üzerine beyaz bas<br><br>Sonuç: Cam pürüzsüz, baskı arkada korunur.</div></div>`}
-],quiz:{q:"Mirror print'te katman sırası?",opts:["Beyaz-alt, renk-üst","Renk-alt, beyaz-üst","Sadece beyaz","Sadece renk"],ans:1,exp:"Camın arkasına bakıldığı için renk altta, beyaz üstte olur."}},
-{id:7,title:"Maliyet",desc:"Hesaplama ve optimizasyon",xp:100,lock:true,lessons:[
-{title:"Mürekkep Maliyeti",sub:"Formül",cont:`<div class="block"><div class="block-title">💰 Hesaplama</div><div class="block-c"><strong>Formül:</strong><br>Maliyet = m² × Pass × ml/m² × Fiyat/ml<br><br><strong>Değerler:</strong><br>• CMYK: ~12ml/m²<br>• White: ~15ml/m²<br>• Varnish: ~18ml/m²<br><br><strong>Fire:</strong> %15-20 ekle!</div></div>`}
-],quiz:{q:"10m² alana 3 pass white basarsanız?",opts:["150ml","300ml","450ml","600ml"],ans:2,exp:"10 × 3 × 15ml = 450ml"}},
-{id:8,title:"Final Sınavı",desc:"Sertifika",xp:500,lock:true,final:true,finalQuiz:[
-{q:"UV baskının en büyük avantajı?",opts:["Ucuz","Anında kuruma","Sadece kağıt","Koku"],ans:1},
-{q:"PP malzemeye baskı için?",opts:["Yüksek ısı","Primer","Su bazlı","Hiçbir şey"],ans:1},
-{q:"Beyaz mürekkep neden çalkalanır?",opts:["Hava","Pigment","Renk","Karıncalanma"],ans:1},
-{q:"Sayfaya merkezlemek için?",opts:["C","P","M","Space"],ans:1},
-{q:"Mirror print sırası?",opts:["Beyaz-alt","Renk-alt","Sadece beyaz","Sadece renk"],ans:1}
-]}
-];
+        // ==================== DATA MANAGEMENT ====================
+        function saveData() {
+            localStorage.setItem('mindforge_uv_data', JSON.stringify(AppState.currentUser));
+        }
 
-let curMod=0,curLesson=0;
-let prog=JSON.parse(localStorage.getItem('uv_prog'))||{done:[],cur:1,xp:0};
-let stats=JSON.parse(localStorage.getItem('mf_stats'))||{xp:0,lvl:1};
+        function loadData() {
+            const saved = localStorage.getItem('mindforge_uv_data');
+            if (saved) {
+                AppState.currentUser = { ...AppState.currentUser, ...JSON.parse(saved) };
+            }
+        }
 
-function go(scr,el){
-document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-document.getElementById(scr).classList.add('active');
-if(el&&el.classList.contains('nav-item')){document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));el.classList.add('active')}
-if(scr==='uvMain')initUV();
-if(scr==='corel')initCorel();
-}
+        function exportData() {
+            const dataStr = JSON.stringify(AppState.currentUser, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `mindforge_backup_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            showToast('Veriler dışa aktarıldı', 'success');
+        }
 
-function initUV(){
-const list=document.getElementById('modList');
-list.innerHTML=curriculum.map((m,i)=>{
-const done=prog.done.includes(m.id),lock=m.id>prog.cur,cur=m.id===prog.cur;
-const hasVid=videoData[m.id]?'<span class="vid-ind">▶️ Video</span>':'';
-return`<div class="mod ${done?'ok':''} ${lock?'lock':''}" onclick="${lock?'':`openMod(${i})`}">
-<div style="display:inline-block;background:var(--uv);color:white;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:bold;margin-bottom:8px">MODÜL ${m.id}</div>${hasVid}
-<div class="title" style="margin:5px 0">${m.title}</div>
-<div style="font-size:13px;color:var(--tm)">${m.desc}</div>
-<div style="display:flex;gap:15px;margin-top:12px;font-size:12px;color:var(--tm)}">
-<span>🎯 ${m.xp} XP</span>${done?'<span style="color:var(--ok)">✓ Tamamlandı</span>':''}${lock?'<span>🔒 Kilitli</span>':''}${cur?'<span style="color:var(--uv)">▶ Devam Et</span>':''}
-</div></div>`;}).join('');
+        function importData(input) {
+            const file = input.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    AppState.currentUser = { ...AppState.currentUser, ...data };
+                    saveData();
+                    showToast('Veriler içe aktarıldı', 'success');
+                    location.reload();
+                } catch (err) {
+                    showToast('Hatalı dosya formatı', 'error');
+                }
+            };
+            reader.readAsText(file);
+            input.value = '';
+        }
 
-const pct=Math.round((prog.done.length/curriculum.length)*100);
-document.getElementById('totProg').textContent=pct+'%';
-document.getElementById('totBar').style.width=pct+'%';
-document.getElementById('modCount').textContent=`${prog.done.length}/${curriculum.length} Modül`;
-document.getElementById('totXP').textContent=prog.xp+' XP';
-}
+        function resetAllData() {
+            if (confirm('Tüm verileriniz silinecek. Emin misiniz?')) {
+                localStorage.removeItem('mindforge_uv_data');
+                AppState.currentUser = {
+                    level: 1,
+                    xp: 0,
+                    totalXp: 0,
+                    completedModules: [],
+                    moduleProgress: {},
+                    wordStats: { seen: 0, learned: 0, streak: 0, lastStudyDate: null, words: {} },
+                    corelStats: { answered: 0, correct: 0, streak: 0, difficulty: 'easy' },
+                    exercises: {},
+                    calculations: [],
+                    priceSettings: { trans: 450, color: 550 }
+                };
+                showToast('Tüm veriler sıfırlandı', 'success');
+                location.reload();
+            }
+        }
 
-function openMod(idx){
-curMod=idx;
-const m=curriculum[idx];
-if(m.final){startFinal();return;}
-curLesson=0;
-showLesson();
-go('lesson');
-}
+        // ==================== HOME SCREEN ====================
+        function updateHomeScreen() {
+            const user = AppState.currentUser;
+            const level = Math.floor(user.totalXp / 100) + 1;
+            const currentLevelXp = user.totalXp % 100;
+            
+            document.getElementById('lvlLabel').textContent = level;
+            document.getElementById('expLabel').textContent = currentLevelXp;
+            document.getElementById('lvlFill').style.width = `${currentLevelXp}%`;
+            
+            document.getElementById('weekModules').textContent = user.completedModules.length;
+            document.getElementById('weekShortcuts').textContent = user.corelStats.answered;
+        }
 
-function showLesson(){
-const m=curriculum[curMod],l=m.lessons[curLesson];
-let vid='';
-if(videoData[m.id]){
-const v=videoData[m.id];
-vid=`<div class="vid-wrap"><div class="vid-badge">▶️ KONU ANLATIM VİDEOSU</div><div class="vid-container" id="vidBox"><iframe src="https://www.youtube.com/embed/${v.id}?rel=0&modestbranding=1&playsinline=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div><div style="margin-top:10px;font-size:13px;color:var(--tm);text-align:center"><strong>${v.title}</strong></div></div>`;
-}
+        // ==================== UV ACADEMY ====================
+        function renderModules() {
+            const container = document.getElementById('modulesList');
+            const user = AppState.currentUser;
+            
+            container.innerHTML = UVModules.map((mod, idx) => {
+                const isCompleted = user.completedModules.includes(mod.id);
+                const isLocked = idx > 0 && !user.completedModules.includes(UVModules[idx-1].id);
+                const progress = user.moduleProgress[mod.id] || 0;
+                
+                return `
+                    <div class="module-card ${isCompleted ? 'completed' : ''} ${isLocked ? 'locked' : ''}" 
+                         onclick="${isLocked ? '' : `openModule(${mod.id})`}">
+                        <div class="module-number">Modül ${mod.id}</div>
+                        <div class="module-title">${mod.title}</div>
+                        <div class="module-desc">${mod.desc}</div>
+                        <div class="module-meta">
+                            <span>⏱️ ${mod.duration}</span>
+                            <span>📖 ${mod.lessons.length} Ders</span>
+                            ${isCompleted ? '<span style="color:var(--success)">✓ Tamamlandı</span>' : 
+                              progress > 0 ? `<span style="color:var(--accent)">${progress}%</span>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            const totalProgress = user.completedModules.length / UVModules.length * 100;
+            document.getElementById('totalProgress').textContent = Math.round(totalProgress) + '%';
+            document.getElementById('totalProgressBar').style.width = totalProgress + '%';
+            document.getElementById('completedModules').textContent = `${user.completedModules.length}/${UVModules.length} Modül`;
+            document.getElementById('totalPoints').textContent = `${user.totalXp} XP Kazanıldı`;
+        }
 
-document.getElementById('lessonCont').innerHTML=`<div class="lesson-hdr"><span class="badge">MODÜL ${m.id} • DERS ${curLesson+1}/${m.lessons.length}</span><h2 class="title">${l.title}</h2><div class="sub">${l.sub}</div></div>${vid}${l.cont}`;
+        function openModule(moduleId) {
+            AppState.currentModule = UVModules.find(m => m.id === moduleId);
+            AppState.currentLesson = 0;
+            showScreen('moduleDetail');
+            renderLesson();
+        }
 
-const prev=document.querySelector('#lessonNav .btn-sec'),next=document.getElementById('nextBtn');
-prev.style.visibility=curLesson===0?'hidden':'visible';
-if(curLesson===m.lessons.length-1){next.textContent='Quize Geç →';next.onclick=startQuiz;}
-else{next.textContent='Sonraki →';next.onclick=nextL;}
-}
+        function renderLesson() {
+            const mod = AppState.currentModule;
+            const lesson = mod.lessons[AppState.currentLesson];
+            
+            document.getElementById('moduleDetailTitle').textContent = mod.title;
+            document.getElementById('lessonContent').innerHTML = `
+                <div style="margin-bottom:20px;">
+                    <span style="color:var(--text-muted); font-size:13px;">Ders ${AppState.currentLesson + 1}/${mod.lessons.length}</span>
+                    <h2 style="margin-top:8px; font-size:22px;">${lesson.title}</h2>
+                </div>
+                ${lesson.content}
+            `;
+            
+            const nextBtn = document.getElementById('nextBtn');
+            if (AppState.currentLesson === mod.lessons.length - 1) {
+                nextBtn.textContent = 'Sınava Git →';
+                nextBtn.onclick = startQuiz;
+            } else {
+                nextBtn.textContent = 'Sonraki →';
+                nextBtn.onclick = nextLesson;
+            }
+        }
 
-function nextL(){curLesson++;showLesson();}
-function prev(){curLesson--;showLesson();}
+        function nextLesson() {
+            if (AppState.currentLesson < AppState.currentModule.lessons.length - 1) {
+                AppState.currentLesson++;
+                renderLesson();
+            }
+        }
 
-function startQuiz(){
-const m=curriculum[curMod],q=m.quiz;
-document.getElementById('quizTitle').textContent=`${m.title} - Bilgi Kontrolü`;
-document.getElementById('quizCont').innerHTML=`<div class="quiz"><div class="q">${q.q}</div><div class="opts">${q.opts.map((o,i)=>`<div class="opt" onclick="ans(${i},${q.ans},'${q.exp}')">${String.fromCharCode(65+i)}) ${o}</div>`).join('')}</div><div id="feed" style="margin-top:20px;display:none"></div></div>`;
-go('quiz');
-}
+        function prevLesson() {
+            if (AppState.currentLesson > 0) {
+                AppState.currentLesson--;
+                renderLesson();
+            } else {
+                showScreen('uvAcademyMain');
+            }
+        }
 
-function ans(sel,cor,exp){
-document.querySelectorAll('.opt').forEach((o,i)=>{o.classList.add('dis');if(i===cor)o.classList.add('ok');else if(i===sel&&i!==cor)o.classList.add('no');});
-const ok=sel===cor,feed=document.getElementById('feed');
-feed.style.display='block';
-feed.innerHTML=`<div class="block" style="margin-top:20px;border-color:${ok?'var(--ok)':'var(--er)'}"><div class="block-title" style="color:${ok?'var(--ok)':'var(--er)'}">${ok?'✅ Doğru!':'❌ Yanlış'}</div><div class="block-c">${exp}<br><br>${ok?`<button class="btn btn-ok" onclick="complete()" style="margin-top:15px">Modülü Tamamla (+${curriculum[curMod].xp} XP)</button>`:`<button class="btn" onclick="startQuiz()" style="margin-top:15px">Tekrar Dene</button>`}</div></div>`;
-}
+        // ==================== QUIZ SYSTEM ====================
+        function startQuiz() {
+            showScreen('quizScreen');
+            const quiz = AppState.currentModule.quiz;
+            document.getElementById('quizTitle').textContent = quiz.title;
+            renderQuizQuestion(0);
+        }
 
-function complete(){
-const m=curriculum[curMod];
-if(!prog.done.includes(m.id)){
-prog.done.push(m.id);prog.xp+=m.xp;
-if(m.id<curriculum.length)prog.cur=m.id+1;
-localStorage.setItem('uv_prog',JSON.stringify(prog));
-addXP(m.xp);showPop(`${m.title} Tamamlandı! +${m.xp} XP`);
-}
-go('uvMain');initUV();
-}
+        function renderQuizQuestion(qIdx) {
+            const quiz = AppState.currentModule.quiz;
+            const q = quiz.questions[qIdx];
+            
+            let html = `
+                <div class="quiz-question">${qIdx + 1}. ${q.q}</div>
+                <div class="quiz-options">
+            `;
+            
+            q.options.forEach((opt, i) => {
+                html += `<div class="quiz-option" onclick="checkAnswer(${i}, ${q.correct}, ${qIdx})">${opt}</div>`;
+            });
+            
+            html += '</div>';
+            document.getElementById('quizContent').innerHTML = html;
+        }
 
-function startFinal(){
-const m=curriculum[curMod];
-let curQ=0,score=0;
-function showQ(){
-const q=m.finalQuiz[curQ];
-document.getElementById('quizTitle').textContent=`🎓 FİNAL (${curQ+1}/${m.finalQuiz.length})`;
-document.getElementById('quizCont').innerHTML=`<div class="quiz"><div class="q">${q.q}</div><div class="opts">${q.opts.map((o,i)=>`<div class="opt" onclick="window.finSel(${i},${q.ans})">${String.fromCharCode(65+i)}) ${o}</div>`).join('')}</div></div>`;
-}
-window.finSel=(sel,cor)=>{
-document.querySelectorAll('.opt').forEach((o,i)=>{o.classList.add('dis');if(i===cor)o.classList.add('ok');else if(i===sel&&i!==cor)o.classList.add('no');});
-if(sel===cor)score++;
-setTimeout(()=>{curQ++;if(curQ<m.finalQuiz.length)showQ();else showRes();},1500);
-};
-function showRes(){
-const pass=score>=3,pct=Math.round((score/m.finalQuiz.length)*100);
-document.getElementById('quizCont').innerHTML=`<div style="text-align:center;padding:40px 20px"><div style="font-size:64px;margin-bottom:20px">${pass?'🏆':'📚'}</div><h2 style="color:${pass?'var(--ok)':'var(--g)'}">${pass?'SERTİFİKA KAZANDINIZ!':'Tekrar Deneyin'}</h2><p style="font-size:18px;margin:20px 0">Skor: ${score}/${m.finalQuiz.length} (${pct}%)</p>${pass?`<button class="btn btn-ok" onclick="complete()">Sertifikayı Al (+${m.xp} XP)</button>`:`<button class="btn" onclick="go('uvMain')">Akademiye Dön</button>`}</div>`;
-}
-go('quiz');showQ();
-}
+        function checkAnswer(selected, correct, qIdx) {
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach((opt, i) => {
+                opt.classList.add('disabled');
+                if (i === correct) opt.classList.add('correct');
+                else if (i === selected && i !== correct) opt.classList.add('wrong');
+            });
+            
+            if (selected === correct) {
+                AppState.currentUser.totalXp += 10;
+                showToast('Doğru! +10 XP', 'success');
+            } else {
+                showToast('Yanlış cevap', 'error');
+            }
+            
+            setTimeout(() => {
+                const quiz = AppState.currentModule.quiz;
+                if (qIdx < quiz.questions.length - 1) {
+                    renderQuizQuestion(qIdx + 1);
+                } else {
+                    completeModule();
+                }
+            }, 1500);
+        }
 
-function initCorel(){
-const cats={temel:['Pick Tool (Space)','Select All (Ctrl+A)','Group (Ctrl+G)','Ungroup (Ctrl+U)'],hizalama:['Center Page (P)','Center Selection (C)','Align Top (T)','Align Bottom (B)'],uv:['Convert Curves (Ctrl+Shift+Q)','PowerClip (Ctrl+W)','To Bitmap (Ctrl+B)','Weld (Ctrl+L)'],hizli:['Paste (Ctrl+V)','Step Repeat (Ctrl+Shift+D)','Mirror H (H)','Mirror V (V)']};
-let html='';
-for(const[cat,items]of Object.entries(cats)){
-html+=`<div style="background:linear-gradient(135deg,rgba(255,102,0,.2),rgba(255,102,0,.05));border:1px solid var(--co);border-radius:16px;padding:20px;margin-bottom:15px"><div style="color:var(--co);font-weight:bold;font-size:16px;margin-bottom:15px">${cat.toUpperCase()}</div>`;
-items.forEach(item=>{const[name,key]=item.split(' (');html+=`<div style="background:rgba(255,102,0,.1);border:1px solid rgba(255,102,0,.3);border-radius:12px;padding:15px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="showPop('${key.replace(')','')}: ${name}')"><div><div style="font-weight:bold">${name}</div></div><div style="background:var(--co);color:white;padding:6px 12px;border-radius:8px;font-family:monospace;font-weight:bold;font-size:13px">${key.replace(')','')}</div></div>`;});
-html+='</div>';
-}
-document.getElementById('corelList').innerHTML=html;
-}
+        function completeModule() {
+            const modId = AppState.currentModule.id;
+            if (!AppState.currentUser.completedModules.includes(modId)) {
+                AppState.currentUser.completedModules.push(modId);
+                AppState.currentUser.totalXp += 50;
+                showAchievement(`Modül ${modId} Tamamlandı!`);
+            }
+            saveData();
+            renderModules();
+            showScreen('uvAcademyMain');
+        }
 
-function updPrice(){const v=document.getElementById('mType').value;if(v){document.getElementById('price').value=v;calc();}}
-function calc(){const w=parseFloat(document.getElementById('w').value)||0,h=parseFloat(document.getElementById('h').value)||0,p=parseFloat(document.getElementById('price').value)||0,area=(w*h)/10000;document.getElementById('res').innerText=Math.round(area*p)+'₺';document.getElementById('det').innerText=`${area.toFixed(3)} m² × ${p}₺`;}
+        // ==================== CORELMASTER ====================
+        function renderShortcuts() {
+            const container = document.getElementById('corelShortcutsList');
+            const diff = AppState.currentUser.corelStats.difficulty;
+            const shortcuts = CorelShortcuts[diff];
+            
+            container.innerHTML = shortcuts.map((sc, i) => `
+                <div class="shortcut-card" onclick="practiceShortcut(${i})">
+                    <div>
+                        <div class="shortcut-name">${sc.name}</div>
+                        <div class="shortcut-desc">${sc.desc}</div>
+                    </div>
+                    <div class="shortcut-keys">${sc.keys}</div>
+                </div>
+            `).join('');
+            
+            updateCorelStats();
+        }
 
-function addXP(amt){stats.xp+=amt;if(stats.xp>=stats.lvl*100){stats.xp-=stats.lvl*100;stats.lvl++;showPop(`Seviye Atladın! Level ${stats.lvl} 🔥`);}updateUI();localStorage.setItem('mf_stats',JSON.stringify(stats));}
-function updateUI(){document.getElementById('lvl').innerText=stats.lvl;document.getElementById('xp').innerText=stats.xp;document.getElementById('lvlBar').style.width=(stats.xp/(stats.lvl*100))*100+'%';}
-function showPop(txt){const p=document.getElementById('pop');document.getElementById('popTxt').textContent=txt;p.classList.add('show');setTimeout(()=>p.classList.remove('show'),3000);}
+        function setDifficulty(level, btn) {
+            document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            AppState.currentUser.corelStats.difficulty = level;
+            saveData();
+            renderShortcuts();
+        }
 
-window.onload=()=>{updateUI();initUV();};
-</script>
+        function updateCorelStats() {
+            const stats = AppState.currentUser.corelStats;
+            const rate = stats.answered > 0 ? Math.round(stats.correct / stats.answered * 100) : 0;
+            document.getElementById('corelTotalAnswered').textContent = stats.answered;
+            document.getElementById('corelCorrectRate').textContent = rate + '%';
+            document.getElementById('corelStreak').textContent = stats.streak;
+        }
 
+        function startCorelQuiz() {
+            const diff = AppState.currentUser.corelStats.difficulty;
+            const shortcuts = CorelShortcuts[diff];
+            AppState.corelQuiz.questions = [...shortcuts].sort(() => Math.random() - 0.5).slice(0, 5);
+            AppState.corelQuiz.current = 0;
+            AppState.corelQuiz.score = 0;
+            AppState.corelQuiz.active = true;
+            
+            showScreen('corelQuizScreen');
+            startQuizTimer();
+            renderCorelQuestion();
+        }
+
+        function startQuizTimer() {
+            AppState.corelQuiz.timeLeft = 30;
+            updateTimerDisplay();
+            AppState.corelQuiz.timer = setInterval(() => {
+                AppState.corelQuiz.timeLeft--;
+                updateTimerDisplay();
+                if (AppState.corelQuiz.timeLeft <= 0) {
+                    handleTimeout();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const timer = document.getElementById('quizTimer');
+            timer.textContent = AppState.corelQuiz.timeLeft;
+            timer.className = 'quiz-timer';
+            if (AppState.corelQuiz.timeLeft <= 10) timer.classList.add('danger');
+            else if (AppState.corelQuiz.timeLeft <= 20) timer.classList.add('warning');
+        }
+
+        function handleTimeout() {
+            clearInterval(AppState.corelQuiz.timer);
+            showToast('Süre doldu!', 'error');
+            nextCorelQuestion();
+        }
+
+        function renderCorelQuestion() {
+            const q = AppState.corelQuiz.questions[AppState.corelQuiz.current];
+            const options = [...CorelShortcuts[AppState.currentUser.corelStats.difficulty]]
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 3)
+                .concat(q)
+                .sort(() => Math.random() - 0.5);
+            
+            document.getElementById('corelQuizQuestion').textContent = `"${q.name}" işlemi için hangi kısayol kullanılır?`;
+            document.getElementById('totalQuestions').textContent = AppState.corelQuiz.questions.length;
+            document.getElementById('currentScore').textContent = AppState.corelQuiz.score;
+            
+            document.getElementById('corelQuizOptions').innerHTML = options.map((opt, i) => `
+                <div class="quiz-option" onclick="checkCorelAnswer('${opt.keys}', '${q.keys}')">
+                    <span class="shortcut-keys" style="margin:0;">${opt.keys}</span>
+                </div>
+            `).join('');
+        }
+
+        function checkCorelAnswer(selected, correct) {
+            clearInterval(AppState.corelQuiz.timer);
+            const options = document.querySelectorAll('.quiz-option');
+            const isCorrect = selected === correct;
+            
+            options.forEach(opt => {
+                opt.classList.add('disabled');
+                if (opt.textContent.includes(correct)) opt.classList.add('correct');
+                else if (opt.textContent.includes(selected) && !isCorrect) opt.classList.add('wrong');
+            });
+            
+            const stats = AppState.currentUser.corelStats;
+            stats.answered++;
+            
+            if (isCorrect) {
+                AppState.corelQuiz.score++;
+                stats.correct++;
+                stats.streak++;
+                AppState.currentUser.totalXp += 5;
+                showToast('Doğru! +5 XP', 'success');
+            } else {
+                stats.streak = 0;
+                showToast('Yanlış!', 'error');
+            }
+            
+            saveData();
+            updateCorelStats();
+            
+            setTimeout(nextCorelQuestion, 1500);
+        }
+
+        function nextCorelQuestion() {
+            AppState.corelQuiz.current++;
+            if (AppState.corelQuiz.current < AppState.corelQuiz.questions.length) {
+                startQuizTimer();
+                renderCorelQuestion();
+            } else {
+                endCorelQuiz();
+            }
+        }
+
+        function endCorelQuiz() {
+            clearInterval(AppState.corelQuiz.timer);
+            AppState.corelQuiz.active = false;
+            const score = AppState.corelQuiz.score;
+            const total = AppState.corelQuiz.questions.length;
+            
+            if (score === total) {
+                showAchievement('Mükemmel! ' + score + '/' + total);
+                AppState.currentUser.totalXp += 25;
+            } else if (score >= total / 2) {
+                showToast('İyi iş! ' + score + '/' + total, 'success');
+                AppState.currentUser.totalXp += 10;
+            } else {
+                showToast('Tekrar dene! ' + score + '/' + total, 'error');
+            }
+            
+            saveData();
+            updateHomeScreen();
+            showScreen('corelScreen');
+        }
+
+        // ==================== WORD LEARNING (SM-2 ALGORITHM) ====================
+        function renderWords() {
+            const container = document.getElementById('wordListBody');
+            const user = AppState.currentUser;
+            const today = new Date().toDateString();
+            
+            // Check streak
+            if (user.wordStats.lastStudyDate) {
+                const last = new Date(user.wordStats.lastStudyDate);
+                const diff = Math.floor((new Date() - last) / (1000 * 60 * 60 * 24));
+                if (diff === 1) user.wordStats.streak++;
+                else if (diff > 1) user.wordStats.streak = 1;
+            } else {
+                user.wordStats.streak = 1;
+            }
+            user.wordStats.lastStudyDate = today;
+            
+            // Select words due for review + new words
+            let dueWords = Vocabulary.filter(w => {
+                const wordData = user.wordStats.words[w.word];
+                if (!wordData) return false;
+                return new Date(wordData.nextReview) <= new Date();
+            });
+            
+            const newWords = Vocabulary.filter(w => !user.wordStats.words[w.word]);
+            const selectedWords = [...dueWords.slice(0, 2), ...newWords.slice(0, 5 - dueWords.length)].slice(0, 5);
+            
+            container.innerHTML = selectedWords.map(w => {
+                const isLearned = user.wordStats.words[w.word]?.learned;
+                return `
+                    <div class="word-card ${isLearned ? 'learned' : ''}" id="word-${w.word}">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                            <div>
+                                <div class="word-text">${w.word}</div>
+                                <div class="word-meaning">${w.meaning}</div>
+                                <div style="margin-top:8px; font-size:11px; color:var(--text-muted); text-transform:uppercase;">${w.category}</div>
+                            </div>
+                            <button class="btn-learn ${isLearned ? 'learned' : ''}" onclick="markWordLearned('${w.word}')">
+                                ${isLearned ? '✓ Öğrenildi' : 'Öğren'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            updateWordStats();
+            saveData();
+        }
+
+        function markWordLearned(word) {
+            const user = AppState.currentUser;
+            if (!user.wordStats.words[word]) {
+                user.wordStats.words[word] = {
+                    learned: true,
+                    level: 1,
+                    nextReview: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 1 day
+                    interval: 1
+                };
+                user.wordStats.learned++;
+                user.totalXp += 5;
+                showToast('+5 XP - Kelime öğrenildi!', 'success');
+            } else {
+                const w = user.wordStats.words[word];
+                w.level++;
+                w.interval *= 2; // SM-2: double interval
+                w.nextReview = new Date(Date.now() + w.interval * 24 * 60 * 60 * 1000).toISOString();
+                user.totalXp += 3;
+                showToast('+3 XP - Tekrar tamamlandı!', 'success');
+            }
+            
+            user.wordStats.seen++;
+            document.getElementById(`word-${word}`).classList.add('learned');
+            saveData();
+            updateWordStats();
+            updateHomeScreen();
+        }
+
+        function updateWordStats() {
+            const stats = AppState.currentUser.wordStats;
+            document.getElementById('totalWordsSeen').textContent = stats.seen;
+            document.getElementById('totalWordsLearned').textContent = stats.learned;
+            document.getElementById('currentStreak').textContent = stats.streak;
+        }
+
+        // ==================== BUSINESS CALCULATOR ====================
+        function updatePriceFromSelection() {
+            const type = document.getElementById('mType').value;
+            const customArea = document.getElementById('customPriceArea');
+            const priceInput = document.getElementById('uPrice');
+            const settings = AppState.currentUser.priceSettings;
+            
+            if (type === 'trans') {
+                priceInput.value = settings.trans;
+                customArea.style.display = 'none';
+                calculate();
+            } else if (type === 'color') {
+                priceInput.value = settings.color;
+                customArea.style.display = 'none';
+                calculate();
+            } else if (type === 'custom') {
+                customArea.style.display = 'block';
+                priceInput.value = '';
+            }
+        }
+
+        function calculate() {
+            const w = parseFloat(document.getElementById('w').value) || 0;
+            const h = parseFloat(document.getElementById('h').value) || 0;
+            const price = parseFloat(document.getElementById('uPrice').value) || 0;
+            const fixed = parseFloat(document.getElementById('fixedCost').value) || 0;
+            
+            const m2 = (w * h) / 10000;
+            const total = (m2 * price) + fixed;
+            
+            document.getElementById('finalRes').textContent = total.toLocaleString('tr-TR', {maximumFractionDigits: 2}) + '₺';
+            document.getElementById('calcDetail').textContent = `${m2.toFixed(3)} m² × ${price}₺ + ${fixed}₺ sabit`;
+        }
+
+        function saveCalculation() {
+            const calc = {
+                date: new Date().toISOString(),
+                dimensions: `${document.getElementById('w').value}x${document.getElementById('h').value} cm`,
+                material: document.getElementById('mType').options[document.getElementById('mType').selectedIndex].text,
+                price: document.getElementById('finalRes').textContent
+            };
+            AppState.currentUser.calculations.unshift(calc);
+            if (AppState.currentUser.calculations.length > 10) AppState.currentUser.calculations.pop();
+            saveData();
+            renderCalculationHistory();
+            showToast('Hesaplama kaydedildi', 'success');
+        }
+
+        function renderCalculationHistory() {
+            const container = document.getElementById('calcHistory');
+            if (AppState.currentUser.calculations.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:20px;">Henüz kayıt yok</p>';
+                return;
+            }
+            
+            container.innerHTML = AppState.currentUser.calculations.map(c => `
+                <div style="padding:12px; background:rgba(255,255,255,0.03); border-radius:8px; margin-bottom:8px;">
+                    <div style="font-size:12px; color:var(--text-muted);">${new Date(c.date).toLocaleDateString('tr-TR')}</div>
+                    <div style="display:flex; justify-content:space-between; margin-top:4px;">
+                        <span>${c.dimensions} - ${c.material}</span>
+                        <span style="color:var(--success); font-weight:700;">${c.price}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function shareCalculation() {
+            const text = `UV Baskı Hesaplama: ${document.getElementById('calcDetail').textContent} = ${document.getElementById('finalRes').textContent}`;
+            if (navigator.share) {
+                navigator.share({ title: 'UV Baskı Hesaplama', text: text });
+            } else {
+                navigator.clipboard.writeText(text);
+                showToast('Panoya kopyalandı', 'success');
+            }
+        }
+
+        function savePriceSettings() {
+            AppState.currentUser.priceSettings.trans = parseFloat(document.getElementById('set_trans').value) || 450;
+            AppState.currentUser.priceSettings.color = parseFloat(document.getElementById('set_color').value) || 550;
+            saveData();
+            showToast('Fiyat ayarları kaydedildi', 'success');
+        }
+
+        // ==================== EXERCISES ====================
+        function renderExercises() {
+            const container = document.getElementById('exerciseList');
+            const today = new Date().toDateString();
+            const completed = AppState.currentUser.exercises[today] || [];
+            
+            container.innerHTML = Exercises.map(ex => {
+                const isDone = completed.includes(ex.id);
+                return `
+                    <div class="exercise-item">
+                        <div>
+                            <div class="exercise-name">${ex.name}</div>
+                            <div class="exercise-sets">${ex.sets} - ${ex.desc}</div>
+                        </div>
+                        <div class="exercise-check ${isDone ? 'completed' : ''}" onclick="toggleExercise(${ex.id})">
+                            ${isDone ? '✓' : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('exerciseProgress').textContent = `${completed.length}/${Exercises.length}`;
+        }
+
+        function toggleExercise(id) {
+            const today = new Date().toDateString();
+            if (!AppState.currentUser.exercises[today]) AppState.currentUser.exercises[today] = [];
+            
+            const idx = AppState.currentUser.exercises[today].indexOf(id);
+            if (idx > -1) {
+                AppState.currentUser.exercises[today].splice(idx, 1);
+            } else {
+                AppState.currentUser.exercises[today].push(id);
+                AppState.currentUser.totalXp += 2;
+                showToast('+2 XP - Egzersiz tamamlandı', 'success');
+            }
+            
+            saveData();
+            renderExercises();
+            updateHomeScreen();
+        }
+
+        function renderCalendar() {
+            const container = document.getElementById('exerciseCalendar');
+            const today = new Date();
+            const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+            
+            let html = '';
+            for (let i = 1; i <= daysInMonth; i++) {
+                const date = new Date(today.getFullYear(), today.getMonth(), i);
+                const dateStr = date.toDateString();
+                const hasExercise = AppState.currentUser.exercises[dateStr] && AppState.currentUser.exercises[dateStr].length > 0;
+                const isToday = i === today.getDate();
+                
+                html += `<div class="cal-day ${hasExercise ? 'done' : ''} ${isToday ? 'today' : ''}">${i}</div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        // ==================== UI HELPERS ====================
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function showAchievement(text) {
+            const popup = document.getElementById('achievementPopup');
+            document.getElementById('achievementText').textContent = text;
+            popup.classList.add('show');
+            setTimeout(() => popup.classList.remove('show'), 3000);
+        }
+
+        function initOfflineDetection() {
+            window.addEventListener('online', () => {
+                document.getElementById('offlineBanner').classList.remove('show');
+                showToast('Çevrimiçi moda geçildi', 'success');
+            });
+            window.addEventListener('offline', () => {
+                document.getElementById('offlineBanner').classList.add('show');
+            });
+            if (!navigator.onLine) document.getElementById('offlineBanner').classList.add('show');
+        }
+
+        // Keyboard shortcuts for Corel quiz
+        document.addEventListener('keydown', (e) => {
+            if (!AppState.corelQuiz.active) return;
+            
+            const key = e.key.toLowerCase();
+            const options = document.querySelectorAll('.quiz-option');
+            
+            if (key >= '1' && key <= '9') {
+                const idx = parseInt(key) - 1;
+                if (options[idx]) options[idx].click();
+            }
+        });
+    </script>
 </body>
 </html>
