@@ -2,51 +2,65 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>UV Master Pro</title>
 
 <style>
 
+:root{
+--bg:#0b0b1a;
+--card:#16162d;
+--accent:#6366f1;
+--accent2:#06b6d4;
+--text:#ffffff;
+}
+
 body{
-font-family:system-ui;
-background:#0b0b1a;
-color:white;
 margin:0;
+font-family:system-ui;
+background:linear-gradient(135deg,#0b0b1a,#121233);
+color:var(--text);
 }
 
 header{
-background:#111;
-padding:15px;
+padding:20px;
+font-size:24px;
+font-weight:bold;
 text-align:center;
-font-size:22px;
+background:linear-gradient(90deg,#1e1e40,#13132a);
+border-bottom:1px solid #2d2d44;
 }
 
 nav{
 display:flex;
+gap:8px;
+padding:12px;
+justify-content:center;
 flex-wrap:wrap;
-gap:6px;
-padding:10px;
-background:#16162d;
 }
 
-button{
-padding:10px;
+nav button{
+padding:10px 14px;
 border:none;
-background:#4f46e5;
+border-radius:10px;
+background:linear-gradient(135deg,var(--accent),var(--accent2));
 color:white;
-border-radius:6px;
+font-weight:600;
 cursor:pointer;
 }
 
 main{
+max-width:900px;
+margin:auto;
 padding:20px;
 }
 
 .card{
-background:#16162d;
-padding:15px;
-margin:10px 0;
-border-radius:8px;
+background:var(--card);
+padding:20px;
+border-radius:14px;
+margin-bottom:16px;
+box-shadow:0 10px 25px rgba(0,0,0,0.3);
 }
 
 .hidden{
@@ -54,28 +68,56 @@ display:none;
 }
 
 input{
-display:block;
 width:100%;
-margin:5px 0 10px;
-padding:8px;
-border-radius:6px;
+padding:12px;
+margin:6px 0 12px 0;
+border-radius:8px;
+border:1px solid #333;
+background:#0f0f22;
+color:white;
+}
+
+button.action{
+width:100%;
+padding:12px;
 border:none;
+border-radius:10px;
+background:linear-gradient(135deg,#22c55e,#16a34a);
+color:white;
+font-weight:bold;
+cursor:pointer;
 }
 
 ul{
-list-style:none;
 padding:0;
+list-style:none;
 }
 
 li{
-background:#16162d;
-padding:10px;
-margin:5px 0;
-border-radius:6px;
+background:#11112a;
+padding:12px;
+border-radius:8px;
+margin:6px 0;
+display:flex;
+justify-content:space-between;
 }
 
-h2{
-margin-top:0;
+.stat{
+font-size:28px;
+font-weight:bold;
+}
+
+.progress{
+height:8px;
+background:#222;
+border-radius:4px;
+overflow:hidden;
+}
+
+.progress div{
+height:100%;
+background:linear-gradient(90deg,#6366f1,#06b6d4);
+width:0%;
 }
 
 </style>
@@ -86,7 +128,7 @@ margin-top:0;
 <header>UV Master Pro</header>
 
 <nav>
-<button onclick="show('home')">Ana Menü</button>
+<button onclick="show('dashboard')">Dashboard</button>
 <button onclick="show('academy')">UV Akademi</button>
 <button onclick="show('calc')">Maliyet</button>
 <button onclick="show('orders')">Sipariş</button>
@@ -96,85 +138,119 @@ margin-top:0;
 
 <main>
 
-<section id="home">
-<h2>Kontrol Paneli</h2>
+<section id="dashboard">
 
 <div class="card">
-Seviye: <span id="level">1</span>
+<div>Seviye</div>
+<div class="stat" id="level">1</div>
+<div class="progress"><div id="xpbar"></div></div>
 </div>
 
 <div class="card">
-XP: <span id="xp">0</span>
+<div>XP</div>
+<div class="stat" id="xp">0</div>
+</div>
+
+<div class="card">
+<div>Toplam Ciro</div>
+<div class="stat" id="revenue">0₺</div>
 </div>
 
 </section>
 
 <section id="academy" class="hidden">
-<h2>UV Akademi</h2>
 
-<div class="card">1. UV baskı temelleri</div>
-<div class="card">2. Yüzey hazırlığı</div>
-<div class="card">3. Corel hazırlık</div>
-<div class="card">4. Makine operasyon</div>
-<div class="card">5. Arıza tespiti</div>
+<div class="card">
+<h3>UV Baskı Temelleri</h3>
+<p>UV ışığı ile anında kürlenen mürekkep teknolojisi.</p>
+</div>
+
+<div class="card">
+<h3>Yüzey Hazırlığı</h3>
+<p>Temizlik ve primer kullanımı baskı kalitesini belirler.</p>
+</div>
+
+<div class="card">
+<h3>Corel Hazırlık</h3>
+<p>Spot renk RD_WHITE ile beyaz katman oluşturulur.</p>
+</div>
 
 </section>
 
 <section id="calc" class="hidden">
 
-<h2>Maliyet Hesaplama</h2>
+<div class="card">
 
-<label>En cm</label>
+<h3>Maliyet Hesaplama</h3>
+
+<label>En (cm)</label>
 <input id="w">
 
-<label>Boy cm</label>
+<label>Boy (cm)</label>
 <input id="h">
 
-<label>m² fiyat</label>
+<label>m² Fiyat</label>
 <input id="price">
 
-<label>sabit maliyet</label>
+<label>Sabit Maliyet</label>
 <input id="fixed">
 
-<button onclick="calculate()">Hesapla</button>
+<button class="action" onclick="calculate()">Hesapla</button>
 
-<h3 id="result"></h3>
+<h2 id="result"></h2>
+
+</div>
 
 </section>
 
 <section id="orders" class="hidden">
 
-<h2>Siparişler</h2>
+<div class="card">
+
+<h3>Sipariş Ekle</h3>
 
 <input id="orderName" placeholder="ürün">
 
 <input id="orderPrice" placeholder="fiyat">
 
-<button onclick="addOrder()">Ekle</button>
+<button class="action" onclick="addOrder()">Kaydet</button>
 
+</div>
+
+<div class="card">
+<h3>Siparişler</h3>
 <ul id="orderList"></ul>
+</div>
 
 </section>
 
 <section id="stock" class="hidden">
 
-<h2>Stok</h2>
+<div class="card">
+
+<h3>Stok Ekle</h3>
 
 <input id="stockName" placeholder="malzeme">
 
 <input id="stockQty" placeholder="adet">
 
-<button onclick="addStock()">Ekle</button>
+<button class="action" onclick="addStock()">Kaydet</button>
 
+</div>
+
+<div class="card">
+<h3>Stok Listesi</h3>
 <ul id="stockList"></ul>
+</div>
 
 </section>
 
 <section id="report" class="hidden">
 
-<h2>Günlük Ciro</h2>
-
-<h3 id="dailyTotal"></h3>
+<div class="card">
+<h3>Günlük Ciro</h3>
+<div class="stat" id="dailyTotal">0₺</div>
+</div>
 
 </section>
 
@@ -182,43 +258,73 @@ XP: <span id="xp">0</span>
 
 <script>
 
-/* ekran değiştirme */
+/* ekran */
 
 function show(id){
 
-document.querySelectorAll("section").forEach(s=>s.classList.add("hidden"))
+document.querySelectorAll("main section").forEach(s=>s.classList.add("hidden"))
 
 document.getElementById(id).classList.remove("hidden")
 
 }
 
-/* maliyet hesaplama */
+/* xp */
 
-function calculate(){
+let stats=JSON.parse(localStorage.getItem("stats"))||{xp:0,lvl:1}
 
-let w=Number(document.getElementById("w").value)
-let h=Number(document.getElementById("h").value)
-let price=Number(document.getElementById("price").value)
-let fixed=Number(document.getElementById("fixed").value)
+function addXP(x){
 
-let area=(w*h)/10000
+stats.xp+=x
 
-let total=(area*price)+fixed
+if(stats.xp>=stats.lvl*100){
 
-document.getElementById("result").innerText="Toplam: "+total+"₺"
+stats.xp=0
+stats.lvl++
 
 }
 
-/* indexedDB */
+localStorage.setItem("stats",JSON.stringify(stats))
 
-const DB_NAME="uvmasterdb"
-const DB_VERSION=1
+updateStats()
+
+}
+
+function updateStats(){
+
+document.getElementById("xp").innerText=stats.xp
+document.getElementById("level").innerText=stats.lvl
+document.getElementById("xpbar").style.width=(stats.xp/(stats.lvl*100))*100+"%"
+
+}
+
+updateStats()
+
+/* maliyet */
+
+function calculate(){
+
+let w=Number(w.value)
+let h=Number(h.value)
+let p=Number(price.value)
+let f=Number(fixed.value)
+
+let area=(w*h)/10000
+
+let total=(area*p)+f
+
+result.innerText="Toplam: "+Math.round(total)+"₺"
+
+addXP(5)
+
+}
+
+/* database */
+
+const dbreq=indexedDB.open("uvmaster",1)
 
 let db
 
-let req=indexedDB.open(DB_NAME,DB_VERSION)
-
-req.onupgradeneeded=e=>{
+dbreq.onupgradeneeded=e=>{
 
 db=e.target.result
 
@@ -228,7 +334,7 @@ db.createObjectStore("stock",{keyPath:"id",autoIncrement:true})
 
 }
 
-req.onsuccess=e=>{
+dbreq.onsuccess=e=>{
 
 db=e.target.result
 
@@ -241,23 +347,26 @@ loadStock()
 
 function addOrder(){
 
-let name=document.getElementById("orderName").value
-let price=Number(document.getElementById("orderPrice").value)
+let name=orderName.value
+let pricev=Number(orderPrice.value)
 
 let tx=db.transaction("orders","readwrite")
-let store=tx.objectStore("orders")
 
-store.add({
-name,
-price,
+tx.objectStore("orders").add({
+
+name:name,
+price:pricev,
 date:Date.now()
+
 })
 
 tx.oncomplete=loadOrders
 
+addXP(10)
+
 }
 
-/* siparişleri yükle */
+/* sipariş liste */
 
 function loadOrders(){
 
@@ -265,28 +374,32 @@ let list=document.getElementById("orderList")
 
 list.innerHTML=""
 
-let tx=db.transaction("orders")
-let store=tx.objectStore("orders")
+let total=0
 
-store.openCursor().onsuccess=e=>{
+db.transaction("orders").objectStore("orders").openCursor().onsuccess=e=>{
 
-let cursor=e.target.result
+let c=e.target.result
 
-if(cursor){
+if(c){
 
 let li=document.createElement("li")
 
-li.innerText=cursor.value.name+" - "+cursor.value.price+"₺"
+li.innerHTML=c.value.name+" <b>"+c.value.price+"₺</b>"
 
 list.appendChild(li)
 
-cursor.continue()
+total+=c.value.price
+
+c.continue()
+
+}else{
+
+document.getElementById("dailyTotal").innerText=total+"₺"
+document.getElementById("revenue").innerText=total+"₺"
 
 }
 
 }
-
-calcDaily()
 
 }
 
@@ -294,20 +407,23 @@ calcDaily()
 
 function addStock(){
 
-let name=document.getElementById("stockName").value
-let qty=document.getElementById("stockQty").value
+let name=stockName.value
+let qty=stockQty.value
 
 let tx=db.transaction("stock","readwrite")
-let store=tx.objectStore("stock")
 
-store.add({
+tx.objectStore("stock").add({
+
 name,
 qty
+
 })
 
 tx.oncomplete=loadStock
 
 }
+
+/* stok liste */
 
 function loadStock(){
 
@@ -315,22 +431,19 @@ let list=document.getElementById("stockList")
 
 list.innerHTML=""
 
-let tx=db.transaction("stock")
-let store=tx.objectStore("stock")
+db.transaction("stock").objectStore("stock").openCursor().onsuccess=e=>{
 
-store.openCursor().onsuccess=e=>{
+let c=e.target.result
 
-let cursor=e.target.result
-
-if(cursor){
+if(c){
 
 let li=document.createElement("li")
 
-li.innerText=cursor.value.name+" - "+cursor.value.qty
+li.innerHTML=c.value.name+" <b>"+c.value.qty+"</b>"
 
 list.appendChild(li)
 
-cursor.continue()
+c.continue()
 
 }
 
@@ -338,49 +451,17 @@ cursor.continue()
 
 }
 
-/* günlük ciro */
-
-function calcDaily(){
-
-let total=0
-
-let tx=db.transaction("orders")
-let store=tx.objectStore("orders")
-
-store.openCursor().onsuccess=e=>{
-
-let cursor=e.target.result
-
-if(cursor){
-
-total+=cursor.value.price
-
-cursor.continue()
-
-}else{
-
-document.getElementById("dailyTotal").innerText=total+"₺"
-
-}
-
-}
-
-}
-
-/* offline service worker */
+/* offline */
 
 if("serviceWorker" in navigator){
 
-const swCode=`
-self.addEventListener('install',e=>{
-self.skipWaiting()
-})
-self.addEventListener('fetch',e=>{
-})
+let code=`
+self.addEventListener('install',e=>self.skipWaiting())
+self.addEventListener('fetch',e=>{})
 `
 
-const blob=new Blob([swCode],{type:'text/javascript'})
-const url=URL.createObjectURL(blob)
+let blob=new Blob([code],{type:"text/javascript"})
+let url=URL.createObjectURL(blob)
 
 navigator.serviceWorker.register(url)
 
