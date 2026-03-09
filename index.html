@@ -12,11 +12,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .screen{display:none;min-height:100vh}
 .screen.active{display:block;animation:fadeIn .4s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
-.vid{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:16px;margin:20px 0;background:#000;border:2px solid var(--uv);box-shadow:0 0 30px rgba(191,0,255,.4)}
-.vid iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
-.vid-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#ff0000,#cc0000);color:white;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:bold;margin-bottom:12px;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-.vid-btn{background:linear-gradient(135deg,var(--uv),var(--pr));border:none;color:white;padding:12px 24px;border-radius:25px;font-weight:bold;cursor:pointer;margin:15px 0;width:100%}
+.vid-wrap{margin:20px 0;background:var(--s);border-radius:16px;padding:15px;border:2px solid var(--uv)}
+.vid-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#ff0000,#cc0000);color:white;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:bold;margin-bottom:12px}
+.vid-container{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;background:#000}
+.vid-container iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:12px}
+.vid-thumb{width:100%;border-radius:12px;cursor:pointer;transition:transform .3s}
+.vid-thumb:hover{transform:scale(1.02)}
+.play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:80px;height:80px;background:rgba(255,0,0,.9);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.play-btn::after{content:'';width:0;height:0;border-left:25px solid white;border-top:15px solid transparent;border-bottom:15px solid transparent;margin-left:5px}
 .hdr{background:linear-gradient(135deg,var(--s),var(--sl));border-radius:16px;padding:20px;margin-bottom:20px;border:1px solid rgba(191,0,255,.2)}
 .bar{width:100%;height:8px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden;margin-top:10px}
 .fill{height:100%;background:linear-gradient(90deg,var(--uv),var(--pr));width:0%;transition:width .8s ease}
@@ -88,7 +91,7 @@ input:focus,select:focus{outline:none;border-color:var(--uv);box-shadow:0 0 0 3p
     <div class="lesson" id="lessonCont"></div>
     <div class="nav-btns" id="lessonNav">
         <button class="btn btn-sec" onclick="prev()">← Önceki</button>
-        <button class="btn" id="nextBtn" onclick="next()">Sonraki →</button>
+        <button class="btn" id="nextBtn" onclick="nextL()">Sonraki →</button>
     </div>
 </div>
 
@@ -182,8 +185,23 @@ input:focus,select:focus{outline:none;border-color:var(--uv);box-shadow:0 0 0 3p
 </div>
 
 <script>
-const videos={1:"4nYz--Yhkb8",2:"dQw4w9WgXcQ",3:"sI9p70_Wc6o",4:"8Qn_v3A1a7U",5:"2X5R8J7K3M9",6:"9Q8r3wY5Z6c",7:"7H4J2K8L5P9",8:"3N6M9P2R5T8"};
+// ==========================================
+// YOUTUBE VIDEO DATABASE
+// ==========================================
+const videoData = {
+    1: {id: "4nYz--Yhkb8", title: "What is UV Printing?"},
+    2: {id: "dQw4w9WgXcQ", title: "UV Printing Process"},
+    3: {id: "sI9p70_Wc6o", title: "Roland VersaUV Introduction"},
+    4: {id: "8Qn_v3A1a7U", title: "UV Printer Maintenance Tips"},
+    5: {id: "2X5R8J7K3M9", title: "White Ink UV Printing"},
+    6: {id: "9Q8r3wY5Z6c", title: "UV vs Screen Printing"},
+    7: {id: "7H4J2K8L5P9", title: "3D UV Printing Effects"},
+    8: {id: "3N6M9P2R5T8", title: "UV Printing Cost Analysis"}
+};
 
+// ==========================================
+// CURRICULUM DATA
+// ==========================================
 const curriculum=[
 {id:1,title:"UV Baskı Temelleri",desc:"Teknoloji temelleri",xp:100,lock:false,lessons:[
 {title:"UV Baskı Nedir?",sub:"Tanım ve tarihçe",cont:`<div class="block"><div class="block-title">📖 Tanım</div><div class="block-c"><strong>UV Baskı</strong>, UV ışınlarıyla anında kuruyan dijital baskı teknolojisidir. Geleneksel baskı saatler sürerken, UV baskı <strong>saniyeler</strong> içinde kurur.</div></div><div class="block"><div class="block-title">💡 Avantajlar</div><div class="block-c"><ul><li>Anında kuruma</li><li>1440 dpi çözünürlük</li><li>Cam, metal, plastik üzerine baskı</li><li>Su ve çizilmeye dayanıklı</li></ul></div></div>`},
@@ -232,7 +250,7 @@ function initUV(){
 const list=document.getElementById('modList');
 list.innerHTML=curriculum.map((m,i)=>{
 const done=prog.done.includes(m.id),lock=m.id>prog.cur,cur=m.id===prog.cur;
-const hasVid=videos[m.id]?'<span class="vid-ind">▶️ Video</span>':'';
+const hasVid=videoData[m.id]?'<span class="vid-ind">▶️ Video</span>':'';
 return`<div class="mod ${done?'ok':''} ${lock?'lock':''}" onclick="${lock?'':`openMod(${i})`}">
 <div style="display:inline-block;background:var(--uv);color:white;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:bold;margin-bottom:8px">MODÜL ${m.id}</div>${hasVid}
 <div class="title" style="margin:5px 0">${m.title}</div>
@@ -259,7 +277,11 @@ go('lesson');
 
 function showLesson(){
 const m=curriculum[curMod],l=m.lessons[curLesson];
-const vid=videos[m.id]?`<div class="vid-badge">▶️ KONU ANLATIM VİDEOSU</div><div class="vid" id="vidBox_${m.id}" style="display:none"><iframe id="yt_${m.id}" src="https://www.youtube.com/embed/${videos[m.id]}?rel=0&modestbranding=1" allowfullscreen></iframe></div><button class="vid-btn" onclick="toggleVid(${m.id})" id="vidBtn_${m.id}">🎬 Videoyu İzle (+5 XP)</button>`:'';
+let vid='';
+if(videoData[m.id]){
+const v=videoData[m.id];
+vid=`<div class="vid-wrap"><div class="vid-badge">▶️ KONU ANLATIM VİDEOSU</div><div class="vid-container" id="vidBox"><iframe src="https://www.youtube.com/embed/${v.id}?rel=0&modestbranding=1&playsinline=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div><div style="margin-top:10px;font-size:13px;color:var(--tm);text-align:center"><strong>${v.title}</strong></div></div>`;
+}
 
 document.getElementById('lessonCont').innerHTML=`<div class="lesson-hdr"><span class="badge">MODÜL ${m.id} • DERS ${curLesson+1}/${m.lessons.length}</span><h2 class="title">${l.title}</h2><div class="sub">${l.sub}</div></div>${vid}${l.cont}`;
 
@@ -267,12 +289,6 @@ const prev=document.querySelector('#lessonNav .btn-sec'),next=document.getElemen
 prev.style.visibility=curLesson===0?'hidden':'visible';
 if(curLesson===m.lessons.length-1){next.textContent='Quize Geç →';next.onclick=startQuiz;}
 else{next.textContent='Sonraki →';next.onclick=nextL;}
-}
-
-function toggleVid(id){
-const box=document.getElementById(`vidBox_${id}`),btn=document.getElementById(`vidBtn_${id}`),ifr=document.getElementById(`yt_${id}`);
-if(box.style.display==='none'){box.style.display='block';btn.innerHTML='⏸️ Videoyu Durdur';ifr.src=ifr.src.replace('?rel=0','?autoplay=1&rel=0');addXP(5);}
-else{box.style.display='none';btn.innerHTML='🎬 Videoyu İzle (+5 XP)';ifr.src=ifr.src.replace('?autoplay=1','?autoplay=0');}
 }
 
 function nextL(){curLesson++;showLesson();}
