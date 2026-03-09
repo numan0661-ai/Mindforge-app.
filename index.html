@@ -3,2025 +3,1417 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0b0b1a">
-    <meta name="description" content="UV Baskı teknolojisi eğitim platformu - Sıfırdan uzmanlığa">
-    <title>MindForge UV Master Pro</title>
+    <title>MindForge UV Master</title>
     <style>
         :root {
-            --primary: #6366f1;
-            --accent: #06b6d4;
-            --bg: #0b0b1a;
-            --surface: #16162d;
-            --surface-light: #1e1e3f;
-            --surface-hover: #252550;
-            --text: #ffffff;
-            --text-muted: #94a3b8;
-            --text-secondary: #64748b;
-            --success: #10b981;
-            --gold: #f59e0b;
-            --purple: #a855f7;
-            --uv: #bf00ff;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --info: #3b82f6;
-            --corel: #ff6600;
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
-            --shadow-md: 0 4px 20px rgba(0,0,0,0.4);
-            --shadow-glow: 0 0 30px rgba(191, 0, 255, 0.3);
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --radius-xl: 20px;
-            --transition-fast: 0.15s ease;
-            --transition-normal: 0.3s ease;
-            --transition-slow: 0.5s ease;
+            --primary: #6366f1; --accent: #06b6d4; --bg: #0b0b1a;
+            --surface: #16162d; --surface-light: #1e1e3f; --text: #ffffff;
+            --text-muted: #94a3b8; --success: #10b981; --gold: #f59e0b;
+            --purple: #a855f7; --uv: #bf00ff; --danger: #ef4444;
+            --warning: #f59e0b; --info: #3b82f6; --corel: #ff6600;
         }
-
-        * { 
-            box-sizing: border-box; 
-            -webkit-tap-highlight-color: transparent;
-            margin: 0;
-            padding: 0;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            font-size: 16px;
-        }
-
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
-            line-height: 1.6;
-            min-height: 100vh;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background: var(--bg); color: var(--text); margin: 0; 
+            padding-bottom: 95px; overflow-x: hidden; line-height: 1.6;
         }
-
-        /* Loading Screen */
-        .loading-screen {
-            position: fixed;
-            inset: 0;
-            background: var(--bg);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-
-        .loading-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 3px solid var(--surface);
-            border-top-color: var(--uv);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        .loading-text {
-            margin-top: 20px;
-            color: var(--text-muted);
-            font-size: 14px;
-            animation: pulse 1.5s ease infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
-        }
-
-        /* App Container */
-        .app-container { 
-            max-width: 430px; 
-            margin: 0 auto; 
-            padding: 15px;
-            padding-bottom: 100px;
-            position: relative;
-        }
-
-        /* Screen Management */
-        .screen { 
-            display: none; 
-            min-height: 100vh;
-            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .screen.active { 
-            display: block; 
-        }
-
-        @keyframes fadeIn { 
-            from { opacity: 0; transform: translateY(20px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
-
-        @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(30px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        @keyframes slideInLeft {
-            from { opacity: 0; transform: translateX(-30px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        /* Header Styles */
-        .page-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
-            padding-top: 10px;
-        }
-
-        .page-header h2 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .back-btn {
-            background: var(--surface);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: var(--text);
-            width: 40px;
-            height: 40px;
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-            font-size: 18px;
-        }
-
-        .back-btn:hover {
-            background: var(--surface-light);
-            transform: translateX(-2px);
-        }
-
-        .back-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* Progress Components */
+        .app-container { max-width: 430px; margin: 0 auto; padding: 15px; }
+        .screen { display: none; min-height: 100vh; }
+        .screen.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Progress Tracking */
         .progress-header {
             background: linear-gradient(135deg, var(--surface), var(--surface-light));
-            border-radius: var(--radius-xl);
-            padding: 24px;
-            margin-bottom: 24px;
+            border-radius: 16px; padding: 20px; margin-bottom: 20px;
             border: 1px solid rgba(191, 0, 255, 0.2);
-            box-shadow: var(--shadow-md);
-            position: relative;
-            overflow: hidden;
         }
-
-        .progress-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--uv), var(--purple));
-        }
-
         .progress-bar {
-            width: 100%;
-            height: 10px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 5px;
-            overflow: hidden;
-            margin-top: 12px;
-            position: relative;
+            width: 100%; height: 8px; background: rgba(255,255,255,0.1);
+            border-radius: 4px; overflow: hidden; margin-top: 10px;
         }
-
         .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--uv), var(--purple), var(--accent));
-            width: 0%;
-            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 5px;
-            position: relative;
-            overflow: hidden;
+            height: 100%; background: linear-gradient(90deg, var(--uv), var(--purple));
+            width: 0%; transition: width 0.8s ease; border-radius: 4px;
         }
-
-        .progress-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
         .module-status {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 12px;
-            font-size: 13px;
-            color: var(--text-muted);
-            font-weight: 500;
+            display: flex; justify-content: space-between; margin-top: 10px;
+            font-size: 12px; color: var(--text-muted);
         }
-
-        /* Cards */
-        .card {
-            background: var(--surface);
-            border-radius: var(--radius-xl);
-            padding: 24px;
-            margin-bottom: 16px;
-            border: 1px solid rgba(255,255,255,0.06);
-            transition: all var(--transition-normal);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-            border-color: rgba(255,255,255,0.12);
-            box-shadow: var(--shadow-md);
-        }
-
-        .card.featured {
-            background: linear-gradient(135deg, rgba(191, 0, 255, 0.15), rgba(99, 102, 241, 0.1));
-            border: 2px solid rgba(191, 0, 255, 0.3);
-        }
-
-        .card.featured::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(191, 0, 255, 0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
+        
         /* Module Cards */
         .module-card {
-            background: var(--surface);
-            border-radius: var(--radius-xl);
-            padding: 24px;
-            margin-bottom: 16px;
-            border: 1px solid rgba(255,255,255,0.06);
-            cursor: pointer;
-            transition: all var(--transition-normal);
-            position: relative;
+            background: var(--surface); border-radius: 20px; padding: 20px;
+            margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer; transition: all 0.3s ease; position: relative;
             overflow: hidden;
         }
-
-        .module-card:hover { 
-            transform: translateY(-3px); 
-            border-color: var(--uv);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .module-card.locked { 
-            opacity: 0.5; 
-            pointer-events: none; 
-            filter: grayscale(0.8);
-        }
-
-        .module-card.completed { 
-            border-color: var(--success);
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), var(--surface));
-        }
-
+        .module-card:hover { transform: translateY(-2px); border-color: var(--uv); }
+        .module-card.locked { opacity: 0.5; pointer-events: none; filter: grayscale(0.8); }
+        .module-card.completed { border-color: var(--success); }
         .module-card.completed::after {
-            content: '✓';
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            background: var(--success);
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: bold;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+            content: '✓'; position: absolute; top: 15px; right: 15px;
+            background: var(--success); width: 24px; height: 24px;
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-size: 14px; font-weight: bold;
         }
-
         .module-number {
-            display: inline-flex;
-            align-items: center;
-            background: var(--uv);
-            color: white;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 12px;
+            display: inline-block; background: var(--uv); color: white;
+            padding: 4px 12px; border-radius: 20px; font-size: 11px;
+            font-weight: bold; margin-bottom: 8px;
         }
-
-        .module-title { 
-            font-size: 20px; 
-            font-weight: 700; 
-            margin: 8px 0;
-            letter-spacing: -0.3px;
-        }
-
-        .module-desc { 
-            font-size: 14px; 
-            color: var(--text-muted);
-            line-height: 1.6;
-        }
-
+        .module-title { font-size: 18px; font-weight: bold; margin: 5px 0; }
+        .module-desc { font-size: 13px; color: var(--text-muted); }
         .module-meta {
-            display: flex;
-            gap: 16px;
-            margin-top: 16px;
-            font-size: 13px;
+            display: flex; gap: 15px; margin-top: 12px; font-size: 12px;
             color: var(--text-muted);
-            font-weight: 500;
         }
-
+        
+        /* Lesson Screens */
+        .lesson-container {
+            background: var(--surface); border-radius: 20px;
+            padding: 25px; margin-bottom: 20px;
+        }
+        .lesson-header {
+            border-bottom: 2px solid rgba(191, 0, 255, 0.3);
+            padding-bottom: 15px; margin-bottom: 20px;
+        }
+        .lesson-badge {
+            display: inline-block; background: rgba(191, 0, 255, 0.2);
+            color: var(--uv); padding: 4px 12px; border-radius: 12px;
+            font-size: 11px; font-weight: bold; margin-bottom: 8px;
+        }
+        .lesson-title { font-size: 22px; margin: 0 0 10px 0; }
+        .lesson-subtitle { color: var(--text-muted); font-size: 14px; }
+        
         /* Content Blocks */
         .content-block {
-            background: rgba(255,255,255,0.03);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            margin-bottom: 16px;
-            border-left: 4px solid var(--uv);
-            transition: all var(--transition-fast);
+            background: rgba(255,255,255,0.03); border-radius: 12px;
+            padding: 20px; margin-bottom: 15px; border-left: 4px solid var(--uv);
         }
-
-        .content-block:hover {
-            background: rgba(255,255,255,0.05);
-            transform: translateX(4px);
-        }
-
         .content-block.warning { border-left-color: var(--warning); background: rgba(245, 158, 11, 0.05); }
         .content-block.danger { border-left-color: var(--danger); background: rgba(239, 68, 68, 0.05); }
         .content-block.info { border-left-color: var(--info); background: rgba(59, 130, 246, 0.05); }
-        .content-block.success { border-left-color: var(--success); background: rgba(16, 185, 129, 0.05); }
-        .content-block.corel { border-left-color: var(--corel); background: rgba(255, 102, 0, 0.05); }
-
+        
         .block-title {
-            color: var(--gold);
-            font-size: 15px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            color: var(--gold); font-size: 14px; font-weight: bold;
+            margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
         }
-
-        .block-content { 
-            font-size: 15px; 
-            color: var(--text-muted); 
-            line-height: 1.8;
-        }
-
-        .block-content strong { 
-            color: var(--text);
-            font-weight: 600;
-        }
-
-        .block-content ul { 
-            padding-left: 24px; 
-            margin: 12px 0;
-        }
-
-        .block-content li { 
-            margin-bottom: 10px;
-            position: relative;
-        }
-
-        .block-content li::marker {
-            color: var(--uv);
-        }
-
+        .block-content { font-size: 14px; color: var(--text-muted); line-height: 1.8; }
+        .block-content strong { color: var(--text); }
+        .block-content ul { padding-left: 20px; margin: 10px 0; }
+        .block-content li { margin-bottom: 8px; }
+        
         /* Interactive Elements */
         .interactive-demo {
             background: linear-gradient(135deg, rgba(191, 0, 255, 0.1), rgba(168, 85, 247, 0.1));
-            border: 2px dashed var(--uv);
-            border-radius: var(--radius-xl);
-            padding: 32px;
-            text-align: center;
-            margin: 24px 0;
-            position: relative;
-            overflow: hidden;
+            border: 2px dashed var(--uv); border-radius: 16px;
+            padding: 25px; text-align: center; margin: 20px 0;
         }
-
-        .interactive-demo::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at center, rgba(191, 0, 255, 0.1), transparent);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .interactive-demo:hover::before {
-            opacity: 1;
-        }
-
-        .demo-title { 
-            color: var(--uv); 
-            font-weight: 700; 
-            margin-bottom: 16px;
-            font-size: 16px;
-        }
-
-        /* Quiz Components */
-        .quiz-container { margin-top: 32px; }
-
+        .demo-title { color: var(--uv); font-weight: bold; margin-bottom: 15px; }
+        
+        /* Quiz Component */
+        .quiz-container { margin-top: 25px; }
         .quiz-question {
-            background: var(--surface-light);
-            padding: 24px;
-            border-radius: var(--radius-lg);
-            font-weight: 600;
-            margin-bottom: 20px;
-            font-size: 16px;
-            line-height: 1.6;
-            border: 1px solid rgba(255,255,255,0.08);
+            background: var(--surface-light); padding: 20px; border-radius: 12px;
+            font-weight: bold; margin-bottom: 15px; font-size: 15px;
         }
-
-        .quiz-options { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 12px; 
-        }
-
+        .quiz-options { display: flex; flex-direction: column; gap: 10px; }
         .quiz-option {
-            background: rgba(255,255,255,0.05);
-            border: 2px solid transparent;
-            padding: 18px 20px;
-            border-radius: var(--radius-lg);
-            cursor: pointer;
-            transition: all var(--transition-fast);
-            font-size: 15px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            background: rgba(255,255,255,0.05); border: 2px solid transparent;
+            padding: 15px; border-radius: 12px; cursor: pointer;
+            transition: all 0.2s; font-size: 14px;
         }
-
-        .quiz-option::before {
-            content: '';
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--text-muted);
-            border-radius: 50%;
-            transition: all var(--transition-fast);
-            flex-shrink: 0;
-        }
-
-        .quiz-option:hover { 
-            border-color: var(--uv); 
-            background: rgba(191, 0, 255, 0.1);
-            transform: translateX(4px);
-        }
-
-        .quiz-option:hover::before {
-            border-color: var(--uv);
-        }
-
-        .quiz-option.correct { 
-            border-color: var(--success); 
-            background: rgba(16, 185, 129, 0.15);
-        }
-
-        .quiz-option.correct::before {
-            background: var(--success);
-            border-color: var(--success);
-            content: '✓';
-            color: white;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .quiz-option.wrong { 
-            border-color: var(--danger); 
-            background: rgba(239, 68, 68, 0.15);
-        }
-
-        .quiz-option.wrong::before {
-            background: var(--danger);
-            border-color: var(--danger);
-            content: '✕';
-            color: white;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .quiz-option.disabled { 
-            pointer-events: none; 
-            opacity: 0.7;
-        }
-
-        /* Corel Specific Styles */
-        .shortcut-card {
-            background: rgba(255, 102, 0, 0.08);
-            border: 1px solid rgba(255, 102, 0, 0.2);
-            border-radius: var(--radius-lg);
-            padding: 18px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .shortcut-card::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: var(--corel);
-            transform: scaleY(0);
-            transition: transform 0.2s;
-        }
-
-        .shortcut-card:hover { 
-            background: rgba(255, 102, 0, 0.15); 
-            transform: translateX(8px);
-            border-color: var(--corel);
-        }
-
-        .shortcut-card:hover::before {
-            transform: scaleY(1);
-        }
-
-        .shortcut-card.practicing {
-            animation: pulse-border 1.5s infinite;
-        }
-
-        @keyframes pulse-border {
-            0%, 100% { border-color: rgba(255, 102, 0, 0.2); }
-            50% { border-color: var(--corel); box-shadow: 0 0 20px rgba(255, 102, 0, 0.3); }
-        }
-
-        .shortcut-keys {
-            background: var(--corel);
-            color: white;
-            padding: 8px 14px;
-            border-radius: var(--radius-md);
-            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
-            font-weight: 700;
-            font-size: 13px;
-            box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
-            letter-spacing: 0.5px;
-        }
-
-        .shortcut-name { 
-            font-weight: 600; 
-            color: var(--text);
-            font-size: 15px;
-        }
-
-        .shortcut-desc { 
-            font-size: 13px; 
-            color: var(--text-muted); 
-            margin-top: 6px;
-        }
-
-        .corel-category {
-            background: linear-gradient(135deg, rgba(255, 102, 0, 0.1), rgba(255, 102, 0, 0.02));
-            border: 1px solid rgba(255, 102, 0, 0.2);
-            border-radius: var(--radius-xl);
-            padding: 24px;
-            margin-bottom: 20px;
-        }
-
-        .corel-category-title {
-            color: var(--corel);
-            font-weight: 700;
-            font-size: 17px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Step Guide */
-        .step-guide { 
-            counter-reset: step; 
-            position: relative;
-        }
-
-        .step-guide::before {
-            content: '';
-            position: absolute;
-            left: 17px;
-            top: 40px;
-            bottom: 40px;
-            width: 2px;
-            background: linear-gradient(to bottom, var(--uv), transparent);
-            opacity: 0.3;
-        }
-
+        .quiz-option:hover { border-color: var(--uv); background: rgba(191, 0, 255, 0.1); }
+        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.2); }
+        .quiz-option.wrong { border-color: var(--danger); background: rgba(239, 68, 68, 0.2); }
+        .quiz-option.disabled { pointer-events: none; opacity: 0.6; }
+        
+        /* Step by Step Guide */
+        .step-guide { counter-reset: step; }
         .step-item {
-            position: relative;
-            padding-left: 60px;
-            margin-bottom: 32px;
-            padding-bottom: 32px;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            position: relative; padding-left: 50px; margin-bottom: 25px;
+            padding-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-
-        .step-item:last-child { 
-            border-bottom: none; 
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
+        .step-item:last-child { border-bottom: none; }
         .step-number {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, var(--uv), var(--purple));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 14px;
-            box-shadow: 0 4px 15px rgba(191, 0, 255, 0.4);
-            z-index: 1;
+            position: absolute; left: 0; top: 0;
+            width: 35px; height: 35px; background: var(--uv);
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-weight: bold; font-size: 14px;
         }
-
-        .step-title { 
-            font-weight: 700; 
-            color: var(--gold); 
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-
-        .step-content { 
-            font-size: 15px; 
-            color: var(--text-muted);
-            line-height: 1.7;
-        }
-
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
-            border: none;
-            padding: 16px 24px;
-            border-radius: var(--radius-lg);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-            font-size: 15px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn:hover::before {
-            left: 100%;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
-        }
-
-        .btn:active { 
-            transform: scale(0.98) translateY(0);
-        }
-
-        .btn:disabled { 
-            opacity: 0.5; 
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-secondary { 
-            background: var(--surface-light);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .btn-secondary:hover {
-            background: var(--surface-hover);
-            box-shadow: var(--shadow-md);
-        }
-
-        .btn-success { 
-            background: linear-gradient(135deg, var(--success), #059669);
-        }
-
-        .btn-success:hover {
-            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
-        }
-
-        .btn-corel { 
-            background: linear-gradient(135deg, var(--corel), #e55c00);
-        }
-
-        .btn-corel:hover {
-            box-shadow: 0 8px 25px rgba(255, 102, 0, 0.4);
-        }
-
-        .btn-outline { 
-            background: transparent; 
-            border: 2px solid var(--uv); 
-            color: var(--uv);
-        }
-
-        .btn-outline:hover {
-            background: rgba(191, 0, 255, 0.1);
-            box-shadow: 0 0 20px rgba(191, 0, 255, 0.2);
-        }
-
-        .btn-ghost {
-            background: transparent;
-            color: var(--text-muted);
-            padding: 12px 16px;
-        }
-
-        .btn-ghost:hover {
-            color: var(--text);
-            background: rgba(255,255,255,0.05);
-        }
-
+        .step-title { font-weight: bold; color: var(--gold); margin-bottom: 8px; }
+        .step-content { font-size: 14px; color: var(--text-muted); }
+        
+        /* Navigation Buttons */
         .nav-buttons {
-            display: flex;
-            gap: 12px;
-            margin-top: 32px;
-            position: sticky;
-            bottom: 20px;
+            display: flex; gap: 10px; margin-top: 30px;
         }
-
-        .nav-buttons .btn {
-            flex: 1;
+        .btn {
+            flex: 1; background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white; border: none; padding: 16px; border-radius: 14px;
+            font-weight: bold; cursor: pointer; transition: all 0.2s;
+            font-size: 14px; text-align: center;
         }
-
-        /* Code Blocks */
+        .btn:active { transform: scale(0.98); }
+        .btn-secondary { background: var(--surface-light); border: 1px solid rgba(255,255,255,0.1); }
+        .btn-success { background: linear-gradient(135deg, var(--success), #059669); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-outline { 
+            background: transparent; border: 2px solid var(--uv); 
+            color: var(--uv); margin-top: 10px;
+        }
+        
+        /* Code/Command Blocks */
         .code-block {
-            background: #0d0d1f;
-            border: 1px solid #2d2d44;
-            border-radius: var(--radius-md);
-            padding: 20px;
-            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
-            font-size: 14px;
-            color: #a5b4fc;
-            overflow-x: auto;
-            margin: 16px 0;
-            position: relative;
+            background: #0d0d1f; border: 1px solid #2d2d44; border-radius: 8px;
+            padding: 15px; font-family: 'Courier New', monospace; font-size: 13px;
+            color: #a5b4fc; overflow-x: auto; margin: 10px 0;
         }
-
-        .code-block::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, var(--uv), transparent);
-        }
-
-        .code-comment { color: #6b7280; font-style: italic; }
-        .code-highlight { color: var(--uv); font-weight: 700; }
-        .code-keyword { color: #c084fc; }
-        .code-string { color: #4ade80; }
-
+        .code-comment { color: #6b7280; }
+        .code-highlight { color: var(--uv); font-weight: bold; }
+        
         /* Tables */
         .data-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            margin: 20px 0;
-            font-size: 14px;
-            border-radius: var(--radius-md);
-            overflow: hidden;
-        }
-
-        .data-table th {
-            background: rgba(191, 0, 255, 0.15);
-            color: var(--uv);
-            padding: 14px 16px;
-            text-align: left;
-            font-weight: 600;
+            width: 100%; border-collapse: collapse; margin: 15px 0;
             font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
-
+        .data-table th {
+            background: rgba(191, 0, 255, 0.2); color: var(--uv);
+            padding: 12px; text-align: left; font-weight: bold;
+        }
         .data-table td {
-            padding: 14px 16px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05);
             color: var(--text-muted);
-            transition: all 0.2s;
         }
-
-        .data-table tr:hover td { 
-            background: rgba(255,255,255,0.03); 
-            color: var(--text);
-        }
-
-        .data-table tr:last-child td {
-            border-bottom: none;
-        }
-
+        .data-table tr:hover td { background: rgba(255,255,255,0.02); color: var(--text); }
+        
         /* Bottom Navigation */
         .nav-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(22, 22, 45, 0.98);
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 0 28px;
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255,255,255,0.08);
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(22, 22, 45, 0.98); display: flex;
+            justify-content: space-around; padding: 15px 0 25px;
+            backdrop-filter: blur(10px); border-top: 1px solid #2d2d44;
             z-index: 1000;
         }
-
         .nav-item {
-            font-size: 24px;
-            cursor: pointer;
-            opacity: 0.5;
-            transition: all var(--transition-fast);
-            position: relative;
-            padding: 8px 16px;
-            border-radius: var(--radius-md);
+            font-size: 24px; cursor: pointer; opacity: 0.4;
+            transition: 0.3s; position: relative;
         }
-
-        .nav-item:hover {
-            opacity: 0.8;
-            background: rgba(255,255,255,0.05);
-        }
-
-        .nav-item.active { 
-            opacity: 1; 
-            color: var(--accent);
-            background: rgba(6, 182, 212, 0.1);
-        }
-
+        .nav-item.active { opacity: 1; color: var(--accent); }
         .nav-item .badge {
-            position: absolute;
-            top: 4px;
-            right: 8px;
-            background: var(--danger);
-            color: white;
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 10px;
-            font-weight: 700;
-            min-width: 18px;
-            text-align: center;
-            animation: pulse-badge 2s infinite;
+            position: absolute; top: -5px; right: -5px;
+            background: var(--danger); color: white; font-size: 10px;
+            padding: 2px 6px; border-radius: 10px; font-weight: bold;
         }
-
-        @keyframes pulse-badge {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
+        
         /* Achievement Popup */
         .achievement-popup {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-120px);
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
             background: linear-gradient(135deg, var(--gold), #d97706);
-            color: white;
-            padding: 16px 28px;
-            border-radius: var(--radius-xl);
-            box-shadow: 0 10px 40px rgba(245, 158, 11, 0.4), 0 0 0 1px rgba(255,255,255,0.1);
-            z-index: 2000;
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 600;
-            font-size: 15px;
-            min-width: 280px;
-            justify-content: center;
+            color: white; padding: 15px 25px; border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(245, 158, 11, 0.3);
+            z-index: 2000; transition: transform 0.5s ease;
+            display: flex; align-items: center; gap: 10px;
+            font-weight: bold;
         }
-
-        .achievement-popup.show { 
-            transform: translateX(-50%) translateY(0); 
-        }
-
-        .achievement-popup::before {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            border-radius: calc(var(--radius-xl) + 2px);
-            background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent);
-            z-index: -1;
-        }
-
+        .achievement-popup.show { transform: translateX(-50%) translateY(0); }
+        
         /* Tooltip */
         .tooltip {
-            position: relative;
-            display: inline-block;
-            border-bottom: 2px dotted var(--uv);
-            cursor: help;
-            color: var(--accent);
+            position: relative; display: inline-block;
+            border-bottom: 2px dotted var(--uv); cursor: help;
         }
-
         .tooltip-text {
-            visibility: hidden;
-            width: 260px;
-            background: var(--surface-light);
-            color: var(--text);
-            text-align: left;
-            padding: 16px;
-            border-radius: var(--radius-lg);
-            position: absolute;
-            z-index: 100;
-            bottom: 130%;
-            left: 50%;
-            margin-left: -130px;
-            font-size: 13px;
-            border: 1px solid rgba(191, 0, 255, 0.3);
-            box-shadow: var(--shadow-md);
-            opacity: 0;
-            transition: all 0.3s;
-            line-height: 1.6;
+            visibility: hidden; width: 200px; background: var(--surface-light);
+            color: var(--text); text-align: center; padding: 10px;
+            border-radius: 8px; position: absolute; z-index: 1;
+            bottom: 125%; left: 50%; margin-left: -100px;
+            font-size: 12px; border: 1px solid var(--uv);
+            opacity: 0; transition: opacity 0.3s;
         }
-
-        .tooltip:hover .tooltip-text { 
-            visibility: visible; 
-            opacity: 1;
-            transform: translateY(-5px);
-        }
-
+        .tooltip:hover .tooltip-text { visibility: visible; opacity: 1; }
+        
         /* Image Placeholder */
         .img-placeholder {
-            background: linear-gradient(135deg, rgba(191, 0, 255, 0.08), rgba(99, 102, 241, 0.08));
-            border: 2px dashed rgba(191, 0, 255, 0.3);
-            border-radius: var(--radius-lg);
-            min-height: 200px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            margin: 20px 0;
-            font-size: 14px;
-            gap: 12px;
-            transition: all 0.3s;
+            background: linear-gradient(135deg, rgba(191, 0, 255, 0.1), rgba(99, 102, 241, 0.1));
+            border: 2px dashed rgba(191, 0, 255, 0.3); border-radius: 12px;
+            height: 200px; display: flex; align-items: center;
+            justify-content: center; color: var(--text-muted);
+            margin: 15px 0; font-size: 14px;
         }
-
-        .img-placeholder:hover {
-            border-color: var(--uv);
-            background: rgba(191, 0, 255, 0.12);
-        }
-
+        
         /* Checklist */
-        .checklist { 
-            list-style: none; 
-            padding: 0; 
-        }
-
+        .checklist { list-style: none; padding: 0; }
         .checklist li {
-            padding: 14px 0 14px 40px;
-            position: relative;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-            transition: all 0.2s;
-            cursor: pointer;
+            padding: 12px 0 12px 35px; position: relative;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-
-        .checklist li:hover {
-            background: rgba(255,255,255,0.02);
-            padding-left: 44px;
-        }
-
         .checklist li::before {
-            content: '○';
-            position: absolute;
-            left: 0;
-            color: var(--uv);
-            font-size: 24px;
-            font-weight: 700;
-            transition: all 0.2s;
-            line-height: 1;
+            content: '○'; position: absolute; left: 0;
+            color: var(--uv); font-size: 20px; font-weight: bold;
         }
-
-        .checklist li:hover::before {
-            transform: scale(1.2);
+        .checklist li.checked::before { content: '✓'; color: var(--success); }
+        .checklist li.checked { color: var(--text-muted); text-decoration: line-through; }
+        
+        /* Input Styles */
+        input, select {
+            width: 100%; padding: 14px; margin: 8px 0;
+            border-radius: 12px; border: 1px solid #2d2d44;
+            background: var(--bg); color: white; font-size: 15px;
+            box-sizing: border-box;
         }
-
-        .checklist li.checked::before { 
-            content: '✓'; 
-            color: var(--success);
-            font-size: 20px;
+        input:focus, select:focus {
+            outline: none; border-color: var(--uv);
+            box-shadow: 0 0 0 3px rgba(191, 0, 255, 0.1);
         }
-
-        .checklist li.checked { 
-            color: var(--text-muted); 
-            text-decoration: line-through;
-            opacity: 0.7;
-        }
-
-        /* Form Elements */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 16px;
-            border-radius: var(--radius-lg);
-            border: 1px solid rgba(255,255,255,0.1);
-            background: var(--bg);
-            color: white;
-            font-size: 15px;
-            transition: all var(--transition-fast);
-            font-family: inherit;
-        }
-
-        input:hover, select:hover, textarea:hover {
-            border-color: rgba(255,255,255,0.2);
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--uv);
-            box-shadow: 0 0 0 3px rgba(191, 0, 255, 0.15);
-        }
-
-        select {
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            padding-right: 44px;
-        }
-
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-            line-height: 1.6;
-        }
-
-        /* Grid Layouts */
-        .grid-2 { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 16px; 
-        }
-
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-        }
-
+        
+        /* Grid */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
         /* Calendar */
-        .calendar-grid { 
-            display: grid; 
-            grid-template-columns: repeat(7, 1fr); 
-            gap: 6px; 
-            margin-top: 16px; 
-        }
-
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-top: 10px; }
         .cal-day { 
-            aspect-ratio: 1; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            border-radius: var(--radius-sm);
-            background: rgba(255,255,255,0.05);
-            cursor: pointer;
-            transition: all var(--transition-fast);
-            font-weight: 500;
+            aspect-ratio: 1; display: flex; align-items: center;
+            justify-content: center; font-size: 11px; border-radius: 8px;
+            background: rgba(255,255,255,0.05); cursor: pointer;
         }
-
-        .cal-day:hover { 
-            background: rgba(255,255,255,0.1);
-            transform: scale(1.1);
-        }
-
-        .cal-day.today {
-            border: 2px solid var(--accent);
-            font-weight: 700;
-        }
-
-        .cal-day.done { 
-            background: var(--success); 
-            color: white;
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-
-        .cal-day.done:hover {
-            background: #059669;
-        }
-
+        .cal-day.done { background: var(--success); color: white; font-weight: bold; }
+        .cal-day:hover { background: rgba(255,255,255,0.1); }
+        
         /* Exercise Specific */
         .exercise-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 18px;
-            background: rgba(255,255,255,0.03);
-            border-radius: var(--radius-lg);
-            margin-bottom: 12px;
-            transition: all var(--transition-fast);
-            border: 1px solid transparent;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 15px; background: rgba(255,255,255,0.03);
+            border-radius: 12px; margin-bottom: 10px;
         }
-
-        .exercise-item:hover {
-            background: rgba(255,255,255,0.05);
-            border-color: rgba(255,255,255,0.1);
-            transform: translateX(4px);
-        }
-
-        .exercise-name { 
-            font-weight: 600;
-            font-size: 16px;
-        }
-
-        .exercise-sets { 
-            color: var(--text-muted); 
-            font-size: 13px;
-            margin-top: 4px;
-        }
-
+        .exercise-name { font-weight: bold; }
+        .exercise-sets { color: var(--text-muted); font-size: 13px; }
         .exercise-check {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 2px solid var(--success);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all var(--transition-fast);
-            background: transparent;
-            color: transparent;
-            font-weight: 700;
-            font-size: 14px;
+            width: 28px; height: 28px; border-radius: 50%;
+            border: 2px solid var(--success); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
         }
-
-        .exercise-check:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
-        }
-
-        .exercise-check.completed { 
-            background: var(--success);
-            color: white;
-            transform: scale(1.1);
-        }
-
+        .exercise-check.completed { background: var(--success); }
+        
         /* Price Settings */
         .price-display {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.05));
-            border: 1px solid var(--success);
-            border-radius: var(--radius-xl);
-            padding: 28px;
-            text-align: center;
-            margin-top: 24px;
-            position: relative;
-            overflow: hidden;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+            border: 1px solid var(--success); border-radius: 12px;
+            padding: 20px; text-align: center; margin-top: 15px;
         }
-
-        .price-display::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--success), #34d399);
-        }
-
-        .price-amount { 
-            font-size: 42px; 
-            font-weight: 800; 
-            color: var(--success);
-            letter-spacing: -1px;
-            text-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
-        }
-
-        .price-detail { 
-            font-size: 13px; 
-            color: var(--text-muted); 
-            margin-top: 8px;
-            font-weight: 500;
-        }
-
+        .price-amount { font-size: 36px; font-weight: bold; color: var(--success); }
+        .price-detail { font-size: 12px; color: var(--text-muted); margin-top: 5px; }
+        
         .settings-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-
-        .settings-row:last-child {
-            border-bottom: none;
-        }
-
-        .settings-label { 
-            font-weight: 600;
-            font-size: 15px;
-        }
-
-        .settings-value { 
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-
-        /* Stats Display */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin: 24px 0;
-        }
-
-        .stat-box {
-            background: rgba(255,255,255,0.03);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.06);
-            transition: all var(--transition-fast);
-        }
-
-        .stat-box:hover {
-            transform: translateY(-3px);
-            border-color: rgba(255,255,255,0.12);
-            background: rgba(255,255,255,0.05);
-        }
-
-        .stat-value { 
-            font-size: 28px; 
-            font-weight: 800; 
-            color: var(--corel);
-            letter-spacing: -0.5px;
-        }
-
-        .stat-label { 
-            font-size: 12px; 
-            color: var(--text-muted); 
-            margin-top: 6px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* Timer for Quiz */
-        .quiz-timer {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--surface);
-            border: 3px solid var(--corel);
-            border-radius: 50%;
-            width: 64px;
-            height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 20px;
-            z-index: 100;
-            box-shadow: var(--shadow-md);
-            transition: all 0.3s;
-        }
-
-        .quiz-timer.warning { 
-            border-color: var(--warning); 
-            color: var(--warning);
-            animation: pulse 1s infinite;
-        }
-
-        .quiz-timer.danger { 
-            border-color: var(--danger); 
-            color: var(--danger);
-            animation: shake 0.5s infinite;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-
-        /* Word Learning Module */
-        .word-card {
-            background: rgba(168, 85, 247, 0.08);
-            border: 1px solid rgba(168, 85, 247, 0.2);
-            border-radius: var(--radius-xl);
-            padding: 24px;
-            margin-bottom: 16px;
-            transition: all var(--transition-fast);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .word-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--purple);
-            transform: scaleY(0);
-            transition: transform 0.3s;
-        }
-
-        .word-card:hover {
-            transform: translateX(8px);
-            border-color: rgba(168, 85, 247, 0.4);
-        }
-
-        .word-card:hover::before {
-            transform: scaleY(1);
-        }
-
-        .word-card.learned {
-            opacity: 0.6;
-            border-color: var(--success);
-        }
-
-        .word-card.learned::before {
-            background: var(--success);
-            transform: scaleY(1);
-        }
-
-        .word-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 12px;
-        }
-
-        .word-text {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--purple);
-            letter-spacing: -0.5px;
-        }
-
-        .word-meaning {
-            color: var(--text-muted);
-            font-size: 15px;
-            line-height: 1.7;
-        }
-
-        .btn-learn {
-            background: rgba(16, 185, 129, 0.15);
-            border: 1px solid var(--success);
-            color: var(--success);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-learn:hover {
-            background: var(--success);
-            color: white;
-        }
-
-        .btn-learn.learned {
-            background: var(--success);
-            color: white;
-            cursor: default;
-        }
-
-        /* Spaced Repetition Indicator */
-        .sr-indicator {
-            display: flex;
-            gap: 4px;
-            margin-top: 12px;
-        }
-
-        .sr-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            transition: all 0.3s;
-        }
-
-        .sr-dot.mastered {
-            background: var(--success);
-            box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
-        }
-
-        /* Keyboard Practice */
-        .keyboard-sim {
-            background: var(--surface-light);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .key-display {
-            display: inline-flex;
-            gap: 8px;
-            margin: 16px 0;
-        }
-
-        .key {
-            background: linear-gradient(180deg, #3a3a5c, #2a2a4a);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px;
-            padding: 16px 24px;
-            font-family: monospace;
-            font-weight: 700;
-            font-size: 18px;
-            box-shadow: 0 4px 0 #1a1a3a, 0 6px 12px rgba(0,0,0,0.3);
-            transition: all 0.1s;
-            min-width: 60px;
-        }
-
-        .key.pressed {
-            transform: translateY(4px);
-            box-shadow: 0 0 0 #1a1a3a, 0 2px 4px rgba(0,0,0,0.3);
-            background: linear-gradient(180deg, var(--corel), #e55c00);
-            border-color: var(--corel);
-            color: white;
-        }
-
-        /* Difficulty Selector */
-        .difficulty-selector {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-
-        .diff-btn {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: var(--surface);
-            color: var(--text-muted);
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .diff-btn:hover {
-            border-color: var(--uv);
-            color: var(--text);
-        }
-
-        .diff-btn.active {
-            background: var(--uv);
-            color: white;
-            border-color: var(--uv);
-        }
-
-        /* Export/Import Section */
-        .data-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .data-actions .btn {
-            flex: 1;
-            font-size: 13px;
-            padding: 12px;
-        }
-
-        /* Toast Notifications */
-        .toast-container {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 3000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            pointer-events: none;
-        }
-
-        .toast {
-            background: var(--surface-light);
-            color: var(--text);
-            padding: 16px 24px;
-            border-radius: var(--radius-lg);
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: var(--shadow-md);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 14px;
-            font-weight: 500;
-            animation: slideDown 0.3s ease;
-            pointer-events: auto;
-            min-width: 300px;
-        }
-
-        .toast.success { border-left: 4px solid var(--success); }
-        .toast.error { border-left: 4px solid var(--danger); }
-        .toast.info { border-left: 4px solid var(--info); }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Offline Indicator */
-        .offline-banner {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: var(--warning);
-            color: #000;
-            padding: 8px;
-            text-align: center;
-            font-size: 13px;
-            font-weight: 600;
-            z-index: 9999;
-            transform: translateY(-100%);
-            transition: transform 0.3s;
-        }
-
-        .offline-banner.show {
-            transform: translateY(0);
-        }
-
-        /* Responsive Adjustments */
-        @media (max-width: 480px) {
-            .app-container {
-                padding: 12px;
-                padding-bottom: 100px;
-            }
-
-            .module-title {
-                font-size: 18px;
-            }
-
-            .price-amount {
-                font-size: 32px;
-            }
-
-            .quiz-timer {
-                width: 50px;
-                height: 50px;
-                font-size: 16px;
-            }
-        }
-
-        /* Focus visible for accessibility */
-        *:focus-visible {
-            outline: 2px solid var(--uv);
-            outline-offset: 2px;
-        }
-
-        /* Reduced motion */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-
-        /* Print styles */
-        @media print {
-            .nav-bar, .nav-buttons, .quiz-timer {
-                display: none !important;
-            }
-
-            .screen {
-                display: block !important;
-            }
-
-            .app-container {
-                max-width: 100%;
-                padding: 20px;
-            }
-        }
+        .settings-label { font-weight: bold; }
+        .settings-value { color: var(--text-muted); }
     </style>
 </head>
 <body>
 
-    <!-- Offline Banner -->
-    <div class="offline-banner" id="offlineBanner">
-        ⚠️ Çevrimdışı Modu - İnternet bağlantısı yok
-    </div>
-
-    <!-- Loading Screen -->
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">MindForge UV Master Yükleniyor...</div>
-    </div>
-
-    <!-- Toast Container -->
-    <div class="toast-container" id="toastContainer"></div>
-
-    <div class="app-container">
+<div class="app-container">
+    
+    <!-- UV AKADEMİ ANA EKRAN -->
+    <div class="screen" id="uvAcademyMain">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+            <button class="btn btn-secondary" style="flex:0; padding:12px 16px;" onclick="showScreen('homeScreen')">←</button>
+            <h2 style="margin:0; color:var(--uv)">🧪 UV Akademi</h2>
+        </div>
         
-        <!-- UV AKADEMİ ANA EKRAN -->
-        <div class="screen" id="uvAcademyMain">
-            <div class="page-header">
-                <button class="back-btn" onclick="showScreen('homeScreen')" aria-label="Geri dön">←</button>
-                <h2 style="color:var(--uv)">🧪 UV Akademi</h2>
+        <div class="progress-header">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                <span style="font-size:14px; font-weight:bold;">Toplam İlerleme</span>
+                <span style="color:var(--uv); font-weight:bold;" id="totalProgress">0%</span>
             </div>
-            
-            <div class="progress-header">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                    <span style="font-size:15px; font-weight:700;">Toplam İlerleme</span>
-                    <span style="color:var(--uv); font-weight:800; font-size:18px;" id="totalProgress">0%</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="totalProgressBar"></div>
-                </div>
-                <div class="module-status">
-                    <span id="completedModules">0/8 Modül</span>
-                    <span id="totalPoints">0 XP Kazanıldı</span>
-                </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="totalProgressBar"></div>
             </div>
-            
-            <div id="modulesList"></div>
+            <div class="module-status">
+                <span id="completedModules">0/8 Modül</span>
+                <span id="totalPoints">0 XP Kazanıldı</span>
+            </div>
+        </div>
+        
+        <div id="modulesList"></div>
+    </div>
 
-            <!-- Data Management -->
-            <div class="card" style="margin-top:24px;">
-                <h3 style="margin:0 0 16px 0; color:var(--text-muted); font-size:14px; text-transform:uppercase; letter-spacing:1px;">Veri Yönetimi</h3>
-                <div class="data-actions">
-                    <button class="btn btn-secondary" onclick="exportData()">
-                        💾 Dışa Aktar
-                    </button>
-                    <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">
-                        📥 İçe Aktar
-                    </button>
-                    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)">
+    <!-- MODÜL DETAY EKRANI -->
+    <div class="screen" id="moduleDetail">
+        <div class="lesson-container" id="lessonContent"></div>
+        <div class="nav-buttons" id="lessonNav">
+            <button class="btn btn-secondary" onclick="prevLesson()">← Önceki</button>
+            <button class="btn" id="nextBtn" onclick="nextLesson()">Sonraki →</button>
+        </div>
+    </div>
+
+    <!-- QUIZ EKRANI -->
+    <div class="screen" id="quizScreen">
+        <div class="lesson-container">
+            <div class="lesson-header">
+                <span class="lesson-badge">MODÜL SONU SINAVI</span>
+                <h2 class="lesson-title" id="quizTitle">Bilgi Kontrolü</h2>
+            </div>
+            <div id="quizContent"></div>
+        </div>
+    </div>
+
+    <!-- ANA EKRAN -->
+    <div class="screen active" id="homeScreen">
+        <h2 style="color:var(--accent)">MindForge Master</h2>
+        <div class="progress-header" style="border-color:var(--gold);">
+            <div style="font-size:12px; color:var(--gold); margin-bottom:5px;">USTA YOLU</div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <div style="font-size:24px; font-weight:bold;">Seviye <span id="lvlLabel">1</span></div>
+                    <div style="font-size:12px; color:var(--text-muted);"><span id="expLabel">0</span> / 100 XP</div>
                 </div>
-                <button class="btn btn-ghost" onclick="resetAllData()" style="margin-top:12px; width:100%; color:var(--danger);">
-                    🗑️ Tüm Verileri Sıfırla
-                </button>
+                <div style="font-size:40px;">🏆</div>
+            </div>
+            <div class="progress-bar" style="margin-top:15px;">
+                <div class="progress-fill" id="lvlFill" style="background:linear-gradient(90deg, var(--gold), #fbbf24);"></div>
             </div>
         </div>
 
-        <!-- MODÜL DETAY EKRANI -->
-        <div class="screen" id="moduleDetail">
-            <div class="card" id="lessonContent"></div>
-            <div class="nav-buttons" id="lessonNav">
-                <button class="btn btn-secondary" onclick="prevLesson()">← Önceki</button>
-                <button class="btn" id="nextBtn" onclick="nextLesson()">Sonraki →</button>
+        <div class="module-card" onclick="showScreen('uvAcademyMain')" style="background:linear-gradient(135deg, #16162d, #3b0066); border:2px solid var(--uv);">
+            <span style="font-size:40px;">🧪</span>
+            <div class="module-title" style="color:white; margin-top:10px;">UV AKADEMİ</div>
+            <div class="module-desc">Sıfırdan uzmanlığa UV baskı teknolojisi</div>
+            <div class="module-meta">
+                <span>📚 8 Modül</span>
+                <span>⏱️ 4 Saat</span>
+                <span>🎯 Sertifikalı</span>
             </div>
         </div>
 
-        <!-- QUIZ EKRANI -->
-        <div class="screen" id="quizScreen">
-            <div class="card">
-                <div class="lesson-header" style="margin-bottom:24px;">
-                    <span class="lesson-badge">MODÜL SONU SINAVI</span>
-                    <h2 class="lesson-title" id="quizTitle">Bilgi Kontrolü</h2>
-                </div>
-                <div id="quizContent"></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
+            <div class="module-card" onclick="showScreen('businessScreen')" style="text-align:center;">
+                <div style="font-size:30px;">📊</div>
+                <div class="module-title" style="font-size:16px;">Maliyet Hesaplama</div>
+            </div>
+            <div class="module-card" onclick="showScreen('exerciseScreen')" style="text-align:center;">
+                <div style="font-size:30px;">🏋️</div>
+                <div class="module-title" style="font-size:16px;">Antrenman</div>
             </div>
         </div>
+    </div>
 
-        <!-- ANA EKRAN -->
-        <div class="screen active" id="homeScreen">
-            <div style="margin-bottom:24px;">
-                <h1 style="font-size:28px; margin:0; letter-spacing:-1px;">MindForge <span style="color:var(--accent)">Master</span></h1>
-                <p style="color:var(--text-muted); margin:8px 0 0 0; font-size:14px;">UV Baskı Uzmanlık Platformu</p>
-            </div>
-
-            <div class="progress-header" style="border-color:var(--gold); background:linear-gradient(135deg, rgba(245,158,11,0.1), var(--surface));">
-                <div style="font-size:12px; color:var(--gold); margin-bottom:8px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Usta Yolu</div>
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div>
-                        <div style="font-size:32px; font-weight:800; letter-spacing:-1px;">Seviye <span id="lvlLabel">1</span></div>
-                        <div style="font-size:13px; color:var(--text-muted); margin-top:4px;"><span id="expLabel">0</span> / 100 XP</div>
-                    </div>
-                    <div style="font-size:48px; filter:drop-shadow(0 4px 8px rgba(245,158,11,0.3));">🏆</div>
+    <!-- MALİYET HESAPLAMA EKRANI -->
+    <div class="screen" id="businessScreen">
+        <button class="btn btn-secondary" onclick="showScreen('homeScreen')" style="margin-bottom:20px;">← Ana Menü</button>
+        <h2 style="margin-bottom:20px;">📊 Maliyet Hesaplama</h2>
+        
+        <div class="lesson-container">
+            <h3 style="margin-top:0; color:var(--accent);">Ölçüler</h3>
+            <div class="grid-2">
+                <div>
+                    <label style="font-size:12px; color:var(--text-muted);">En (cm)</label>
+                    <input type="number" id="w" placeholder="Örn: 50" oninput="calculate()">
                 </div>
-                <div class="progress-bar" style="margin-top:16px; height:12px;">
-                    <div class="progress-fill" id="lvlFill" style="background:linear-gradient(90deg, var(--gold), #fbbf24, var(--gold));"></div>
+                <div>
+                    <label style="font-size:12px; color:var(--text-muted);">Boy (cm)</label>
+                    <input type="number" id="h" placeholder="Örn: 70" oninput="calculate()">
                 </div>
             </div>
-
-            <div class="module-card featured" onclick="showScreen('uvAcademyMain')">
-                <div style="display:flex; align-items:center; gap:16px; position:relative; z-index:1;">
-                    <span style="font-size:48px; filter:drop-shadow(0 4px 12px rgba(191,0,255,0.4));">🧪</span>
-                    <div>
-                        <div class="module-title" style="margin:0; color:white;">UV AKADEMİ</div>
-                        <div class="module-desc" style="margin-top:4px;">Sıfırdan uzmanlığa UV baskı teknolojisi</div>
-                        <div class="module-meta" style="margin-top:12px;">
-                            <span>📚 8 Modül</span>
-                            <span>⏱️ 4 Saat</span>
-                            <span>🎯 Sertifikalı</span>
-                        </div>
-                    </div>
-                </div>
+            
+            <h3 style="color:var(--accent); margin-top:20px;">Malzeme ve Fiyat</h3>
+            <select id="mType" onchange="updatePriceFromSelection()">
+                <option value="">Malzeme Seçin...</option>
+                <option value="trans">Şeffaf Pleksi</option>
+                <option value="color">Opak/Renkli Malzeme</option>
+                <option value="custom">Özel Fiyat</option>
+            </select>
+            
+            <div id="customPriceArea" style="display:none;">
+                <label style="font-size:12px; color:var(--text-muted);">Özel Fiyat (₺/m²)</label>
+                <input type="number" id="customPrice" placeholder="Örn: 750" oninput="calculate()">
             </div>
-
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px;">
-                <div class="module-card" onclick="showScreen('corelScreen')" style="text-align:center; border:1px solid var(--corel);">
-                    <div style="font-size:36px; margin-bottom:8px;">🎨</div>
-                    <div class="module-title" style="font-size:16px; margin:0;">CorelMaster</div>
-                    <div style="font-size:12px; color:var(--text-muted);">Kısayollar & Quiz</div>
-                </div>
-                <div class="module-card" onclick="showScreen('businessScreen')" style="text-align:center;">
-                    <div style="font-size:36px; margin-bottom:8px;">📊</div>
-                    <div class="module-title" style="font-size:16px; margin:0;">Maliyet</div>
-                    <div style="font-size:12px; color:var(--text-muted);">Hesaplama</div>
-                </div>
-                <div class="module-card" onclick="showScreen('exerciseScreen')" style="text-align:center;">
-                    <div style="font-size:36px; margin-bottom:8px;">🏋️</div>
-                    <div class="module-title" style="font-size:16px; margin:0;">Antrenman</div>
-                    <div style="font-size:12px; color:var(--text-muted);">Günlük</div>
-                </div>
-                <div class="module-card" onclick="showScreen('wordScreen')" style="text-align:center; border:1px solid var(--purple);">
-                    <div style="font-size:36px; margin-bottom:8px;">📚</div>
-                    <div class="module-title" style="font-size:16px; margin:0;">5 Kelime</div>
-                    <div style="font-size:12px; color:var(--text-muted);">Sözlük</div>
-                </div>
+            
+            <label style="font-size:12px; color:var(--text-muted);">Birim Fiyat (₺/m²)</label>
+            <input type="number" id="uPrice" placeholder="Fiyat seçin veya girin" oninput="calculate()">
+            
+            <label style="font-size:12px; color:var(--text-muted);">Sabit Maliyet (₺)</label>
+            <input type="number" id="fixedCost" value="50" oninput="calculate()">
+            
+            <div class="price-display">
+                <div class="price-amount" id="finalRes">0₺</div>
+                <div class="price-detail" id="calcDetail">0 m² × 0₺ + 50₺ sabit</div>
             </div>
-
-            <!-- Quick Stats -->
-            <div class="card" style="margin-top:20px;">
-                <h3 style="margin:0 0 16px 0; font-size:14px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px;">Haftalık Özet</h3>
-                <div class="grid-3" style="text-align:center;">
-                    <div>
-                        <div style="font-size:24px; font-weight:700; color:var(--success);" id="weekModules">0</div>
-                        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Modül</div>
-                    </div>
-                    <div>
-                        <div style="font-size:24px; font-weight:700; color:var(--corel);" id="weekShortcuts">0</div>
-                        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Kısayol</div>
-                    </div>
-                    <div>
-                        <div style="font-size:24px; font-weight:700; color:var(--purple);" id="weekWords">0</div>
-                        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Kelime</div>
-                    </div>
-                </div>
-            </div>
+            
+            <button class="btn" onclick="saveCalculation()" style="margin-top:15px;">💾 Hesaplamayı Kaydet</button>
         </div>
+        
+        <div class="lesson-container" style="margin-top:15px;">
+            <h3 style="margin-top:0; color:var(--gold);">⚙️ Fiyat Ayarları</h3>
+            <div class="settings-row">
+                <span class="settings-label">Şeffaf m² Fiyatı</span>
+                <input type="number" id="set_trans" value="450" style="width:100px; text-align:right;" onchange="savePriceSettings()">
+            </div>
+            <div class="settings-row">
+                <span class="settings-label">Renkli m² Fiyatı</span>
+                <input type="number" id="set_color" value="600" style="width:100px; text-align:right;" onchange="savePriceSettings()">
+            </div>
+            <div class="settings-row">
+                <span class="settings-label">Sabit Maliyet</span>
+                <input type="number" id="set_fixed" value="50" style="width:100px; text-align:right;" onchange="savePriceSettings()">
+            </div>
+            <p style="font-size:12px; color:var(--text-muted); margin-top:10px;">
+                * Bu fiyatlar varsayılan olarak kullanılır
+            </p>
+        </div>
+    </div>
 
-        <!-- CORELMASTER EKRANI -->
-        <div class="screen" id="corelScreen">
-            <div class="page-header">
-                <button class="back-btn" onclick="showScreen('homeScreen')">←</button>
-                <h2 style="color:var(--corel); margin:0;">🎨 CorelMaster</h2>
+    <!-- EGZERSİZ EKRANI -->
+    <div class="screen" id="exerciseScreen">
+        <button class="btn btn-secondary" onclick="showScreen('homeScreen')" style="margin-bottom:20px;">← Ana Menü</button>
+        <h2 style="margin-bottom:20px;">🏋️ Antrenman Programı</h2>
+        
+        <div class="lesson-container">
+            <h3 style="margin-top:0; color:var(--success);">Bugünkü Program</h3>
+            <div id="exerciseList">
+                <div class="exercise-item">
+                    <div>
+                        <div class="exercise-name">Şınav (Push-up)</div>
+                        <div class="exercise-sets">4 set × 12 tekrar</div>
+                    </div>
+                    <div class="exercise-check" onclick="toggleExercise(this)"></div>
+                </div>
+                <div class="exercise-item">
+                    <div>
+                        <div class="exercise-name">Squat</div>
+                        <div class="exercise-sets">3 set × 15 tekrar</div>
+                    </div>
+                    <div class="exercise-check" onclick="toggleExercise(this)"></div>
+                </div>
+                <div class="exercise-item">
+                    <div>
+                        <div class="exercise-name">Plank</div>
+                        <div class="exercise-sets">3 set × 45 saniye</div>
+                    </div>
+                    <div class="exercise-check" onclick="toggleExercise(this)"></div>
+                </div>
+                <div class="exercise-item">
+                    <div>
+                        <div class="exercise-name">Lunges</div>
+                        <div class="exercise-sets">3 set × 10 tekrar (her bacak)</div>
+                    </div>
+                    <div class="exercise-check" onclick="toggleExercise(this)"></div>
+                </div>
             </div>
             
-            <!-- Difficulty Selector -->
-            <div class="difficulty-selector">
-                <button class="diff-btn active" onclick="setDifficulty('easy', this)">Kolay</button>
-                <button class="diff-btn" onclick="setDifficulty('medium', this)">Orta</button>
-                <button class="diff-btn" onclick="setDifficulty('hard', this)">Zor</button>
+            <div style="margin-top:20px; padding:15px; background:rgba(16,185,129,0.1); border-radius:12px; text-align:center;">
+                <div style="font-size:14px; color:var(--text-muted);">Tamamlanan</div>
+                <div style="font-size:24px; font-weight:bold; color:var(--success);">
+                    <span id="completedCount">0</span> / 4
+                </div>
             </div>
             
-            <!-- İstatistikler -->
-            <div class="stats-grid">
-                <div class="stat-box">
-                    <div class="stat-value" id="corelTotalAnswered">0</div>
-                    <div class="stat-label">Cevaplanan</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-value" id="corelCorrectRate">0%</div>
-                    <div class="stat-label">Başarı Oranı</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-value" id="corelStreak">0</div>
-                    <div class="stat-label">Seri</div>
-                </div>
-            </div>
-
-            <!-- Keyboard Practice Mode -->
-            <div class="keyboard-sim" id="keyboardPractice" style="display:none;">
-                <div style="color:var(--text-muted); font-size:13px; margin-bottom:8px;">Pratik Modu - Tuşlara basın!</div>
-                <div class="key-display" id="targetKeys">
-                    <div class="key">?</div>
-                </div>
-                <div style="margin-top:16px; font-size:14px; color:var(--corel); font-weight:600;" id="practiceTarget">Hazır...</div>
-                <div style="margin-top:8px; font-size:12px; color:var(--text-muted);" id="practiceHint">Kısayol seçip pratik yapın</div>
-            </div>
-            
-            <!-- Kısayollar Listesi -->
-            <div id="corelShortcutsList"></div>
-
-            <button class="btn btn-corel" onclick="startCorelQuiz()" style="width:100%; margin-top:20px;">
-                ⚡ Quiz Başlat
+            <button class="btn btn-success" onclick="logWorkout()" id="completeWorkoutBtn" disabled>
+                Antrenmanı Tamamla ✅
+            </button>
+            <button class="btn btn-secondary" onclick="resetExercises()" style="margin-top:10px;">
+                Sıfırla
             </button>
         </div>
-
-        <!-- COREL QUIZ EKRANI -->
-        <div class="screen" id="corelQuizScreen">
-            <div class="quiz-timer" id="quizTimer">30</div>
-            
-            <button class="back-btn" onclick="endCorelQuiz()" style="margin-bottom:20px;">←</button>
-            
-            <div class="card" style="margin-top:60px;">
-                <div class="lesson-header">
-                    <span class="lesson-badge" style="background:rgba(255,102,0,0.2); color:var(--corel);">COREL QUIZ</span>
-                    <h2 class="lesson-title" id="corelQuizQuestion" style="font-size:20px;">Soru yükleniyor...</h2>
-                </div>
-                
-                <div class="quiz-options" id="corelQuizOptions"></div>
-                
-                <div id="corelQuizFeedback" style="margin-top:24px; display:none;"></div>
-                
-                <div style="margin-top:32px; text-align:center; padding:20px; background:rgba(255,255,255,0.03); border-radius:var(--radius-lg);">
-                    <div style="font-size:13px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px;">Skor</div>
-                    <div style="font-size:36px; font-weight:800; color:var(--corel); margin-top:8px;">
-                        <span id="currentScore">0</span> / <span id="totalQuestions">0</span>
-                    </div>
-                    <div style="font-size:12px; color:var(--text-muted); margin-top:8px;" id="difficultyDisplay">Kolay Mod</div>
-                </div>
+        
+        <div class="lesson-container" style="margin-top:15px;">
+            <h3 style="margin-top:0; color:var(--accent);">📆 Bu Ayın Takvimi</h3>
+            <div class="calendar-grid" id="mainCalendar"></div>
+            <div style="display:flex; gap:15px; margin-top:15px; font-size:12px; justify-content:center;">
+                <span style="display:flex; align-items:center; gap:5px;">
+                    <span style="width:12px; height:12px; background:var(--success); border-radius:3px;"></span> Tamamlandı
+                </span>
+                <span style="display:flex; align-items:center; gap:5px;">
+                    <span style="width:12px; height:12px; background:rgba(255,255,255,0.05); border-radius:3px;"></span> Boş
+                </span>
             </div>
         </div>
+    </div>
 
-        <!-- 5 KELİME EKRANI -->
-        <div class="screen" id="wordScreen">
-            <div class="page-header">
-                <button class="back-btn" onclick="showScreen('homeScreen')">←</button>
-                <h2 style="color:var(--purple); margin:0;">📚 Günün 5 Kelimesi</h2>
-            </div>
-            
-            <div class="card">
-                <div id="wordListBody"></div>
-                <button class="btn" style="background:var(--purple); margin-top:20px; width:100%;" onclick="renderWords()">
-                    🔄 Yeni Kelimeler
-                </button>
-            </div>
-            
-            <div class="card" style="margin-top:16px;">
-                <h3 style="margin:0 0 20px 0; color:var(--gold); font-size:16px;">📖 Öğrenme İstatistikleri</h3>
-                <div class="stats-grid" style="margin:0;">
-                    <div class="stat-box">
-                        <div class="stat-value" id="totalWordsSeen">0</div>
-                        <div class="stat-label">Görülen</div>
+    <!-- Achievement Popup -->
+    <div class="achievement-popup" id="achievementPopup">
+        <span style="font-size:24px;">🏆</span>
+        <span id="achievementText">Başarım Kazanıldı!</span>
+    </div>
+
+    <div class="nav-bar">
+        <div class="nav-item active" onclick="showScreen('homeScreen', this)">🏠</div>
+        <div class="nav-item" onclick="showScreen('uvAcademyMain', this)">🧪<span class="badge" id="navBadge" style="display:none;">!</span></div>
+        <div class="nav-item" onclick="showScreen('businessScreen', this)">📊</div>
+        <div class="nav-item" onclick="showScreen('exerciseScreen', this)">🏋️</div>
+    </div>
+</div>
+
+<script>
+// ==========================================
+// UV AKADEMİ KAPSAMLI MÜFREDAT
+// ==========================================
+
+const uvCurriculum = [
+    {
+        id: 1,
+        title: "UV Baskı Temelleri",
+        desc: "Teknolojinin temel prensipleri ve kimyasal süreçler",
+        duration: "25 dk",
+        xp: 100,
+        locked: false,
+        lessons: [
+            {
+                title: "UV Baskı Nedir?",
+                subtitle: "Teknolojinin tanımı ve tarihçesi",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">📖 Tanım</div>
+                        <div class="block-content">
+                            <strong>UV Baskı (Ultraviolet Printing)</strong>, boyanın anında kuruması için ultraviyole (UV) ışınları kullanan dijital baskı teknolojisidir. Geleneksel baskıda boyanın kuruması saatler sürerken, UV baskıda bu süre <strong>saniyeler</strong> içinde gerçekleşir.
+                        </div>
                     </div>
-                    <div class="stat-box">
-                        <div class="stat-value" id="totalWordsLearned">0</div>
-                        <div class="stat-label">Öğrenilen</div>
+                    
+                    <div class="content-block info">
+                        <div class="block-title">💡 Neden UV Baskı?</div>
+                        <div class="block-content">
+                            <ul>
+                                <li><strong>Anında Kuruma:</strong> Baskı alındığı anda dokunulabilir, paketlenebilir</li>
+                                <li><strong>Yüksek Çözünürlük:</strong> 1440 dpi'ye varan detay kalitesi</li>
+                                <li><strong>Çok Yönlülük:</strong> Cam, metal, plastik, ahşap, deri üzerine baskı</li>
+                                <li><strong>Dayanıklılık:</strong> Çizilmez, suya ve güneşe dayanıklı</li>
+                                <li><strong>Çevre Dostu:</strong> VOC (Uçucu Organik Bileşik) salınımı yok</li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="stat-box">
-                        <div class="stat-value" id="currentStreak">0</div>
-                        <div class="stat-label">Gün Serisi</div>
+
+                    <div class="content-block">
+                        <div class="block-title">⚗️ Kimyasal Süreç: Fotopolimerizasyon</div>
+                        <div class="block-content">
+                            <p>UV boyaları üç temel bileşen içerir:</p>
+                            <ol>
+                                <li><strong>Monomerler:</strong> Sıvı haldeki temel yapı taşları</li>
+                                <li><strong>Oligomerler:</strong> Ağ yapısını oluşturan zincirler</li>
+                                <li><strong>Foto-başlatıcılar:</strong> UV ışığıyla reaksiyonu başlatan maddeler</li>
+                            </ol>
+                            <br>
+                            <p>UV ışığı (365-405nm) foto-başlatıcıları uyarınca, monomerler <span class="tooltip">polimerleşir<span class="tooltip-text">Küçük moleküllerin büyük zincirler oluşturması</span></span> ve katı, plastik bir tabaka oluşur. Bu sürece <strong>kürlenme (curing)</strong> denir.</p>
+                        </div>
                     </div>
+                `
+            },
+            {
+                title: "UV Boya Türleri",
+                subtitle: "Mürekkep çeşitleri ve kullanım alanları",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">🎨 Ana Mürekkep Türleri</div>
+                        <div class="block-content">
+                            <table class="data-table">
+                                <tr>
+                                    <th>Tür</th>
+                                    <th>Özellik</th>
+                                    <th>Kullanım</th>
+                                </tr>
+                                <tr>
+                                    <td><strong>CMYK</strong></td>
+                                    <td>Cyan, Magenta, Yellow, Black</td>
+                                    <td>Temel renk baskısı</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>White (Beyaz)</strong></td>
+                                    <td>Opak beyaz zemin</td>
+                                    <td>Şeffaf/renkli yüzeyler</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Varnish (Vernik)</strong></td>
+                                    <td>Şeffaf koruyucu/kabartma</td>
+                                    <td>3D efekt, parlaklık</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Primer (Astar)</strong></td>
+                                    <td>Yapıştırıcı katman</td>
+                                    <td>Zor tutunan yüzeyler</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="content-block warning">
+                        <div class="block-title">⚠️ Önemli Not: Beyaz Mürekkep</div>
+                        <div class="block-content">
+                            <p>Beyaz mürekkep <strong>en kritik</strong> bileşendir çünkü:</p>
+                            <ul>
+                                <li>Şeffaf pleksiye baskı yaparken renklerin görünmesini sağlar</li>
+                                <li>Cam üzerine beyaz zemin oluşturur</li>
+                                <li>Renkli metaller üzerinde gerçek renkleri verir</li>
+                            </ul>
+                            <br>
+                            <strong>Beyaz mürekkep kullanılmazsa:</strong> Renkler soluk, cansız ve şeffaf çıkar!
+                        </div>
+                    </div>
+                `
+            }
+        ],
+        quiz: {
+            question: "Şeffaf pleksi üzerine renkli baskı yaparken beyaz katmanı nereye basmalısınız?",
+            options: ["Sadece üste", "Sadece alta", "Hem alta hem üste", "Hiçbir yere"],
+            correct: 1,
+            explanation: "Renklerin canlı görünmesi için beyaz zemin şarttır. Bu yüzden önce beyaz, üzerine CMYK basılır."
+        }
+    },
+    {
+        id: 2,
+        title: "Yüzey Hazırlığı ve Adhezyon",
+        desc: "Malzeme seçimi, temizlik ve tutunma prensipleri",
+        duration: "30 dk",
+        xp: 120,
+        locked: true,
+        lessons: [
+            {
+                title: "Yüzey Enerjisi ve Tutunma",
+                subtitle: "Boya neden atar? Neden tutunur?",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">🔬 Bilimsel Temel</div>
+                        <div class="block-content">
+                            <p>Her malzemenin bir <span class="tooltip">yüzey enerjisi<span class="tooltip-text">Malzeme yüzeyinin moleküler çekim gücü</span></span> vardır. Boya tutunması için:</p>
+                            <br>
+                            <strong>Boya Yüzey Gerilimi < Malzeme Yüzey Enerjisi</strong>
+                            <br><br>
+                            <table class="data-table">
+                                <tr><th>Malzeme</th><th>Yüzey Enerjisi (dyn/cm)</th><th>Tutunma</th></tr>
+                                <tr><td>Paslanmaz Çelik</td><td>700-1000</td><td>✅ Mükemmel</td></tr>
+                                <tr><td>Alüminyum</td><td>500-800</td><td>✅ İyi</td></tr>
+                                <tr><td>PVC</td><td>39</td><td>⚠️ Orta</td></tr>
+                                <tr><td>PP (Polipropilen)</td><td>29</td><td>❌ Zayıf</td></tr>
+                                <tr><td>PTFE (Teflon)</td><td>18</td><td>❌ İmkansız</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                `
+            }
+        ],
+        quiz: {
+            question: "PP (Polipropilen) malzemeye baskı yapmadan önce ne yapılmalıdır?",
+            options: ["Sadece silmek", "Primer (korona/alev) uygulamak", "Sıcak tutmak", "Hiçbir şey yapmadan basmak"],
+            correct: 1,
+            explanation: "PP düşük yüzey enerjili (29 dyn/cm) malzemedir. UV boyası tutunamaz. Corona treatment veya özel primer şarttır."
+        }
+    },
+    {
+        id: 3,
+        title: "CorelDRAW ile UV Hazırlık",
+        desc: "Profesyonel dosya hazırlama ve RIP ayarları",
+        duration: "35 dk",
+        xp: 150,
+        locked: true,
+        lessons: [
+            {
+                title: "Renk Yönetimi ve Spot Renkler",
+                subtitle: "White ve Varnish katmanları",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">🎯 Spot Renk Mantığı</div>
+                        <div class="block-content">
+                            <p>RIP yazılımı (PrintForge, Caldera, vb.) <strong>spot renkleri</strong> özel kanallar olarak tanır:</p>
+                            <ul>
+                                <li><strong>RD_WHITE:</strong> Beyaz mürekkep kanalı</li>
+                                <li><strong>RD_VARNISH:</strong> Vernik/kabartma kanalı</li>
+                                <li><strong>RD_PRIMER:</strong> Astar kanalı</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            }
+        ],
+        quiz: {
+            question: "CorelDRAW'de beyaz katmanı nasıl tanımlamalısınız?",
+            options: ["Sadece beyaz renk yap", "Spot renk adı 'RD_WHITE' olmalı", "Sadece alt katmana koy", "RIP'te sonradan ayarla"],
+            correct: 1,
+            explanation: "RIP yazılımı 'RD_WHITE' spot renk adını otomatik beyaz kanalına yönlendirir. Sadece beyaz renk yetmez."
+        }
+    },
+    {
+        id: 4,
+        title: "Makine Operasyonu",
+        desc: "Günlük bakım, kalibrasyon ve baskı ayarları",
+        duration: "40 dk",
+        xp: 150,
+        locked: true,
+        lessons: [
+            {
+                title: "Günlük Başlangıç Prosedürü",
+                subtitle: "Sabit kalite için sabit rutin",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">☀️ Sabah Rutini (Her Gün!)</div>
+                        <div class="block-content">
+                            <ul class="checklist">
+                                <li>Makineyi aç, ısınmasını bekle (5 dk)</li>
+                                <li>Beyaz mürekkep şişesini çalkala (10 saniye)</li>
+                                <li>Nozzle check yap (tüm kanallar açık mı?)</li>
+                                <li>Kafa temizliği (light cleaning)</li>
+                                <li>Test baskısı yap</li>
+                                <li>Malzeme yüzeyini kontrol et</li>
+                                <li>Kafa yüksekliğini ayarla (1.5-2mm)</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            }
+        ],
+        quiz: {
+            question: "Beyaz mürekkep neden her sabah çalkalanmalıdır?",
+            options: ["Hava kabarcığı için", "Pigment çökelmesini önlemek", "Kokusunu gidermek", "Rengini açmak"],
+            correct: 1,
+            explanation: "Beyaz mürekkep titanyum dioksit pigmenti içerir. Çökelir ve tıkanıklık yapar. Çalkalamak homojen dağılımı sağlar."
+        }
+    },
+    {
+        id: 5,
+        title: "Arıza Tespiti ve Çözüm",
+        desc: "Banding, nozzle loss ve renk problemleri",
+        duration: "35 dk",
+        xp: 150,
+        locked: true,
+        lessons: [
+            {
+                title: "Banding (Çizgili Baskı)",
+                subtitle: "Yatay çizgilerin nedenleri ve çözümleri",
+                content: `
+                    <div class="content-block danger">
+                        <div class="block-title">🚨 Banding Tipleri</div>
+                        <div class="block-content">
+                            <p><strong>Ink Starvation (Açlık):</strong> Mürekkep yetmezliği</p>
+                            <p style="margin-left:20px;">→ Çözüm: Damper kontrolü, mürekkep seviyesi</p>
+                            <br>
+                            <p><strong>Kafa Hizalama Kayması:</strong> Passlar arası uyumsuzluk</p>
+                            <p style="margin-left:20px;">→ Çözüm: Bidirectional calibration</p>
+                        </div>
+                    </div>
+                `
+            }
+        ],
+        quiz: {
+            question: "Düzenli aralıklarla tekrar eden hafif çizgilerin sebebi nedir?",
+            options: ["Nozzle tıkanıklığı", "Encoder strip kirlenmesi", "Yanlış ICC profili", "Düşük UV gücü"],
+            correct: 1,
+            explanation: "Encoder strip (şerit sensör) kirliyse kafa pozisyonunu yanlış okur ve düzenli aralıklarla hizalama hatası oluşur."
+        }
+    },
+    {
+        id: 6,
+        title: "İleri Teknikler",
+        desc: "Double pass, mirror print ve özel efektler",
+        duration: "30 dk",
+        xp: 130,
+        locked: true,
+        lessons: [
+            {
+                title: "Mirror Print (Ayna Baskı)",
+                subtitle: "Cam ve pleksi için ters baskı",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">🪞 Uygulama Alanları</div>
+                        <div class="block-content">
+                            <p>Cam üzerine baskıda görsel <strong>camın arkasından</strong> izlenir. Bu yüzden:</p>
+                            <ol>
+                                <li>Resmi yatay çevir (mirror/flip)</li>
+                                <li>Önce renkli katmanı bas (normalde altta kalır)</li>
+                                <li>Üzerine beyaz bas (normalde üstte kalır)</li>
+                                <li>Sonuç: Camın önü pürüzsüz, arka taraf baskılı</li>
+                            </ol>
+                        </div>
+                    </div>
+                `
+            }
+        ],
+        quiz: {
+            question: "Mirror print'te katman sırası nasıldır?",
+            options: ["Beyaz altta, renk üstte", "Renk altta, beyaz üstte", "Sadece beyaz", "Sadece renk"],
+            correct: 1,
+            explanation: "Mirror print'te camın arkasına bakılır. Önce renk (ters çevrilmiş), üzerine beyaz basılır. Böylece camdan bakınca renk önde görünür."
+        }
+    },
+    {
+        id: 7,
+        title: "Maliyet Optimizasyonu",
+        desc: "Mürekkep hesabı, fire oranı ve fiyatlandırma",
+        duration: "25 dk",
+        xp: 100,
+        locked: true,
+        lessons: [
+            {
+                title: "Mürekkep Maliyeti Hesaplama",
+                subtitle: "Gerçek maliyeti öğrenmek",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">💰 Formül</div>
+                        <div class="block-content">
+                            <div class="code-block">
+Maliyet = (Kaplama Alanı m²) × (Pass Sayısı) × (ml/m²/pass) × (Fiyat/ml)
+                            </div>
+                            <br>
+                            <p><strong>Örnek Değerler:</strong></p>
+                            <ul>
+                                <li>CMYK: ~12ml/m² (1 pass)</li>
+                                <li>White: ~15ml/m² (daha yoğun)</li>
+                                <li>Varnish: ~18ml/m²</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            }
+        ],
+        quiz: {
+            question: "10m² alana 3 pass white + 1 pass CMYK basarsanız toplam kaç ml white gider?",
+            options: ["150ml", "300ml", "450ml", "600ml"],
+            correct: 2,
+            explanation: "10m² × 3 pass × 15ml/m² = 450ml. White mürekkebi daha yoğundur (15ml/m²)."
+        }
+    },
+    {
+        id: 8,
+        title: "Sertifika Sınavı",
+        desc: "Tüm modüllerin final değerlendirmesi",
+        duration: "20 dk",
+        xp: 500,
+        locked: true,
+        isFinal: true,
+        lessons: [],
+        finalQuiz: [
+            {
+                question: "UV baskının en büyük avantajı nedir?",
+                options: ["Ucuz maliyet", "Anında kuruma", "Sadece kağıda basılması", "Solvent kokusu"],
+                correct: 1
+            },
+            {
+                question: "PP malzemeye baskı için ne şarttır?",
+                options: ["Yüksek ısı", "Primer/Corona", "Sadece su bazlı boya", "Hiçbir şey"],
+                correct: 1
+            },
+            {
+                question: "Beyaz mürekkep neden çalkalanır?",
+                options: ["Hava için", "Pigment çökelmesi", "Rengi açmak", "Karıncalanmayı önlemek"],
+                correct: 1
+            }
+        ]
+    }
+];
+
+// ==========================================
+// UYGULAMA MANTIĞI
+// ==========================================
+
+let currentModule = 0;
+let currentLesson = 0;
+let userProgress = JSON.parse(localStorage.getItem('uv_progress')) || {
+    completedModules: [],
+    currentModule: 1,
+    totalXP: 0
+};
+
+let priceSettings = JSON.parse(localStorage.getItem('mf_price_settings')) || {
+    trans: 450,
+    color: 600,
+    fixed: 50
+};
+
+let workoutHistory = JSON.parse(localStorage.getItem('mf_workout_history')) || [];
+let todayExercises = JSON.parse(localStorage.getItem('mf_today_exercises')) || {
+    date: new Date().toLocaleDateString('tr-TR'),
+    completed: [false, false, false, false]
+};
+
+function initUVAcademy() {
+    renderModules();
+    updateProgress();
+}
+
+function renderModules() {
+    const container = document.getElementById('modulesList');
+    container.innerHTML = uvCurriculum.map((mod, idx) => {
+        const isCompleted = userProgress.completedModules.includes(mod.id);
+        const isLocked = mod.id > userProgress.currentModule;
+        const isCurrent = mod.id === userProgress.currentModule;
+        
+        return `
+            <div class="module-card ${isCompleted ? 'completed' : ''} ${isLocked ? 'locked' : ''}" 
+                 onclick="${isLocked ? '' : `openModule(${mod.id})`}">
+                <div class="module-number">MODÜL ${mod.id}</div>
+                <div class="module-title">${mod.title}</div>
+                <div class="module-desc">${mod.desc}</div>
+                <div class="module-meta">
+                    <span>⏱️ ${mod.duration}</span>
+                    <span>🎯 ${mod.xp} XP</span>
+                    ${isCompleted ? '<span style="color:var(--success)">✓ Tamamlandı</span>' : ''}
+                    ${isLocked ? '<span>🔒 Kilitli</span>' : ''}
+                    ${isCurrent ? '<span style="color:var(--uv)">▶ Devam Et</span>' : ''}
                 </div>
-                
-                <!-- Spaced Repetition Info -->
-                <div style="margin-top:20px; padding:16px; background:rgba(168,85,247,0.08); border-radius:var(--radius-lg); border:1px solid rgba(168,85,247,0.2);">
-                    <div style="font-size:13px; color:var(--purple); font-weight:600; margin-bottom:8px;">🧠 Tekrar Zamanlaması</div>
-                    <div style="font-size:12px; color:var(--text-muted); line-height:1.6;">
-                        Öğrenilen kelimeler 1, 3, 7 ve 21 gün sonra tekrar gösterilecek.
+            </div>
+        `;
+    }).join('');
+}
+
+function updateProgress() {
+    const total = uvCurriculum.length;
+    const completed = userProgress.completedModules.length;
+    const percent = Math.round((completed / total) * 100);
+    
+    document.getElementById('totalProgress').textContent = percent + '%';
+    document.getElementById('totalProgressBar').style.width = percent + '%';
+    document.getElementById('completedModules').textContent = `${completed}/${total} Modül`;
+    document.getElementById('totalPoints').textContent = `${userProgress.totalXP} XP Kazanıldı`;
+    
+    const hasNew = uvCurriculum.some(m => m.id === userProgress.currentModule && !userProgress.completedModules.includes(m.id));
+    document.getElementById('navBadge').style.display = hasNew ? 'block' : 'none';
+}
+
+function openModule(moduleId) {
+    currentModule = uvCurriculum.findIndex(m => m.id === moduleId);
+    const mod = uvCurriculum[currentModule];
+    
+    if (mod.isFinal) {
+        startFinalQuiz();
+        return;
+    }
+    
+    currentLesson = 0;
+    showLesson();
+    showScreen('moduleDetail');
+}
+
+function showLesson() {
+    const mod = uvCurriculum[currentModule];
+    const lesson = mod.lessons[currentLesson];
+    
+    document.getElementById('lessonContent').innerHTML = `
+        <div class="lesson-header">
+            <span class="lesson-badge">MODÜL ${mod.id} • DERS ${currentLesson + 1}/${mod.lessons.length}</span>
+            <h2 class="lesson-title">${lesson.title}</h2>
+            <div class="lesson-subtitle">${lesson.subtitle}</div>
+        </div>
+        ${lesson.content}
+    `;
+    
+    const prevBtn = document.querySelector('#lessonNav .btn-secondary');
+    const nextBtn = document.getElementById('nextBtn');
+    
+    prevBtn.style.visibility = currentLesson === 0 ? 'hidden' : 'visible';
+    prevBtn.onclick = prevLesson;
+    
+    if (currentLesson === mod.lessons.length - 1) {
+        nextBtn.textContent = 'Quize Geç →';
+        nextBtn.onclick = () => startQuiz();
+    } else {
+        nextBtn.textContent = 'Sonraki →';
+        nextBtn.onclick = nextLesson;
+    }
+}
+
+function nextLesson() {
+    currentLesson++;
+    showLesson();
+}
+
+function prevLesson() {
+    currentLesson--;
+    showLesson();
+}
+
+function startQuiz() {
+    const mod = uvCurriculum[currentModule];
+    const quiz = mod.quiz;
+    
+    document.getElementById('quizTitle').textContent = `${mod.title} - Bilgi Kontrolü`;
+    
+    document.getElementById('quizContent').innerHTML = `
+        <div class="quiz-container">
+            <div class="quiz-question">${quiz.question}</div>
+            <div class="quiz-options" id="quizOptions">
+                ${quiz.options.map((opt, idx) => `
+                    <div class="quiz-option" onclick="selectAnswer(${idx}, ${quiz.correct}, '${quiz.explanation}')">
+                        ${String.fromCharCode(65 + idx)}) ${opt}
                     </div>
-                    <div class="sr-indicator" id="srIndicator" style="margin-top:12px;">
-                        <div class="sr-dot"></div>
-                        <div class="sr-dot"></div>
-                        <div class="sr-dot"></div>
-                        <div class="sr-dot"></div>
-                    </div>
-                </div>
+                `).join('')}
+            </div>
+            <div id="quizFeedback" style="margin-top:20px; display:none;"></div>
+        </div>
+    `;
+    
+    showScreen('quizScreen');
+}
+
+function selectAnswer(selected, correct, explanation) {
+    const options = document.querySelectorAll('.quiz-option');
+    const feedback = document.getElementById('quizFeedback');
+    
+    options.forEach((opt, idx) => {
+        opt.classList.add('disabled');
+        if (idx === correct) opt.classList.add('correct');
+        else if (idx === selected && idx !== correct) opt.classList.add('wrong');
+    });
+    
+    const isCorrect = selected === correct;
+    feedback.style.display = 'block';
+    feedback.innerHTML = `
+        <div class="content-block ${isCorrect ? '' : 'warning'}" style="margin-top:20px;">
+            <div class="block-title">${isCorrect ? '✅ Doğru!' : '❌ Yanlış'}</div>
+            <div class="block-content">
+                <p>${explanation}</p>
+                ${isCorrect ? `<button class="btn btn-success" onclick="completeModule()" style="margin-top:15px;">Modülü Tamamla (+${uvCurriculum[currentModule].xp} XP)</button>` : 
+                `<button class="btn" onclick="startQuiz()" style="margin-top:15px;">Tekrar Dene</button>`}
             </div>
         </div>
+    `;
+}
 
-        <!-- MALİYET HESAPLAMA EKRANI -->
-        <div class="screen" id="businessScreen">
-            <div class="page-header">
-                <button class="back-btn" onclick="showScreen('homeScreen')">←</button>
-                <h2 style="margin:0;">📊 Maliyet Hesaplama</h2>
-            </div>
-            
-            <div class="card">
-                <h3 style="margin:0 0 20px 0; color:var(--accent); font-size:16px;">Ölçüler</h3>
-                <div class="grid-2">
-                    <div class="form-group" style="margin:0;">
-                        <label class="form-label">En (cm)</label>
-                        <input type="number" id="w" placeholder="Örn: 50" oninput="calculate()" step="0.1">
-                    </div>
-                    <div class="form-group" style="margin:0;">
-                        <label class="form-label">Boy (cm)</label>
-                        <input type="number" id="h" placeholder="Örn: 70" oninput="calculate()" step="0.1">
-                    </div>
-                </div>
-                
-                <h3 style="color:var(--accent); margin:24px 0 16px 0; font-size:16px;">Malzeme ve Fiyat</h3>
-                
-                <div class="form-group">
-                    <label class="form-label">Malzeme Tipi</label>
-                    <select id="mType" onchange="updatePriceFromSelection()">
-                        <option value="">Malzeme Seçin...</option>
-                        <option value="trans">Şeffaf Pleksi</option>
-                        <option value="color">Opak/Renkli Malzeme</option>
-                        <option value="custom">Özel Fiyat</option>
-                    </select>
-                </div>
-                
-                <div id="customPriceArea" style="display:none;" class="form-group">
-                    <label class="form-label">Özel Fiyat (₺/m²)</label>
-                    <input type="number" id="customPrice" placeholder="Örn: 750" oninput="calculate()">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Birim Fiyat (₺/m²)</label>
-                    <input type="number" id="uPrice" placeholder="Fiyat seçin veya girin" oninput="calculate()">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Sabit Maliyet (₺)</label>
-                    <input type="number" id="fixedCost" value="50" oninput="calculate()">
-                </div>
-                
-                <div class="price-display">
-                    <div class="price-amount" id="finalRes">0₺</div>
-                    <div class="price-detail" id="calcDetail">0 m² × 0₺ + 50₺ sabit</div>
-                </div>
-                
-                <div class="data
-                <div class="data-actions" style="margin-top:20px;">
-                    <button class="btn" onclick="saveCalculation()" style="flex:1;">
-                        💾 Kaydet
-                    </button>
-                    <button class="btn btn-secondary" onclick="shareCalculation()" style="flex:1;">
-                        📤 Paylaş
-                    </button>
+function completeModule() {
+    const mod = uvCurriculum[currentModule];
+    
+    if (!userProgress.completedModules.includes(mod.id)) {
+        userProgress.completedModules.push(mod.id);
+        userProgress.totalXP += mod.xp;
+        
+        if (mod.id < uvCurriculum.length) {
+            userProgress.currentModule = mod.id + 1;
+        }
+        
+        localStorage.setItem('uv_progress', JSON.stringify(userProgress));
+        addExp(mod.xp);
+        showAchievement(`${mod.title} Tamamlandı! +${mod.xp} XP`);
+    }
+    
+    showScreen('uvAcademyMain');
+    initUVAcademy();
+}
+
+function startFinalQuiz() {
+    const mod = uvCurriculum[currentModule];
+    let currentQ = 0;
+    let score = 0;
+    
+    function showQuestion() {
+        const q = mod.finalQuiz[currentQ];
+        document.getElementById('quizTitle').textContent = `🎓 FİNAL SINAVI (${currentQ + 1}/${mod.finalQuiz.length})`;
+        
+        document.getElementById('quizContent').innerHTML = `
+            <div class="quiz-container">
+                <div class="quiz-question">${q.question}</div>
+                <div class="quiz-options">
+                    ${q.options.map((opt, idx) => `
+                        <div class="quiz-option" onclick="window.finalSelect(${idx}, ${q.correct})">
+                            ${String.fromCharCode(65 + idx)}) ${opt}
+                        </div>
+                    `).join('')}
                 </div>
             </div>
-            
-            <!-- Calculation History -->
-            <div class="card" style="margin-top:16px;">
-                <h3 style="margin:0 0 16px 0; color:var(--gold); font-size:16px;">📜 Hesaplama Geçmişi</h3>
-                <div id="calcHistory" style="max-height:300px; overflow-y:auto;">
-                    <p style="color:var(--text-muted); text-align:center; padding:20px;">Henüz kayıt yok</p>
-                </div>
+        `;
+    }
+    
+    window.finalSelect = (selected, correct) => {
+        const options = document.querySelectorAll('.quiz-option');
+        options.forEach((opt, idx) => {
+            opt.classList.add('disabled');
+            if (idx === correct) opt.classList.add('correct');
+            else if (idx === selected && idx !== correct) opt.classList.add('wrong');
+        });
+        
+        if (selected === correct) score++;
+        
+        setTimeout(() => {
+            currentQ++;
+            if (currentQ < mod.finalQuiz.length) {
+                showQuestion();
+            } else {
+                showFinalResult();
+            }
+        }, 1500);
+    };
+    
+    function showFinalResult() {
+        const passed = score >= 2;
+        const percent = Math.round((score / mod.finalQuiz.length) * 100);
+        
+        document.getElementById('quizContent').innerHTML = `
+            <div style="text-align:center; padding:40px 20px;">
+                <div style="font-size:64px; margin-bottom:20px;">${passed ? '🏆' : '📚'}</div>
+                <h2 style="color:${passed ? 'var(--success)' : 'var(--warning)'}">
+                    ${passed ? 'SERTİFİKA KAZANDINIZ!' : 'Tekrar Deneyin'}
+                </h2>
+                <p style="font-size:18px; margin:20px 0;">Skor: ${score}/${mod.finalQuiz.length} (${percent}%)</p>
+                ${passed ? `
+                    <p style="color:var(--text-muted); margin-bottom:30px;">UV Baskı Uzmanı sertifikası kazandınız!</p>
+                    <button class="btn btn-success" onclick="completeModule()">Sertifikayı Al (+${mod.xp} XP)</button>
+                ` : `
+                    <p style="color:var(--text-muted); margin-bottom:30px;">Tüm modülleri gözden geçirin.</p>
+                    <button class="btn" onclick="showScreen('uvAcademyMain')">Akademiye Dön</button>
+                `}
             </div>
-            
-            <div class="card" style="margin-top:16px;">
-                <h3 style="margin:0 0 20px 0; color:var(--gold); font-size:16px;">⚙️ Fiyat Ayarları</h3>
-                
-                <div class="settings-row">
-                    <span class="settings-label">Şeffaf m² Fiyatı</span>
-                    <input type="number" id="set_trans" value="450" style="width:120px; text-align:right;" onchange="savePriceSettings()">
-                </div>
-                <div class="settings-row">
-                    <span class="settings-label">Renkli m² Fiyatı</span>
-                    <input type="numb
+        `;
+    }
+    
+    showScreen('quizScreen');
+    showQuestion();
+}
+
+function showAchievement(text) {
+    const popup = document.getElementById('achievementPopup');
+    document.getElementById('achievementText').textContent = text;
+    popup.classList.add('show');
+    setTimeout(() => popup.classList.remove('show'), 3000);
+}
+
+// ==========================================
+// MALİYET HESAPLAMA MODÜLÜ
+// ==========================================
+
+function loadPriceSettings() {
+    document.getElementById('set_trans').value = priceSettings.trans;
+    document.getElementById('set_color').value = priceSettings.color;
+    document.getElementById('set_fixed').value = priceSettings.fixed;
+    document.getElementById('fixedCost').value = priceSettings.fixed;
+}
+
+function savePriceSettings() {
+    priceSettings = {
+        trans: parseFloat(document.getElementById('set_trans').value) || 450,
+        color: parseFloat(document.getElementById('set_color').value) || 600,
+        fixed: parseFloat(document.getElementById('set_fixed').value) || 50
+    };
+    localStorage.setItem('mf_price_settings', JSON.stringify(priceSettings));
+    
+    // Anlık hesaplamayı güncelle
+    document.getElementById('fixedCost').value = priceSettings.fixed;
+    calculate();
+    showAchievement('Fiyat ayarları kaydedildi!');
+}
+
+function updatePriceFromSelection() {
+    const type = document.getElementById('mType').value;
+    const customArea = document.getElementById('customPriceArea');
+    const priceInput = document.getElementById('uPrice');
+    
+    if (type === 'trans') {
+        priceInput.value = priceSettings.trans;
+        customArea.style.display = 'none';
+    } else if (type === 'color') {
+        priceInput.value = priceSettings.color;
+        customArea.style.display = 'none';
+    } else if (type === 'custom') {
+        customArea.style.display = 'block';
+        priceInput.value = '';
+        document.getElementById('customPrice').focus();
+    } else {
+        priceInput.value = '';
+        customArea.style.display = 'none';
+    }
+    calculate();
+}
+
+function calculate() {
+    const w = parseFloat(document.getElementById('w').value) || 0;
+    const h = parseFloat(document.getElementById('h').value) || 0;
+    const unitPrice = parseFloat(document.getElementById('uPrice').value) || 0;
+    const fixed = parseFloat(document.getElementById('fixedCost').value) || 0;
+    
+    const area = (w * h) / 10000; // cm²'den m²'ye
+    const materialCost = area * unitPrice;
+    const total = materialCost + fixed;
+    
+    document.getElementById('finalRes').innerText = Math.round(total) + "₺";
+    document.getElementById('calcDetail').innerText = 
+        `${area.toFixed(3)} m² × ${unitPrice}₺ + ${fixed}₺ sabit = ${Math.round(materialCost)}₺ + ${fixed}₺`;
+    
+    // Otomatik XP ekleme (ilk hesaplama için)
+    if (w > 0 && h > 0 && unitPrice > 0 && !window.calcXPAdded) {
+        addExp(5);
+        window.calcXPAdded = true;
+        setTimeout(() => { window.calcXPAdded = false; }, 5000); // 5 saniye sonra reset
+    }
+}
+
+function saveCalculation() {
+    const calc = {
+        date: new Date().toLocaleString('tr-TR'),
+        dimensions: `${document.getElementById('w').value}x${document.getElementById('h').value} cm`,
+        price: document.getElementById('finalRes').innerText,
+        type: document.getElementById('mType').options[document.getElementById('mType').selectedIndex].text
+    };
+    
+    let history = JSON.parse(localStorage.getItem('mf_calc_history')) || [];
+    history.unshift(calc);
+    if (history.length > 10) history = history.slice(0, 10); // Son 10 kayıt
+    localStorage.setItem('mf_calc_history', JSON.stringify(history));
+    
+    showAchievement('Hesaplama kaydedildi!');
+    addExp(10);
+}
+
+// ==========================================
+// EGZERSİZ MODÜLÜ
+// ==========================================
+
+function initExercise() {
+    // Gün kontrolü - yeni günse sıfırla
+    const today = new Date().toLocaleDateString('tr-TR');
+    if (todayExercises.date !== today) {
+        todayExercises = {
+            date: today,
+            completed: [false, false, false, false]
+        };
+        localStorage.setItem('mf_today_exercises', JSON.stringify(todayExercises));
+    }
+    
+    // Checkbox'ları güncelle
+    const checks = document.querySelectorAll('.exercise-check');
+    checks.forEach((check, idx) => {
+        if (todayExercises.completed[idx]) {
+            check.classList.add('completed');
+            check.innerHTML = '✓';
+        } else {
+            check.classList.remove('completed');
+            check.innerHTML = '';
+        }
+    });
+    
+    updateExerciseProgress();
+    renderCalendar();
+}
+
+function toggleExercise(element) {
+    const index = Array.from(document.querySelectorAll('.exercise-check')).indexOf(element);
+    const isCompleted = element.classList.contains('completed');
+    
+    if (isCompleted) {
+        element.classList.remove('completed');
+        element.innerHTML = '';
+        todayExercises.completed[index] = false;
+    } else {
+        element.classList.add('completed');
+        element.innerHTML = '✓';
+        todayExercises.completed[index] = true;
+        addExp(5); // Her egzersiz için 5 XP
+    }
+    
+    localStorage.setItem('mf_today_exercises', JSON.stringify(todayExercises));
+    updateExerciseProgress();
+}
+
+function updateExerciseProgress() {
+    const completed = todayExercises.completed.filter(x => x).length;
+    const total = todayExercises.completed.length;
+    
+    document.getElementById('completedCount').innerText = completed;
+    
+    const btn = document.getElementById('completeWorkoutBtn');
+    if (completed === total) {
+        btn.disabled = false;
+        btn.style.opacity = '1';
+    } else {
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+    }
+}
+
+function logWorkout() {
+    const today = new Date().toLocaleDateString('tr-TR');
+    
+    if (!workoutHistory.includes(today)) {
+        workoutHistory.push(today);
+        localStorage.setItem('mf_workout_history', JSON.stringify(workoutHistory));
+        addExp(50); // Tamamlama bonusu
+        showAchievement('Antrenman Tamamlandı! +50 XP');
+    } else {
+        showAchievement('Bugünkü antrenman zaten kaydedilmiş!');
+    }
+    
+    renderCalendar();
+}
+
+function resetExercises() {
+    todayExercises.completed = [false, false, false, false];
+    localStorage.setItem('mf_today_exercises', JSON.stringify(todayExercises));
+    initExercise();
+}
+
+function renderCalendar() {
+    const cal = document.getElementById('mainCalendar');
+    if (!cal) return;
+    
+    cal.innerHTML = '';
+    const now = new Date();
+    const days = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    
+    for (let i = 1; i <= days; i++) {
+        const dateStr = new Date(now.getFullYear(), now.getMonth(), i).toLocaleDateString('tr-TR');
+        const isDone = workoutHistory.includes(dateStr);
+        const isToday = i === now.getDate();
+        
+        const d = document.createElement('div');
+        d.className = `cal-day ${isDone ? 'done' : ''}`;
+        d.innerText = i;
+        
+        if (isToday) {
+            d.style.border = '2px solid var(--accent)';
+            d.style.fontWeight = 'bold';
+        }
+        
+        cal.appendChild(d);
+    }
+}
+
+// ==========================================
+// GENEL UYGULAMA FONKSİYONLARI
+// ==========================================
+
+function showScreen(id, el) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    
+    if (el && el.classList.contains('nav-item')) {
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+    }
+    
+    // Ekran spesifik init
+    if (id === 'uvAcademyMain') initUVAcademy();
+    if (id === 'businessScreen') loadPriceSettings();
+    if (id === 'exerciseScreen') initExercise();
+}
+
+// Gamification
+let stats = JSON.parse(localStorage.getItem('mf_stats')) || { exp: 0, lvl: 1 };
+
+function addExp(amount) {
+    stats.exp += amount;
+    if (stats.exp >= stats.lvl * 100) {
+        stats.exp -= stats.lvl * 100;
+        stats.lvl++;
+        showAchievement(`Seviye Atladın! Level ${stats.lvl} 🔥`);
+    }
+    updateMasteryUI();
+    localStorage.setItem('mf_stats', JSON.stringify(stats));
+}
+
+function updateMasteryUI() {
+    document.getElementById('lvlLabel').innerText = stats.lvl;
+    document.getElementById('expLabel').innerText = stats.exp;
+    document.getElementById('lvlFill').style.width = (stats.exp / (stats.lvl * 100)) * 100 + "%";
+}
+
+// Init
+window.onload = () => {
+    updateMasteryUI();
+    loadPriceSettings();
+    
+    // Varsayılan ekran
+    if (document.querySelector('.screen.active') === null) {
+        showScreen('homeScreen');
+    }
+};
+</script>
+
+</body>
+</html>
