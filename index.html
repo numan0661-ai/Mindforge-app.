@@ -1663,65 +1663,6 @@
                 padding: 20px;
             }
         }
-
-        /* Lesson Header */
-        .lesson-header {
-            margin-bottom: 24px;
-        }
-
-        .lesson-badge {
-            display: inline-block;
-            background: rgba(191, 0, 255, 0.15);
-            color: var(--uv);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 12px;
-        }
-
-        .lesson-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin: 0;
-            line-height: 1.3;
-        }
-
-        /* History Item */
-        .history-item {
-            background: rgba(255,255,255,0.03);
-            border-radius: var(--radius-lg);
-            padding: 16px;
-            margin-bottom: 12px;
-            border: 1px solid rgba(255,255,255,0.06);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .history-info {
-            flex: 1;
-        }
-
-        .history-date {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 4px;
-        }
-
-        .history-detail {
-            font-size: 14px;
-            color: var(--text);
-            font-weight: 500;
-        }
-
-        .history-price {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--success);
-        }
     </style>
 </head>
 <body>
@@ -1739,12 +1680,6 @@
 
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
-
-    <!-- Achievement Popup -->
-    <div class="achievement-popup" id="achievementPopup">
-        <span style="font-size: 24px;">🏆</span>
-        <span id="achievementText">Başarım Kazanıldı!</span>
-    </div>
 
     <div class="app-container">
         
@@ -1791,10 +1726,6 @@
 
         <!-- MODÜL DETAY EKRANI -->
         <div class="screen" id="moduleDetail">
-            <div class="page-header">
-                <button class="back-btn" onclick="showScreen('uvAcademyMain')">←</button>
-                <h2 id="moduleDetailTitle">Modül</h2>
-            </div>
             <div class="card" id="lessonContent"></div>
             <div class="nav-buttons" id="lessonNav">
                 <button class="btn btn-secondary" onclick="prevLesson()">← Önceki</button>
@@ -1804,10 +1735,6 @@
 
         <!-- QUIZ EKRANI -->
         <div class="screen" id="quizScreen">
-            <div class="page-header">
-                <button class="back-btn" onclick="showScreen('uvAcademyMain')">←</button>
-                <h2>Sınav</h2>
-            </div>
             <div class="card">
                 <div class="lesson-header" style="margin-bottom:24px;">
                     <span class="lesson-badge">MODÜL SONU SINAVI</span>
@@ -2017,195 +1944,85 @@
             </div>
         </div>
 
-                // ==================== OFFLINE VERİ YÖNETİMİ ====================
-        
-        // IndexedDB için
-        const DB_NAME = 'UVMasterDB';
-        const DB_VERSION = 1;
-        let db = null;
-
-        function initIndexedDB() {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open(DB_NAME, DB_VERSION);
+        <!-- MALİYET HESAPLAMA EKRANI -->
+        <div class="screen" id="businessScreen">
+            <div class="page-header">
+                <button class="back-btn" onclick="showScreen('homeScreen')">←</button>
+                <h2 style="margin:0;">📊 Maliyet Hesaplama</h2>
+            </div>
+            
+            <div class="card">
+                <h3 style="margin:0 0 20px 0; color:var(--accent); font-size:16px;">Ölçüler</h3>
+                <div class="grid-2">
+                    <div class="form-group" style="margin:0;">
+                        <label class="form-label">En (cm)</label>
+                        <input type="number" id="w" placeholder="Örn: 50" oninput="calculate()" step="0.1">
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                        <label class="form-label">Boy (cm)</label>
+                        <input type="number" id="h" placeholder="Örn: 70" oninput="calculate()" step="0.1">
+                    </div>
+                </div>
                 
-                request.onerror = () => reject(request.error);
-                request.onsuccess = () => {
-                    db = request.result;
-                    resolve(db);
-                };
+                <h3 style="color:var(--accent); margin:24px 0 16px 0; font-size:16px;">Malzeme ve Fiyat</h3>
                 
-                request.onupgradeneeded = (event) => {
-                    const database = event.target.result;
+                <div class="form-group">
+                    <label class="form-label">Malzeme Tipi</label>
+                    <select id="mType" onchange="updatePriceFromSelection()">
+                        <option value="">Malzeme Seçin...</option>
+                        <option value="trans">Şeffaf Pleksi</option>
+                        <option value="color">Opak/Renkli Malzeme</option>
+                        <option value="custom">Özel Fiyat</option>
+                    </select>
+                </div>
+                
+                <div id="customPriceArea" style="display:none;" class="form-group">
+                    <label class="form-label">Özel Fiyat (₺/m²)</label>
+                    <input type="number" id="customPrice" placeholder="Örn: 750" oninput="calculate()">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Birim Fiyat (₺/m²)</label>
+                    <input type="number" id="uPrice" placeholder="Fiyat seçin veya girin" oninput="calculate()">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Sabit Maliyet (₺)</label>
+                    <input type="number" id="fixedCost" value="50" oninput="calculate()">
+                </div>
+                
+                <div class="price-display">
+                    <div class="price-amount" id="finalRes">0₺</div>
+                    <div class="price-detail" id="calcDetail">0 m² × 0₺ + 50₺ sabit</div>
+                </div>
+                
+                <div class="data
+                <div class="data-actions" style="margin-top:20px;">
+                    <button class="btn" onclick="saveCalculation()" style="flex:1;">
+                        💾 Kaydet
+                    </button>
+                    <button class="btn btn-secondary" onclick="shareCalculation()" style="flex:1;">
+                        📤 Paylaş
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Calculation History -->
+            <div class="card" style="margin-top:16px;">
+                <h3 style="margin:0 0 16px 0; color:var(--gold); font-size:16px;">📜 Hesaplama Geçmişi</h3>
+                <div id="calcHistory" style="max-height:300px; overflow-y:auto;">
+                    <p style="color:var(--text-muted); text-align:center; padding:20px;">Henüz kayıt yok</p>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-top:16px;">
+                <h3 style="margin:0 0 20px 0; color:var(--gold); font-size:16px;">⚙️ Fiyat Ayarları</h3>
+                
+                <div class="settings-row">
+                    <span class="settings-label">Şeffaf m² Fiyatı</span>
+                    <input type="number" id="set_trans" value="450" style="width:120px; text-align:right;" onchange="savePriceSettings()">
+                </div>
+                <div class="settings-row">
+                    <span class="settings-label">Renkli m² Fiyatı</span>
+                    <input type="numb
                     
-                    // Store'lar
-                    if (!database.objectStoreNames.contains('modules')) {
-                        database.createObjectStore('modules', { keyPath: 'id' });
-                    }
-                    if (!database.objectStoreNames.contains('media')) {
-                        database.createObjectStore('media', { keyPath: 'id' });
-                    }
-                    if (!database.objectStoreNames.contains('syncQueue')) {
-                        database.createObjectStore('syncQueue', { keyPath: 'id', autoIncrement: true });
-                    }
-                };
-            });
-        }
-
-        // Medya cache'leme (görsel/video)
-        async function cacheMedia(url, id) {
-            try {
-                const response = await fetch(url);
-                const blob = await response.blob();
-                
-                const transaction = db.transaction(['media'], 'readwrite');
-                const store = transaction.objectStore('media');
-                await store.put({ id, blob, url, timestamp: Date.now() });
-                
-                return URL.createObjectURL(blob);
-            } catch (err) {
-                console.error('Medya cache hatası:', err);
-                return url;
-            }
-        }
-
-        // Cache'lenmiş medyayı al
-        async function getCachedMedia(id) {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction(['media'], 'readonly');
-                const store = transaction.objectStore('media');
-                const request = store.get(id);
-                
-                request.onsuccess = () => {
-                    if (request.result) {
-                        resolve(URL.createObjectURL(request.result.blob));
-                    } else {
-                        resolve(null);
-                    }
-                };
-                request.onerror = () => reject(request.error);
-            });
-        }
-
-        // Senkronizasyon kuyruğu
-        async function queueForSync(data) {
-            const transaction = db.transaction(['syncQueue'], 'readwrite');
-            const store = transaction.objectStore('syncQueue');
-            await store.add({
-                data,
-                timestamp: Date.now(),
-                attempts: 0
-            });
-            
-            // Background sync iste
-            if ('serviceWorker' in navigator) {
-                const registration = await navigator.serviceWorker.ready;
-                if ('sync' in registration) {
-                    await registration.sync.register('sync-data');
-                }
-            }
-        }
-
-        // ==================== GELİŞMİŞ OFFLINE KONTROLÜ ====================
-        
-        function updateOfflineStatus() {
-            const banner = document.getElementById('offlineBanner');
-            const isOnline = navigator.onLine;
-            
-            if (!isOnline) {
-                banner.classList.add('show');
-                showToast('Çevrimdışı moduna geçildi. Veriler yerel olarak kaydediliyor.', 'info');
-            } else {
-                banner.classList.remove('show');
-                // Senkronizasyon dene
-                syncOfflineData();
-            }
-        }
-
-        async function syncOfflineData() {
-            if (!db) return;
-            
-            const transaction = db.transaction(['syncQueue'], 'readonly');
-            const store = transaction.objectStore('syncQueue');
-            const request = store.getAll();
-            
-            request.onsuccess = async () => {
-                const items = request.result;
-                if (items.length === 0) return;
-                
-                showToast(`${items.length} veri senkronize ediliyor...`, 'info');
-                
-                for (const item of items) {
-                    try {
-                        // localStorage'a kaydet (senkronizasyon simülasyonu)
-                        const existing = JSON.parse(localStorage.getItem('mindforge_uv_data') || '{}');
-                        Object.assign(existing, item.data);
-                        localStorage.setItem('mindforge_uv_data', JSON.stringify(existing));
-                        
-                        // Kuyruktan sil
-                        const deleteTx = db.transaction(['syncQueue'], 'readwrite');
-                        const deleteStore = deleteTx.objectStore('syncQueue');
-                        await deleteStore.delete(item.id);
-                        
-                    } catch (err) {
-                        console.error('Senkronizasyon hatası:', err);
-                    }
-                }
-                
-                showToast('Tüm veriler senkronize edildi ✅', 'success');
-                loadData(); // Yeniden yükle
-            };
-        }
-
-        // Network durumunu izle
-        window.addEventListener('online', updateOfflineStatus);
-        window.addEventListener('offline', updateOfflineStatus);
-
-        // ==================== UYGULAMA KURULUMU ====================
-        
-        // Before install prompt (PWA kurulum)
-        let deferredPrompt = null;
-        
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            
-            // Kurulum butonu göster (opsiyonel)
-            setTimeout(() => {
-                showToast('📱 Ana ekrana eklemek için buraya tıklayın', 'info');
-            }, 5000);
-        });
-
-        async function installApp() {
-            if (!deferredPrompt) {
-                showToast('Kurulum desteklenmiyor veya zaten kurulu', 'warning');
-                return;
-            }
-            
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            
-            if (outcome === 'accepted') {
-                showToast('Uygulama kuruldu! 🎉', 'success');
-            }
-            
-            deferredPrompt = null;
-        }
-
-        // Standalone mod kontrolü (PWA olarak mı açıldı?)
-        function isStandalone() {
-            return window.matchMedia('(display-mode: standalone)').matches || 
-                   window.navigator.standalone || 
-                   document.referrer.includes('android-app://');
-        }
-
-        // Başlangıçta kontrol et
-        document.addEventListener('DOMContentLoaded', () => {
-            if (isStandalone()) {
-                console.log('PWA modunda çalışıyor');
-            }
-            
-            // IndexedDB'i başlat
-            initIndexedDB().catch(err => {
-                console.log('IndexedDB hatası:', err);
-            });
-        });
