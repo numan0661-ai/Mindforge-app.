@@ -1,206 +1,241 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UV Master</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>MindForge UV Master</title>
+
+<meta name="theme-color" content="#0b0b1a">
+
 <style>
-:root{--p:#6366f1;--a:#06b6d4;--b:#0b0b1a;--s:#16162d;--t:#fff;--tm:#94a3b8;--ok:#10b981;--g:#f59e0b;--pr:#a855f7;--uv:#bf00ff;--er:#ef4444;--co:#ff6600;}
-*{box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--b);color:var(--t);margin:0;padding-bottom:80px}
-.app{max-width:430px;margin:0 auto;padding:15px}
-.screen{display:none}
-.screen.active{display:block;animation:f .4s}@keyframes f{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
-.vid-box{margin:15px 0;background:var(--s);border-radius:12px;padding:12px;border:2px solid var(--uv)}
-.vid-tit{color:var(--uv);font-weight:bold;margin-bottom:8px;font-size:13px}
-.vid-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;background:#000}
-.vid-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
-.hdr{background:var(--s);border-radius:16px;padding:20px;margin-bottom:15px}
-.bar{height:8px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden;margin-top:10px}
-.fill{height:100%;background:linear-gradient(90deg,var(--uv),var(--pr));transition:width .8s}
-.mod{background:var(--s);border-radius:16px;padding:18px;margin-bottom:12px;border:1px solid rgba(255,255,255,.05);cursor:pointer;transition:all .3s}
-.mod:hover{border-color:var(--uv);transform:translateY(-2px)}
-.mod.lock{opacity:.5;pointer-events:none;filter:grayscale(1)}
-.mod.ok{border-color:var(--ok)}
-.mod.ok::after{content:'✓';position:absolute;top:12px;right:12px;background:var(--ok);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold}
-.mod{position:relative}
-.vid-ind{background:rgba(255,0,0,.2);color:#ff4444;padding:3px 8px;border-radius:10px;font-size:10px;font-weight:bold;margin-left:10px}
-.lesson{background:var(--s);border-radius:16px;padding:20px;margin-bottom:15px}
-.l-hdr{border-bottom:2px solid rgba(191,0,255,.3);padding-bottom:12px;margin-bottom:15px}
-.badge{background:rgba(191,0,255,.2);color:var(--uv);padding:4px 10px;border-radius:10px;font-size:11px;font-weight:bold}
-.tit{font-size:20px;margin:8px 0}
-.sub{color:var(--tm);font-size:13px}
-.block{background:rgba(255,255,255,.03);border-radius:10px;padding:15px;margin-bottom:12px;border-left:3px solid var(--uv)}
-.b-tit{color:var(--g);font-size:13px;font-weight:bold;margin-bottom:8px}
-.b-c{font-size:13px;color:var(--tm);line-height:1.6}
-.quiz{margin-top:20px}
-.q{background:var(--s);padding:15px;border-radius:10px;font-weight:bold;margin-bottom:12px;font-size:14px}
-.opts{display:flex;flex-direction:column;gap:8px}
-.opt{background:rgba(255,255,255,.05);border:2px solid transparent;padding:12px;border-radius:10px;cursor:pointer;font-size:13px;transition:all .2s}
-.opt:hover{border-color:var(--uv)}
-.opt.ok{border-color:var(--ok);background:rgba(16,185,129,.2)}
-.opt.no{border-color:var(--er);background:rgba(239,68,68,.2)}
-.opt.dis{pointer-events:none;opacity:.5}
-.nav-btn{display:flex;gap:10px;margin-top:20px}
-.btn{flex:1;background:linear-gradient(135deg,var(--p),var(--a));color:white;border:none;padding:14px;border-radius:12px;font-weight:bold;cursor:pointer;font-size:13px}
-.btn-sec{background:var(--s);border:1px solid rgba(255,255,255,.1)}
-.btn-ok{background:var(--ok)}
-.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(22,22,45,.98);display:flex;justify-content:space-around;padding:12px 0 20px;border-top:1px solid #2d2d44}
-.nav-it{font-size:22px;cursor:pointer;opacity:.4;transition:.3s}
-.nav-it.active{opacity:1;color:var(--a)}
-.pop{position:fixed;top:15px;left:50%;transform:translateX(-50%) translateY(-100px);background:var(--g);color:white;padding:12px 20px;border-radius:10px;transition:transform .5s;z-index:2000;font-weight:bold}
-.pop.show{transform:translateX(-50%) translateY(0)}
-.g2{display:grid;grid-template:1fr 1fr/1fr 1fr;gap:10px}
-input,select{width:100%;padding:12px;margin:6px 0;border-radius:10px;border:1px solid #2d2d44;background:var(--b);color:white;font-size:14px}
+
+body{
+font-family:system-ui;
+background:#0b0b1a;
+color:white;
+margin:0;
+padding:20px;
+}
+
+.screen{
+display:none;
+}
+
+.screen.active{
+display:block;
+}
+
+.card{
+background:#16162d;
+padding:20px;
+border-radius:12px;
+margin-bottom:16px;
+}
+
+button{
+padding:12px 18px;
+border:none;
+border-radius:10px;
+background:#6366f1;
+color:white;
+cursor:pointer;
+}
+
+input{
+padding:10px;
+border-radius:8px;
+border:none;
+width:100%;
+margin-top:8px;
+}
+
+.nav{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:#16162d;
+display:flex;
+justify-content:space-around;
+padding:12px;
+}
+
 </style>
+
 </head>
 <body>
-<div class="app">
 
-<div class="screen" id="uvM">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:15px">
-<button class="btn btn-sec" style="flex:0;padding:10px 14px" onclick="g('home')">←</button>
-<h2 style="margin:0;color:var(--uv)">🧪 UV Akademi</h2>
-</div>
-<div class="hdr">
-<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px">
-<span>Toplam İlerleme</span>
-<span style="color:var(--uv);font-weight:bold" id="tP">0%</span>
-</div>
-<div class="bar"><div class="fill" id="tB"></div></div>
-<div style="display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:var(--tm)}">
-<span id="mC">0/8 Modül</span>
-<span id="tX">0 XP</span>
-</div>
-</div>
-<div id="mL"></div>
+<div id="home" class="screen active">
+
+<h1>MindForge</h1>
+
+<div class="card">
+<h3>UV Akademi</h3>
+<button onclick="show('academy')">Aç</button>
 </div>
 
-<div class="screen" id="les">
-<div class="lesson" id="lC"></div>
-<div class="nav-btn">
-<button class="btn btn-sec" onclick="pr()">← Önceki</button>
-<button class="btn" id="nB" onclick="nx()">Sonraki →</button>
-</div>
+<div class="card">
+<h3>Maliyet Hesapla</h3>
+<button onclick="show('calc')">Hesapla</button>
 </div>
 
-<div class="screen" id="qz">
-<div class="lesson">
-<div class="l-hdr">
-<span class="badge">SINAV</span>
-<h2 class="tit" id="qT">Bilgi Kontrolü</h2>
-</div>
-<div id="qC"></div>
-</div>
 </div>
 
-<div class="screen active" id="home">
-<h2 style="color:var(--a)">MindForge Master</h2>
-<div class="hdr" style="border:1px solid var(--g)">
-<div style="font-size:11px;color:var(--g);margin-bottom:3px">USTA YOLU</div>
-<div style="display:flex;justify-content:space-between;align-items:center">
-<div>
-<div style="font-size:22px;font-weight:bold">Seviye <span id="lv">1</span></div>
-<div style="font-size:11px;color:var(--tm)}"><span id="xp">0</span>/100 XP</div>
-</div>
-<div style="font-size:36px">🏆</div>
-</div>
-<div class="bar" style="margin-top:12px"><div class="fill" id="lB" style="background:linear-gradient(90deg,var(--g),#fbbf24)"></div></div>
+<div id="academy" class="screen">
+
+<h2>UV Akademi</h2>
+
+<div class="card">
+<p>UV baskı teknolojisi LED ışık ile anında kuruyan mürekkep kullanır.</p>
 </div>
 
-<div class="mod" onclick="g('uvM')" style="background:linear-gradient(135deg,#16162d,#3b0066);border:2px solid var(--uv)">
-<span style="font-size:36px">🧪</span>
-<div style="font-size:18px;font-weight:bold;color:white;margin-top:8px">UV AKADEMİ</div>
-<div style="font-size:12px;color:var(--tm)}">Sıfırdan uzmanlığa UV baskı teknolojisi</div>
-<div style="display:flex;gap:12px;margin-top:10px;font-size:11px;color:var(--tm)}">
-<span>📚 8 Modül</span><span>⏱️ 4 Saat</span><span>🎯 Sertifika</span>
-</div>
+<button onclick="show('home')">Geri</button>
+
 </div>
 
-<div class="g2" style="margin-top:12px">
-<div class="mod" onclick="g('cor')" style="text-align:center;border:1px solid var(--co)">
-<div style="font-size:28px">🎨</div>
-<div style="font-size:14px;font-weight:bold;margin-top:5px">CorelMaster</div>
-</div>
-<div class="mod" onclick="g('biz')" style="text-align:center">
-<div style="font-size:28px">📊</div>
-<div style="font-size:14px;font-weight:bold;margin-top:5px">Maliyet</div>
-</div>
-</div>
+<div id="calc" class="screen">
+
+<h2>Maliyet</h2>
+
+<div class="card">
+
+<label>En (cm)</label>
+<input id="w" type="number">
+
+<label>Boy (cm)</label>
+<input id="h" type="number">
+
+<label>m² fiyat</label>
+<input id="p" type="number">
+
+<button onclick="calc()">Hesapla</button>
+
+<h3 id="result">0 ₺</h3>
+
 </div>
 
-<div class="screen" id="cor">
-<button class="btn btn-sec" onclick="g('home')" style="margin-bottom:15px">← Ana Menü</button>
-<h2 style="color:var(--co)">🎨 CorelMaster</h2>
-<div id="cL"></div>
-</div>
+<button onclick="show('home')">Geri</button>
 
-<div class="screen" id="biz">
-<button class="btn btn-sec" onclick="g('home')" style="margin-bottom:15px">← Ana Menü</button>
-<h2>📊 Maliyet Hesaplama</h2>
-<div class="lesson">
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-<div><label style="font-size:11px;color:var(--tm)}">En (cm)</label><input type="number" id="w" placeholder="50" oninput="ca()"></div>
-<div><label style="font-size:11px;color:var(--tm)}">Boy (cm)</label><input type="number" id="h" placeholder="70" oninput="ca()"></div>
 </div>
-<select id="mT" onchange="up()">
-<option value="">Malzeme Seç...</option>
-<option value="450">Şeffaf Pleksi (450₺/m²)</option>
-<option value="600">Opak Malzeme (600₺/m²)</option>
-</select>
-<input type="number" id="pr" placeholder="Fiyat" oninput="ca()">
-<div style="background:rgba(16,185,129,.1);border:1px solid var(--ok);border-radius:10px;padding:15px;text-align:center;margin-top:12px">
-<div style="font-size:32px;font-weight:bold;color:var(--ok)" id="re">0₺</div>
-<div style="font-size:11px;color:var(--tm)}" id="de">0 m² × 0₺</div>
-</div>
-</div>
-</div>
-
-<div class="pop" id="po">🏆 <span id="pt">Başarım!</span></div>
 
 <div class="nav">
-<div class="nav-it active" onclick="g('home',this)">🏠</div>
-<div class="nav-it" onclick="g('uvM',this)">🧪</div>
-<div class="nav-it" onclick="g('cor',this)">🎨</div>
-<div class="nav-it" onclick="g('biz',this)">📊</div>
-</div>
+
+<button onclick="show('home')">🏠</button>
+<button onclick="show('academy')">📚</button>
+<button onclick="show('calc')">📊</button>
 
 </div>
 
 <script>
-const vids={1:"dQw4w9WgXcQ",2:"dQw4w9WgXcQ",3:"dQw4w9WgXcQ",4:"dQw4w9WgXcQ",5:"dQw4w9WgXcQ",6:"dQw4w9WgXcQ",7:"dQw4w9WgXcQ",8:"dQw4w9WgXcQ"};
-const curr=[{id:1,t:"UV Baskı Temelleri",d:"Teknoloji temelleri",x:100,l:!1,ls:[{t:"UV Baskı Nedir?",s:"Tanım ve tarihçe",c:`<div class="block"><div class="b-tit">📖 Tanım</div><div class="b-c"><strong>UV Baskı</strong>, UV ışınlarıyla anında kuruyan dijital baskı teknolojisidir.</div></div>`},{t:"Boya Türleri",s:"Mürekkep çeşitleri",c:`<div class="block"><div class="b-tit">🎨 Türler</div><div class="b-c"><strong>CMYK:</strong> Temel renkler<br><strong>White:</strong> Şeffaf yüzeyler<br><strong>Varnish:</strong> 3D efekt</div></div>`}],q:{q:"Şeffaf pleksiye renkli baskı için beyaz katmanı nereye basmalısınız?",o:["Sadece üste","Sadece alta","Hem alta hem üste","Hiçbir yere"],a:1,e:"Renklerin canlı görünmesi için önce beyaz zemin basılır."}},{id:2,t:"Yüzey Hazırlığı",d:"Tutunma prensipleri",x:120,l:!0,ls:[{t:"Yüzey Enerjisi",s:"Boya neden tutunur?",c:`<div class="block"><div class="b-tit">🔬 Bilimsel Temel</div><div class="b-c">Her malzemenin <strong>yüzey enerjisi</strong> vardır. PP malzeme için primer şarttır.</div></div>`}],q:{q:"PP malzemeye baskı için ne şarttır?",o:["Silmek","Primer/Corona","Sıcak tutmak","Hiçbir şey"],a:1,e:"PP düşük enerjili malzemedir, primer şarttır."}},{id:3,t:"CorelDRAW Hazırlık",d:"Dosya hazırlama",x:150,l:!0,ls:[{t:"Spot Renkler",s:"White/Varnish tanımlama",c:`<div class="block"><div class="b-tit">🎯 RD_WHITE</div><div class="b-c">RIP yazılımı <strong>RD_WHITE</strong> spot rengini tanır. CMYK: 0,0,0,0</div></div>`}],q:{q:"Corel'de beyaz katman nasıl tanımlanır?",o:["Sadece beyaz renk","Spot renk 'RD_WHITE'","Alt katmana koy","RIP'te ayarla"],a:1,e:"RIP 'RD_WHITE' adını otomatik beyaz kanalına yönlendirir."}},{id:4,t:"Makine Operasyonu",d:"Bakım ve ayarlar",x:150,l:!0,ls:[{t:"Sabah Rutini",s:"Günlük prosedür",c:`<div class="block"><div class="b-tit">☀️ Her Gün</div><div class="b-c"><ul><li>Makineyi aç, ısın (5 dk)</li><li>Beyaz mürekkebi çalkala (10 sn)</li><li>Nozzle check yap</li></ul></div></div>`}],q:{q:"Beyaz mürekkep neden çalkalanır?",o:["Hava için","Pigment çökelmesi","Koku","Renk açma"],a:1,e:"Titanyum dioksit pigmenti çökelir."}},{id:5,t:"Arıza Tespiti",d:"Banding ve çözümler",x:150,l:!0,ls:[{t:"Banding",s:"Çizgili baskı",c:`<div class="block"><div class="b-tit">🚨 Nedenleri</div><div class="b-c">Ink Starvation, Hizalama Kayması, Nozzle Tıkanıklığı</div></div>`}],q:{q:"Düzenli aralıklı çizgilerin sebebi?",o:["Nozzle tıkanıklığı","Encoder strip kiri","Yanlış ICC","Düşük UV"],a:1,e:"Encoder strip kirliyse kafa pozisyonunu yanlış okur."}},{id:6,t:"İleri Teknikler",d:"Mirror ve 3D",x:130,l:!0,ls:[{t:"Mirror Print",s:"Ayna baskı",c:`<div class="block"><div class="b-tit">🪞 Uygulama</div><div class="b-c">1. Resmi yatay çevir<br>2. Önce renkli katmanı bas<br>3. Üzerine beyaz bas</div></div>`}],q:{q:"Mirror print'te katman sırası?",o:["Beyaz-alt, renk-üst","Renk-alt, beyaz-üst","Sadece beyaz","Sadece renk"],a:1,e:"Camın arkasına bakıldığı için renk altta, beyaz üstte olur."}},{id:7,t:"Maliyet",d:"Hesaplama ve optimizasyon",x:100,l:!0,ls:[{t:"Mürekkep Maliyeti",s:"Formül",c:`<div class="block"><div class="b-tit">💰 Hesaplama</div><div class="b-c">Maliyet = m² × Pass × ml/m² × Fiyat/ml<br>Fire: %15-20 ekle!</div></div>`}],q:{q:"10m² alana 3 pass white basarsanız?",o:["150ml","300ml","450ml","600ml"],a:2,e:"10 × 3 × 15ml = 450ml"}},{id:8,t:"Final Sınavı",d:"Sertifika",x:500,l:!0,f:!0,fq:[{q:"UV baskının en büyük avantajı?",o:["Ucuz","Anında kuruma","Sadece kağıt","Koku"],a:1},{q:"PP malzemeye baskı için?",o:["Yüksek ısı","Primer","Su bazlı","Hiçbir şey"],a:1},{q:"Beyaz mürekkep neden çalkalanır?",o:["Hava","Pigment","Renk","Karıncalanma"],a:1},{q:"Sayfaya merkezlemek için?",o:["C","P","M","Space"],a:1},{q:"Mirror print sırası?",o:["Beyaz-alt","Renk-alt","Sadece beyaz","Sadece renk"],a:1}]}];
 
-let cM=0,cL=0,p=JSON.parse(localStorage.getItem('p'))||{d:[],c:1,x:0},st=JSON.parse(localStorage.getItem('s'))||{x:0,l:1};
+function show(id){
 
-function g(sc,el){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(sc).classList.add('active');if(el&&el.classList.contains('nav-it')){document.querySelectorAll('.nav-it').forEach(i=>i.classList.remove('active'));el.classList.add('active')}if(sc==='uvM')iU();if(sc==='cor')iC()}
+document.querySelectorAll(".screen").forEach(s=>{
+s.classList.remove("active")
+})
 
-function iU(){document.getElementById('mL').innerHTML=curr.map((m,i)=>{const d=p.d.includes(m.id),k=m.id>p.c,c=m.id===p.c,vi=vids[m.id]?'<span class="vid-ind">▶️</span>':'';return`<div class="mod ${d?'ok':''} ${k?'lock':''}" onclick="${k?'':`oM(${i})`}"><div style="display:inline-block;background:var(--uv);color:white;padding:3px 10px;border-radius:15px;font-size:10px;font-weight:bold">MODÜL ${m.id}</div>${vi}<div style="font-size:16px;font-weight:bold;margin:5px 0">${m.t}</div><div style="font-size:12px;color:var(--tm)}">${m.d}</div><div style="display:flex;gap:10px;margin-top:8px;font-size:11px;color:var(--tm)}"><span>🎯 ${m.x} XP</span>${d?'<span style="color:var(--ok)">✓</span>':''}${k?'<span>🔒</span>':''}${c?'<span style="color:var(--uv)">▶</span>':''}</div></div>`}).join('');const pt=Math.round((p.d.length/curr.length)*100);document.getElementById('tP').textContent=pt+'%';document.getElementById('tB').style.width=pt+'%';document.getElementById('mC').textContent=`${p.d.length}/${curr.length} Modül`;document.getElementById('tX').textContent=p.x+' XP'}
+document.getElementById(id).classList.add("active")
 
-function oM(i){cM=i;const m=curr[i];if(m.f){sF();return}cL=0;sL();g('les')}
+}
 
-function sL(){const m=curr[cM],l=m.ls[cL];let v='';if(vids[m.id])v=`<div class="vid-box"><div class="vid-tit">▶️ Video ${m.id}</div><div class="vid-wrap"><iframe src="https://www.youtube.com/embed/${vids[m.id]}?rel=0&modestbranding=1" allowfullscreen></iframe></div></div>`;document.getElementById('lC').innerHTML=`<div class="l-hdr"><span class="badge">MODÜL ${m.id} • DERS ${cL+1}/${m.ls.length}</span><div class="tit">${l.t}</div><div class="sub">${l.s}</div></div>${v}${l.c}`;const pr=document.querySelector('#les .btn-sec'),nb=document.getElementById('nB');pr.style.visibility=cL===0?'hidden':'visible';if(cL===m.ls.length-1){nb.textContent='Quize Geç →';nb.onclick=sQ}else{nb.textContent='Sonraki →';nb.onclick=nx}}
+function calc(){
 
-function nx(){cL++;sL()}function pr(){cL--;sL()}
+let w=document.getElementById("w").value
+let h=document.getElementById("h").value
+let p=document.getElementById("p").value
 
-function sQ(){const m=curr[cM],q=m.q;document.getElementById('qT').textContent=`${m.t} - Sınav`;document.getElementById('qC').innerHTML=`<div class="quiz"><div class="q">${q.q}</div><div class="opts">${q.o.map((o,i)=>`<div class="opt" onclick="a(${i},${q.a},'${q.e}')">${String.fromCharCode(65+i)}) ${o}</div>`).join('')}</div><div id="fd" style="margin-top:15px;display:none"></div></div>`;g('qz')}
+let area=(w*h)/10000
+let price=area*p
 
-function a(s,c,e){document.querySelectorAll('.opt').forEach((o,i)=>{o.classList.add('dis');if(i===c)o.classList.add('ok');else if(i===s&&i!==c)o.classList.add('no')});const ok=s===c,fd=document.getElementById('fd');fd.style.display='block';fd.innerHTML=`<div class="block" style="border-color:${ok?'var(--ok)':'var(--er)'}"><div class="b-tit" style="color:${ok?'var(--ok)':'var(--er)'}">${ok?'✅ Doğru!':'❌ Yanlış'}</div><div class="b-c">${e}<br><br>${ok?`<button class="btn btn-ok" onclick="co()" style="margin-top:10px">Tamamla (+${curr[cM].x} XP)</button>`:`<button class="btn" onclick="sQ()" style="margin-top:10px">Tekrar</button>`}</div></div>`}
+document.getElementById("result").innerText=price.toFixed(2)+" ₺"
 
-function co(){const m=curr[cM];if(!p.d.includes(m.id)){p.d.push(m.id);p.x+=m.x;if(m.id<curr.length)p.c=m.id+1;localStorage.setItem('p',JSON.stringify(p));aX(m.x);sh(`${m.t} Tamamlandı! +${m.x} XP`)}g('uvM');iU()}
+}
 
-function sF(){const m=curr[cM];let cQ=0,s=0;function sQ(){const q=m.fq[cQ];document.getElementById('qT').textContent=`🎓 FİNAL (${cQ+1}/${m.fq.length})`;document.getElementById('qC').innerHTML=`<div class="quiz"><div class="q">${q.q}</div><div class="opts">${q.o.map((o,i)=>`<div class="opt" onclick="fs(${i},${q.a})">${String.fromCharCode(65+i)}) ${o}</div>`).join('')}</div></div>`}window.fs=(sl,cr)=>{document.querySelectorAll('.opt').forEach((o,i)=>{o.classList.add('dis');if(i===cr)o.classList.add('ok');else if(i===sl&&i!==cr)o.classList.add('no')});if(sl===cr)s++;setTimeout(()=>{cQ++;if(cQ<m.fq.length)sQ();else sR()},1500)};function sR(){const pa=s>=3,pc=Math.round((s/m.fq.length)*100);document.getElementById('qC').innerHTML=`<div style="text-align:center;padding:30px 15px"><div style="font-size:56px;margin-bottom:15px">${pa?'🏆':'📚'}</div><h2 style="color:${pa?'var(--ok)':'var(--g)'}">${pa?'SERTİFİKA KAZANDINIZ!':'Tekrar Dene'}</h2><p style="font-size:16px;margin:15px 0">${s}/${m.fq.length} (${pc}%)</p>${pa?`<button class="btn btn-ok" onclick="co()">Sertifika Al (+${m.x} XP)</button>`:`<button class="btn" onclick="g('uvM')">Akademiye Dön</button>`}</div>`}g('qz');sQ()}
+function toast(t){
 
-function iC(){const ct={temel:['Pick Tool (Space)','Select All (Ctrl+A)','Group (Ctrl+G)','Ungroup (Ctrl+U)'],hizalama:['Center Page (P)','Center Selection (C)','Align Top (T)','Align Bottom (B)'],uv:['Convert Curves (Ctrl+Shift+Q)','PowerClip (Ctrl+W)','To Bitmap (Ctrl+B)','Weld (Ctrl+L)'],hizli:['Paste (Ctrl+V)','Step Repeat (Ctrl+Shift+D)','Mirror H (H)','Mirror V (V)']};let h='';for(const[ca,it]of Object.entries(ct)){h+=`<div style="background:rgba(255,102,0,.1);border:1px solid var(--co);border-radius:14px;padding:15px;margin-bottom:12px"><div style="color:var(--co);font-weight:bold;font-size:14px;margin-bottom:12px">${ca.toUpperCase()}</div>`;it.forEach(i=>{const[n,k]=i.split(' (');h+=`<div style="background:rgba(255,102,0,.05);border:1px solid rgba(255,102,0,.2);border-radius:10px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="sh('${k.replace(')','')}: ${n}')"><div style="font-size:13px;font-weight:bold">${n}</div><div style="background:var(--co);color:white;padding:5px 10px;border-radius:6px;font-family:monospace;font-size:12px;font-weight:bold">${k.replace(')','')}</div></div>`});h+='</div>'}document.getElementById('cL').innerHTML=h}
+let d=document.createElement("div")
+d.innerText=t
+d.style.position="fixed"
+d.style.top="20px"
+d.style.left="50%"
+d.style.transform="translateX(-50%)"
+d.style.background="#16162d"
+d.style.padding="10px 20px"
+d.style.borderRadius="8px"
 
-function up(){const v=document.getElementById('mT').value;if(v){document.getElementById('pr').value=v;ca()}}
-function ca(){const w=parseFloat(document.getElementById('w').value)||0,h=parseFloat(document.getElementById('h').value)||0,pr=parseFloat(document.getElementById('pr').value)||0,ar=(w*h)/10000;document.getElementById('re').innerText=Math.round(ar*pr)+'₺';document.getElementById('de').innerText=`${ar.toFixed(3)} m² × ${pr}₺`}
+document.body.appendChild(d)
 
-function aX(am){st.x+=am;if(st.x>=st.l*100){st.x-=st.l*100;st.l++;sh(`Seviye Atladın! Level ${st.l} 🔥`)}uI();localStorage.setItem('s',JSON.stringify(st))}
-function uI(){document.getElementById('lv').innerText=st.l;document.getElementById('xp').innerText=st.x;document.getElementById('lB').style.width=(st.x/(st.l*100))*100+'%'}
-function sh(t){const po=document.getElementById('po');document.getElementById('pt').textContent=t;po.classList.add('show');setTimeout(()=>po.classList.remove('show'),3000)}
+setTimeout(()=>{
+d.remove()
+},2000)
 
-window.onload=()=>{uI();iU()};
+}
+
+window.addEventListener("load",()=>{
+
+toast("MindForge hazır")
+
+})
+
 </script>
+
+<script>
+
+if('serviceWorker' in navigator){
+
+const swCode=`
+
+self.addEventListener('install',e=>{
+self.skipWaiting()
+})
+
+self.addEventListener('fetch',e=>{
+e.respondWith(
+caches.open('mindforge').then(cache=>{
+return cache.match(e.request).then(r=>{
+return r||fetch(e.request).then(res=>{
+cache.put(e.request,res.clone())
+return res
+})
+})
+})
+)
+})
+
+`
+
+const blob=new Blob([swCode],{type:'text/javascript'})
+const swURL=URL.createObjectURL(blob)
+
+navigator.serviceWorker.register(swURL)
+
+}
+
+</script>
+
+<script>
+
+const manifest={
+name:"MindForge UV Master",
+short_name:"MindForge",
+start_url:".",
+display:"standalone",
+background_color:"#0b0b1a",
+theme_color:"#0b0b1a",
+icons:[]
+}
+
+const blob=new Blob([JSON.stringify(manifest)],{type:'application/json'})
+const url=URL.createObjectURL(blob)
+
+const link=document.createElement("link")
+link.rel="manifest"
+link.href=url
+
+document.head.appendChild(link)
+
+</script>
+
 </body>
 </html>
