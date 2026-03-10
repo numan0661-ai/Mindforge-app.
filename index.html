@@ -36,7 +36,69 @@
             --transition-normal: 0.3s ease;
             --transition-slow: 0.5s ease;
         }
-
+<style>
+    /* SENİN CSS'İN - BAŞINDA */
+    
+    /* EKLE: Eksik CSS kuralları */
+    .exercise-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px;
+        background: rgba(255,255,255,0.03);
+        border-radius: var(--radius-lg);
+        margin-bottom: 12px;
+        transition: all var(--transition-fast);
+        border: 1px solid transparent;
+    }
+    
+    .exercise-item:hover {
+        background: rgba(255,255,255,0.05);
+        border-color: rgba(255,255,255,0.1);
+        transform: translateX(4px);
+    }
+    
+    .exercise-name { 
+        font-weight: 600;
+        font-size: 16px;
+    }
+    
+    .exercise-sets { 
+        color: var(--text-muted); 
+        font-size: 13px;
+        margin-top: 4px;
+    }
+    
+    .exercise-check {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 2px solid var(--success);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all var(--transition-fast);
+        background: transparent;
+        color: transparent;
+        font-weight: 700;
+        font-size: 14px;
+    }
+    
+    .exercise-check:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+    }
+    
+    .exercise-check.completed { 
+        background: var(--success);
+        color: white;
+        transform: scale(1.1);
+    }
+    
+    /* DİĞER EKSİK CSS'LER... */
+    
+    /* SENİN CSS'İN - SONUNDA */
         * { 
             box-sizing: border-box; 
             -webkit-tap-highlight-color: transparent;
@@ -1712,6 +1774,7 @@
                 padding: 20px;
             }
         }
+        
     </style>
 </head>
 <body>
@@ -2252,38 +2315,27 @@ function initExerciseScreen() {
                 <div class="exercise-sets
         <!-- EGZERSİZ EKRANI -->
               <!-- EGZERSİZ EKRANI -->
-        <div class="screen" id="exerciseScreen">
-            <div class="page-header">
-                <button class="back-btn" onclick="showScreen('homeScreen')">←</button>
-                <h2 style="margin:0;">🏋️ Günlük Antrenman</h2>
-            </div>
-            
-            <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                    <div>
-                        <div style="font-size:24px; font-weight:700;" id="currentDate"></div>
-                        <div style="font-size:13px; color:var(--text-muted);">Bugünkü program</div>
-                    </div>
-                    <div style="font-size:36px;">💪</div>
-                </div>
-                
-                <div class="progress-bar" style="margin-bottom:24px;">
-                    <div class="progress-fill" id="exerciseProgress" style="width:0%"></div>
-                </div>
-                
-                <div id="exerciseList"></div>
-                
-                <button class="btn btn-success" onclick="completeAllExercises()" style="width:100%; margin-top:20px;">
-                    ✓ Tümünü Tamamla
-                </button>
-            </div>
-            
-            <div class="card" style="margin-top:16px;">
-                <h3 style="margin:0 0 16px 0; color:var(--gold); font-size:16px;">📅 Takvim</h3>
-                <div class="calendar-grid" id="exerciseCalendar"></div>
-            </div>
-        </div>
-
+        <!-- SENİN exerciseScreen'İN - DÜZELTİLMİŞ HALİ -->
+<div class="screen" id="exerciseScreen">
+    <div class="page-header">
+        <button class="back-btn" onclick="showScreen('homeScreen')">←</button>
+        <h2 style="margin:0;">🏋️ Günlük Antrenman</h2>
+    </div>
+    
+    <div class="card">
+        <!-- içerik -->
+        <div id="exerciseList"></div>
+        
+        <button class="btn btn-success" onclick="completeAllExercises()" style="width:100%; margin-top:20px;">
+            ✓ Tümünü Tamamla
+        </button>
+    </div>
+    
+    <div class="card" style="margin-top:16px;">
+        <h3 style="margin:0 0 16px 0; color:var(--gold); font-size:16px;">📅 Takvim</h3>
+        <div class="calendar-grid" id="exerciseCalendar"></div>
+    </div>
+</div>  <!-- ← BU KAPANIŞ EKSİKTİ, EKLE -->
     <!-- Bottom Navigation -->
     <div class="nav-bar">
         <div class="nav-item active" onclick="showScreen('homeScreen')" data-screen="homeScreen">🏠</div>
@@ -2405,6 +2457,110 @@ function initExerciseScreen() {
         ];
     <script>
         // ==================== GLOBAL STATE ====================
+       <script>
+    // SENİN JS'İN - BAŞINDA
+    
+    // EKLE: Eksik CONST tanımlamaları (FONKSİYONLARDAN ÖNCE!)
+    const exercises = [
+        { name: "Baskı Kafası Temizliği", sets: "Günde 1x" },
+        { name: "Kapak ve Platform Kontrolü", sets: "Her baskı öncesi" },
+        { name: "UV Lamba Toz Temizliği", sets: "Haftada 2x" },
+        { name: "Mürekkep Seviye Kontrolü", sets: "Günde 1x" },
+        { name: "Kalibrasyon Test Baskısı", sets: "Haftada 1x" }
+    ];
+    
+    // EKLE: Eksik fonksiyonlar
+    
+    function initExerciseScreen() {
+        const now = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('currentDate').textContent = now.toLocaleDateString('tr-TR', options);
+        
+        const today = now.toDateString();
+        const completed = state.user.exerciseHistory[today] || [];
+        
+        const list = document.getElementById('exerciseList');
+        list.innerHTML = '';
+        
+        exercises.forEach((ex, idx) => {
+            const isCompleted = completed.includes(idx);
+            const item = document.createElement('div');
+            item.className = 'exercise-item';
+            item.innerHTML = `
+                <div>
+                    <div class="exercise-name">${ex.name}</div>
+                    <div class="exercise-sets">${ex.sets}</div>
+                </div>
+                <div class="exercise-check ${isCompleted ? 'completed' : ''}" onclick="toggleExercise(${idx})">
+                    ${isCompleted ? '✓' : ''}
+                </div>
+            `;
+            list.appendChild(item);
+        });
+        
+        updateExerciseProgress(completed.length);
+        renderExerciseCalendar();
+    }
+    
+    function toggleExercise(idx) {
+        const today = new Date().toDateString();
+        
+        if (!state.user.exerciseHistory[today]) {
+            state.user.exerciseHistory[today] = [];
+        }
+        
+        const arr = state.user.exerciseHistory[today];
+        const index = arr.indexOf(idx);
+        
+        if (index > -1) {
+            arr.splice(index, 1);
+        } else {
+            arr.push(idx);
+            addXP(5);
+        }
+        
+        saveUserData();
+        initExerciseScreen();
+    }
+    
+    function completeAllExercises() {
+        const today = new Date().toDateString();
+        state.user.exerciseHistory[today] = exercises.map((_, idx) => idx);
+        
+        saveUserData();
+        initExerciseScreen();
+        addXP(25);
+        showToast('Tüm egzersizler tamamlandı! 💪', 'success');
+    }
+    
+    function updateExerciseProgress(completedCount) {
+        const percent = (completedCount / exercises.length) * 100;
+        document.getElementById('exerciseProgress').style.width = percent + '%';
+    }
+    
+    function renderExerciseCalendar() {
+        const calendar = document.getElementById('exerciseCalendar');
+        const today = new Date();
+        
+        let html = '';
+        
+        for (let i = 29; i >= 0; i--) {
+            const d = new Date(today);
+            d.setDate(d.getDate() - i);
+            const dateStr = d.toDateString();
+            const isDone = state.user.exerciseHistory[dateStr]?.length === exercises.length;
+            const isToday = i === 0;
+            
+            html += `<div class="cal-day ${isDone ? 'done' : ''} ${isToday ? 'today' : ''}" title="${d.toLocaleDateString('tr-TR')}">
+                ${d.getDate()}
+            </div>`;
+        }
+        
+        calendar.innerHTML = html;
+    }
+    
+    // SENİN JS'İN - DEVAMI (state, fonksiyonlar, window.onload)
+</script>
         const state = {
             currentScreen: 'homeScreen',
             currentModule: null,
