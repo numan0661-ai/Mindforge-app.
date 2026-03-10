@@ -6,6 +6,162 @@
     <title>MindForge UV Master</title>
     <style>
         :root {
+            /* Canvas Lab Styles */
+.canvas-container {
+    background: linear-gradient(135deg, #0d0d1f, #1a1a2e);
+    border: 2px solid var(--uv);
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    margin: 20px 0;
+    box-shadow: 0 0 30px rgba(191, 0, 255, 0.2);
+}
+.canvas-controls {
+    background: var(--surface-light);
+    padding: 15px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+    min-width: 80px;
+}
+.control-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.1);
+    outline: none;
+}
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--uv);
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(191, 0, 255, 0.5);
+}
+.simulation-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+.stat-box {
+    background: rgba(255,255,255,0.03);
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.stat-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--uv);
+    font-family: 'Courier New', monospace;
+}
+.stat-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 5px;
+}
+.lab-tabs {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+.lab-tab {
+    flex: 1;
+    padding: 12px;
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    color: var(--text-muted);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+}
+.lab-tab.active {
+    background: rgba(191, 0, 255, 0.2);
+    border-color: var(--uv);
+    color: var(--text);
+}
+.curing-stage {
+    display: flex;
+    justify-content: space-between;
+    margin: 15px 0;
+    padding: 10px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+}
+.stage-indicator {
+    flex: 1;
+    text-align: center;
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 11px;
+    transition: all 0.3s;
+}
+.stage-indicator.active {
+    background: var(--uv);
+    color: white;
+    font-weight: bold;
+}
+.stage-indicator.completed {
+    background: var(--success);
+    color: white;
+}
+.play-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--uv), var(--purple));
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(191, 0, 255, 0.4);
+    transition: all 0.3s;
+}
+.play-btn:hover {
+    transform: scale(1.1);
+}
+.molecule-legend {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 10px;
+    font-size: 12px;
+    flex-wrap: wrap;
+}
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
             --primary: #6366f1; --accent: #06b6d4; --bg: #0b0b1a;
             --surface: #16162d; --surface-light: #1e1e3f; --text: #ffffff;
             --text-muted: #94a3b8; --success: #10b981; --gold: #f59e0b;
@@ -320,7 +476,8 @@
 <div class="app-container">
     
     <!-- UV AKADEMİ ANA EKRAN -->
-    <div class="screen" id="uvAcademyMain">
+   <div class="screen" id="uvLabScreen">
+       </div>
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
             <button class="btn btn-secondary" style="flex:0; padding:12px 16px;" onclick="showScreen('homeScreen')">←</button>
             <h2 style="margin:0; color:var(--uv)">🧪 UV Akademi</h2>
@@ -380,16 +537,16 @@
             </div>
         </div>
 
-        <div class="module-card" onclick="showScreen('uvAcademyMain')" style="background:linear-gradient(135deg, #16162d, #3b0066); border:2px solid var(--uv);">
-            <span style="font-size:40px;">🧪</span>
-            <div class="module-title" style="color:white; margin-top:10px;">UV AKADEMİ</div>
-            <div class="module-desc">Sıfırdan uzmanlığa UV baskı teknolojisi</div>
-            <div class="module-meta">
-                <span>📚 8 Modül</span>
-                <span>⏱️ 4 Saat</span>
-                <span>🎯 Sertifikalı</span>
-            </div>
-        </div>
+        <div class="module-card" onclick="showScreen('uvLabScreen'); setTimeout(initUVLab, 100);" 
+     style="background:linear-gradient(135deg, #1a1a2e, #0f3460); border:2px solid var(--accent);">
+    <span style="font-size:40px;">🔬</span>
+    <div class="module-title" style="color:white; margin-top:10px;">UV LABORATUVARI</div>
+    <div class="module-desc">Interaktif simülasyonlar ve deneyler</div>
+    <div class="module-meta">
+        <span>⚡ 3 Simülasyon</span>
+        <span>🔬 Molekül Seviyesi</span>
+    </div>
+</div>
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
             <div class="module-card" onclick="showScreen('businessScreen')" style="text-align:center;">
@@ -983,19 +1140,17 @@ function openModule(moduleId) {
     showLesson();
     showScreen('moduleDetail');
 }
-
-function showLesson() {
-    const mod = uvCurriculum[currentModule];
-    const lesson = mod.lessons[currentLesson];
+function showScreen(id, el) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
     
-    document.getElementById('lessonContent').innerHTML = `
-        <div class="lesson-header">
-            <span class="lesson-badge">MODÜL ${mod.id} • DERS ${currentLesson + 1}/${mod.lessons.length}</span>
-            <h2 class="lesson-title">${lesson.title}</h2>
-            <div class="lesson-subtitle">${lesson.subtitle}</div>
-        </div>
-        ${lesson.content}
-    `;
+    // ... mevcut kod ...
+    
+    // Yeni: UV Lab init
+    if (id === 'uvLabScreen') {
+        setTimeout(initUVLab, 100);
+    }
+}
     
     const prevBtn = document.querySelector('#lessonNav .btn-secondary');
     const nextBtn = document.getElementById('nextBtn');
