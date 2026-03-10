@@ -574,12 +574,14 @@
         <span id="achievementText">Başarım Kazanıldı!</span>
     </div>
 
-    <div class="nav-bar">
-        <div class="nav-item active" onclick="showScreen('homeScreen', this)">🏠</div>
-        <div class="nav-item" onclick="showScreen('uvAcademyMain', this)">🧪<span class="badge" id="navBadge" style="display:none;">!</span></div>
-        <div class="nav-item" onclick="showScreen('businessScreen', this)">📊</div>
-        <div class="nav-item" onclick="showScreen('exerciseScreen', this)">🏋️</div>
+   div class="nav-bar" id="mainNavBar">
+    <div class="nav-item active" data-target="homeScreen" role="button" tabindex="0">🏠</div>
+    <div class="nav-item" data-target="uvAcademyMain" role="button" tabindex="0">
+        🧪
+        <span class="badge" id="navBadge" style="display:none;">!</span>
     </div>
+    <div class="nav-item" data-target="businessScreen" role="button" tabindex="0">📊</div>
+    <div class="nav-item" data-target="exerciseScreen" role="button" tabindex="0">🏋️</div>
 </div>
 
 <script>
@@ -1507,19 +1509,83 @@ function renderCalendar() {
 // GENEL UYGULAMA FONKSİYONLARI
 // ==========================================
 
-function showScreen(id, el) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+const Navigation = {
+    currentScreen: 'homeScreen',
     
-    if (el && el.classList.contains('nav-item')) {
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-        el.classList.add('active');
+    init() {
+        // Tüm nav-item'ları otomatik bağla
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                const target = item.getAttribute('data-target') || 
+                              item.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+                if (target) {
+                    this.navigate(target, item);
+                }
+            });
+        });
+        
+        // Başlangıç ekranını ayarla
+        this.navigate('homeScreen', document.querySelector('.nav-item[data-target="homeScreen"]'));
+    },
+    
+    navigate(screenId, navElement = null) {
+        // Aynı ekrana tıklanırsa bir şey yapma
+        if (this.currentScreen === screenId) return;
+        
+        // Tüm ekranları gizle
+        document.querySelectorAll('.screen').forEach(screen => {
+            screen.classList.remove('active');
+            screen.style.display = 'none'; // Force hide
+        });
+        
+        // Hedef ekranı göster
+        const targetScreen = document.getElementById(screenId);
+        if (!targetScreen) {
+            console.error('Ekran bulunamadı:', screenId);
+            return;
+        }
+        
+        targetScreen.style.display = 'block';
+        // Force reflow
+        void targetScreen.offsetWidth;
+        targetScreen.classList.add('active');
+        
+        // Navigasyon durumunu güncelle
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        if (navElement) {
+            navElement.classList.add('active');
+        } else {
+            // Nav elementi yoksa data-target'e göre bul
+            const matchingNav = document.querySelector(`.nav-item[data-target="${screenId}"]`);
+            if (matchingNav) matchingNav.classList.add('active');
+        }
+        
+        this.currentScreen = screenId;
+        
+        // Ekran spesifik init fonksiyonları
+        this.runScreenInit(screenId);
+        
+        console.log('Navigated to:', screenId);
+    },
+    
+    runScreenInit(screenId) {
+        switch(screenId) {
+            case 'uvAcademyMain':
+                if (typeof initUVAcademy === 'function') initUVAcademy();
+                break;
+            case 'businessScreen':
+                if (typeof loadPriceSettings === 'function') loadPriceSettings();
+                if (typeof updateInkChart === 'function') updateInkChart();
+                break;
+            case 'exerciseScreen':
+                if (typeof initExercise === 'function') initExercise();
+                break;
+        }
     }
-    
-    // Ekran spesifik init
-    if (id === 'uvAcademyMain') initUVAcademy();
-    if (id === 'businessScreen') loadPriceSettings();
-    if (id === 'exerciseScreen') initExercise();
+};
 }
 
 // Gamification
