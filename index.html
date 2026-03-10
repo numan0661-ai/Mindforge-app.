@@ -112,6 +112,7 @@
             padding: 25px; text-align: center; margin: 20px 0;
         }
         .demo-title { color: var(--uv); font-weight: bold; margin-bottom: 15px; }
+
         
         /* Quiz Component */
         .quiz-container { margin-top: 25px; }
@@ -191,6 +192,109 @@
         
         /* Bottom Navigation */
         .nav-bar {
+            .nav-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(22, 22, 45, 0.98);
+    display: flex;
+    justify-content: space-around;
+    padding: 15px 0 25px;
+    backdrop-filter: blur(10px);
+    border-top: 1px solid #2d2d44;
+    
+    /* EN ÖNEMLİ: Z-index */
+    z-index: 999999 !important;
+    
+    /* Tıklamaya açık */
+    pointer-events: auto !important;
+    
+    /* Güvenlik için */
+    transform: translateZ(0);
+    will-change: transform;
+}
+
+.nav-item {
+    font-size: 24px;
+    cursor: pointer;
+    opacity: 0.4;
+    transition: all 0.3s;
+    position: relative;
+    padding: 10px 20px;
+    
+    /* Tıklama alanı */
+    min-width: 60px;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Z-index */
+    z-index: 999999 !important;
+    pointer-events: auto !important;
+    
+    /* Seçilemez */
+    user-select: none;
+    -webkit-user-select: none;
+    
+    /* Dokunmatik iyileştirme */
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(255,255,255,0.2);
+}
+
+.nav-item:active {
+    transform: scale(0.9);
+    opacity: 0.8;
+}
+
+.nav-item.active {
+    opacity: 1;
+    color: var(--accent);
+    transform: scale(1.1);
+}
+
+/* ========================================== */
+/* EKRANLAR - NAV BAR'IN ARKASINDA */
+/* ========================================== */
+
+.app-container {
+    max-width: 430px;
+    margin: 0 auto;
+    padding: 15px;
+    padding-bottom: 100px; /* Nav bar için boşluk */
+    position: relative;
+    z-index: 1;
+}
+
+.screen {
+    display: none;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+}
+
+.screen.active {
+    display: block;
+    animation: fadeIn 0.4s ease;
+}
+
+/* ========================================== */
+/* BODY DÜZENLEMESİ */
+/* ========================================== */
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    line-height: 1.6;
+    
+    /* Nav bar için boşluk */
+    padding-bottom: 80px;
+}
             position: fixed; bottom: 0; left: 0; right: 0;
             background: rgba(22, 22, 45, 0.98); display: flex;
             justify-content: space-around; padding: 15px 0 25px;
@@ -574,17 +678,23 @@
         <span id="achievementText">Başarım Kazanıldı!</span>
     </div>
 
-   div class="nav-bar" id="mainNavBar">
-    <div class="nav-item active" data-target="homeScreen" role="button" tabindex="0">🏠</div>
-    <div class="nav-item" data-target="uvAcademyMain" role="button" tabindex="0">
-        🧪
-        <span class="badge" id="navBadge" style="display:none;">!</span>
+   <div class="nav-bar" id="mainNavBar">
+    <div class="nav-item active" data-target="homeScreen" onclick="goToScreen('homeScreen')">🏠</div>
+    <div class="nav-item" data-target="uvAcademyMain" onclick="goToScreen('uvAcademyMain')">
+        🧪<span class="badge" id="navBadge" style="display:none;">!</span>
     </div>
-    <div class="nav-item" data-target="businessScreen" role="button" tabindex="0">📊</div>
-    <div class="nav-item" data-target="exerciseScreen" role="button" tabindex="0">🏋️</div>
+    <div class="nav-item" data-target="businessScreen" onclick="goToScreen('businessScreen')">📊</div>
+    <div class="nav-item" data-target="exerciseScreen" onclick="goToScreen('exerciseScreen')">🏋️</div>
 </div>
 
-<script>
+<!-- Achievement Popup -->
+<div class="achievement-popup" id="achievementPopup">
+    <span style="font-size:24px;">🏆</span>
+    <span id="achievementText">Başarım Kazanıldı!</span>
+</div>
+
+</body>
+</html>
 // ==========================================
 // UV AKADEMİ KAPSAMLI MÜFREDAT
 // ==========================================
@@ -1566,154 +1676,111 @@ const Navigation = {
         this.currentScreen = screenId;
         
         // Ekran spesifik init fonksiyonları
-        this.runScreenInit(screenId);
-        
-        console.log('Navigated to:', screenId);
-    },
-    
-    runScreenInit(screenId) {
-        switch(screenId) {
-            case 'uvAcademyMain':
-                if (typeof initUVAcademy === 'function') initUVAcademy();
-                break;
-            case 'businessScreen':
-                if (typeof loadPriceSettings === 'function') loadPriceSettings();
-                if (typeof updateInkChart === 'function') updateInkChart();
-                break;
-            case 'exerciseScreen':
-                if (typeof initExercise === 'function') initExercise();
-                break;
-        }
-    }
-};
-}
-
-// Gamification
-let stats = JSON.parse(localStorage.getItem('mf_stats')) || { exp: 0, lvl: 1 };
-
-function addExp(amount) {
-    stats.exp += amount;
-    if (stats.exp >= stats.lvl * 100) {
-        stats.exp -= stats.lvl * 100;
-        stats.lvl++;
-        showAchievement(`Seviye Atladın! Level ${stats.lvl} 🔥`);
-    }
-    updateMasteryUI();
-    localStorage.setItem('mf_stats', JSON.stringify(stats));
-}
-
-function updateMasteryUI() {
-    document.getElementById('lvlLabel').innerText = stats.lvl;
-    document.getElementById('expLabel').innerText = stats.exp;
-    document.getElementById('lvlFill').style.width = (stats.exp / (stats.lvl * 100)) * 100 + "%";
-}
-
-// Init
-window.onload = () => {
-    updateMasteryUI();
-    loadPriceSettings();
-    
-    // Varsayılan ekran
-    if (document.querySelector('.screen.active') === null) {
-        showScreen('homeScreen');
-    }
-};
-</script>
-        // ==========================================
-// MEVCUT KOD (Sonunda):
-window.onload = () => {
-    updateMasteryUI();
-    loadPriceSettings();
-    if (document.querySelector('.screen.active') === null) {
-        showScreen('homeScreen');
-    }
-};
-
-// ==========================================
-// BURAYA YAPIŞTIR: Ortak Simülasyon Fonksiyonları
+      // ==========================================
+// NAVİGASYON - EN BASİT HALİ
 // ==========================================
 
-// Canvas Performance Utility
-const CanvasOptimizer = {
-    activeAnimations: new Set(),
+function goToScreen(screenId) {
+    console.log('Tıklandı:', screenId);
     
-    register(canvasId, drawFn) {
-        const canvas = document.getElementById(canvasId);
-        if (!canvas) return null;
-        
-        let rafId;
-        const animate = () => {
-            drawFn();
-            rafId = requestAnimationFrame(animate);
-            this.activeAnimations.add(rafId);
-        };
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    if (!this.activeAnimations.has(rafId)) animate();
-                } else {
-                    cancelAnimationFrame(rafId);
-                    this.activeAnimations.delete(rafId);
-                }
-            });
-        }, { threshold: 0.1 });
-        
-        observer.observe(canvas);
-        animate();
-        
-        return {
-            stop: () => {
-                cancelAnimationFrame(rafId);
-                this.activeAnimations.delete(rafId);
-                observer.disconnect();
+    // Tüm ekranları gizle
+    const screens = document.querySelectorAll('.screen');
+    screens.forEach(s => {
+        s.classList.remove('active');
+        s.style.display = 'none';
+    });
+    
+    // Hedef ekranı göster
+    const target = document.getElementById(screenId);
+    if (!target) {
+        console.error('Ekran bulunamadı:', screenId);
+        return;
+    }
+    
+    target.style.display = 'block';
+    setTimeout(() => target.classList.add('active'), 10);
+    
+    // Nav'ı güncelle
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    // Aktif nav item'ı bul
+    const activeNav = document.querySelector(`.nav-item[data-target="${screenId}"]`) ||
+                      document.querySelector(`.nav-item[onclick*="${screenId}"]`);
+    if (activeNav) {
+        activeNav.classList.add('active');
+    }
+    
+    // Init fonksiyonları
+    if (screenId === 'uvAcademyMain' && typeof initUVAcademy === 'function') {
+        setTimeout(initUVAcademy, 100);
+    }
+    if (screenId === 'businessScreen' && typeof loadPriceSettings === 'function') {
+        setTimeout(loadPriceSettings, 100);
+    }
+    if (screenId === 'exerciseScreen' && typeof initExercise === 'function') {
+        setTimeout(initExercise, 100);
+    }
+    
+    // Scroll top
+    window.scrollTo(0, 0);
+}
+
+// ==========================================
+// OLAY DİNLEYİCİLERİ
+// ==========================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM yüklendi');
+    
+    // Nav item'lara tıklama olayı ekle
+    const navItems = document.querySelectorAll('.nav-item');
+    console.log('Nav item sayısı:', navItems.length);
+    
+    navItems.forEach((item, index) => {
+        // Tıklama
+        item.addEventListener('click', function(e) {
+            console.log('Nav item tıklandı:', index);
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const target = this.getAttribute('data-target') || 
+                          this.getAttribute('onclick')?.match(/['"]([^'"]+)['"]/)?.[1];
+            
+            if (target) {
+                goToScreen(target);
             }
-        };
-    },
+        });
+        
+        // Dokunmatik
+        item.addEventListener('touchstart', function(e) {
+            console.log('Nav item dokunuldu:', index);
+            e.preventDefault();
+            const target = this.getAttribute('data-target') ||
+                          this.getAttribute('onclick')?.match(/['"]([^'"]+)['"]/)?.[1];
+            if (target) goToScreen(target);
+        }, {passive: false});
+        
+        // Mouse down
+        item.addEventListener('mousedown', function(e) {
+            console.log('Nav item mouse down:', index);
+        });
+    });
     
-    setupHiDPI(canvas) {
-        const dpr = window.devicePixelRatio || 1;
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width * dpr;
-        canvas.height = rect.height * dpr;
-        const ctx = canvas.getContext('2d');
-        ctx.scale(dpr, dpr);
-        return { ctx, width: rect.width, height: rect.height };
-    }
-};
+    // Başlangıç ekranı
+    goToScreen('homeScreen');
+});
 
-// Konfeti efekti (ortak)
-function showConfetti() {
-    const colors = ['#10b981', '#6366f1', '#bf00ff', '#f59e0b'];
-    for (let i = 0; i < 30; i++) {
-        setTimeout(() => {
-            const conf = document.createElement('div');
-            conf.style.cssText = `
-                position: fixed;
-                width: 8px;
-                height: 8px;
-                background: ${colors[Math.floor(Math.random() * colors.length)]};
-                left: 50%;
-                top: 50%;
-                border-radius: 50%;
-                pointer-events: none;
-                z-index: 9999;
-            `;
-            document.body.appendChild(conf);
-            
-            const angle = (Math.PI * 2 * i) / 30;
-            const velocity = 100 + Math.random() * 50;
-            const tx = Math.cos(angle) * velocity;
-            const ty = Math.sin(angle) * velocity;
-            
-            conf.animate([
-                { transform: 'translate(0,0) scale(1)', opacity: 1 },
-                { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
-            ], {
-                duration: 1000,
-                easing: 'cubic-bezier(0, .9, .57, 1)'
-            }).onfinish = () => conf.remove();
-        }, i * 30);
+// ==========================================
+// YEDEK: Global click listener
+// ==========================================
+
+document.addEventListener('click', function(e) {
+    if (e.target.closest('.nav-item')) {
+        console.log('Nav item tespit edildi');
+    }
+});
     }
 }
 
