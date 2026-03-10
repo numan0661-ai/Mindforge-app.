@@ -10,7 +10,7 @@
             --surface: #16162d; --surface-light: #1e1e3f; --text: #ffffff;
             --text-muted: #94a3b8; --success: #10b981; --gold: #f59e0b;
             --purple: #a855f7; --uv: #bf00ff; --danger: #ef4444;
-            --warning: #f59e0b; --info: #3b82f6; --corel: #ff6600;
+            --warning: #f59e0b; --info: #3b82f6;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
@@ -19,458 +19,308 @@
             padding-bottom: 95px; overflow-x: hidden; line-height: 1.6;
         }
         .app-container { max-width: 430px; margin: 0 auto; padding: 15px; }
-        .screen { display: none; min-height: 100vh; }
-        .screen.active { display: block; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Progress Tracking */
-        .progress-header {
-            background: linear-gradient(135deg, var(--surface), var(--surface-light));
-            border-radius: 16px; padding: 20px; margin-bottom: 20px;
-            border: 1px solid rgba(191, 0, 255, 0.2);
+        /* EKRANLAR */
+        .screen { 
+            display: none; 
+            min-height: 100vh;
+            opacity: 0;
         }
-        .progress-bar {
-            width: 100%; height: 8px; background: rgba(255,255,255,0.1);
-            border-radius: 4px; overflow: hidden; margin-top: 10px;
+        .screen.active { 
+            display: block !important; 
+            opacity: 1;
+            animation: fadeIn 0.4s ease;
         }
-        .progress-fill {
-            height: 100%; background: linear-gradient(90deg, var(--uv), var(--purple));
-            width: 0%; transition: width 0.8s ease; border-radius: 4px;
-        }
-        .module-status {
-            display: flex; justify-content: space-between; margin-top: 10px;
-            font-size: 12px; color: var(--text-muted);
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(15px); } 
+            to { opacity: 1; transform: translateY(0); } 
         }
         
-        /* Module Cards */
+        /* NAVİGASYON */
+        .nav-bar {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(22, 22, 45, 0.98); 
+            display: flex;
+            justify-content: space-around; 
+            padding: 15px 0 25px;
+            backdrop-filter: blur(10px); 
+            border-top: 1px solid #2d2d44;
+            z-index: 1000;
+        }
+        .nav-item {
+            font-size: 24px; 
+            cursor: pointer; 
+            opacity: 0.4;
+            transition: all 0.3s; 
+            position: relative;
+            padding: 10px 20px;
+            user-select: none;
+        }
+        .nav-item:active { transform: scale(0.9); opacity: 0.8; }
+        .nav-item.active { opacity: 1; color: var(--accent); }
+        .nav-item .badge {
+            position: absolute; 
+            top: -5px; right: 5px;
+            background: var(--danger); 
+            color: white; 
+            font-size: 10px;
+            padding: 2px 6px; 
+            border-radius: 10px; 
+            font-weight: bold;
+        }
+        
+        /* KARTLAR */
         .module-card {
-            background: var(--surface); border-radius: 20px; padding: 20px;
-            margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05);
-            cursor: pointer; transition: all 0.3s ease; position: relative;
-            overflow: hidden;
+            background: var(--surface); 
+            border-radius: 20px; 
+            padding: 20px;
+            margin-bottom: 15px; 
+            border: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer; 
+            transition: all 0.3s ease;
         }
         .module-card:hover { transform: translateY(-2px); border-color: var(--uv); }
         .module-card.locked { opacity: 0.5; pointer-events: none; filter: grayscale(0.8); }
         .module-card.completed { border-color: var(--success); }
-        .module-card.completed::after {
-            content: '✓'; position: absolute; top: 15px; right: 15px;
-            background: var(--success); width: 24px; height: 24px;
-            border-radius: 50%; display: flex; align-items: center;
-            justify-content: center; font-size: 14px; font-weight: bold;
-        }
         .module-number {
-            display: inline-block; background: var(--uv); color: white;
-            padding: 4px 12px; border-radius: 20px; font-size: 11px;
-            font-weight: bold; margin-bottom: 8px;
+            display: inline-block; 
+            background: var(--uv); 
+            color: white;
+            padding: 4px 12px; 
+            border-radius: 20px; 
+            font-size: 11px;
+            font-weight: bold; 
+            margin-bottom: 8px;
         }
         .module-title { font-size: 18px; font-weight: bold; margin: 5px 0; }
         .module-desc { font-size: 13px; color: var(--text-muted); }
         .module-meta {
-            display: flex; gap: 15px; margin-top: 12px; font-size: 12px;
+            display: flex; 
+            gap: 15px; 
+            margin-top: 12px; 
+            font-size: 12px;
             color: var(--text-muted);
         }
         
-        /* Lesson Screens */
+        /* BUTONLAR */
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white; 
+            border: none; 
+            padding: 16px; 
+            border-radius: 14px;
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: all 0.2s;
+            font-size: 14px; 
+            text-align: center;
+            display: inline-block;
+            width: 100%;
+            margin: 5px 0;
+        }
+        .btn:active { transform: scale(0.98); }
+        .btn-secondary { 
+            background: var(--surface-light); 
+            border: 1px solid rgba(255,255,255,0.1); 
+        }
+        .btn-success { 
+            background: linear-gradient(135deg, var(--success), #059669); 
+        }
+        
+        .nav-buttons {
+            display: flex; 
+            gap: 10px; 
+            margin-top: 30px;
+        }
+        
+        /* LİSTELER */
         .lesson-container {
-            background: var(--surface); border-radius: 20px;
-            padding: 25px; margin-bottom: 20px;
+            background: var(--surface); 
+            border-radius: 20px;
+            padding: 25px; 
+            margin-bottom: 20px;
         }
         .lesson-header {
             border-bottom: 2px solid rgba(191, 0, 255, 0.3);
-            padding-bottom: 15px; margin-bottom: 20px;
+            padding-bottom: 15px; 
+            margin-bottom: 20px;
         }
         .lesson-badge {
-            display: inline-block; background: rgba(191, 0, 255, 0.2);
-            color: var(--uv); padding: 4px 12px; border-radius: 12px;
-            font-size: 11px; font-weight: bold; margin-bottom: 8px;
+            display: inline-block; 
+            background: rgba(191, 0, 255, 0.2);
+            color: var(--uv); 
+            padding: 4px 12px; 
+            border-radius: 12px;
+            font-size: 11px; 
+            font-weight: bold; 
+            margin-bottom: 8px;
         }
         .lesson-title { font-size: 22px; margin: 0 0 10px 0; }
-        .lesson-subtitle { color: var(--text-muted); font-size: 14px; }
         
-        /* Content Blocks */
         .content-block {
-            background: rgba(255,255,255,0.03); border-radius: 12px;
-            padding: 20px; margin-bottom: 15px; border-left: 4px solid var(--uv);
+            background: rgba(255,255,255,0.03); 
+            border-radius: 12px;
+            padding: 20px; 
+            margin-bottom: 15px; 
+            border-left: 4px solid var(--uv);
         }
-        .content-block.warning { border-left-color: var(--warning); background: rgba(245, 158, 11, 0.05); }
-        .content-block.danger { border-left-color: var(--danger); background: rgba(239, 68, 68, 0.05); }
-        .content-block.info { border-left-color: var(--info); background: rgba(59, 130, 246, 0.05); }
-        
         .block-title {
-            color: var(--gold); font-size: 14px; font-weight: bold;
-            margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+            color: var(--gold); 
+            font-size: 14px; 
+            font-weight: bold;
+            margin-bottom: 10px;
         }
         .block-content { font-size: 14px; color: var(--text-muted); line-height: 1.8; }
-        .block-content strong { color: var(--text); }
-        .block-content ul { padding-left: 20px; margin: 10px 0; }
-        .block-content li { margin-bottom: 8px; }
         
-        /* Interactive Elements */
-        .interactive-demo {
-            background: linear-gradient(135deg, rgba(191, 0, 255, 0.1), rgba(168, 85, 247, 0.1));
-            border: 2px dashed var(--uv); border-radius: 16px;
-            padding: 25px; text-align: center; margin: 20px 0;
-        }
-        .demo-title { color: var(--uv); font-weight: bold; margin-bottom: 15px; }
-
-        
-        /* Quiz Component */
-        .quiz-container { margin-top: 25px; }
+        /* QUIZ */
         .quiz-question {
-            background: var(--surface-light); padding: 20px; border-radius: 12px;
-            font-weight: bold; margin-bottom: 15px; font-size: 15px;
+            background: var(--surface-light); 
+            padding: 20px; 
+            border-radius: 12px;
+            font-weight: bold; 
+            margin-bottom: 15px; 
+            font-size: 15px;
         }
-        .quiz-options { display: flex; flex-direction: column; gap: 10px; }
         .quiz-option {
-            background: rgba(255,255,255,0.05); border: 2px solid transparent;
-            padding: 15px; border-radius: 12px; cursor: pointer;
-            transition: all 0.2s; font-size: 14px;
+            background: rgba(255,255,255,0.05); 
+            border: 2px solid transparent;
+            padding: 15px; 
+            border-radius: 12px; 
+            cursor: pointer;
+            transition: all 0.2s; 
+            font-size: 14px;
+            margin-bottom: 10px;
         }
-        .quiz-option:hover { border-color: var(--uv); background: rgba(191, 0, 255, 0.1); }
+        .quiz-option:hover { border-color: var(--uv); }
         .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.2); }
         .quiz-option.wrong { border-color: var(--danger); background: rgba(239, 68, 68, 0.2); }
         .quiz-option.disabled { pointer-events: none; opacity: 0.6; }
         
-        /* Step by Step Guide */
-        .step-guide { counter-reset: step; }
-        .step-item {
-            position: relative; padding-left: 50px; margin-bottom: 25px;
-            padding-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .step-item:last-child { border-bottom: none; }
-        .step-number {
-            position: absolute; left: 0; top: 0;
-            width: 35px; height: 35px; background: var(--uv);
-            border-radius: 50%; display: flex; align-items: center;
-            justify-content: center; font-weight: bold; font-size: 14px;
-        }
-        .step-title { font-weight: bold; color: var(--gold); margin-bottom: 8px; }
-        .step-content { font-size: 14px; color: var(--text-muted); }
-        
-        /* Navigation Buttons */
-        .nav-buttons {
-            display: flex; gap: 10px; margin-top: 30px;
-        }
-        .btn {
-            flex: 1; background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white; border: none; padding: 16px; border-radius: 14px;
-            font-weight: bold; cursor: pointer; transition: all 0.2s;
-            font-size: 14px; text-align: center;
-        }
-        .btn:active { transform: scale(0.98); }
-        .btn-secondary { background: var(--surface-light); border: 1px solid rgba(255,255,255,0.1); }
-        .btn-success { background: linear-gradient(135deg, var(--success), #059669); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn-outline { 
-            background: transparent; border: 2px solid var(--uv); 
-            color: var(--uv); margin-top: 10px;
-        }
-        
-        /* Code/Command Blocks */
-        .code-block {
-            background: #0d0d1f; border: 1px solid #2d2d44; border-radius: 8px;
-            padding: 15px; font-family: 'Courier New', monospace; font-size: 13px;
-            color: #a5b4fc; overflow-x: auto; margin: 10px 0;
-        }
-        .code-comment { color: #6b7280; }
-        .code-highlight { color: var(--uv); font-weight: bold; }
-        
-        /* Tables */
-        .data-table {
-            width: 100%; border-collapse: collapse; margin: 15px 0;
-            font-size: 13px;
-        }
-        .data-table th {
-            background: rgba(191, 0, 255, 0.2); color: var(--uv);
-            padding: 12px; text-align: left; font-weight: bold;
-        }
-        .data-table td {
-            padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05);
-            color: var(--text-muted);
-        }
-        .data-table tr:hover td { background: rgba(255,255,255,0.02); color: var(--text); }
-        
-        /* Bottom Navigation */
-        .nav-bar {
-            .nav-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(22, 22, 45, 0.98);
-    display: flex;
-    justify-content: space-around;
-    padding: 15px 0 25px;
-    backdrop-filter: blur(10px);
-    border-top: 1px solid #2d2d44;
-    
-    /* EN ÖNEMLİ: Z-index */
-    z-index: 999999 !important;
-    
-    /* Tıklamaya açık */
-    pointer-events: auto !important;
-    
-    /* Güvenlik için */
-    transform: translateZ(0);
-    will-change: transform;
-}
-
-.nav-item {
-    font-size: 24px;
-    cursor: pointer;
-    opacity: 0.4;
-    transition: all 0.3s;
-    position: relative;
-    padding: 10px 20px;
-    
-    /* Tıklama alanı */
-    min-width: 60px;
-    min-height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    /* Z-index */
-    z-index: 999999 !important;
-    pointer-events: auto !important;
-    
-    /* Seçilemez */
-    user-select: none;
-    -webkit-user-select: none;
-    
-    /* Dokunmatik iyileştirme */
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: rgba(255,255,255,0.2);
-}
-
-.nav-item:active {
-    transform: scale(0.9);
-    opacity: 0.8;
-}
-
-.nav-item.active {
-    opacity: 1;
-    color: var(--accent);
-    transform: scale(1.1);
-}
-
-/* ========================================== */
-/* EKRANLAR - NAV BAR'IN ARKASINDA */
-/* ========================================== */
-
-.app-container {
-    max-width: 430px;
-    margin: 0 auto;
-    padding: 15px;
-    padding-bottom: 100px; /* Nav bar için boşluk */
-    position: relative;
-    z-index: 1;
-}
-
-.screen {
-    display: none;
-    min-height: 100vh;
-    position: relative;
-    z-index: 1;
-}
-
-.screen.active {
-    display: block;
-    animation: fadeIn 0.4s ease;
-}
-
-/* ========================================== */
-/* BODY DÜZENLEMESİ */
-/* ========================================== */
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-    line-height: 1.6;
-    
-    /* Nav bar için boşluk */
-    padding-bottom: 80px;
-}
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: rgba(22, 22, 45, 0.98); display: flex;
-            justify-content: space-around; padding: 15px 0 25px;
-            backdrop-filter: blur(10px); border-top: 1px solid #2d2d44;
-            z-index: 1000;
-        }
-        .nav-item {
-            font-size: 24px; cursor: pointer; opacity: 0.4;
-            transition: 0.3s; position: relative;
-        }
-        .nav-item.active { opacity: 1; color: var(--accent); }
-        .nav-item .badge {
-            position: absolute; top: -5px; right: -5px;
-            background: var(--danger); color: white; font-size: 10px;
-            padding: 2px 6px; border-radius: 10px; font-weight: bold;
-        }
-        
-        /* Achievement Popup */
+        /* BAŞARIM */
         .achievement-popup {
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
+            position: fixed; 
+            top: 20px; 
+            left: 50%; 
+            transform: translateX(-50%) translateY(-100px);
             background: linear-gradient(135deg, var(--gold), #d97706);
-            color: white; padding: 15px 25px; border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(245, 158, 11, 0.3);
-            z-index: 2000; transition: transform 0.5s ease;
-            display: flex; align-items: center; gap: 10px;
+            color: white; 
+            padding: 15px 25px; 
+            border-radius: 12px;
+            z-index: 2000; 
+            transition: transform 0.5s ease;
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
             font-weight: bold;
         }
         .achievement-popup.show { transform: translateX(-50%) translateY(0); }
         
-        /* Tooltip */
-        .tooltip {
-            position: relative; display: inline-block;
-            border-bottom: 2px dotted var(--uv); cursor: help;
-        }
-        .tooltip-text {
-            visibility: hidden; width: 200px; background: var(--surface-light);
-            color: var(--text); text-align: center; padding: 10px;
-            border-radius: 8px; position: absolute; z-index: 1;
-            bottom: 125%; left: 50%; margin-left: -100px;
-            font-size: 12px; border: 1px solid var(--uv);
-            opacity: 0; transition: opacity 0.3s;
-        }
-        .tooltip:hover .tooltip-text { visibility: visible; opacity: 1; }
-        
-        /* Image Placeholder */
-        .img-placeholder {
-            background: linear-gradient(135deg, rgba(191, 0, 255, 0.1), rgba(99, 102, 241, 0.1));
-            border: 2px dashed rgba(191, 0, 255, 0.3); border-radius: 12px;
-            height: 200px; display: flex; align-items: center;
-            justify-content: center; color: var(--text-muted);
-            margin: 15px 0; font-size: 14px;
-        }
-        
-        /* Checklist */
-        .checklist { list-style: none; padding: 0; }
-        .checklist li {
-            padding: 12px 0 12px 35px; position: relative;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .checklist li::before {
-            content: '○'; position: absolute; left: 0;
-            color: var(--uv); font-size: 20px; font-weight: bold;
-        }
-        .checklist li.checked::before { content: '✓'; color: var(--success); }
-        .checklist li.checked { color: var(--text-muted); text-decoration: line-through; }
-        
-        /* Input Styles */
+        /* INPUT */
         input, select {
-            width: 100%; padding: 14px; margin: 8px 0;
-            border-radius: 12px; border: 1px solid #2d2d44;
-            background: var(--bg); color: white; font-size: 15px;
-            box-sizing: border-box;
-        }
-        input:focus, select:focus {
-            outline: none; border-color: var(--uv);
-            box-shadow: 0 0 0 3px rgba(191, 0, 255, 0.1);
+            width: 100%; 
+            padding: 14px; 
+            margin: 8px 0;
+            border-radius: 12px; 
+            border: 1px solid #2d2d44;
+            background: var(--bg); 
+            color: white; 
+            font-size: 15px;
         }
         
-        /* Grid */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         
-        /* Calendar */
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-top: 10px; }
-        .cal-day { 
-            aspect-ratio: 1; display: flex; align-items: center;
-            justify-content: center; font-size: 11px; border-radius: 8px;
-            background: rgba(255,255,255,0.05); cursor: pointer;
-        }
-        .cal-day.done { background: var(--success); color: white; font-weight: bold; }
-        .cal-day:hover { background: rgba(255,255,255,0.1); }
-        
-        /* Exercise Specific */
+        /* EGZERSİZ */
         .exercise-item {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 15px; background: rgba(255,255,255,0.03);
-            border-radius: 12px; margin-bottom: 10px;
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+            padding: 15px; 
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px; 
+            margin-bottom: 10px;
         }
-        .exercise-name { font-weight: bold; }
-        .exercise-sets { color: var(--text-muted); font-size: 13px; }
         .exercise-check {
-            width: 28px; height: 28px; border-radius: 50%;
-            border: 2px solid var(--success); cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s;
+            width: 28px; 
+            height: 28px; 
+            border-radius: 50%;
+            border: 2px solid var(--success); 
+            cursor: pointer;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
         }
-        .exercise-check.completed { background: var(--success); }
+        .exercise-check.completed { background: var(--success); color: white; }
         
-        /* Price Settings */
+        /* TAKVİM */
+        .calendar-grid { 
+            display: grid; 
+            grid-template-columns: repeat(7, 1fr); 
+            gap: 5px; 
+            margin-top: 10px; 
+        }
+        .cal-day { 
+            aspect-ratio: 1; 
+            display: flex; 
+            align-items: center;
+            justify-content: center; 
+            font-size: 11px; 
+            border-radius: 8px;
+            background: rgba(255,255,255,0.05); 
+        }
+        .cal-day.done { background: var(--success); color: white; }
+        
+        /* FİYAT */
         .price-display {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
-            border: 1px solid var(--success); border-radius: 12px;
-            padding: 20px; text-align: center; margin-top: 15px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success); 
+            border-radius: 12px;
+            padding: 20px; 
+            text-align: center; 
+            margin-top: 15px;
         }
         .price-amount { font-size: 36px; font-weight: bold; color: var(--success); }
-        .price-detail { font-size: 12px; color: var(--text-muted); margin-top: 5px; }
         
         .settings-row {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            padding: 15px 0; 
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-        .settings-label { font-weight: bold; }
-        .settings-value { color: var(--text-muted); }
+        
+        /* PROGRES */
+        .progress-header {
+            background: linear-gradient(135deg, var(--surface), var(--surface-light));
+            border-radius: 16px; 
+            padding: 20px; 
+            margin-bottom: 20px;
+        }
+        .progress-bar {
+            width: 100%; 
+            height: 8px; 
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px; 
+            overflow: hidden; 
+            margin-top: 10px;
+        }
+        .progress-fill {
+            height: 100%; 
+            background: linear-gradient(90deg, var(--uv), var(--purple));
+            width: 0%; 
+            transition: width 0.8s ease; 
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     
-    <!-- UV AKADEMİ ANA EKRAN -->
-    <div class="screen" id="uvAcademyMain">
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
-            <button class="btn btn-secondary" style="flex:0; padding:12px 16px;" onclick="showScreen('homeScreen')">←</button>
-            <h2 style="margin:0; color:var(--uv)">🧪 UV Akademi</h2>
-        </div>
-        
-        <div class="progress-header">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
-                <span style="font-size:14px; font-weight:bold;">Toplam İlerleme</span>
-                <span style="color:var(--uv); font-weight:bold;" id="totalProgress">0%</span>
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="totalProgressBar"></div>
-            </div>
-            <div class="module-status">
-                <span id="completedModules">0/8 Modül</span>
-                <span id="totalPoints">0 XP Kazanıldı</span>
-            </div>
-        </div>
-        
-        <div id="modulesList"></div>
-    </div>
-
-    <!-- MODÜL DETAY EKRANI -->
-    <div class="screen" id="moduleDetail">
-        <div class="lesson-container" id="lessonContent"></div>
-        <div class="nav-buttons" id="lessonNav">
-            <button class="btn btn-secondary" onclick="prevLesson()">← Önceki</button>
-            <button class="btn" id="nextBtn" onclick="nextLesson()">Sonraki →</button>
-        </div>
-    </div>
-
-    <!-- QUIZ EKRANI -->
-    <div class="screen" id="quizScreen">
-        <div class="lesson-container">
-            <div class="lesson-header">
-                <span class="lesson-badge">MODÜL SONU SINAVI</span>
-                <h2 class="lesson-title" id="quizTitle">Bilgi Kontrolü</h2>
-            </div>
-            <div id="quizContent"></div>
-        </div>
-    </div>
-
     <!-- ANA EKRAN -->
     <div class="screen active" id="homeScreen">
         <h2 style="color:var(--accent)">MindForge Master</h2>
-        <div class="progress-header" style="border-color:var(--gold);">
+        
+        <div class="progress-header">
             <div style="font-size:12px; color:var(--gold); margin-bottom:5px;">USTA YOLU</div>
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <div>
@@ -480,36 +330,79 @@ body {
                 <div style="font-size:40px;">🏆</div>
             </div>
             <div class="progress-bar" style="margin-top:15px;">
-                <div class="progress-fill" id="lvlFill" style="background:linear-gradient(90deg, var(--gold), #fbbf24);"></div>
+                <div class="progress-fill" id="lvlFill" style="background:linear-gradient(90deg, var(--gold), #fbbf24); width:0%"></div>
             </div>
         </div>
 
-        <div class="module-card" onclick="showScreen('uvAcademyMain')" style="background:linear-gradient(135deg, #16162d, #3b0066); border:2px solid var(--uv);">
+        <div class="module-card" onclick="goToAcademy()" style="background:linear-gradient(135deg, #16162d, #3b0066); border:2px solid var(--uv);">
             <span style="font-size:40px;">🧪</span>
             <div class="module-title" style="color:white; margin-top:10px;">UV AKADEMİ</div>
             <div class="module-desc">Sıfırdan uzmanlığa UV baskı teknolojisi</div>
             <div class="module-meta">
                 <span>📚 8 Modül</span>
                 <span>⏱️ 4 Saat</span>
-                <span>🎯 Sertifikalı</span>
             </div>
         </div>
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
-            <div class="module-card" onclick="showScreen('businessScreen')" style="text-align:center;">
+            <div class="module-card" onclick="goToBusiness()" style="text-align:center;">
                 <div style="font-size:30px;">📊</div>
-                <div class="module-title" style="font-size:16px;">Maliyet Hesaplama</div>
+                <div class="module-title" style="font-size:16px;">Maliyet</div>
             </div>
-            <div class="module-card" onclick="showScreen('exerciseScreen')" style="text-align:center;">
+            <div class="module-card" onclick="goToExercise()" style="text-align:center;">
                 <div style="font-size:30px;">🏋️</div>
                 <div class="module-title" style="font-size:16px;">Antrenman</div>
             </div>
         </div>
     </div>
 
-    <!-- MALİYET HESAPLAMA EKRANI -->
+    <!-- UV AKADEMİ -->
+    <div class="screen" id="uvAcademyMain">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+            <button class="btn btn-secondary" style="flex:0; padding:12px 16px; width:auto;" onclick="goHome()">←</button>
+            <h2 style="margin:0; color:var(--uv)">🧪 UV Akademi</h2>
+        </div>
+        
+        <div class="progress-header">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                <span style="font-size:14px; font-weight:bold;">İlerleme</span>
+                <span style="color:var(--uv); font-weight:bold;" id="totalProgress">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="totalProgressBar" style="width:0%"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-top:10px; font-size:12px; color:var(--text-muted);">
+                <span id="completedModules">0/8 Modül</span>
+                <span id="totalPoints">0 XP</span>
+            </div>
+        </div>
+        
+        <div id="modulesList"></div>
+    </div>
+
+    <!-- MODÜL DETAY -->
+    <div class="screen" id="moduleDetail">
+        <div class="lesson-container" id="lessonContent"></div>
+        <div class="nav-buttons">
+            <button class="btn btn-secondary" onclick="prevLesson()">← Önceki</button>
+            <button class="btn" id="nextBtn" onclick="nextLesson()">Sonraki →</button>
+        </div>
+    </div>
+
+    <!-- QUIZ -->
+    <div class="screen" id="quizScreen">
+        <div class="lesson-container">
+            <div class="lesson-header">
+                <span class="lesson-badge">SINAV</span>
+                <h2 class="lesson-title" id="quizTitle">Bilgi Kontrolü</h2>
+            </div>
+            <div id="quizContent"></div>
+        </div>
+    </div>
+
+    <!-- MALİYET -->
     <div class="screen" id="businessScreen">
-        <button class="btn btn-secondary" onclick="showScreen('homeScreen')" style="margin-bottom:20px;">← Ana Menü</button>
+        <button class="btn btn-secondary" onclick="goHome()" style="margin-bottom:20px;">← Ana Menü</button>
         <h2 style="margin-bottom:20px;">📊 Maliyet Hesaplama</h2>
         
         <div class="lesson-container">
@@ -517,690 +410,356 @@ body {
             <div class="grid-2">
                 <div>
                     <label style="font-size:12px; color:var(--text-muted);">En (cm)</label>
-                    <input type="number" id="w" placeholder="Örn: 50" oninput="calculate()">
+                    <input type="number" id="w" placeholder="50" oninput="calculate()">
                 </div>
                 <div>
-                    <!-- MEVCUT: Maliyet Hesaplama Ekranı -->
-<div class="screen" id="businessScreen">
-    <button class="btn btn-secondary" onclick="showScreen('homeScreen')" style="margin-bottom:20px;">← Ana Menü</button>
-    <h2 style="margin-bottom:20px;">📊 Maliyet Hesaplama</h2>
-    
-    <!-- MEVCUT: Ölçüler ve hesaplama container'ı -->
-    <div class="lesson-container">
-        <!-- ... mevcut input'lar ... -->
-        
-        <div class="price-display">
-            <!-- ... mevcut fiyat gösterimi ... -->
-        </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- BURAYA YAPIŞTIR: Mürekkep Analizi -->
-    <!-- ========================================== -->
-    
-    <div class="lesson-container" style="margin-top:20px;">
-        <h3 style="color:var(--accent); margin-top:0;">📊 Canlı Mürekkep Analizi</h3>
-        <!-- ... tüm canvas grafik HTML'i ... -->
-    </div>
-    
-    <script>
-        // ... mürekkep JavaScript fonksiyonları ...
-    </script>
-    
-    <!-- MEVCUT: Fiyat Ayarları (Değiştirmeyin) -->
-    <div class="lesson-container" style="margin-top:15px;">
-        <h3 style="margin-top:0; color:var(--gold);">⚙️ Fiyat Ayarları</h3>
-        <!-- ... mevcut ayarlar ... -->
-    </div>
-</div>
                     <label style="font-size:12px; color:var(--text-muted);">Boy (cm)</label>
-                    <input type="number" id="h" placeholder="Örn: 70" oninput="calculate()">
+                    <input type="number" id="h" placeholder="70" oninput="calculate()">
                 </div>
             </div>
             
-            <h3 style="color:var(--accent); margin-top:20px;">Malzeme ve Fiyat</h3>
-            <select id="mType" onchange="updatePriceFromSelection()">
-                <option value="">Malzeme Seçin...</option>
+            <h3 style="color:var(--accent); margin-top:20px;">Malzeme</h3>
+            <select id="mType" onchange="updatePrice()">
+                <option value="">Seçin...</option>
                 <option value="trans">Şeffaf Pleksi</option>
-                <option value="color">Opak/Renkli Malzeme</option>
-                <option value="custom">Özel Fiyat</option>
+                <option value="color">Renkli</option>
             </select>
             
-            <div id="customPriceArea" style="display:none;">
-                <label style="font-size:12px; color:var(--text-muted);">Özel Fiyat (₺/m²)</label>
-                <input type="number" id="customPrice" placeholder="Örn: 750" oninput="calculate()">
-            </div>
-            
-            <label style="font-size:12px; color:var(--text-muted);">Birim Fiyat (₺/m²)</label>
-            <input type="number" id="uPrice" placeholder="Fiyat seçin veya girin" oninput="calculate()">
-            
-            <label style="font-size:12px; color:var(--text-muted);">Sabit Maliyet (₺)</label>
-            <input type="number" id="fixedCost" value="50" oninput="calculate()">
+            <input type="number" id="uPrice" placeholder="Fiyat (₺/m²)" oninput="calculate()">
+            <input type="number" id="fixedCost" value="50" placeholder="Sabit maliyet" oninput="calculate()">
             
             <div class="price-display">
                 <div class="price-amount" id="finalRes">0₺</div>
-                <div class="price-detail" id="calcDetail">0 m² × 0₺ + 50₺ sabit</div>
+                <div style="font-size:12px; color:var(--text-muted);" id="calcDetail">0 m² × 0₺</div>
             </div>
-            
-            <button class="btn" onclick="saveCalculation()" style="margin-top:15px;">💾 Hesaplamayı Kaydet</button>
-        </div>
-        
-        <div class="lesson-container" style="margin-top:15px;">
-            <h3 style="margin-top:0; color:var(--gold);">⚙️ Fiyat Ayarları</h3>
-            <div class="settings-row">
-                <span class="settings-label">Şeffaf m² Fiyatı</span>
-                <input type="number" id="set_trans" value="450" style="width:100px; text-align:right;" onchange="savePriceSettings()">
-            </div>
-            <div class="settings-row">
-                <span class="settings-label">Renkli m² Fiyatı</span>
-                <input type="number" id="set_color" value="600" style="width:100px; text-align:right;" onchange="savePriceSettings()">
-            </div>
-            <div class="settings-row">
-                <span class="settings-label">Sabit Maliyet</span>
-                <input type="number" id="set_fixed" value="50" style="width:100px; text-align:right;" onchange="savePriceSettings()">
-            </div>
-            <p style="font-size:12px; color:var(--text-muted); margin-top:10px;">
-                * Bu fiyatlar varsayılan olarak kullanılır
-            </p>
         </div>
     </div>
 
-    <!-- EGZERSİZ EKRANI -->
+    <!-- EGZERSİZ -->
     <div class="screen" id="exerciseScreen">
-        <button class="btn btn-secondary" onclick="showScreen('homeScreen')" style="margin-bottom:20px;">← Ana Menü</button>
-        <h2 style="margin-bottom:20px;">🏋️ Antrenman Programı</h2>
+        <button class="btn btn-secondary" onclick="goHome()" style="margin-bottom:20px;">← Ana Menü</button>
+        <h2 style="margin-bottom:20px;">🏋️ Antrenman</h2>
         
         <div class="lesson-container">
-            <h3 style="margin-top:0; color:var(--success);">Bugünkü Program</h3>
+            <h3 style="margin-top:0; color:var(--success);">Bugün</h3>
             <div id="exerciseList">
                 <div class="exercise-item">
                     <div>
-                        <div class="exercise-name">Şınav (Push-up)</div>
-                        <div class="exercise-sets">4 set × 12 tekrar</div>
+                        <div style="font-weight:bold;">Şınav</div>
+                        <div style="font-size:13px; color:var(--text-muted);">4 set × 12</div>
                     </div>
-                    <div class="exercise-check" onclick="toggleExercise(this)"></div>
+                    <div class="exercise-check" onclick="toggleEx(this)"></div>
                 </div>
                 <div class="exercise-item">
                     <div>
-                        <div class="exercise-name">Squat</div>
-                        <div class="exercise-sets">3 set × 15 tekrar</div>
+                        <div style="font-weight:bold;">Squat</div>
+                        <div style="font-size:13px; color:var(--text-muted);">3 set × 15</div>
                     </div>
-                    <div class="exercise-check" onclick="toggleExercise(this)"></div>
-                </div>
-                <div class="exercise-item">
-                    <div>
-                        <div class="exercise-name">Plank</div>
-                        <div class="exercise-sets">3 set × 45 saniye</div>
-                    </div>
-                    <div class="exercise-check" onclick="toggleExercise(this)"></div>
-                </div>
-                <div class="exercise-item">
-                    <div>
-                        <div class="exercise-name">Lunges</div>
-                        <div class="exercise-sets">3 set × 10 tekrar (her bacak)</div>
-                    </div>
-                    <div class="exercise-check" onclick="toggleExercise(this)"></div>
+                    <div class="exercise-check" onclick="toggleEx(this)"></div>
                 </div>
             </div>
             
-            <div style="margin-top:20px; padding:15px; background:rgba(16,185,129,0.1); border-radius:12px; text-align:center;">
-                <div style="font-size:14px; color:var(--text-muted);">Tamamlanan</div>
+            <div style="margin-top:20px; text-align:center;">
                 <div style="font-size:24px; font-weight:bold; color:var(--success);">
-                    <span id="completedCount">0</span> / 4
+                    <span id="completedCount">0</span> / 2
                 </div>
             </div>
             
-            <button class="btn btn-success" onclick="logWorkout()" id="completeWorkoutBtn" disabled>
-                Antrenmanı Tamamla ✅
-            </button>
-            <button class="btn btn-secondary" onclick="resetExercises()" style="margin-top:10px;">
-                Sıfırla
-            </button>
+            <button class="btn btn-success" onclick="completeWorkout()" id="workoutBtn" disabled>Tamamla</button>
         </div>
         
-        <div class="lesson-container" style="margin-top:15px;">
-            <h3 style="margin-top:0; color:var(--accent);">📆 Bu Ayın Takvimi</h3>
+        <div class="lesson-container">
+            <h3 style="margin-top:0; color:var(--accent);">Takvim</h3>
             <div class="calendar-grid" id="mainCalendar"></div>
-            <div style="display:flex; gap:15px; margin-top:15px; font-size:12px; justify-content:center;">
-                <span style="display:flex; align-items:center; gap:5px;">
-                    <span style="width:12px; height:12px; background:var(--success); border-radius:3px;"></span> Tamamlandı
-                </span>
-                <span style="display:flex; align-items:center; gap:5px;">
-                    <span style="width:12px; height:12px; background:rgba(255,255,255,0.05); border-radius:3px;"></span> Boş
-                </span>
-            </div>
         </div>
     </div>
 
-    <!-- Achievement Popup -->
+    <!-- BAŞARIM -->
     <div class="achievement-popup" id="achievementPopup">
-        <span style="font-size:24px;">🏆</span>
-        <span id="achievementText">Başarım Kazanıldı!</span>
+        <span>🏆</span>
+        <span id="achievementText">Başarım!</span>
     </div>
 
-   <div class="nav-bar" id="mainNavBar">
-    <div class="nav-item active" data-target="homeScreen" onclick="goToScreen('homeScreen')">🏠</div>
-    <div class="nav-item" data-target="uvAcademyMain" onclick="goToScreen('uvAcademyMain')">
-        🧪<span class="badge" id="navBadge" style="display:none;">!</span>
+    <!-- ALT MENÜ -->
+    <div class="nav-bar">
+        <div class="nav-item active" onclick="goHome()" id="navHome">🏠</div>
+        <div class="nav-item" onclick="goToAcademy()" id="navAcademy">🧪<span class="badge" id="navBadge" style="display:none;">!</span></div>
+        <div class="nav-item" onclick="goToBusiness()" id="navBusiness">📊</div>
+        <div class="nav-item" onclick="goToExercise()" id="navExercise">🏋️</div>
     </div>
-    <div class="nav-item" data-target="businessScreen" onclick="goToScreen('businessScreen')">📊</div>
-    <div class="nav-item" data-target="exerciseScreen" onclick="goToScreen('exerciseScreen')">🏋️</div>
 </div>
 
-<!-- Achievement Popup -->
-<div class="achievement-popup" id="achievementPopup">
-    <span style="font-size:24px;">🏆</span>
-    <span id="achievementText">Başarım Kazanıldı!</span>
-</div>
-
-</body>
-</html>
+<script>
 // ==========================================
-// UV AKADEMİ KAPSAMLI MÜFREDAT
+// NAVİGASYON - BASİT VE GÜVENİLİR
 // ==========================================
 
-const uvCurriculum = [
+function showScreen(id) {
+    // Tüm ekranları kapat
+    document.querySelectorAll('.screen').forEach(s => {
+        s.classList.remove('active');
+        s.style.display = 'none';
+    });
+    
+    // Hedefi aç
+    const target = document.getElementById(id);
+    if (target) {
+        target.style.display = 'block';
+        setTimeout(() => target.classList.add('active'), 10);
+    }
+    
+    // Nav aktifliğini güncelle
+    updateNav(id);
+    
+    // Init fonksiyonları
+    if (id === 'uvAcademyMain') initAcademy();
+    if (id === 'exerciseScreen') initExercise();
+    
+    window.scrollTo(0, 0);
+}
+
+function updateNav(activeScreen) {
+    const map = {
+        'homeScreen': 'navHome',
+        'uvAcademyMain': 'navAcademy',
+        'businessScreen': 'navBusiness',
+        'exerciseScreen': 'navExercise'
+    };
+    
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    
+    const activeNav = document.getElementById(map[activeScreen]);
+    if (activeNav) activeNav.classList.add('active');
+}
+
+function goHome() { showScreen('homeScreen'); }
+function goToAcademy() { showScreen('uvAcademyMain'); }
+function goToBusiness() { showScreen('businessScreen'); }
+function goToExercise() { showScreen('exerciseScreen'); }
+
+// ==========================================
+// VERİ
+// ==========================================
+
+const curriculum = [
     {
         id: 1,
         title: "UV Baskı Temelleri",
-        desc: "Teknolojinin temel prensipleri ve kimyasal süreçler",
+        desc: "Temel prensipler ve kimyasal süreçler",
         duration: "25 dk",
         xp: 100,
         locked: false,
         lessons: [
             {
                 title: "UV Baskı Nedir?",
-                subtitle: "Teknolojinin tanımı ve tarihçesi",
+                subtitle: "Teknoloji tanımı",
                 content: `
                     <div class="content-block">
                         <div class="block-title">📖 Tanım</div>
                         <div class="block-content">
-                            <strong>UV Baskı (Ultraviolet Printing)</strong>, boyanın anında kuruması için ultraviyole (UV) ışınları kullanan dijital baskı teknolojisidir. Geleneksel baskıda boyanın kuruması saatler sürerken, UV baskıda bu süre <strong>saniyeler</strong> içinde gerçekleşir.
+                            <strong>UV Baskı</strong>, boyanın anında kuruması için ultraviyole ışınları kullanan dijital baskı teknolojisidir.
                         </div>
-                        // MEVCUT KOD (Değiştirmeyin, sadece referans):
-const uvCurriculum = [
-    {
-        id: 1,
-        title: "UV Baskı Temelleri",
-        // ...
-        lessons: [
-            {
-                title: "UV Baskı Nedir?",
-                // ...
-            },
-            {
-                title: "UV Boya Türleri",
-                subtitle: "Mürekkep çeşitleri ve kullanım alanları",
-                content: `
+                    </div>
                     <div class="content-block">
-                        <div class="block-title">🎨 Ana Mürekkep Türleri</div>
-                        <!-- ... mevcut tablo ... -->
-                    </div>
-                    
-                    <div class="content-block warning">
-                        <!-- ... mevcut uyarı bloğu ... -->
-                    </div>
-
-                    <!-- ========================================== -->
-                    <!-- BURAYA YAPIŞTIR: UV Kürlenme Simülasyonu -->
-                    <!-- ========================================== -->
-                    
-                    <div class="interactive-demo" id="curingSimulation">
-                        <!-- ... tüm simülasyon HTML'i ... -->
-                    </div>
-                    
-                    <style>
-                        /* ... simülasyon CSS'i ... */
-                    </style>
-                    
-                    <script>
-                        /* ... simülasyon JavaScript'i ... */
-                    </script>
-                `
-            }
-        ]
-    }
-];
-                    </div>
-                    
-                    <div class="content-block info">
-                        <div class="block-title">💡 Neden UV Baskı?</div>
+                        <div class="block-title">💡 Avantajlar</div>
                         <div class="block-content">
                             <ul>
-                                <li><strong>Anında Kuruma:</strong> Baskı alındığı anda dokunulabilir, paketlenebilir</li>
-                                <li><strong>Yüksek Çözünürlük:</strong> 1440 dpi'ye varan detay kalitesi</li>
-                                <li><strong>Çok Yönlülük:</strong> Cam, metal, plastik, ahşap, deri üzerine baskı</li>
-                                <li><strong>Dayanıklılık:</strong> Çizilmez, suya ve güneşe dayanıklı</li>
-                                <li><strong>Çevre Dostu:</strong> VOC (Uçucu Organik Bileşik) salınımı yok</li>
+                                <li>Anında kuruma</li>
+                                <li>Yüksek çözünürlük</li>
+                                <li>Çok yönlülük</li>
                             </ul>
-                        </div>
-                    </div>
-
-                    <div class="content-block">
-                        <div class="block-title">⚗️ Kimyasal Süreç: Fotopolimerizasyon</div>
-                        <div class="block-content">
-                            <p>UV boyaları üç temel bileşen içerir:</p>
-                            <ol>
-                                <li><strong>Monomerler:</strong> Sıvı haldeki temel yapı taşları</li>
-                                <li><strong>Oligomerler:</strong> Ağ yapısını oluşturan zincirler</li>
-                                <li><strong>Foto-başlatıcılar:</strong> UV ışığıyla reaksiyonu başlatan maddeler</li>
-                            </ol>
-                            <br>
-                            <p>UV ışığı (365-405nm) foto-başlatıcıları uyarınca, monomerler <span class="tooltip">polimerleşir<span class="tooltip-text">Küçük moleküllerin büyük zincirler oluşturması</span></span> ve katı, plastik bir tabaka oluşur. Bu sürece <strong>kürlenme (curing)</strong> denir.</p>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "UV Boya Türleri",
-                subtitle: "Mürekkep çeşitleri ve kullanım alanları",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">🎨 Ana Mürekkep Türleri</div>
-                        <div class="block-content">
-                            <table class="data-table">
-                                <tr>
-                                    <th>Tür</th>
-                                    <th>Özellik</th>
-                                    <th>Kullanım</th>
-                                </tr>
-                                <tr>
-                                    <td><strong>CMYK</strong></td>
-                                    <td>Cyan, Magenta, Yellow, Black</td>
-                                    <td>Temel renk baskısı</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>White (Beyaz)</strong></td>
-                                    <td>Opak beyaz zemin</td>
-                                    <td>Şeffaf/renkli yüzeyler</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Varnish (Vernik)</strong></td>
-                                    <td>Şeffaf koruyucu/kabartma</td>
-                                    <td>3D efekt, parlaklık</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Primer (Astar)</strong></td>
-                                    <td>Yapıştırıcı katman</td>
-                                    <td>Zor tutunan yüzeyler</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="content-block warning">
-                        <div class="block-title">⚠️ Önemli Not: Beyaz Mürekkep</div>
-                        <div class="block-content">
-                            <p>Beyaz mürekkep <strong>en kritik</strong> bileşendir çünkü:</p>
-                            <ul>
-                                <li>Şeffaf pleksiye baskı yaparken renklerin görünmesini sağlar</li>
-                                <li>Cam üzerine beyaz zemin oluşturur</li>
-                                <li>Renkli metaller üzerinde gerçek renkleri verir</li>
-                            </ul>
-                            <br>
-                            <strong>Beyaz mürekkep kullanılmazsa:</strong> Renkler soluk, cansız ve şeffaf çıkar!
                         </div>
                     </div>
                 `
             }
         ],
         quiz: {
-            question: "Şeffaf pleksi üzerine renkli baskı yaparken beyaz katmanı nereye basmalısınız?",
-            options: ["Sadece üste", "Sadece alta", "Hem alta hem üste", "Hiçbir yere"],
+            question: "UV baskının en büyük avantajı nedir?",
+            options: ["Ucuz maliyet", "Anında kuruma", "Sadece kağıt", "Solvent kokusu"],
             correct: 1,
-            explanation: "Renklerin canlı görünmesi için beyaz zemin şarttır. Bu yüzden önce beyaz, üzerine CMYK basılır."
+            explanation: "UV baskıda boya saniyeler içinde kurur, bu en büyük avantajdır."
         }
     },
     {
         id: 2,
-        title: "Yüzey Hazırlığı ve Adhezyon",
-        desc: "Malzeme seçimi, temizlik ve tutunma prensipleri",
+        title: "Yüzey Hazırlığı",
+        desc: "Malzeme seçimi ve tutunma",
         duration: "30 dk",
         xp: 120,
         locked: true,
         lessons: [
             {
-                title: "Yüzey Enerjisi ve Tutunma",
-                subtitle: "Boya neden atar? Neden tutunur?",
+                title: "Yüzey Enerjisi",
+                subtitle: "Tutunma prensipleri",
                 content: `
                     <div class="content-block">
                         <div class="block-title">🔬 Bilimsel Temel</div>
                         <div class="block-content">
-                            <p>Her malzemenin bir <span class="tooltip">yüzey enerjisi<span class="tooltip-text">Malzeme yüzeyinin moleküler çekim gücü</span></span> vardır. Boya tutunması için:</p>
-                            <br>
-                            <strong>Boya Yüzey Gerilimi < Malzeme Yüzey Enerjisi</strong>
-                            <br><br>
-                            <table class="data-table">
-                                <tr><th>Malzeme</th><th>Yüzey Enerjisi (dyn/cm)</th><th>Tutunma</th></tr>
-                                <tr><td>Paslanmaz Çelik</td><td>700-1000</td><td>✅ Mükemmel</td></tr>
-                                <tr><td>Alüminyum</td><td>500-800</td><td>✅ İyi</td></tr>
-                                <tr><td>PVC</td><td>39</td><td>⚠️ Orta</td></tr>
-                                <tr><td>PP (Polipropilen)</td><td>29</td><td>❌ Zayıf</td></tr>
-                                <tr><td>PTFE (Teflon)</td><td>18</td><td>❌ İmkansız</td></tr>
-                            </table>
+                            Her malzemenin yüzey enerjisi vardır. Boya tutunması için boyanın yüzey gerilimi malzemeninkinden düşük olmalıdır.
                         </div>
-                                // MEVCUT KOD:
-{
-    id: 2,
-    title: "Yüzey Hazırlığı ve Adhezyon",
-    // ...
-    lessons: [
-        {
-            title: "Yüzey Enerjisi ve Tutunma",
-            subtitle: "Boya neden atar? Neden tutunur?",
-            content: `
-                <div class="content-block">
-                    <div class="block-title">🔬 Bilimsel Temel</div>
-                    <!-- ... mevcut tablo ... -->
-                </div>
-
-                <!-- ========================================== -->
-                <!-- BURAYA YAPIŞTIR: Yüzey Enerjisi Simülasyonu -->
-                <!-- ========================================== -->
-                
-                <div class="interactive-demo" id="adhesionSim">
-                    <!-- ... tüm adhesion HTML'i ... -->
-                </div>
-                
-                <script>
-                    // ... adhesion JavaScript fonksiyonları ...
-                </script>
-            `
-        }
-    ]
-}
                     </div>
                 `
             }
         ],
         quiz: {
-            question: "PP (Polipropilen) malzemeye baskı yapmadan önce ne yapılmalıdır?",
-            options: ["Sadece silmek", "Primer (korona/alev) uygulamak", "Sıcak tutmak", "Hiçbir şey yapmadan basmak"],
+            question: "PP malzemeye baskı için ne şarttır?",
+            options: ["Sadece silmek", "Primer uygulamak", "Sıcak tutmak", "Hiçbir şey"],
             correct: 1,
-            explanation: "PP düşük yüzey enerjili (29 dyn/cm) malzemedir. UV boyası tutunamaz. Corona treatment veya özel primer şarttır."
+            explanation: "PP düşük yüzey enerjilidir, primer şarttır."
         }
     },
     {
         id: 3,
-        title: "CorelDRAW ile UV Hazırlık",
-        desc: "Profesyonel dosya hazırlama ve RIP ayarları",
+        title: "CorelDRAW Hazırlık",
+        desc: "Dosya hazırlama",
         duration: "35 dk",
         xp: 150,
         locked: true,
-        lessons: [
-            {
-                title: "Renk Yönetimi ve Spot Renkler",
-                subtitle: "White ve Varnish katmanları",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">🎯 Spot Renk Mantığı</div>
-                        <div class="block-content">
-                            <p>RIP yazılımı (PrintForge, Caldera, vb.) <strong>spot renkleri</strong> özel kanallar olarak tanır:</p>
-                            <ul>
-                                <li><strong>RD_WHITE:</strong> Beyaz mürekkep kanalı</li>
-                                <li><strong>RD_VARNISH:</strong> Vernik/kabartma kanalı</li>
-                                <li><strong>RD_PRIMER:</strong> Astar kanalı</li>
-                            </ul>
-                        </div>
-                    </div>
-                `
-            }
-        ],
+        lessons: [{
+            title: "Spot Renkler",
+            subtitle: "White ve Varnish",
+            content: `<div class="content-block"><div class="block-title">🎯 Spot Renkler</div><div class="block-content">RD_WHITE ve RD_VARNISH kullanımı.</div></div>`
+        }],
         quiz: {
-            question: "CorelDRAW'de beyaz katmanı nasıl tanımlamalısınız?",
-            options: ["Sadece beyaz renk yap", "Spot renk adı 'RD_WHITE' olmalı", "Sadece alt katmana koy", "RIP'te sonradan ayarla"],
+            question: "Beyaz katman nasıl tanımlanır?",
+            options: ["Sadece beyaz renk", "Spot 'RD_WHITE'", "Alt katman", "RIP'te"],
             correct: 1,
-            explanation: "RIP yazılımı 'RD_WHITE' spot renk adını otomatik beyaz kanalına yönlendirir. Sadece beyaz renk yetmez."
+            explanation: "RIP yazılımı RD_WHITE spot rengini beyaz kanalına yönlendirir."
         }
     },
     {
         id: 4,
         title: "Makine Operasyonu",
-        desc: "Günlük bakım, kalibrasyon ve baskı ayarları",
+        desc: "Bakım ve kalibrasyon",
         duration: "40 dk",
         xp: 150,
         locked: true,
-        lessons: [
-            {
-                title: "Günlük Başlangıç Prosedürü",
-                subtitle: "Sabit kalite için sabit rutin",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">☀️ Sabah Rutini (Her Gün!)</div>
-                        <div class="block-content">
-                            <ul class="checklist">
-                                <li>Makineyi aç, ısınmasını bekle (5 dk)</li>
-                                <li>Beyaz mürekkep şişesini çalkala (10 saniye)</li>
-                                <li>Nozzle check yap (tüm kanallar açık mı?)</li>
-                                <li>Kafa temizliği (light cleaning)</li>
-                                <li>Test baskısı yap</li>
-                                <li>Malzeme yüzeyini kontrol et</li>
-                                <li>Kafa yüksekliğini ayarla (1.5-2mm)</li>
-                            </ul>
-                        </div>
-                    </div>
-                `
-            }
-        ],
+        lessons: [{
+            title: "Günlük Rutin",
+            subtitle: "Sabit kalite için",
+            content: `<div class="content-block"><div class="block-title">☀️ Rutin</div><div class="block-content">Makine açma, çalkalama, nozzle check.</div></div>`
+        }],
         quiz: {
-            question: "Beyaz mürekkep neden her sabah çalkalanmalıdır?",
-            options: ["Hava kabarcığı için", "Pigment çökelmesini önlemek", "Kokusunu gidermek", "Rengini açmak"],
+            question: "Beyaz mürekkep neden çalkalanır?",
+            options: ["Hava için", "Pigment çökelmesi", "Kokusu", "Rengi"],
             correct: 1,
-            explanation: "Beyaz mürekkep titanyum dioksit pigmenti içerir. Çökelir ve tıkanıklık yapar. Çalkalamak homojen dağılımı sağlar."
+            explanation: "Titanyum dioksit çökelir, çalkalamak gerekir."
         }
     },
     {
         id: 5,
-        title: "Arıza Tespiti ve Çözüm",
-        desc: "Banding, nozzle loss ve renk problemleri",
+        title: "Arıza Tespiti",
+        desc: "Banding çözümleri",
         duration: "35 dk",
         xp: 150,
         locked: true,
-        lessons: [
-            {
-                title: "Banding (Çizgili Baskı)",
-                subtitle: "Yatay çizgilerin nedenleri ve çözümleri",
-                content: `
-                    <div class="content-block danger">
-                        <div class="block-title">🚨 Banding Tipleri</div>
-                        <div class="block-content">
-                            <p><strong>Ink Starvation (Açlık):</strong> Mürekkep yetmezliği</p>
-                            <p style="margin-left:20px;">→ Çözüm: Damper kontrolü, mürekkep seviyesi</p>
-                            <br>
-                            <p><strong>Kafa Hizalama Kayması:</strong> Passlar arası uyumsuzluk</p>
-                            <p style="margin-left:20px;">→ Çözüm: Bidirectional calibration</p>
-                    
-                        </div>
-                     // MEVCUT KOD:
-{
-    id: 5,
-    title: "Arıza Tespiti ve Çözüm",
-    // ...
-    lessons: [
-        {
-            title: "Banding (Çizgili Baskı)",
-            subtitle: "Yatay çizgilerin nedenleri ve çözümleri",
-            content: `
-                <div class="content-block danger">
-                    <div class="block-title">🚨 Banding Tipleri</div>
-                    <!-- ... mevcut içerik ... -->
-                </div>
-
-                <!-- ========================================== -->
-                <!-- BURAYA YAPIŞTIR: Nozzle Check Simülasyonu -->
-                <!-- ========================================== -->
-                
-                <div class="interactive-demo" id="nozzleCheck">
-                    <!-- ... tüm nozzle HTML'i ... -->
-                </div>
-                
-                <script>
-                    // ... nozzle JavaScript fonksiyonları ...
-                    // NOT: showConfetti fonksiyonu zaten varsa tekrar yazmayın
-                </script>
-            `
-        }
-    ]
-}   
-                    </div>
-                `
-            }
-        ],
+        lessons: [{
+            title: "Banding",
+            subtitle: "Çizgili baskı",
+            content: `<div class="content-block"><div class="block-title">🚨 Nedenleri</div><div class="block-content">Ink starvation, hizalama kayması.</div></div>`
+        }],
         quiz: {
-            question: "Düzenli aralıklarla tekrar eden hafif çizgilerin sebebi nedir?",
-            options: ["Nozzle tıkanıklığı", "Encoder strip kirlenmesi", "Yanlış ICC profili", "Düşük UV gücü"],
+            question: "Düzenli çizgilerin sebebi?",
+            options: ["Nozzle", "Encoder strip", "ICC", "UV gücü"],
             correct: 1,
-            explanation: "Encoder strip (şerit sensör) kirliyse kafa pozisyonunu yanlış okur ve düzenli aralıklarla hizalama hatası oluşur."
+            explanation: "Encoder strip kirliyse düzenli hatalar oluşur."
         }
     },
     {
         id: 6,
         title: "İleri Teknikler",
-        desc: "Double pass, mirror print ve özel efektler",
+        desc: "Mirror print",
         duration: "30 dk",
         xp: 130,
         locked: true,
-        lessons: [
-            {
-                title: "Mirror Print (Ayna Baskı)",
-                subtitle: "Cam ve pleksi için ters baskı",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">🪞 Uygulama Alanları</div>
-                        <div class="block-content">
-                            <p>Cam üzerine baskıda görsel <strong>camın arkasından</strong> izlenir. Bu yüzden:</p>
-                            <ol>
-                                <li>Resmi yatay çevir (mirror/flip)</li>
-                                <li>Önce renkli katmanı bas (normalde altta kalır)</li>
-                                <li>Üzerine beyaz bas (normalde üstte kalır)</li>
-                                <li>Sonuç: Camın önü pürüzsüz, arka taraf baskılı</li>
-                            </ol>
-                        </div>
-                    </div>
-                `
-            }
-        ],
+        lessons: [{
+            title: "Mirror Print",
+            subtitle: "Ters baskı",
+            content: `<div class="content-block"><div class="block-title">🪞 Uygulama</div><div class="block-content">Cam üzerine ters baskı tekniği.</div></div>`
+        }],
         quiz: {
-            question: "Mirror print'te katman sırası nasıldır?",
-            options: ["Beyaz altta, renk üstte", "Renk altta, beyaz üstte", "Sadece beyaz", "Sadece renk"],
+            question: "Mirror print sırası?",
+            options: ["Beyaz altta", "Renk altta", "Sadece beyaz", "Sadece renk"],
             correct: 1,
-            explanation: "Mirror print'te camın arkasına bakılır. Önce renk (ters çevrilmiş), üzerine beyaz basılır. Böylece camdan bakınca renk önde görünür."
+            explanation: "Önce renk, üzerine beyaz basılır."
         }
     },
     {
         id: 7,
         title: "Maliyet Optimizasyonu",
-        desc: "Mürekkep hesabı, fire oranı ve fiyatlandırma",
+        desc: "Mürekkep hesabı",
         duration: "25 dk",
         xp: 100,
         locked: true,
-        lessons: [
-            {
-                title: "Mürekkep Maliyeti Hesaplama",
-                subtitle: "Gerçek maliyeti öğrenmek",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">💰 Formül</div>
-                        <div class="block-content">
-                            <div class="code-block">
-Maliyet = (Kaplama Alanı m²) × (Pass Sayısı) × (ml/m²/pass) × (Fiyat/ml)
-                            </div>
-                            <br>
-                            <p><strong>Örnek Değerler:</strong></p>
-                            <ul>
-                                <li>CMYK: ~12ml/m² (1 pass)</li>
-                                <li>White: ~15ml/m² (daha yoğun)</li>
-                                <li>Varnish: ~18ml/m²</li>
-                            </ul>
-                        </div>
-                    </div>
-                `
-            }
-        ],
+        lessons: [{
+            title: "Mürekkep Maliyeti",
+            subtitle: "Hesaplama",
+            content: `<div class="content-block"><div class="block-title">💰 Formül</div><div class="block-content">Alan × Pass × ml/m² × Fiyat</div></div>`
+        }],
         quiz: {
-            question: "10m² alana 3 pass white + 1 pass CMYK basarsanız toplam kaç ml white gider?",
+            question: "10m²'ye 3 pass white?",
             options: ["150ml", "300ml", "450ml", "600ml"],
             correct: 2,
-            explanation: "10m² × 3 pass × 15ml/m² = 450ml. White mürekkebi daha yoğundur (15ml/m²)."
+            explanation: "10 × 3 × 15 = 450ml"
         }
     },
     {
         id: 8,
-        title: "Sertifika Sınavı",
-        desc: "Tüm modüllerin final değerlendirmesi",
+        title: "Final Sınavı",
+        desc: "Sertifika",
         duration: "20 dk",
         xp: 500,
         locked: true,
         isFinal: true,
         lessons: [],
         finalQuiz: [
-            {
-                question: "UV baskının en büyük avantajı nedir?",
-                options: ["Ucuz maliyet", "Anında kuruma", "Sadece kağıda basılması", "Solvent kokusu"],
-                correct: 1
-            },
-            {
-                question: "PP malzemeye baskı için ne şarttır?",
-                options: ["Yüksek ısı", "Primer/Corona", "Sadece su bazlı boya", "Hiçbir şey"],
-                correct: 1
-            },
-            {
-                question: "Beyaz mürekkep neden çalkalanır?",
-                options: ["Hava için", "Pigment çökelmesi", "Rengi açmak", "Karıncalanmayı önlemek"],
-                correct: 1
-            }
+            {q: "UV baskı avantajı?", o: ["Ucuz","Anında kuruma","Kağıt","Kokulu"], c: 1},
+            {q: "PP için gerekli?", o: ["Isı","Primer","Su","Hiçbiri"], c: 1},
+            {q: "Beyaz mürekkep?", o: ["Hava","Pigment","Renk","Karınca"], c: 1}
         ]
     }
 ];
 
+let progress = JSON.parse(localStorage.getItem('uv_progress')) || {
+    completed: [],
+    current: 1,
+    xp: 0
+};
+
+let stats = JSON.parse(localStorage.getItem('mf_stats')) || {exp: 0, lvl: 1};
+let exercises = JSON.parse(localStorage.getItem('mf_ex')) || {date: new Date().toLocaleDateString('tr-TR'), done: [false, false]};
+let workouts = JSON.parse(localStorage.getItem('mf_workouts')) || [];
+
 // ==========================================
-// UYGULAMA MANTIĞI
+// AKADEMİ
 // ==========================================
 
-let currentModule = 0;
-let currentLesson = 0;
-let userProgress = JSON.parse(localStorage.getItem('uv_progress')) || {
-    completedModules: [],
-    currentModule: 1,
-    totalXP: 0
-};
-
-let priceSettings = JSON.parse(localStorage.getItem('mf_price_settings')) || {
-    trans: 450,
-    color: 600,
-    fixed: 50
-};
-
-let workoutHistory = JSON.parse(localStorage.getItem('mf_workout_history')) || [];
-let todayExercises = JSON.parse(localStorage.getItem('mf_today_exercises')) || {
-    date: new Date().toLocaleDateString('tr-TR'),
-    completed: [false, false, false, false]
-};
-
-function initUVAcademy() {
+function initAcademy() {
     renderModules();
     updateProgress();
 }
 
 function renderModules() {
     const container = document.getElementById('modulesList');
-    container.innerHTML = uvCurriculum.map((mod, idx) => {
-        const isCompleted = userProgress.completedModules.includes(mod.id);
-        const isLocked = mod.id > userProgress.currentModule;
-        const isCurrent = mod.id === userProgress.currentModule;
+    if (!container) return;
+    
+    container.innerHTML = curriculum.map(mod => {
+        const done = progress.completed.includes(mod.id);
+        const locked = mod.id > progress.current;
+        const current = mod.id === progress.current;
         
         return `
-            <div class="module-card ${isCompleted ? 'completed' : ''} ${isLocked ? 'locked' : ''}" 
-                 onclick="${isLocked ? '' : `openModule(${mod.id})`}">
+            <div class="module-card ${done ? 'completed' : ''} ${locked ? 'locked' : ''}" 
+                 onclick="${locked ? '' : `openModule(${mod.id})`}">
                 <div class="module-number">MODÜL ${mod.id}</div>
                 <div class="module-title">${mod.title}</div>
                 <div class="module-desc">${mod.desc}</div>
                 <div class="module-meta">
                     <span>⏱️ ${mod.duration}</span>
                     <span>🎯 ${mod.xp} XP</span>
-                    ${isCompleted ? '<span style="color:var(--success)">✓ Tamamlandı</span>' : ''}
-                    ${isLocked ? '<span>🔒 Kilitli</span>' : ''}
-                    ${isCurrent ? '<span style="color:var(--uv)">▶ Devam Et</span>' : ''}
+                    ${done ? '<span style="color:var(--success)">✓</span>' : ''}
+                    ${locked ? '<span>🔒</span>' : ''}
+                    ${current ? '<span style="color:var(--uv)">▶</span>' : ''}
                 </div>
             </div>
         `;
@@ -1208,581 +767,360 @@ function renderModules() {
 }
 
 function updateProgress() {
-    const total = uvCurriculum.length;
-    const completed = userProgress.completedModules.length;
-    const percent = Math.round((completed / total) * 100);
+    const total = curriculum.length;
+    const done = progress.completed.length;
+    const pct = Math.round((done / total) * 100);
     
-    document.getElementById('totalProgress').textContent = percent + '%';
-    document.getElementById('totalProgressBar').style.width = percent + '%';
-    document.getElementById('completedModules').textContent = `${completed}/${total} Modül`;
-    document.getElementById('totalPoints').textContent = `${userProgress.totalXP} XP Kazanıldı`;
+    const tp = document.getElementById('totalProgress');
+    const tpb = document.getElementById('totalProgressBar');
+    const cm = document.getElementById('completedModules');
+    const tpts = document.getElementById('totalPoints');
+    const nb = document.getElementById('navBadge');
     
-    const hasNew = uvCurriculum.some(m => m.id === userProgress.currentModule && !userProgress.completedModules.includes(m.id));
-    document.getElementById('navBadge').style.display = hasNew ? 'block' : 'none';
+    if (tp) tp.textContent = pct + '%';
+    if (tpb) tpb.style.width = pct + '%';
+    if (cm) cm.textContent = `${done}/${total} Modül`;
+    if (tpts) tpts.textContent = `${progress.xp} XP`;
+    if (nb) nb.style.display = (progress.current > done) ? 'block' : 'none';
 }
 
-function openModule(moduleId) {
-    currentModule = uvCurriculum.findIndex(m => m.id === moduleId);
-    const mod = uvCurriculum[currentModule];
+let currModule = 0;
+let currLesson = 0;
+
+function openModule(id) {
+    currModule = curriculum.findIndex(m => m.id === id);
+    const mod = curriculum[currModule];
     
     if (mod.isFinal) {
-        startFinalQuiz();
+        startFinal();
         return;
     }
     
-    currentLesson = 0;
+    currLesson = 0;
     showLesson();
     showScreen('moduleDetail');
 }
 
 function showLesson() {
-    const mod = uvCurriculum[currentModule];
-    const lesson = mod.lessons[currentLesson];
+    const mod = curriculum[currModule];
+    const lesson = mod.lessons[currLesson];
+    const content = document.getElementById('lessonContent');
     
-    document.getElementById('lessonContent').innerHTML = `
-        <div class="lesson-header">
-            <span class="lesson-badge">MODÜL ${mod.id} • DERS ${currentLesson + 1}/${mod.lessons.length}</span>
-            <h2 class="lesson-title">${lesson.title}</h2>
-            <div class="lesson-subtitle">${lesson.subtitle}</div>
-        </div>
-        ${lesson.content}
-    `;
+    if (content) {
+        content.innerHTML = `
+            <div class="lesson-header">
+                <span class="lesson-badge">MODÜL ${mod.id} • DERS ${currLesson + 1}/${mod.lessons.length}</span>
+                <h2 class="lesson-title">${lesson.title}</h2>
+                <div style="color:var(--text-muted); font-size:14px;">${lesson.subtitle}</div>
+            </div>
+            ${lesson.content}
+        `;
+    }
     
-    const prevBtn = document.querySelector('#lessonNav .btn-secondary');
-    const nextBtn = document.getElementById('nextBtn');
+    const prev = document.querySelector('#moduleDetail .btn-secondary');
+    const next = document.getElementById('nextBtn');
     
-    prevBtn.style.visibility = currentLesson === 0 ? 'hidden' : 'visible';
-    prevBtn.onclick = prevLesson;
-    
-    if (currentLesson === mod.lessons.length - 1) {
-        nextBtn.textContent = 'Quize Geç →';
-        nextBtn.onclick = () => startQuiz();
-    } else {
-        nextBtn.textContent = 'Sonraki →';
-        nextBtn.onclick = nextLesson;
+    if (prev) prev.style.visibility = currLesson === 0 ? 'hidden' : 'visible';
+    if (next) {
+        next.textContent = currLesson === mod.lessons.length - 1 ? 'Quize Geç →' : 'Sonraki →';
+        next.onclick = currLesson === mod.lessons.length - 1 ? startQuiz : nextLesson;
     }
 }
 
 function nextLesson() {
-    currentLesson++;
+    currLesson++;
     showLesson();
 }
 
 function prevLesson() {
-    currentLesson--;
+    currLesson--;
     showLesson();
 }
 
 function startQuiz() {
-    const mod = uvCurriculum[currentModule];
-    const quiz = mod.quiz;
+    const mod = curriculum[currModule];
+    const q = mod.quiz;
     
-    document.getElementById('quizTitle').textContent = `${mod.title} - Bilgi Kontrolü`;
+    const qt = document.getElementById('quizTitle');
+    const qc = document.getElementById('quizContent');
     
-    document.getElementById('quizContent').innerHTML = `
-        <div class="quiz-container">
-            <div class="quiz-question">${quiz.question}</div>
-            <div class="quiz-options" id="quizOptions">
-                ${quiz.options.map((opt, idx) => `
-                    <div class="quiz-option" onclick="selectAnswer(${idx}, ${quiz.correct}, '${quiz.explanation}')">
-                        ${String.fromCharCode(65 + idx)}) ${opt}
-                    </div>
-                `).join('')}
-            </div>
-            <div id="quizFeedback" style="margin-top:20px; display:none;"></div>
-        </div>
-    `;
+    if (qt) qt.textContent = `${mod.title} - Sınav`;
+    if (qc) {
+        qc.innerHTML = `
+            <div class="quiz-question">${q.question}</div>
+            ${q.options.map((opt, i) => `
+                <div class="quiz-option" onclick="answer(${i}, ${q.correct}, '${q.explanation.replace(/'/g, "\\'")}')">
+                    ${String.fromCharCode(65 + i)}) ${opt}
+                </div>
+            `).join('')}
+            <div id="qf" style="margin-top:20px; display:none;"></div>
+        `;
+    }
     
     showScreen('quizScreen');
 }
 
-function selectAnswer(selected, correct, explanation) {
-    const options = document.querySelectorAll('.quiz-option');
-    const feedback = document.getElementById('quizFeedback');
+function answer(sel, cor, exp) {
+    const opts = document.querySelectorAll('.quiz-option');
+    const fb = document.getElementById('qf');
     
-    options.forEach((opt, idx) => {
-        opt.classList.add('disabled');
-        if (idx === correct) opt.classList.add('correct');
-        else if (idx === selected && idx !== correct) opt.classList.add('wrong');
+    opts.forEach((o, i) => {
+        o.classList.add('disabled');
+        o.onclick = null;
+        if (i === cor) o.classList.add('correct');
+        else if (i === sel && i !== cor) o.classList.add('wrong');
     });
     
-    const isCorrect = selected === correct;
-    feedback.style.display = 'block';
-    feedback.innerHTML = `
-        <div class="content-block ${isCorrect ? '' : 'warning'}" style="margin-top:20px;">
-            <div class="block-title">${isCorrect ? '✅ Doğru!' : '❌ Yanlış'}</div>
-            <div class="block-content">
-                <p>${explanation}</p>
-                ${isCorrect ? `<button class="btn btn-success" onclick="completeModule()" style="margin-top:15px;">Modülü Tamamla (+${uvCurriculum[currentModule].xp} XP)</button>` : 
-                `<button class="btn" onclick="startQuiz()" style="margin-top:15px;">Tekrar Dene</button>`}
-            </div>
-        </div>
-    `;
-}
-
-function completeModule() {
-    const mod = uvCurriculum[currentModule];
-    
-    if (!userProgress.completedModules.includes(mod.id)) {
-        userProgress.completedModules.push(mod.id);
-        userProgress.totalXP += mod.xp;
-        
-        if (mod.id < uvCurriculum.length) {
-            userProgress.currentModule = mod.id + 1;
-        }
-        
-        localStorage.setItem('uv_progress', JSON.stringify(userProgress));
-        addExp(mod.xp);
-        showAchievement(`${mod.title} Tamamlandı! +${mod.xp} XP`);
-    }
-    
-    showScreen('uvAcademyMain');
-    initUVAcademy();
-}
-
-function startFinalQuiz() {
-    const mod = uvCurriculum[currentModule];
-    let currentQ = 0;
-    let score = 0;
-    
-    function showQuestion() {
-        const q = mod.finalQuiz[currentQ];
-        document.getElementById('quizTitle').textContent = `🎓 FİNAL SINAVI (${currentQ + 1}/${mod.finalQuiz.length})`;
-        
-        document.getElementById('quizContent').innerHTML = `
-            <div class="quiz-container">
-                <div class="quiz-question">${q.question}</div>
-                <div class="quiz-options">
-                    ${q.options.map((opt, idx) => `
-                        <div class="quiz-option" onclick="window.finalSelect(${idx}, ${q.correct})">
-                            ${String.fromCharCode(65 + idx)}) ${opt}
-                        </div>
-                    `).join('')}
+    const ok = sel === cor;
+    if (fb) {
+        fb.style.display = 'block';
+        fb.innerHTML = `
+            <div class="content-block" style="${ok ? '' : 'border-left-color:var(--warning)'}">
+                <div class="block-title">${ok ? '✅ Doğru!' : '❌ Yanlış'}</div>
+                <div class="block-content">
+                    <p>${exp}</p>
+                    ${ok ? `<button class="btn btn-success" onclick="completeMod()" style="width:100%; margin-top:10px;">Tamamla (+${curriculum[currModule].xp} XP)</button>` : 
+                    `<button class="btn" onclick="startQuiz()" style="width:100%; margin-top:10px;">Tekrar</button>`}
                 </div>
             </div>
         `;
     }
+}
+
+function completeMod() {
+    const mod = curriculum[currModule];
     
-    window.finalSelect = (selected, correct) => {
-        const options = document.querySelectorAll('.quiz-option');
-        options.forEach((opt, idx) => {
-            opt.classList.add('disabled');
-            if (idx === correct) opt.classList.add('correct');
-            else if (idx === selected && idx !== correct) opt.classList.add('wrong');
+    if (!progress.completed.includes(mod.id)) {
+        progress.completed.push(mod.id);
+        progress.xp += mod.xp;
+        if (mod.id < curriculum.length) progress.current = mod.id + 1;
+        localStorage.setItem('uv_progress', JSON.stringify(progress));
+        addExp(mod.xp);
+        showAchievement(`${mod.title} Tamamlandı! +${mod.xp} XP`);
+    }
+    
+    goToAcademy();
+}
+
+function startFinal() {
+    const mod = curriculum[currModule];
+    let qIdx = 0;
+    let score = 0;
+    
+    function showQ() {
+        const q = mod.finalQuiz[qIdx];
+        const qt = document.getElementById('quizTitle');
+        const qc = document.getElementById('quizContent');
+        
+        if (qt) qt.textContent = `Final Sınavı (${qIdx + 1}/${mod.finalQuiz.length})`;
+        if (qc) {
+            qc.innerHTML = `
+                <div class="quiz-question">${q.q}</div>
+                ${q.o.map((opt, i) => `
+                    <div class="quiz-option" onclick="window.finSel(${i}, ${q.c})">${String.fromCharCode(65 + i)}) ${opt}</div>
+                `).join('')}
+            `;
+        }
+    }
+    
+    window.finSel = (sel, cor) => {
+        const opts = document.querySelectorAll('.quiz-option');
+        opts.forEach((o, i) => {
+            o.classList.add('disabled');
+            o.onclick = null;
+            if (i === cor) o.classList.add('correct');
+            else if (i === sel && i !== cor) o.classList.add('wrong');
         });
         
-        if (selected === correct) score++;
+        if (sel === cor) score++;
         
         setTimeout(() => {
-            currentQ++;
-            if (currentQ < mod.finalQuiz.length) {
-                showQuestion();
+            qIdx++;
+            if (qIdx < mod.finalQuiz.length) {
+                showQ();
             } else {
-                showFinalResult();
+                const passed = score >= 2;
+                const qc = document.getElementById('quizContent');
+                if (qc) {
+                    qc.innerHTML = `
+                        <div style="text-align:center; padding:40px;">
+                            <div style="font-size:64px;">${passed ? '🏆' : '📚'}</div>
+                            <h2 style="color:${passed ? 'var(--success)' : 'var(--warning)'}">${passed ? 'SERTİFİKA!' : 'Tekrar Dene'}</h2>
+                            <p>Skor: ${score}/${mod.finalQuiz.length}</p>
+                            ${passed ? 
+                                `<button class="btn btn-success" onclick="completeMod()" style="width:100%;">Sertifika Al (+${mod.xp} XP)</button>` :
+                                `<button class="btn" onclick="goToAcademy()" style="width:100%;">Akademiye Dön</button>`
+                            }
+                        </div>
+                    `;
+                }
             }
         }, 1500);
     };
     
-    function showFinalResult() {
-        const passed = score >= 2;
-        const percent = Math.round((score / mod.finalQuiz.length) * 100);
-        
-        document.getElementById('quizContent').innerHTML = `
-            <div style="text-align:center; padding:40px 20px;">
-                <div style="font-size:64px; margin-bottom:20px;">${passed ? '🏆' : '📚'}</div>
-                <h2 style="color:${passed ? 'var(--success)' : 'var(--warning)'}">
-                    ${passed ? 'SERTİFİKA KAZANDINIZ!' : 'Tekrar Deneyin'}
-                </h2>
-                <p style="font-size:18px; margin:20px 0;">Skor: ${score}/${mod.finalQuiz.length} (${percent}%)</p>
-                ${passed ? `
-                    <p style="color:var(--text-muted); margin-bottom:30px;">UV Baskı Uzmanı sertifikası kazandınız!</p>
-                    <button class="btn btn-success" onclick="completeModule()">Sertifikayı Al (+${mod.xp} XP)</button>
-                ` : `
-                    <p style="color:var(--text-muted); margin-bottom:30px;">Tüm modülleri gözden geçirin.</p>
-                    <button class="btn" onclick="showScreen('uvAcademyMain')">Akademiye Dön</button>
-                `}
-            </div>
-        `;
-    }
-    
     showScreen('quizScreen');
-    showQuestion();
-}
-
-function showAchievement(text) {
-    const popup = document.getElementById('achievementPopup');
-    document.getElementById('achievementText').textContent = text;
-    popup.classList.add('show');
-    setTimeout(() => popup.classList.remove('show'), 3000);
+    showQ();
 }
 
 // ==========================================
-// MALİYET HESAPLAMA MODÜLÜ
+// MALİYET
 // ==========================================
 
-function loadPriceSettings() {
-    document.getElementById('set_trans').value = priceSettings.trans;
-    document.getElementById('set_color').value = priceSettings.color;
-    document.getElementById('set_fixed').value = priceSettings.fixed;
-    document.getElementById('fixedCost').value = priceSettings.fixed;
-}
+const prices = {trans: 450, color: 600};
 
-function savePriceSettings() {
-    priceSettings = {
-        trans: parseFloat(document.getElementById('set_trans').value) || 450,
-        color: parseFloat(document.getElementById('set_color').value) || 600,
-        fixed: parseFloat(document.getElementById('set_fixed').value) || 50
-    };
-    localStorage.setItem('mf_price_settings', JSON.stringify(priceSettings));
-    
-    // Anlık hesaplamayı güncelle
-    document.getElementById('fixedCost').value = priceSettings.fixed;
-    calculate();
-    showAchievement('Fiyat ayarları kaydedildi!');
-}
-
-function updatePriceFromSelection() {
+function updatePrice() {
     const type = document.getElementById('mType').value;
-    const customArea = document.getElementById('customPriceArea');
-    const priceInput = document.getElementById('uPrice');
-    
-    if (type === 'trans') {
-        priceInput.value = priceSettings.trans;
-        customArea.style.display = 'none';
-    } else if (type === 'color') {
-        priceInput.value = priceSettings.color;
-        customArea.style.display = 'none';
-    } else if (type === 'custom') {
-        customArea.style.display = 'block';
-        priceInput.value = '';
-        document.getElementById('customPrice').focus();
-    } else {
-        priceInput.value = '';
-        customArea.style.display = 'none';
-    }
+    const up = document.getElementById('uPrice');
+    if (up) up.value = prices[type] || '';
     calculate();
 }
 
 function calculate() {
     const w = parseFloat(document.getElementById('w').value) || 0;
     const h = parseFloat(document.getElementById('h').value) || 0;
-    const unitPrice = parseFloat(document.getElementById('uPrice').value) || 0;
-    const fixed = parseFloat(document.getElementById('fixedCost').value) || 0;
+    const p = parseFloat(document.getElementById('uPrice').value) || 0;
+    const f = parseFloat(document.getElementById('fixedCost').value) || 0;
     
-    const area = (w * h) / 10000; // cm²'den m²'ye
-    const materialCost = area * unitPrice;
-    const total = materialCost + fixed;
+    const area = (w * h) / 10000;
+    const total = (area * p) + f;
     
-    document.getElementById('finalRes').innerText = Math.round(total) + "₺";
-    document.getElementById('calcDetail').innerText = 
-        `${area.toFixed(3)} m² × ${unitPrice}₺ + ${fixed}₺ sabit = ${Math.round(materialCost)}₺ + ${fixed}₺`;
+    const fr = document.getElementById('finalRes');
+    const cd = document.getElementById('calcDetail');
     
-    // Otomatik XP ekleme (ilk hesaplama için)
-    if (w > 0 && h > 0 && unitPrice > 0 && !window.calcXPAdded) {
-        addExp(5);
-        window.calcXPAdded = true;
-        setTimeout(() => { window.calcXPAdded = false; }, 5000); // 5 saniye sonra reset
-    }
-}
-
-function saveCalculation() {
-    const calc = {
-        date: new Date().toLocaleString('tr-TR'),
-        dimensions: `${document.getElementById('w').value}x${document.getElementById('h').value} cm`,
-        price: document.getElementById('finalRes').innerText,
-        type: document.getElementById('mType').options[document.getElementById('mType').selectedIndex].text
-    };
-    
-    let history = JSON.parse(localStorage.getItem('mf_calc_history')) || [];
-    history.unshift(calc);
-    if (history.length > 10) history = history.slice(0, 10); // Son 10 kayıt
-    localStorage.setItem('mf_calc_history', JSON.stringify(history));
-    
-    showAchievement('Hesaplama kaydedildi!');
-    addExp(10);
+    if (fr) fr.textContent = Math.round(total) + '₺';
+    if (cd) cd.textContent = `${area.toFixed(3)}m² × ${p}₺ + ${f}₺`;
 }
 
 // ==========================================
-// EGZERSİZ MODÜLÜ
+// EGZERSİZ
 // ==========================================
 
 function initExercise() {
-    // Gün kontrolü - yeni günse sıfırla
     const today = new Date().toLocaleDateString('tr-TR');
-    if (todayExercises.date !== today) {
-        todayExercises = {
-            date: today,
-            completed: [false, false, false, false]
-        };
-        localStorage.setItem('mf_today_exercises', JSON.stringify(todayExercises));
+    if (exercises.date !== today) {
+        exercises = {date: today, done: [false, false]};
+        localStorage.setItem('mf_ex', JSON.stringify(exercises));
     }
     
-    // Checkbox'ları güncelle
-    const checks = document.querySelectorAll('.exercise-check');
-    checks.forEach((check, idx) => {
-        if (todayExercises.completed[idx]) {
-            check.classList.add('completed');
-            check.innerHTML = '✓';
+    document.querySelectorAll('.exercise-check').forEach((c, i) => {
+        if (exercises.done[i]) {
+            c.classList.add('completed');
+            c.textContent = '✓';
         } else {
-            check.classList.remove('completed');
-            check.innerHTML = '';
+            c.classList.remove('completed');
+            c.textContent = '';
         }
     });
     
-    updateExerciseProgress();
-    renderCalendar();
+    updateExCount();
+    renderCal();
 }
 
-function toggleExercise(element) {
-    const index = Array.from(document.querySelectorAll('.exercise-check')).indexOf(element);
-    const isCompleted = element.classList.contains('completed');
+function toggleEx(el) {
+    const checks = document.querySelectorAll('.exercise-check');
+    const idx = Array.from(checks).indexOf(el);
     
-    if (isCompleted) {
-        element.classList.remove('completed');
-        element.innerHTML = '';
-        todayExercises.completed[index] = false;
+    const done = el.classList.contains('completed');
+    if (done) {
+        el.classList.remove('completed');
+        el.textContent = '';
+        exercises.done[idx] = false;
     } else {
-        element.classList.add('completed');
-        element.innerHTML = '✓';
-        todayExercises.completed[index] = true;
-        addExp(5); // Her egzersiz için 5 XP
+        el.classList.add('completed');
+        el.textContent = '✓';
+        exercises.done[idx] = true;
+        addExp(5);
     }
     
-    localStorage.setItem('mf_today_exercises', JSON.stringify(todayExercises));
-    updateExerciseProgress();
+    localStorage.setItem('mf_ex', JSON.stringify(exercises));
+    updateExCount();
 }
 
-function updateExerciseProgress() {
-    const completed = todayExercises.completed.filter(x => x).length;
-    const total = todayExercises.completed.length;
+function updateExCount() {
+    const done = exercises.done.filter(x => x).length;
+    const cc = document.getElementById('completedCount');
+    const btn = document.getElementById('workoutBtn');
     
-    document.getElementById('completedCount').innerText = completed;
-    
-    const btn = document.getElementById('completeWorkoutBtn');
-    if (completed === total) {
-        btn.disabled = false;
-        btn.style.opacity = '1';
-    } else {
-        btn.disabled = true;
-        btn.style.opacity = '0.5';
-    }
+    if (cc) cc.textContent = done;
+    if (btn) btn.disabled = done !== 2;
 }
 
-function logWorkout() {
+function completeWorkout() {
     const today = new Date().toLocaleDateString('tr-TR');
-    
-    if (!workoutHistory.includes(today)) {
-        workoutHistory.push(today);
-        localStorage.setItem('mf_workout_history', JSON.stringify(workoutHistory));
-        addExp(50); // Tamamlama bonusu
+    if (!workouts.includes(today)) {
+        workouts.push(today);
+        localStorage.setItem('mf_workouts', JSON.stringify(workouts));
+        addExp(50);
         showAchievement('Antrenman Tamamlandı! +50 XP');
-    } else {
-        showAchievement('Bugünkü antrenman zaten kaydedilmiş!');
     }
-    
-    renderCalendar();
+    renderCal();
 }
 
-function resetExercises() {
-    todayExercises.completed = [false, false, false, false];
-    localStorage.setItem('mf_today_exercises', JSON.stringify(todayExercises));
-    initExercise();
-}
-
-function renderCalendar() {
+function renderCal() {
     const cal = document.getElementById('mainCalendar');
     if (!cal) return;
     
     cal.innerHTML = '';
-    const now = new Date();
-    const days = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    const days = new Date().getDate();
     
-    for (let i = 1; i <= days; i++) {
-        const dateStr = new Date(now.getFullYear(), now.getMonth(), i).toLocaleDateString('tr-TR');
-        const isDone = workoutHistory.includes(dateStr);
-        const isToday = i === now.getDate();
-        
+    for (let i = 1; i <= 31; i++) {
         const d = document.createElement('div');
-        d.className = `cal-day ${isDone ? 'done' : ''}`;
-        d.innerText = i;
+        d.className = 'cal-day';
+        d.textContent = i;
         
-        if (isToday) {
-            d.style.border = '2px solid var(--accent)';
-            d.style.fontWeight = 'bold';
-        }
+        const dateStr = new Date().toLocaleDateString('tr-TR').replace(/\d{1,2}$/, i);
+        if (workouts.includes(dateStr)) d.classList.add('done');
+        if (i === days) d.style.border = '2px solid var(--accent)';
         
         cal.appendChild(d);
     }
 }
 
 // ==========================================
-// GENEL UYGULAMA FONKSİYONLARI
+// GAMIFICATION
 // ==========================================
 
-const Navigation = {
-    currentScreen: 'homeScreen',
-    
-    init() {
-        // Tüm nav-item'ları otomatik bağla
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', (e) => {
-                const target = item.getAttribute('data-target') || 
-                              item.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
-                if (target) {
-                    this.navigate(target, item);
-                }
-            });
-        });
-        
-        // Başlangıç ekranını ayarla
-        this.navigate('homeScreen', document.querySelector('.nav-item[data-target="homeScreen"]'));
-    },
-    
-    navigate(screenId, navElement = null) {
-        // Aynı ekrana tıklanırsa bir şey yapma
-        if (this.currentScreen === screenId) return;
-        
-        // Tüm ekranları gizle
-        document.querySelectorAll('.screen').forEach(screen => {
-            screen.classList.remove('active');
-            screen.style.display = 'none'; // Force hide
-        });
-        
-        // Hedef ekranı göster
-        const targetScreen = document.getElementById(screenId);
-        if (!targetScreen) {
-            console.error('Ekran bulunamadı:', screenId);
-            return;
-        }
-        
-        targetScreen.style.display = 'block';
-        // Force reflow
-        void targetScreen.offsetWidth;
-        targetScreen.classList.add('active');
-        
-        // Navigasyon durumunu güncelle
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.classList.remove('active');
-        });
-        
-        if (navElement) {
-            navElement.classList.add('active');
-        } else {
-            // Nav elementi yoksa data-target'e göre bul
-            const matchingNav = document.querySelector(`.nav-item[data-target="${screenId}"]`);
-            if (matchingNav) matchingNav.classList.add('active');
-        }
-        
-        this.currentScreen = screenId;
-        
-        // Ekran spesifik init fonksiyonları
-      // ==========================================
-// NAVİGASYON - EN BASİT HALİ
-// ==========================================
+function addExp(amount) {
+    stats.exp += amount;
+    if (stats.exp >= stats.lvl * 100) {
+        stats.exp -= stats.lvl * 100;
+        stats.lvl++;
+        showAchievement(`Seviye ${stats.lvl}! 🔥`);
+    }
+    updateStats();
+    localStorage.setItem('mf_stats', JSON.stringify(stats));
+}
 
-function goToScreen(screenId) {
-    console.log('Tıklandı:', screenId);
+function updateStats() {
+    const ll = document.getElementById('lvlLabel');
+    const el = document.getElementById('expLabel');
+    const lf = document.getElementById('lvlFill');
     
-    // Tüm ekranları gizle
-    const screens = document.querySelectorAll('.screen');
-    screens.forEach(s => {
-        s.classList.remove('active');
-        s.style.display = 'none';
-    });
+    if (ll) ll.textContent = stats.lvl;
+    if (el) el.textContent = stats.exp;
+    if (lf) lf.style.width = (stats.exp / (stats.lvl * 100)) * 100 + '%';
+}
+
+function showAchievement(text) {
+    const pop = document.getElementById('achievementPopup');
+    const txt = document.getElementById('achievementText');
     
-    // Hedef ekranı göster
-    const target = document.getElementById(screenId);
-    if (!target) {
-        console.error('Ekran bulunamadı:', screenId);
-        return;
+    if (pop && txt) {
+        txt.textContent = text;
+        pop.classList.add('show');
+        setTimeout(() => pop.classList.remove('show'), 3000);
     }
-    
-    target.style.display = 'block';
-    setTimeout(() => target.classList.add('active'), 10);
-    
-    // Nav'ı güncelle
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
-    });
-    
-    // Aktif nav item'ı bul
-    const activeNav = document.querySelector(`.nav-item[data-target="${screenId}"]`) ||
-                      document.querySelector(`.nav-item[onclick*="${screenId}"]`);
-    if (activeNav) {
-        activeNav.classList.add('active');
-    }
-    
-    // Init fonksiyonları
-    if (screenId === 'uvAcademyMain' && typeof initUVAcademy === 'function') {
-        setTimeout(initUVAcademy, 100);
-    }
-    if (screenId === 'businessScreen' && typeof loadPriceSettings === 'function') {
-        setTimeout(loadPriceSettings, 100);
-    }
-    if (screenId === 'exerciseScreen' && typeof initExercise === 'function') {
-        setTimeout(initExercise, 100);
-    }
-    
-    // Scroll top
-    window.scrollTo(0, 0);
 }
 
 // ==========================================
-// OLAY DİNLEYİCİLERİ
+// BAŞLATMA
 // ==========================================
 
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM yüklendi');
-    
-    // Nav item'lara tıklama olayı ekle
-    const navItems = document.querySelectorAll('.nav-item');
-    console.log('Nav item sayısı:', navItems.length);
-    
-    navItems.forEach((item, index) => {
-        // Tıklama
-        item.addEventListener('click', function(e) {
-            console.log('Nav item tıklandı:', index);
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const target = this.getAttribute('data-target') || 
-                          this.getAttribute('onclick')?.match(/['"]([^'"]+)['"]/)?.[1];
-            
-            if (target) {
-                goToScreen(target);
-            }
-        });
-        
-        // Dokunmatik
-        item.addEventListener('touchstart', function(e) {
-            console.log('Nav item dokunuldu:', index);
-            e.preventDefault();
-            const target = this.getAttribute('data-target') ||
-                          this.getAttribute('onclick')?.match(/['"]([^'"]+)['"]/)?.[1];
-            if (target) goToScreen(target);
-        }, {passive: false});
-        
-        // Mouse down
-        item.addEventListener('mousedown', function(e) {
-            console.log('Nav item mouse down:', index);
-        });
-    });
-    
-    // Başlangıç ekranı
-    goToScreen('homeScreen');
-});
-
-// ==========================================
-// YEDEK: Global click listener
-// ==========================================
-
-document.addEventListener('click', function(e) {
-    if (e.target.closest('.nav-item')) {
-        console.log('Nav item tespit edildi');
-    }
-});
-    }
-}
+window.onload = () => {
+    updateStats();
+    // Varsayılan ekran zaten HTML'de active
+};
+</script>
 
 </body>
 </html>
