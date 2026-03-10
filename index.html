@@ -416,6 +416,39 @@
                     <input type="number" id="w" placeholder="Örn: 50" oninput="calculate()">
                 </div>
                 <div>
+                    <!-- MEVCUT: Maliyet Hesaplama Ekranı -->
+<div class="screen" id="businessScreen">
+    <button class="btn btn-secondary" onclick="showScreen('homeScreen')" style="margin-bottom:20px;">← Ana Menü</button>
+    <h2 style="margin-bottom:20px;">📊 Maliyet Hesaplama</h2>
+    
+    <!-- MEVCUT: Ölçüler ve hesaplama container'ı -->
+    <div class="lesson-container">
+        <!-- ... mevcut input'lar ... -->
+        
+        <div class="price-display">
+            <!-- ... mevcut fiyat gösterimi ... -->
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- BURAYA YAPIŞTIR: Mürekkep Analizi -->
+    <!-- ========================================== -->
+    
+    <div class="lesson-container" style="margin-top:20px;">
+        <h3 style="color:var(--accent); margin-top:0;">📊 Canlı Mürekkep Analizi</h3>
+        <!-- ... tüm canvas grafik HTML'i ... -->
+    </div>
+    
+    <script>
+        // ... mürekkep JavaScript fonksiyonları ...
+    </script>
+    
+    <!-- MEVCUT: Fiyat Ayarları (Değiştirmeyin) -->
+    <div class="lesson-container" style="margin-top:15px;">
+        <h3 style="margin-top:0; color:var(--gold);">⚙️ Fiyat Ayarları</h3>
+        <!-- ... mevcut ayarlar ... -->
+    </div>
+</div>
                     <label style="font-size:12px; color:var(--text-muted);">Boy (cm)</label>
                     <input type="number" id="h" placeholder="Örn: 70" oninput="calculate()">
                 </div>
@@ -572,6 +605,50 @@ const uvCurriculum = [
                         <div class="block-content">
                             <strong>UV Baskı (Ultraviolet Printing)</strong>, boyanın anında kuruması için ultraviyole (UV) ışınları kullanan dijital baskı teknolojisidir. Geleneksel baskıda boyanın kuruması saatler sürerken, UV baskıda bu süre <strong>saniyeler</strong> içinde gerçekleşir.
                         </div>
+                        // MEVCUT KOD (Değiştirmeyin, sadece referans):
+const uvCurriculum = [
+    {
+        id: 1,
+        title: "UV Baskı Temelleri",
+        // ...
+        lessons: [
+            {
+                title: "UV Baskı Nedir?",
+                // ...
+            },
+            {
+                title: "UV Boya Türleri",
+                subtitle: "Mürekkep çeşitleri ve kullanım alanları",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">🎨 Ana Mürekkep Türleri</div>
+                        <!-- ... mevcut tablo ... -->
+                    </div>
+                    
+                    <div class="content-block warning">
+                        <!-- ... mevcut uyarı bloğu ... -->
+                    </div>
+
+                    <!-- ========================================== -->
+                    <!-- BURAYA YAPIŞTIR: UV Kürlenme Simülasyonu -->
+                    <!-- ========================================== -->
+                    
+                    <div class="interactive-demo" id="curingSimulation">
+                        <!-- ... tüm simülasyon HTML'i ... -->
+                    </div>
+                    
+                    <style>
+                        /* ... simülasyon CSS'i ... */
+                    </style>
+                    
+                    <script>
+                        /* ... simülasyon JavaScript'i ... */
+                    </script>
+                `
+            }
+        ]
+    }
+];
                     </div>
                     
                     <div class="content-block info">
@@ -690,6 +767,36 @@ const uvCurriculum = [
                                 <tr><td>PTFE (Teflon)</td><td>18</td><td>❌ İmkansız</td></tr>
                             </table>
                         </div>
+                                // MEVCUT KOD:
+{
+    id: 2,
+    title: "Yüzey Hazırlığı ve Adhezyon",
+    // ...
+    lessons: [
+        {
+            title: "Yüzey Enerjisi ve Tutunma",
+            subtitle: "Boya neden atar? Neden tutunur?",
+            content: `
+                <div class="content-block">
+                    <div class="block-title">🔬 Bilimsel Temel</div>
+                    <!-- ... mevcut tablo ... -->
+                </div>
+
+                <!-- ========================================== -->
+                <!-- BURAYA YAPIŞTIR: Yüzey Enerjisi Simülasyonu -->
+                <!-- ========================================== -->
+                
+                <div class="interactive-demo" id="adhesionSim">
+                    <!-- ... tüm adhesion HTML'i ... -->
+                </div>
+                
+                <script>
+                    // ... adhesion JavaScript fonksiyonları ...
+                </script>
+            `
+        }
+    ]
+}
                     </div>
                 `
             }
@@ -790,7 +897,39 @@ const uvCurriculum = [
                             <br>
                             <p><strong>Kafa Hizalama Kayması:</strong> Passlar arası uyumsuzluk</p>
                             <p style="margin-left:20px;">→ Çözüm: Bidirectional calibration</p>
+                    
                         </div>
+                     // MEVCUT KOD:
+{
+    id: 5,
+    title: "Arıza Tespiti ve Çözüm",
+    // ...
+    lessons: [
+        {
+            title: "Banding (Çizgili Baskı)",
+            subtitle: "Yatay çizgilerin nedenleri ve çözümleri",
+            content: `
+                <div class="content-block danger">
+                    <div class="block-title">🚨 Banding Tipleri</div>
+                    <!-- ... mevcut içerik ... -->
+                </div>
+
+                <!-- ========================================== -->
+                <!-- BURAYA YAPIŞTIR: Nozzle Check Simülasyonu -->
+                <!-- ========================================== -->
+                
+                <div class="interactive-demo" id="nozzleCheck">
+                    <!-- ... tüm nozzle HTML'i ... -->
+                </div>
+                
+                <script>
+                    // ... nozzle JavaScript fonksiyonları ...
+                    // NOT: showConfetti fonksiyonu zaten varsa tekrar yazmayın
+                </script>
+            `
+        }
+    ]
+}   
                     </div>
                 `
             }
@@ -1414,6 +1553,103 @@ window.onload = () => {
     }
 };
 </script>
+        // ==========================================
+// MEVCUT KOD (Sonunda):
+window.onload = () => {
+    updateMasteryUI();
+    loadPriceSettings();
+    if (document.querySelector('.screen.active') === null) {
+        showScreen('homeScreen');
+    }
+};
+
+// ==========================================
+// BURAYA YAPIŞTIR: Ortak Simülasyon Fonksiyonları
+// ==========================================
+
+// Canvas Performance Utility
+const CanvasOptimizer = {
+    activeAnimations: new Set(),
+    
+    register(canvasId, drawFn) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return null;
+        
+        let rafId;
+        const animate = () => {
+            drawFn();
+            rafId = requestAnimationFrame(animate);
+            this.activeAnimations.add(rafId);
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if (!this.activeAnimations.has(rafId)) animate();
+                } else {
+                    cancelAnimationFrame(rafId);
+                    this.activeAnimations.delete(rafId);
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        observer.observe(canvas);
+        animate();
+        
+        return {
+            stop: () => {
+                cancelAnimationFrame(rafId);
+                this.activeAnimations.delete(rafId);
+                observer.disconnect();
+            }
+        };
+    },
+    
+    setupHiDPI(canvas) {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        const ctx = canvas.getContext('2d');
+        ctx.scale(dpr, dpr);
+        return { ctx, width: rect.width, height: rect.height };
+    }
+};
+
+// Konfeti efekti (ortak)
+function showConfetti() {
+    const colors = ['#10b981', '#6366f1', '#bf00ff', '#f59e0b'];
+    for (let i = 0; i < 30; i++) {
+        setTimeout(() => {
+            const conf = document.createElement('div');
+            conf.style.cssText = `
+                position: fixed;
+                width: 8px;
+                height: 8px;
+                background: ${colors[Math.floor(Math.random() * colors.length)]};
+                left: 50%;
+                top: 50%;
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 9999;
+            `;
+            document.body.appendChild(conf);
+            
+            const angle = (Math.PI * 2 * i) / 30;
+            const velocity = 100 + Math.random() * 50;
+            const tx = Math.cos(angle) * velocity;
+            const ty = Math.sin(angle) * velocity;
+            
+            conf.animate([
+                { transform: 'translate(0,0) scale(1)', opacity: 1 },
+                { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
+            ], {
+                duration: 1000,
+                easing: 'cubic-bezier(0, .9, .57, 1)'
+            }).onfinish = () => conf.remove();
+        }, i * 30);
+    }
+}
 
 </body>
 </html>
