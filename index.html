@@ -804,37 +804,50 @@
 // ==========================================
 // UV AKADEMİ KAPSAMLI MÜFREDAT
 // ==========================================
-
 const uvCurriculum = [
     {
         id: 1,
         title: "UV Baskı Temelleri",
-        desc: "Teknolojinin temel prensipleri ve kimyasal süreçler",
-        duration: "25 dk",
-        xp: 100,
+        desc: "Teknolojinin temel prensipleri, kimyasal süreçler ve endüstri uygulamaları",
+        duration: "45 dk",
+        xp: 150,
         locked: false,
         lessons: [
             {
                 title: "UV Baskı Nedir?",
-                subtitle: "Teknolojinin tanımı ve tarihçesi",
+                subtitle: "Teknolojinin tanımı, tarihçesi ve endüstriyel evrimi",
                 content: `
                     <div class="content-block">
-                        <div class="block-title">📖 Tanım</div>
+                        <div class="block-title">📖 Tanım ve Tarihçe</div>
                         <div class="block-content">
-                            <strong>UV Baskı (Ultraviolet Printing)</strong>, boyanın anında kuruması için ultraviyole (UV) ışınları kullanan dijital baskı teknolojisidir. Geleneksel baskıda boyanın kuruması saatler sürerken, UV baskıda bu süre <strong>saniyeler</strong> içinde gerçekleşir.
+                            <strong>UV Baskı (Ultraviolet Printing)</strong>, boyanın anında kuruması için ultraviyole (UV) ışınları kullanan dijital baskı teknolojisidir. 
+                            <br><br>
+                            <strong>Tarihsel Gelişim:</strong>
+                            <ul>
+                                <li><strong>1970'ler:</strong> UV mürekkeplerinin icadı (geleneksel ofset)</li>
+                                <li><strong>1990'lar:</strong> Dijital UV plotterların doğuşu</li>
+                                <li><strong>2000'ler:</strong> Flatbed UV teknolojisi yaygınlaşması</li>
+                                <li><strong>2010+:</strong> LED-UV sistemler (daha az ısı, daha uzun ömür)</li>
+                                <li><strong>2020+:</strong> 3D kabartma, beyaz+renk aynı anda, yapay zeka optimizasyonu</li>
+                            </ul>
                         </div>
                     </div>
                     
                     <div class="content-block info">
-                        <div class="block-title">💡 Neden UV Baskı?</div>
+                        <div class="block-title">💡 Neden UV Baskı? - 10 Kritik Avantaj</div>
                         <div class="block-content">
-                            <ul>
-                                <li><strong>Anında Kuruma:</strong> Baskı alındığı anda dokunulabilir, paketlenebilir</li>
-                                <li><strong>Yüksek Çözünürlük:</strong> 1440 dpi'ye varan detay kalitesi</li>
-                                <li><strong>Çok Yönlülük:</strong> Cam, metal, plastik, ahşap, deri üzerine baskı</li>
-                                <li><strong>Dayanıklılık:</strong> Çizilmez, suya ve güneşe dayanıklı</li>
-                                <li><strong>Çevre Dostu:</strong> VOC (Uçucu Organik Bileşik) salınımı yok</li>
-                            </ul>
+                            <ol>
+                                <li><strong>Anında Kuruma:</strong> 0.1-3 saniye içinde dokunulabilir</li>
+                                <li><strong>Yüksek Çözünürlük:</strong> 1440x1440 dpi'ye varan detay</li>
+                                <li><strong>Çok Yönlülük:</strong> 100+ farklı malzeme üzerine baskı</li>
+                                <li><strong>Dayanıklılık:</strong> Çizilmez, suya, UV ışığına, solvente dayanıklı</li>
+                                <li><strong>Çevre Dostu:</strong> VOC salınımı yok, solvent içermez</li>
+                                <li><strong>Verimlilik:</strong> Islak üzerine ıslak baskı (lamine gerekmez)</li>
+                                <li><strong>3D Efektler:</strong> Kabartma (emboss) baskı imkanı</li>
+                                <li><strong>Beyaz Mürekkep:</strong> Şeffaf/renkli zeminlerde canlı renkler</li>
+                                <li><strong>Değişken Veri:</strong> Her baskı farklı olabilir (seri numara, barkod)</li>
+                                <li><strong>Düşük Fire:</strong> Test baskısı maliyeti minimum</li>
+                            </ol>
                         </div>
                     </div>
 
@@ -842,69 +855,128 @@ const uvCurriculum = [
                         <div class="block-title">⚗️ Kimyasal Süreç: Fotopolimerizasyon</div>
                         <div class="block-content">
                             <p>UV boyaları üç temel bileşen içerir:</p>
-                            <ol>
-                                <li><strong>Monomerler:</strong> Sıvı haldeki temel yapı taşları</li>
-                                <li><strong>Oligomerler:</strong> Ağ yapısını oluşturan zincirler</li>
-                                <li><strong>Foto-başlatıcılar:</strong> UV ışığıyla reaksiyonu başlatan maddeler</li>
-                            </ol>
+                            <table class="data-table">
+                                <tr><th>Bileşen</th><th>Oran</th><th>Görevi</th></tr>
+                                <tr><td><strong>Monomerler</strong></td><td>40-60%</td><td>Sıvı haldeki temel yapı taşları, kürlenince polimerleşir</td></tr>
+                                <tr><td><strong>Oligomerler</strong></td><td>20-40%</td><td>Ağ yapısını oluşturan zincirler, dayanıklılık sağlar</td></tr>
+                                <tr><td><strong>Foto-başlatıcılar</strong></td><td>3-8%</td><td>UV ışığıyla reaksiyonu başlatan kimyasal tetikleyiciler</td></tr>
+                                <tr><td><strong>Pigmentler</strong></td><td>5-15%</td><td>Renk veren partiküller (titanyum dioksit vb.)</td></tr>
+                                <tr><td><strong>Additifler</strong></td><td>1-5%</td><td>Akışkanlık, ıslatma, stabilite düzenleyicileri</td></tr>
+                            </table>
                             <br>
-                            <p>UV ışığı (365-405nm) foto-başlatıcıları uyarınca, monomerler polimerleşir ve katı, plastik bir tabaka oluşur. Bu sürece <strong>kürlenme (curing)</strong> denir.</p>
+                            <p><strong>Kürlenme Mekanizması:</strong></p>
+                            <ol>
+                                <li>UV lambadan 365-405nm dalga boyu ışın yayılır</li>
+                                <li>Foto-başlatıcılar bu enerjiyi absorbe eder</li>
+                                <li>Serbest radikaller oluşur (kimyasal zincirleme tepkime)</li>
+                                <li>Monomerler birleşerek uzun polimer zincirleri oluşturur</li>
+                                <li>Sıvı katılaşır, 0.1-3 saniyede dokunulabilir hale gelir</li>
+                            </ol>
+                        </div>
+                    </div>
+                    
+                    <div class="content-block warning">
+                        <div class="block-title">⚠️ UV Işığı Güvenliği</div>
+                        <div class="block-content">
+                            <ul>
+                                <li><strong>Göz:</strong> UV ışığı katarakt ve retina hasarına yol açabilir. Asla doğrudan bakmayın.</li>
+                                <li><strong>Cilt:</strong> UV-B ve UV-C yanıklara, erken yaşlanmaya neden olur.</li>
+                                <li><strong>Ozon:</strong> Bazı UV lambalar ozon üretir, havalandırma şart.</li>
+                                <li><strong>Koruma:</strong> UV filtreli gözlük, uzun kollu giysi, eldiven kullanın.</li>
+                            </ul>
                         </div>
                     </div>
                 `
             },
             {
-                title: "UV Boya Türleri",
-                subtitle: "Mürekkep çeşitleri ve kullanım alanları",
+                title: "UV Boya Türleri ve Formülasyonlar",
+                subtitle: "Mürekkep çeşitleri, viskozite ve uygulama alanları",
                 content: `
                     <div class="content-block">
-                        <div class="block-title">🎨 Ana Mürekkep Türleri</div>
+                        <div class="block-title">🎨 Ana Mürekkep Türleri - Detaylı Analiz</div>
                         <div class="block-content">
                             <table class="data-table">
                                 <tr>
                                     <th>Tür</th>
-                                    <th>Özellik</th>
+                                    <th>Kompozisyon</th>
+                                    <th>Viskozite</th>
                                     <th>Kullanım</th>
+                                    <th>Maliyet</th>
                                 </tr>
                                 <tr>
                                     <td><strong>CMYK</strong></td>
-                                    <td>Cyan, Magenta, Yellow, Black</td>
-                                    <td>Temel renk baskısı</td>
+                                    <td>Cyan, Magenta, Yellow, Black pigmentler</td>
+                                    <td>8-12 cps</td>
+                                    <td>Temel renk baskısı, fotoğraf, grafik</td>
+                                    <td>Orta</td>
                                 </tr>
                                 <tr>
                                     <td><strong>White (Beyaz)</strong></td>
-                                    <td>Opak beyaz zemin</td>
-                                    <td>Şeffaf/renkli yüzeyler</td>
+                                    <td>%35-50 TiO₂ (titanyum dioksit)</td>
+                                    <td>15-25 cps</td>
+                                    <td>Opak zemin, şeffaf malzemeler</td>
+                                    <td>Yüksek (+40%)</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Varnish (Vernik)</strong></td>
-                                    <td>Şeffaf koruyucu/kabartma</td>
-                                    <td>3D efekt, parlaklık</td>
+                                    <td>Şeffaf polimer, mat/parlak seçenekler</td>
+                                    <td>10-18 cps</td>
+                                    <td>3D kabartma, koruma, selektif parlaklık</td>
+                                    <td>Orta</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Primer (Astar)</strong></td>
-                                    <td>Yapıştırıcı katman</td>
-                                    <td>Zor tutunan yüzeyler</td>
+                                    <td>Yapıştırıcı katman, korona öncesi</td>
+                                    <td>5-10 cps</td>
+                                    <td>PP, PE, silikonlu yüzeyler</td>
+                                    <td>Düşük</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Metallic</strong></td>
+                                    <td>Alüminyum pigmentli</td>
+                                    <td>12-18 cps</td>
+                                    <td>Lüks ambalaj, dekorasyon</td>
+                                    <td>Çok Yüksek</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Neon/Fluoresan</strong></td>
+                                    <td>UV reaktif pigmentler</td>
+                                    <td>10-15 cps</td>
+                                    <td>Güvenlik, dikkat çekici tasarım</td>
+                                    <td>Yüksek</td>
                                 </tr>
                             </table>
                         </div>
                     </div>
 
                     <div class="content-block warning">
-                        <div class="block-title">⚠️ Önemli Not: Beyaz Mürekkep</div>
+                        <div class="block-title">⚠️ Beyaz Mürekkep - Kritik Bilgiler</div>
                         <div class="block-content">
                             <p>Beyaz mürekkep <strong>en kritik</strong> bileşendir çünkü:</p>
                             <ul>
-                                <li>Şeffaf pleksiye baskı yaparken renklerin görünmesini sağlar</li>
-                                <li>Cam üzerine beyaz zemin oluşturur</li>
-                                <li>Renkli metaller üzerinde gerçek renkleri verir</li>
+                                <li>Şeffaf pleksiye baskı yaparken renklerin görünmesini sağlar (yoksa soluk çıkar)</li>
+                                <li>Cam üzerine beyaz zemin oluşturur (arkadan aydınlatmalı uygulamalar)</li>
+                                <li>Renkli metaller üzerinde gerçek renkleri verir (alüminyum, paslanmaz)</li>
+                                <li>Double-hit (çift vuruş) ile daha opak sonuç verir</li>
                             </ul>
                             <br>
-                            <strong>Beyaz mürekkep kullanılmazsa:</strong> Renkler soluk, cansız ve şeffaf çıkar!
+                            <strong>Beyaz Mürekkep Kullanılmazsa:</strong>
+                            <ul>
+                                <li>Renkler soluk, cansız ve şeffaf çıkar</li>
+                                <li>Mavi → açık mavi, Kırmızı → pembe, Siyah → gri olur</li>
+                                <li>Cam/pleksi üzerine baskı tamamen başarısız olur</li>
+                            </ul>
+                            <br>
+                            <strong>Beyaz Mürekkep Yönetimi:</strong>
+                            <ul>
+                                <li>Her gün 10-15 saniye çalkalayın (pigment çökmesini önler)</li>
+                                <li>Sıcaklık 20-25°C arasında tutun (düşük ısı viskozite artırır)</li>
+                                <li>Damper (mürekkep pompası) kontrolü yapın</li>
+                                <li>Nozzle check'te beyaz kanalı mutlaka kontrol edin</li>
+                            </ul>
                         </div>
-                                       </div>
+                    </div>
 
-                    <!-- UV KÜRLENME SİMÜLASYONU -->
                     <div class="interactive-demo" id="curingSimulation">
                         <div class="demo-title">⚗️ Fotopolimerizasyon Simülasyonu</div>
                         
@@ -993,47 +1065,207 @@ const uvCurriculum = [
                             </ol>
                         </div>
                     </div>
+                    
+                    <div class="content-block">
+                        <div class="block-title">🔬 LED-UV vs. Gel-UV Lambalar</div>
+                        <div class="block-content">
+                            <table class="data-table">
+                                <tr><th>Özellik</th><th>Geleneksel Gel-UV</th><th>LED-UV (Modern)</th></tr>
+                                <tr><td>Isı Yayılımı</td><td>Yüksek (60-80°C)</td><td>Düşük (30-40°C)</td></tr>
+                                <tr><td>Enerji Tüketimi</td><td>Yüksek (3-5 kW)</td><td>Düşük (0.5-1 kW)</td></tr>
+                                <tr><td>Ömür</td><td>1000-2000 saat</td><td>20,000+ saat</td></tr>
+                                <tr><td>Anında Açılma</td><td>2-5 dk ısınma</td><td>Anında</td></tr>
+                                <tr><td>Ozon Üretimi</td><td>Var (havalandırma şart)</td><td>Yok</td></tr>
+                                <tr><td>Bakım</td><td>Sık değişim</td><td>Nadiren</td></tr>
+                                <tr><td>Maliyet</td><td>Düşük başlangıç</td><td>Yüksek başlangıç, düşük işletme</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "UV Baskı Makine Tipleri",
+                subtitle: "Flatbed, roll-to-roll ve hibrid sistemler",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">🖨️ Makine Kategorileri</div>
+                        <div class="block-content">
+                            <p><strong>1. Flatbed (Düz Yataklı):</strong></p>
+                            <ul>
+                                <li>Rijit malzemeler üzerine baskı (pleksi, MDF, cam, metal)</li>
+                                <li>Malzeme kalınlığı: 1-50mm (bazı modeller 100mm+)</li>
+                                <li>Vakum masası sayesinde malzeme sabitleme</li>
+                                <li>Çoklu kafa seçenekleri (4-16 kafa)</li>
+                            </ul>
+                            <br>
+                            <p><strong>2. Roll-to-Roll (Rulo Beslemeli):</strong></p>
+                            <ul>
+                                <li>Esnek malzemeler (vinil, folyo, kumaş, kağıt)</li>
+                                <li>Sürekli üretim için ideal</li>
+                                <li>Tension control (gerilim kontrolü) kritik</li>
+                            </ul>
+                            <br>
+                            <p><strong>3. Hibrid (Hibrit):</strong></p>
+                            <ul>
+                                <li>Hem flatbed hem roll-to-roll kapasitesi</li>
+                                <li>Çok yönlü üretim hatları için</li>
+                                <li>Daha yüksek yatırım maliyeti</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="content-block info">
+                        <div class="block-title">📊 Popüler Kafa Teknolojileri</div>
+                        <div class="block-content">
+                            <table class="data-table">
+                                <tr><th>Üretici</th><th>Model</th><th>Nozzle Sayısı</th><th>Drop Boyutu</th><th>Özellik</th></tr>
+                                <tr><td>Ricoh</td><td>Gen6</td><td>1280</td><td>5-7 pL</td><td>Hız odaklı</td></tr>
+                                <tr><td>Konica Minolta</td><td>KM1024i</td><td>1024</td><td>6-13 pL</td><td>Endüstriyel dayanıklılık</td></tr>
+                                <tr><td>Seiko</td><td>RC1536</td><td>1536</td><td>4-6 pL</td><td>Yüksek çözünürlük</td></tr>
+                                <tr><td>Epson</td><td>PrecisionCore</td><td>800</td><td>3.5 pL</td><td>Fotoğraf kalitesi</td></tr>
+                                <tr><td>Xaar</td><td>1003</td><td>1000</td><td>6-42 pL</td><td>Ağır mürekkep uyumlu</td></tr>
+                            </table>
+                            <br>
+                            <p><strong>Drop Boyutu (pL - pikolitre):</strong> Küçük damla = daha yüksek çözünürlük ama daha yavaş. Büyük damla = daha hızlı ama daha az detay.</p>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Endüstriyel Uygulamalar ve Karlılık",
+                subtitle: "Sektörler, kullanım alanları ve fiyatlandırma",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">🏭 Ana Sektörler</div>
+                        <div class="block-content">
+                            <p><strong>1. Reklam ve Dijital Baskı:</strong></p>
+                            <ul>
+                                <li>Tabela, billboard, araç giydirme</li>
+                                <li>Forex, alüminyum kompozit panel</li>
+                                <li>Roll-up, X-banner, fuar standları</li>
+                            </ul>
+                            <br>
+                            <p><strong>2. Mobilya ve Dekorasyon:</strong></p>
+                            <ul>
+                                <li>Dolap kapakları (MDF, lake)</li>
+                                <li>Cam dekorasyon (duşakabin, mutfak arası)</li>
+                                <li>3D duvar panelleri</li>
+                                <li>Laminat parke üzerine desen</li>
+                            </ul>
+                            <br>
+                            <p><strong>3. Elektronik ve Elektrik:</strong></p>
+                            <ul>
+                                <li>PCB üzerine barkod/seri numara</li>
+                                <li>Kablo ve kablo kanalı etiketleme</li>
+                                <li>Panel ve switch üzerine baskı</li>
+                            </ul>
+                            <br>
+                            <p><strong>4. Promosyon ve Hediyelik:</strong></p>
+                            <ul>
+                                <li>Kalem, çakmak, anahtarlık</li>
+                                <li>Kupa, bardak, şişe</li>
+                                <li>Telefon kılıfı, powerbank</li>
+                                <li>Plaket, ödül, kupa</li>
+                            </ul>
+                            <br>
+                            <p><strong>5. Otomotiv:</strong></p>
+                            <ul>
+                                <li>İç trim parçaları</li>
+                                <li>Gösterge paneli yüzeyleri</li>
+                                <li>Lastik üzerine barkod</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="content-block">
+                        <div class="block-title">💰 Karlılık Analizi</div>
+                        <div class="block-content">
+                            <table class="data-table">
+                                <tr><th>Uygulama</th><th>Maliyet (m²)</th><th>Satış Fiyatı</th><th>Kar Marjı</th></tr>
+                                <tr><td>Pleksi tabela (CMYK+White)</td><td>15-25₺</td><td>80-150₺</td><td>%400-800</td></tr>
+                                <tr><td>Cam dekorasyon</td><td>20-30₺</td><td>100-200₺</td><td>%400-900</td></tr>
+                                <tr><td>Promosyon kalem</td><td>0.5-1₺</td><td>5-15₺</td><td>%500-2000</td></tr>
+                                <tr><td>Mobilya paneli</td><td>30-50₺</td><td>150-300₺</td><td>%300-600</td></tr>
+                                <tr><td>Araç giydirme (parçalı)</td><td>40-60₺</td><td>200-400₺</td><td>%400-650</td></tr>
+                            </table>
+                        </div>
+                    </div>
                 `
             }
         ],
         quiz: {
-            question: "Şeffaf pleksi üzerine renkli baskı yaparken beyaz katmanı nereye basmalısınız?",
-            options: ["Sadece üste", "Sadece alta", "Hem alta hem üste", "Hiçbir yere"],
-            correct: 1,
-            explanation: "Renklerin canlı görünmesi için beyaz zemin şarttır. Bu yüzden önce beyaz, üzerine CMYK basılır."
+            questions: [
+                {
+                    question: "Şeffaf pleksi üzerine renkli baskı yaparken beyaz katmanı nereye basmalısınız?",
+                    options: ["Sadece üste", "Sadece alta (altta)", "Hem alta hem üste", "Hiçbir yere"],
+                    correct: 1,
+                    explanation: "Renklerin canlı görünmesi için beyaz zemin şarttır. Bu yüzden önce beyaz (alta), üzerine CMYK basılır."
+                },
+                {
+                    question: "UV baskının geleneksel solvent baskıya göre en büyük avantajı nedir?",
+                    options: ["Daha ucuz malzeme maliyeti", "Anında kuruma ve üretime hazır olma", "Daha geniş renk gamı", "Daha yavaş üretim hızı"],
+                    correct: 1,
+                    explanation: "UV baskı 0.1-3 saniyede kurur, laminasyon veya bekleme gerektirmez. Bu üretim hızını katlar."
+                },
+                {
+                    question: "Beyaz mürekkep neden her gün çalkalanmalıdır?",
+                    options: ["Hava kabarcığı için", "Titanyum dioksit pigment çökelmesini önlemek", "Kokusunu gidermek", "Rengini açmak"],
+                    correct: 1,
+                    explanation: "Beyaz mürekkep %35-50 TiO₂ içerir. Ağır pigment çöker ve tıkanıklık yapar. Çalkalamak homojen dağılımı sağlar."
+                },
+                {
+                    question: "LED-UV lambaların geleneksel gel-UV lambalara göre hangi avantajı YANLIŞTIR?",
+                    options: ["Daha uzun ömür (20,000+ saat)", "Daha düşük ısı yayılımı", "Daha yüksek enerji tüketimi", "Anında açılma (ısınma yok)"],
+                    correct: 2,
+                    explanation: "LED-UV'ler %80 daha az enerji tüketir. Düşük ısı, uzun ömür ve anında açılma avantajları vardır."
+                },
+                {
+                    question: "Fotopolimerizasyon sürecinde hangi dalga boyu aralığı kullanılır?",
+                    options: ["200-300nm (UV-C)", "365-405nm (UV-A / Mor ötesi)", "500-600nm (Görünür ışık)", "800-1000nm (Kızılötesi)"],
+                    correct: 1,
+                    explanation: "UV baskıda 365-405nm (UV-A) kullanılır. Bu aralık foto-başlatıcıları uyarmak için idealdir."
+                }
+            ]
         }
     },
     {
         id: 2,
         title: "Yüzey Hazırlığı ve Adhezyon",
-        desc: "Malzeme seçimi, temizlik ve tutunma prensipleri",
-        duration: "30 dk",
-        xp: 120,
+        desc: "Malzeme bilimi, temizlik protokolleri ve tutunma prensipleri",
+        duration: "50 dk",
+        xp: 180,
         locked: true,
         lessons: [
             {
-                title: "Yüzey Enerjisi ve Tutunma",
-                subtitle: "Boya neden atar? Neden tutunur?",
+                title: "Yüzey Enerjisi ve Tutunma Mekaniği",
+                subtitle: "Boya neden atar? Bilimsel temeller",
                 content: `
                     <div class="content-block">
-                        <div class="block-title">🔬 Bilimsel Temel</div>
+                        <div class="block-title">🔬 Bilimsel Temel: Yüzey Enerjisi</div>
                         <div class="block-content">
-                            <p>Her malzemenin bir <span class="tooltip">yüzey enerjisi<span class="tooltip-text">Malzeme yüzeyinin moleküler çekim gücü</span></span> vardır. Boya tutunması için:</p>
+                            <p>Her malzemenin bir <span class="tooltip">yüzey enerjisi<span class="tooltip-text">Malzeme yüzeyinin moleküler çekim gücü, dyn/cm cinsinden ölçülür</span></span> vardır. Boya tutunması için:</p>
                             <br>
-                            <strong>Boya Yüzey Gerilimi < Malzeme Yüzey Enerjisi</strong>
-                            <br><br>
+                            <div class="code-block">
+Boya Yüzey Gerilimi < Malzeme Yüzey Enerjisi
+                            </div>
+                            <br>
                             <table class="data-table">
-                                <tr><th>Malzeme</th><th>Yüzey Enerjisi (dyn/cm)</th><th>Tutunma</th></tr>
-                                <tr><td>Paslanmaz Çelik</td><td>700-1000</td><td>✅ Mükemmel</td></tr>
-                                <tr><td>Alüminyum</td><td>500-800</td><td>✅ İyi</td></tr>
-                                <tr><td>PVC</td><td>39</td><td>⚠️ Orta</td></tr>
-                                <tr><td>PP (Polipropilen)</td><td>29</td><td>❌ Zayıf</td></tr>
-                                <tr><td>PTFE (Teflon)</td><td>18</td><td>❌ İmkansız</td></tr>
+                                <tr><th>Malzeme</th><th>Yüzey Enerjisi (dyn/cm)</th><th>Tutunma</th><th>Primer Gerekli?</th></tr>
+                                <tr><td>Paslanmaz Çelik (304)</td><td>700-1000</td><td>✅ Mükemmel</td><td>Hayır</td></tr>
+                                <tr><td>Alüminyum (Alodine)</td><td>500-800</td><td>✅ İyi</td><td>Hayır</td></tr>
+                                <tr><td>PVC (Sert)</td><td>39</td><td>⚠️ Orta</td><td>Önerilir</td></tr>
+                                <tr><td>Akrilik (Pleksi)</td><td>38</td><td>✅ İyi</td><td>Hayır</td></tr>
+                                <tr><td>Polikarbonat</td><td>34</td><td>⚠️ Orta</td><td>Test edin</td></tr>
+                                <tr><td>PP (Polipropilen)</td><td>29</td><td>❌ Zayıf</td><td>Evet (Corona/Primer)</td></tr>
+                                <tr><td>PE (Polietilen)</td><td>31</td><td>❌ Zayıf</td><td>Evet (Corona/Plazma)</td></tr>
+                                <tr><td>PTFE (Teflon)</td><td>18</td><td>❌ İmkansız</td><td>Özel işlem gerekli</td></tr>
+                                <tr><td>Silikon</td><td>24</td><td>❌ İmkansız</td><td>Özel primer şart</td></tr>
                             </table>
+                            <br>
+                            <p><strong>Kritik Eşik:</strong> 38-40 dyn/cm üzeri yüzeyler UV boyası için idealdir. Altındakiler ön işlem gerektirir.</p>
                         </div>
                     </div>
 
-                    <!-- YÜZEY ENERJİSİ SİMÜLASYONU -->
                     <div class="interactive-demo" id="adhesionSim">
                         <div class="demo-title">🔬 Yüzey Enerjisi Simülasyonu</div>
                         
@@ -1062,65 +1294,441 @@ const uvCurriculum = [
                         
                         <div style="margin-top:10px; display:flex; gap:10px; align-items:center; font-size:12px; color:var(--text-muted);">
                             <span style="display:flex; align-items:center; gap:5px;">
-                                <span style="width:12px; height:12px; background:var(--success); border-radius:50%;"></span> İyi
+                                <span style="width:12px; height:12px; background:var(--success); border-radius:50%;"></span> İyi (>40)
                             </span>
                             <span style="display:flex; align-items:center; gap:5px;">
-                                <span style="width:12px; height:12px; background:var(--warning); border-radius:50%;"></span> Zayıf
+                                <span style="width:12px; height:12px; background:var(--warning); border-radius:50%;"></span> Orta (30-40)
                             </span>
                             <span style="display:flex; align-items:center; gap:5px;">
-                                <span style="width:12px; height:12px; background:var(--danger); border-radius:50%;"></span> İmkansız
+                                <span style="width:12px; height:12px; background:var(--danger); border-radius:50%;"></span> Zayıf (<30)
                             </span>
+                        </div>
+                    </div>
+
+                    <div class="content-block info">
+                        <div class="block-title">💡 Tutunma Mekanizması</div>
+                        <div class="block-content">
+                            <p><strong>1. Mekanik Tutunma:</strong> Boya malzeme gözeneklerine girer (pürüzlü yüzeylerde artar)</p>
+                            <p><strong>2. Kimyasal Tutunma:</strong> Boya ile yüzey arasında kovalent bağ oluşur (en güçlü)</p>
+                            <p><strong>3. Fiziksel Tutunma:</strong> Van der Waals kuvvetleri (zayıf ama yaygın)</p>
+                            <br>
+                            <p>UV boyaları genellikle <strong>fiziksel + mekanik</strong> tutunma sağlar. Kimyasal tutunma için özel primerler gerekir.</p>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Temizlik Protokolleri ve Yüzey Hazırlığı",
+                subtitle: "Adım adım profesyonel hazırlık",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">🧼 Standart Temizlik Prosedürü</div>
+                        <div class="block-content">
+                            <div class="step-guide">
+                                <div class="step-item">
+                                    <div class="step-number">1</div>
+                                    <div class="step-title">Görsel Kontrol</div>
+                                    <div class="step-content">Yüzeyde yağ, toz, parmak izi, korozyon veya eski baskı kalıntısı olup olmadığını kontrol edin.</div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-number">2</div>
+                                    <div class="step-title">Toz Alma</div>
+                                    <div class="step-content">Mikrofiber bez veya hava tabancası ile yüzey tozunu temizleyin. Statik elektrik varsa iyonize hava kullanın.</div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-number">3</div>
+                                    <div class="step-title">Yağ/Gres Temizliği</div>
+                                    <div class="step-content">Isopropil alkol (IPA) %70-99 veya özel yüzey temizleyici ile silin. Metal yüzeylerde aseton kullanılabilir.</div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-number">4</div>
+                                    <div class="step-title">Yıkama (Gerekirse)</div>
+                                    <div class="step-content">Kirli malzemeler için su + hafif deterjan, ardından tam kuruma. Nem tutunmayı engeller.</div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-number">5</div>
+                                    <div class="step-title">Son Kontrol</div>
+                                    <div class="step-content">"Su testi" yapın: Su damlası yüzeyde tabakalanıyorsa yağ vardır. Homojen yayılıyorsa temizdir.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-block warning">
+                        <div class="block-title">⚠️ Malzeme Özel Uyarıları</div>
+                        <div class="block-content">
+                            <p><strong>Pleksi/Akrilik:</strong></p>
+                            <ul>
+                                <li>Aseton kullanmayın (yüzey çatlar)</li>
+                                <li>Statik elektrik toz çeker, iyonize hava kullanın</li>
+                                <li>Koruyucu film varsa baskıdan hemen önce çıkarın</li>
+                            </ul>
+                            <br>
+                            <p><strong>Alüminyum:</strong></p>
+                            <ul>
+                                <li>Oksit tabakası tutunmayı engeller</li>
+                                <li>Alodine veya light sanding önerilir</li>
+                                <li>Yağlı pres kalıntılarına dikkat</li>
+                            </ul>
+                            <br>
+                            <p><strong>Cam:</strong></p>
+                            <ul>
+                                <li>Silikon temizleyici kalıntılarına dikkat (fazla kalırsa tutunmaz)</li>
+                                <li>Alkol ile son temizlik şart</li>
+                                <li>Beyaz zemin şart (yoksa renkler soluk)</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Primer ve Ön İşlem Teknikleri",
+                subtitle: "Düşük enerjili yüzeyler için çözümler",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">🧪 Primer Türleri</div>
+                        <div class="block-content">
+                            <table class="data-table">
+                                <tr><th>Primer</th><th>Uygulama</th><th>Kuruma</th><th>Etkinlik</th></tr>
+                                <tr><td>Sprey Astar</td><td>Manuel sprey</td><td>5-10 dk</td><td>Orta</td></tr>
+                                <tr><td>UV Primer (Clear)</td><td>Makineyle baskı</td><td>Anında</td><td>İyi</td></tr>
+                                <tr><td>Korona Treatment</td><td>Elektrik arkı</td><td>Anında</td><td>Çok İyi</td></tr>
+                                <tr><td>Plazma Treatment</td><td>Vakum altında iyon</td><td>Anında</td><td>Mükemmel</td></tr>
+                                <tr><td>Alev Treatment</td><td>Oksijen alev</td><td>Anında</td><td>İyi</td></tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="content-block info">
+                        <div class="block-title">⚡ Korona Treatment Detayları</div>
+                        <div class="block-content">
+                            <p><strong>Prensip:</strong> Yüksek voltajlı elektrotlar (10-20kV) hava moleküllerini iyonlaştırır. Bu iyonlar yüzeyi okside ederek polar gruplar ekler.</p>
+                            <br>
+                            <p><strong>Sonuç:</strong> PP/PE yüzey enerjisi 29→45+ dyn/cm'a çıkar.</p>
+                            <br>
+                            <p><strong>Ayarlama:</strong></p>
+                            <ul>
+                                <li>Wattage: Malzeme kalınlığına göre 300-1000W</li>
+                                <li>Hız: 1-5 m/dk (yavaş = daha etkili)</li>
+                                <li>Mesafe: 1-3mm (elektrod-yüzey)</li>
+                            </ul>
+                            <br>
+                            <p><strong>Önemli:</strong> Korona etkisi geçicidir (24-48 saat). İşlem sonrası hemen baskı yapın!</p>
+                        </div>
+                    </div>
+
+                    <div class="content-block">
+                        <div class="block-title">📋 Primer Seçim Rehberi</div>
+                        <div class="block-content">
+                            <ul>
+                                <li><strong>PP/PE:</strong> Korona + UV primer (clear)</li>
+                                <li><strong>Silikon:</strong> Özel silikon primer (sadece sprey)</li>
+                                <li><strong>Teflon:</strong> Plazma treatment + özel yapıştırıcı</li>
+                                <li><strong>Naylon:</strong> Korona treatment</li>
+                                <li><strong>Karbon fiber:</strong> Light sanding + UV primer</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Test ve Kalite Kontrol",
+                subtitle: "Tutunma testleri ve sorun giderme",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">🔍 Tutunma Testleri</div>
+                        <div class="block-content">
+                            <p><strong>1. Çapraz Kesme Testi (Cross-cut):</strong></p>
+                            <ul>
+                                <li>Baskı yüzeyine 1mm aralıklı çizgiler çizin (10x10 grid)</li>
+                                <li>3M bant yapıştırıp sertçe çekin</li>
+                                <li>0-5 sınıflandırma: 0 = hiç kopma, 5 = tamamen koptu</li>
+                                <li>Kabul kriteri: 0-1 sınıf</li>
+                            </ul>
+                            <br>
+                            <p><strong>2. Su Testi:</strong></p>
+                            <ul>
+                                <li>Baskıyı 24 saat suda bekletin</li>
+                                <li>Kabarma, soyulma varsa tutunma yetersiz</li>
+                            </ul>
+                            <br>
+                            <p><strong>3. Bant Testi:</strong></p>
+                            <ul>
+                                <li>3M 610 bant yapıştırın</li>
+                                <li>180° geriye doğru çekin</li>
+                                <li>Boya kalmamalı</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="content-block warning">
+                        <div class="block-title">🚨 Yaygın Tutunma Sorunları</div>
+                        <div class="block-content">
+                            <table class="data-table">
+                                <tr><th>Sorun</th><th>Neden</th><th>Çözüm</th></tr>
+                                <tr><td>Köşelerden soyulma</td><td>Yetersiz temizlik, yağ kalıntısı</td><td>IPA ile tekrar sil, primer kullan</td></tr>
+                                <tr><td>Tamamen atmak</td><td>PP/PE yüzey, yanlış malzeme</td><td>Korona treatment şart</td></tr>
+                                <tr><td>Pürtüklü/kabarcıklı</td><td>Nem/yağ altında baskı</td><td>Kurut, temizle, tekrar bas</td></tr>
+                                <tr><td>Soluk renk</td><td>Beyaz zemin yok</td><td>Önce beyaz mürekkep bas</td></tr>
+                                <tr><td>Yer yer tutunmama</td><td>Statik/toz</td><td>İyonize hava, temiz ortam</td></tr>
+                            </table>
                         </div>
                     </div>
                 `
             }
         ],
         quiz: {
-            question: "PP (Polipropilen) malzemeye baskı yapmadan önce ne yapılmalıdır?",
-            options: ["Sadece silmek", "Primer (korona/alev) uygulamak", "Sıcak tutmak", "Hiçbir şey yapmadan basmak"],
-            correct: 1,
-            explanation: "PP düşük yüzey enerjili (29 dyn/cm) malzemedir. UV boyası tutunamaz. Corona treatment veya özel primer şarttır."
+            questions: [
+                {
+                    question: "PP (Polipropilen) malzemeye baskı yapmadan önce ne yapılmalıdır?",
+                    options: ["Sadece silmek", "Primer veya Corona treatment", "Sıcak tutmak", "Hiçbir şey yapmadan basmak"],
+                    correct: 1,
+                    explanation: "PP düşük yüzey enerjili (29 dyn/cm) malzemedir. UV boyası tutunamaz. Corona treatment veya özel primer şarttır."
+                },
+                {
+                    question: "Korona treatment etkisi ne kadar süre kalıcıdır?",
+                    options: ["Kalıcı (sınırsız)", "24-48 saat", "1 hafta", "1 ay"],
+                    correct: 1,
+                    explanation: "Korona etkisi geçicidir. 24-48 saat içinde baskı yapılmalıdır, yoksa yüzey enerjisi düşer."
+                },
+                {
+                    question: "Pleksi (akrilik) temizliğinde hangi solvent KULLANILMAMALIDIR?",
+                    options: ["İzopropil alkol (IPA)", "Aseton", "Su + deterjan", "Özel pleksi temizleyici"],
+                    correct: 1,
+                    explanation: "Aseton pleksi yüzeyini çatlatır (stress cracking). IPA %70-99 veya özel temizleyici kullanın."
+                },
+                {
+                    question: "Çapraz kesme testinde kabul edilebilir sınıf nedir?",
+                    options: ["0-1", "2-3", "4-5", "Herhangi biri"],
+                    correct: 0,
+                    explanation: "0-1 sınıf (hiç kopma veya çok az) kabul edilebilir. 2 ve üstü yetersiz tutunma demektir."
+                },
+                {
+                    question: "Yüzey enerjisi 38-40 dyn/cm üzeri malzemeler için ne gerekir?",
+                    options: ["Her zaman primer", "Genellikle doğrudan baskı yapılabilir", "Sadece korona", "Sadece plazma"],
+                    correct: 1,
+                    explanation: "38-40 dyn/cm UV boyası için ideal eşiktir. Üzerindekiler genellikle doğrudan baskıya uygundur."
+                }
+            ]
         }
     },
     {
         id: 3,
         title: "CorelDRAW ile UV Hazırlık",
-        desc: "Profesyonel dosya hazırlama ve RIP ayarları",
-        duration: "35 dk",
-        xp: 150,
+        desc: "Profesyonel dosya hazırlama, RIP ayarları ve renk yönetimi",
+        duration: "55 dk",
+        xp: 200,
         locked: true,
         lessons: [
             {
                 title: "Renk Yönetimi ve Spot Renkler",
-                subtitle: "White ve Varnish katmanları",
+                subtitle: "White, Varnish ve Primer katmanları",
                 content: `
                     <div class="content-block">
                         <div class="block-title">🎯 Spot Renk Mantığı</div>
                         <div class="block-content">
-                            <p>RIP yazılımı (PrintForge, Caldera, vb.) <strong>spot renkleri</strong> özel kanallar olarak tanır:</p>
+                            <p>RIP yazılımı (PrintForge, Caldera, Onyx, vb.) <strong>spot renkleri</strong> özel kanallar olarak tanır:</p>
+                            <table class="data-table">
+                                <tr><th>Spot Renk Adı</th><th>Kanal</th><th>Kullanım</th></tr>
+                                <tr><td>RD_WHITE</td><td>Beyaz mürekkep</td><td>Opak zemin, şeffaf malzemeler</td></tr>
+                                <tr><td>RD_VARNISH</td><td>Vernik</td><td>3D kabartma, parlaklık</td></tr>
+                                <tr><td>RD_PRIMER</td><td>Astar</td><td>PP, silikon, zor tutunan</td></tr>
+                                <tr><td>RD_CMYK</td><td>Standart renkler</td><td>Görsel içerik</td></tr>
+                            </table>
+                            <br>
+                            <p><strong>CorelDRAW Ayarı:</strong></p>
+                            <ol>
+                                <li>Nesneyi seçin</li>
+                                <li>Dolgu aracını açın (Shift+F11)</li>
+                                <li>"Spot renk" seçeneğini işaretleyin</li>
+                                <li>Renk adını <strong>RD_WHITE</strong> olarak yazın (büyük harf, alt çizgi)</li>
+                                <li>CMYK değerleri önemli değil (RIP tarafından eşleştirilir)</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="content-block warning">
+                        <div class="block-title">⚠️ Sık Yapılan Hatalar</div>
+                        <div class="block-content">
                             <ul>
-                                <li><strong>RD_WHITE:</strong> Beyaz mürekkep kanalı</li>
-                                <li><strong>RD_VARNISH:</strong> Vernik/kabartma kanalı</li>
-                                <li><strong>RD_PRIMER:</strong> Astar kanalı</li>
+                                <li><strong>"White" yazmak yerine "RD_WHITE":</strong> RIP tanımaz, beyaz basılmaz</li>
+                                <li><strong>Spot renk işaretini unutmak:</strong> CMYK'ya çevrilir, sonuç farklı çıkar</li>
+                                <li><strong>Beyazı üste koymak:</strong> Renklerin altında kalmalı (normal baskıda)</li>
+                                <li><strong>Mirror print'te unutmak:</strong> Katman sırası ters!</li>
                             </ul>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Katman Yönetimi ve Sıralama",
+                subtitle: "Doğru katman düzeni için rehber",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">📚 Standart Katman Sıralaması</div>
+                        <div class="block-content">
+                            <p><strong>Normal Baskı (Cam/Pleksi üzerine):</strong></p>
+                            <ol>
+                                <li><strong>Alt katman:</strong> Beyaz (RD_WHITE) - Opak zemin</li>
+                                <li><strong>Orta katman:</strong> CMYK görsel</li>
+                                <li><strong>Üst katman (opsiyonel):</strong> Varnish (koruma/kabartma)</li>
+                            </ol>
+                            <br>
+                            <p><strong>Mirror Print (Cam üzerine, arkadan görünür):</strong></p>
+                            <ol>
+                                <li><strong>Alt katman:</strong> CMYK (ters çevrilmiş görsel)</li>
+                                <li><strong>Orta katman:</strong> Beyaz (RD_WHITE)</li>
+                                <li><strong>Üst katman:</strong> Varnish (opsiyonel)</li>
+                            </ol>
+                            <br>
+                            <p><strong>Double White (Ekstra opaklık):</strong></p>
+                            <ol>
+                                <li>Beyaz (düşük pass)</li>
+                                <li>CMYK</li>
+                                <li>Beyaz (tekrar - üstte)</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="content-block info">
+                        <div class="block-title">💡 CorelDRAW Layer Yönetimi</div>
+                        <div class="block-content">
+                            <ul>
+                                <li>Her kanal için ayrı layer oluşturun (WHITE, CMYK, VARNISH)</li>
+                                <li>Layer sırası baskı sırasını belirler (alttan üste)</li>
+                                <li>"Print colors as spot" seçeneğini işaretleyin</li>
+                                <li>PDF export'ta "Preserve spot colors" seçeneğini aktif edin</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Çözünürlük, Bleed ve Kesme Çizgileri",
+                subtitle: "Teknik dosya hazırlama standartları",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">📐 Teknik Parametreler</div>
+                        <div class="block-content">
+                            <table class="data-table">
+                                <tr><th>Parametre</th><th>Değer</th><th>Açıklama</th></tr>
+                                <tr><td>Çözünürlük</td><td>150-300 dpi</td><td>Görsel kalitesi (baskı boyutuna göre)</td></tr>
+                                <tr><td>Bleed (taşma)</td><td>2-3 mm</td><td>Kesim payı, beyaz alan bırakmayın</td></tr>
+                                <tr><td>Kesme çizgisi</td><td>0.25 pt, kırmızı</td><td>Contour cut için işaret</td></tr>
+                                <tr><td>Güvenli alan</td><td>5-10 mm içerden</td><td>Önemli içerik kenara yakın olmasın</td></tr>
+                                <tr><td>Font outline</td><td>Convert to curves</td><td>Font kaybını önle</td></tr>
+                            </table>
+                            <br>
+                            <p><strong>Baskı Boyutuna Göre DPI:</strong></p>
+                            <ul>
+                                <li>Küçük (10x10cm): 300 dpi</li>
+                                <li>Orta (50x70cm): 150-200 dpi</li>
+                                <li>Büyük (1x2m): 100-150 dpi</li>
+                                <li>Dev ebat (3m+): 72-100 dpi</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="content-block">
+                        <div class="block-title">✂️ Kesme Çizgisi (Cut Contour) Hazırlama</div>
+                        <div class="block-content">
+                            <p><strong>Adımlar:</strong></p>
+                            <ol>
+                                <li>Nesneyi seçin, "Contour" efekti uygulayın</li>
+                                <li>Offset: 0 (dış hat)</li>
+                                <li>Contour'u ayrı nesneye ayırın (Break Apart)</li>
+                                <li>Stroke: 0.25 pt, renk: Spot "CutContour" veya RGB 255-0-0</li>
+                                <li>Fill: None</li>
+                            </ol>
+                            <br>
+                            <p><strong>RIP Ayarı:</strong> CutContour kanalı "Cut" olarak işaretlenir, baskı yapılmaz, sadece kesim makinesine gönderilir.</p>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "PDF Export ve RIP İletimi",
+                subtitle: "Doğru format ve ayarlar",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">📤 PDF Export Ayarları</div>
+                        <div class="block-content">
+                            <p><strong>PDF/X-4 veya PDF/X-1a standardı:</strong></p>
+                            <ul>
+                                <li>Spot renkleri korur</li>
+                                <li>Transparanlık desteği (X-4)</li>
+                                <li>Font gömme (embed)</li>
+                                <li>CMYK + Spot renk çıktı</li>
+                            </ul>
+                            <br>
+                            <p><strong>Ayarlar:</strong></p>
+                            <ul>
+                                <li>Color: Composite CMYK + Spot</li>
+                                <li>Compatibility: Acrobat 5.0+</li>
+                                <li>Compress: ZIP/LZW (JPEG değil!)</li>
+                                <li>Bleed: Include</li>
+                                <li>Marks: Registration marks (opsiyonel)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="content-block info">
+                        <div class="block-title">🖥️ RIP Yazılımı İçe Aktarma</div>
+                        <div class="block-content">
+                            <p><strong>PrintForge/Caldera/Onyx:</strong></p>
+                            <ol>
+                                <li>PDF'i hot folder'a atın veya import edin</li>
+                                <li>Spot renkler otomatik kanallara ayrılır</li>
+                                <li>White ve Varnish görsel olarak önizlenir</li>
+                                <li>Pass sayısı, hız, drop size ayarlanır</li>
+                                <li>Test strip (küçük baskı) önerilir</li>
+                            </ol>
                         </div>
                     </div>
                 `
             }
         ],
         quiz: {
-            question: "CorelDRAW'de beyaz katmanı nasıl tanımlamalısınız?",
-            options: ["Sadece beyaz renk yap", "Spot renk adı 'RD_WHITE' olmalı", "Sadece alt katmana koy", "RIP'te sonradan ayarla"],
-            correct: 1,
-            explanation: "RIP yazılımı 'RD_WHITE' spot renk adını otomatik beyaz kanalına yönlendirir. Sadece beyaz renk yetmez."
+            questions: [
+                {
+                    question: "CorelDRAW'de beyaz katmanı nasıl tanımlamalısınız?",
+                    options: ["Sadece beyaz renk yap", "Spot renk adı 'RD_WHITE' olmalı", "Sadece alt katmana koy", "RIP'te sonradan ayarla"],
+                    correct: 1,
+                    explanation: "RIP yazılımı 'RD_WHITE' spot renk adını otomatik beyaz kanalına yönlendirir. Sadece beyaz renk yetmez."
+                },
+                {
+                    question: "Mirror print'te (cam üzerine) katman sırası nasıldır?",
+                    options: ["Beyaz altta, renk üstte", "Renk altta, beyaz üstte", "Sadece beyaz", "Sadece renk"],
+                    correct: 1,
+                    explanation: "Mirror print'te camın arkasına bakılır. Önce renk (ters çevrilmiş), üzerine beyaz basılır. Böylece camdan bakınca renk önde görünür."
+                },
+                {
+                    question: "Büyük format baskı (1x2m) için ideal DPI nedir?",
+                    options: ["300 dpi", "150-200 dpi", "72 dpi", "600 dpi"],
+                    correct: 1,
+                    explanation: "Büyük formatlarda 150-200 dpi yeterlidir. 300 dpi dosya boyutunu şişirir, baskı hızını yavaşlatır, fark görülmez."
+                },
+                {
+                    question: "Kesme çizgisi (cut contour) hangi renkte olmalıdır?",
+                    options: ["Siyah", "Kırmızı (RGB 255-0-0)", "Mavi", "Yeşil"],
+                    correct: 1,
+                    explanation: "Kesme çizgileri standart olarak kırmızı (RGB 255-0-0) veya 'CutContour' spot rengi ile tanımlanır."
+                },
+                {
+                    question: "PDF export'ta hangi sıkıştırma kullanılmalıdır?",
+                    options: ["JPEG (küçük dosya)", "ZIP/LZW (kayıpsız)", "RAR", "Hiçbiri"],
+                    correct: 1,
+                    explanation: "JPEG kayıplı sıkıştırma yapar, detay kaybı olur. ZIP/LZW kayıpsızdır, spot renkleri korur."
+                }
+            ]
         }
     },
     {
         id: 4,
-        title: "Makine Operasyonu",
-        desc: "Günlük bakım, kalibrasyon ve baskı ayarları",
-        duration: "40 dk",
-        xp: 150,
+        title: "Makine Operasyonu ve Bakım",
+        desc: "Günlük rutinler, kalibrasyon ve arıza önleme",
+        duration: "60 dk",
+        xp: 220,
         locked: true,
         lessons: [
             {
@@ -1131,50 +1739,67 @@ const uvCurriculum = [
                         <div class="block-title">☀️ Sabah Rutini (Her Gün!)</div>
                         <div class="block-content">
                             <ul class="checklist">
-                                <li>Makineyi aç, ısınmasını bekle (5 dk)</li>
-                                <li>Beyaz mürekkep şişesini çalkala (10 saniye)</li>
+                                <li>Makineyi aç, ısınmasını bekle (5 dk - LED için gerekmez)</li>
+                                <li>Beyaz mürekkep şişesini çalkala (10-15 saniye)</li>
                                 <li>Nozzle check yap (tüm kanallar açık mı?)</li>
                                 <li>Kafa temizliği (light cleaning)</li>
-                                <li>Test baskısı yap</li>
-                                <li>Malzeme yüzeyini kontrol et</li>
+                                <li>Test baskısı yap (A4/Letter boyut)</li>
+                                <li>Malzeme yüzeyini kontrol et (temizlik)</li>
                                 <li>Kafa yüksekliğini ayarla (1.5-2mm)</li>
+                                <li>UV lamba kontrolü (anında açılıyor mu?)</li>
                             </ul>
                         </div>
                     </div>
-                `
-            }
-        ],
-        quiz: {
-            question: "Beyaz mürekkep neden her sabah çalkalanmalıdır?",
-            options: ["Hava kabarcığı için", "Pigment çökelmesini önlemek", "Kokusunu gidermek", "Rengini açmak"],
-            correct: 1,
-            explanation: "Beyaz mürekkep titanyum dioksit pigmenti içerir. Çökelir ve tıkanıklık yapar. Çalkalamak homojen dağılımı sağlar."
-        }
-    },
-    {
-        id: 5,
-        title: "Arıza Tespiti ve Çözüm",
-        desc: "Banding, nozzle loss ve renk problemleri",
-        duration: "35 dk",
-        xp: 150,
-        locked: true,
-        lessons: [
-            {
-                title: "Banding (Çizgili Baskı)",
-                subtitle: "Yatay çizgilerin nedenleri ve çözümleri",
-                content: `
-                    <div class="content-block danger">
-                        <div class="block-title">🚨 Banding Tipleri</div>
+
+                    <div class="content-block warning">
+                        <div class="block-title">⏰ Zamanlama Önerisi</div>
                         <div class="block-content">
-                            <p><strong>Ink Starvation (Açlık):</strong> Mürekkep yetmezliği</p>
-                            <p style="margin-left:20px;">→ Çözüm: Damper kontrolü, mürekkep seviyesi</p>
-                            <br>
-                            <p><strong>Kafa Hizalama Kayması:</strong> Passlar arası uyumsuzluk</p>
-                            <p style="margin-left:20px;">→ Çözüm: Bidirectional calibration</p>
+                            <table class="data-table">
+                                <tr><th>İşlem</th><th>Süre</th><th>Sıklık</th></tr>
+                                <tr><td>Beyaz çalkalama</td><td>15 sn</td><td>Her gün</td></tr>
+                                <tr><td>Nozzle check</td><td>2 dk</td><td>Her gün</td></tr>
+                                <tr><td>Light cleaning</td><td>3 dk</td><td>Her gün / gerekirse</td></tr>
+                                <tr><td>Medium cleaning</td><td>10 dk</td><td>Haftada 1-2</td></tr>
+                                <tr><td>Strong cleaning</td><td>20 dk</td><td>Ayda 1 veya sorun varsa</td></tr>
+                                <tr><td>Kafa değişimi</td><td>30-60 dk</td><td>5000-10000 saatte</td></tr>
+                            </table>
                         </div>
                     </div>
-
-                    <!-- NOZZLE CHECK SİMÜLASYONU -->
+                `
+            },
+            {
+                title: "Kafa Yüksekliği ve Mesafe Ayarı",
+                subtitle: "Doğru yükseklik = kaliteli baskı",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">📏 Optimal Mesafe</div>
+                        <div class="block-content">
+                            <p><strong>Standart Mesafe:</strong> 1.5-2.0 mm (kafa ile malzeme arası)</p>
+                            <br>
+                            <p><strong>Malzemeye Göre Ayar:</strong></p>
+                            <ul>
+                                <li>Düz pleksi/metal: 1.5 mm</li>
+                                <li>Kabartmalı/3D: 2.0-2.5 mm</li>
+                                <li>Yumuşak/esnek: 2.0 mm (çarpmamak için)</li>
+                                <li>Çok ince kağıt: 1.2-1.5 mm</li>
+                            </ul>
+                            <br>
+                            <p><strong>Yanlış Mesafenin Etkileri:</strong></p>
+                            <table class="data-table">
+                                <tr><th>Çok Yakın</th><th>Çok Uzak</th></tr>
+                                <tr><td>Kafa çarpması riski</td><td>Drop uçuşu, bulanıklık</td></tr>
+                                <tr><td>Mürekkep birikimi</td><td>Düşük çözünürlük</td></tr>
+                                <tr><td>Kafa hasarı</td><td>Tozlanma</td></tr>
+                                <tr><td>Çift hat (ghosting)</td><td>Boya israfı</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Nozzle Check ve Temizlik",
+                subtitle: "Tıkanıklık tespiti ve çözümü",
+                content: `
                     <div class="interactive-demo" id="nozzleCheck">
                         <div class="demo-title">🔍 Nozzle Check Simülasyonu</div>
                         
@@ -1211,74 +1836,49 @@ const uvCurriculum = [
                             <strong style="color:var(--accent);">Durum:</strong> Tüm nozullar aktif. Baskıya hazır.
                         </div>
                     </div>
-                `
-            }
-        ],
-        quiz: {
-            question: "Düzenli aralıklarla tekrar eden hafif çizgilerin sebebi nedir?",
-            options: ["Nozzle tıkanıklığı", "Encoder strip kirlenmesi", "Yanlış ICC profili", "Düşük UV gücü"],
-            correct: 1,
-            explanation: "Encoder strip (şerit sensör) kirliyse kafa pozisyonunu yanlış okur ve düzenli aralıklarla hizalama hatası oluşur."
-        }
-    },
-    {
-        id: 6,
-        title: "İleri Teknikler",
-        desc: "Double pass, mirror print ve özel efektler",
-        duration: "30 dk",
-        xp: 130,
-        locked: true,
-        lessons: [
-            {
-                title: "Mirror Print (Ayna Baskı)",
-                subtitle: "Cam ve pleksi için ters baskı",
-                content: `
+
                     <div class="content-block">
-                        <div class="block-title">🪞 Uygulama Alanları</div>
+                        <div class="block-title">🧽 Temizlik Seviyeleri</div>
                         <div class="block-content">
-                            <p>Cam üzerine baskıda görsel <strong>camın arkasından</strong> izlenir. Bu yüzden:</p>
-                            <ol>
-                                <li>Resmi yatay çevir (mirror/flip)</li>
-                                <li>Önce renkli katmanı bas (normalde altta kalır)</li>
-                                <li>Üzerine beyaz bas (normalde üstte kalır)</li>
-                                <li>Sonuç: Camın önü pürüzsüz, arka taraf baskılı</li>
-                            </ol>
+                            <p><strong>Light Cleaning:</strong> Yüzey temizliği, hafif vakum</p>
+                            <p><strong>Medium Cleaning:</strong> Güçlü vakum, hafif sünger teması</p>
+                            <p><strong>Strong Cleaning:</strong> Agresif vakum, sünger ıslatma</p>
+                            <p><strong>Power Cleaning:</strong> Mürekkep doldurma, uzun vakum</p>
                         </div>
                     </div>
                 `
-            }
-        ],
-        quiz: {
-            question: "Mirror print'te katman sırası nasıldır?",
-            options: ["Beyaz altta, renk üstte", "Renk altta, beyaz üstte", "Sadece beyaz", "Sadece renk"],
-            correct: 1,
-            explanation: "Mirror print'te camın arkasına bakılır. Önce renk (ters çevrilmiş), üzerine beyaz basılır. Böylece camdan bakınca renk önde görünür."
-        }
-    },
-    {
-        id: 7,
-        title: "Maliyet Optimizasyonu",
-        desc: "Mürekkep hesabı, fire oranı ve fiyatlandırma",
-        duration: "25 dk",
-        xp: 100,
-        locked: true,
-        lessons: [
+            },
             {
-                title: "Mürekkep Maliyeti Hesaplama",
-                subtitle: "Gerçek maliyeti öğrenmek",
+                title: "UV Lamba Bakımı",
+                subtitle: "Ömür uzatma ve performans",
                 content: `
                     <div class="content-block">
-                        <div class="block-title">💰 Formül</div>
+                        <div class="block-title">💡 LED-UV Bakımı</div>
                         <div class="block-content">
-                            <div class="code-block">
-Maliyet = (Kaplama Alanı m²) × (Pass Sayısı) × (ml/m²/pass) × (Fiyat/ml)
-                            </div>
-                            <br>
-                            <p><strong>Örnek Değerler:</strong></p>
                             <ul>
-                                <li>CMYK: ~12ml/m² (1 pass)</li>
-                                <li>White: ~15ml/m² (daha yoğun)</li>
-                                <li>Varnish: ~18ml/m²</li>
+                                <li><strong>Temizlik:</strong> Haftada bir mikrofiber bezle silin (kapalıyken)</li>
+                                <li><strong>Soğutma:</strong> Fan filtresini aylık temizleyin</li>
+                                <li><strong>Ömür:</strong> 20,000 saat (2-3 yıl yoğun kullanım)</li>
+                                <li><strong>Güç kontrolü:</strong> %100, %75, %50 ayarlarını kullanın</li>
+                            </ul>
+                            <br>
+                            <p><strong>Güç Ayarı:</strong></p>
+                            <ul>
+                                <li>%100: Yüksek hız, tam kürlenme</li>
+                                <li>%75: Standart baskı, enerji tasarrufu</li>
+                                <li>%50: Isı hassas malzemeler (PVC, ince pleksi)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="content-block warning">
+                        <div class="block-title">⚠️ Lamba Değişim İşaretleri</div>
+                        <div class="block-content">
+                            <ul>
+                                <li>Boya tam kurumuyor (yapışkan kalıyor)</li>
+                                <li>Baskı hızında düşüş (kürlenme için bekleme)</li>
+                                <li>Lamba üzerinde kararma/leke</li>
+                                <li>5000+ saat kullanım süresi</li>
                             </ul>
                         </div>
                     </div>
@@ -1286,21 +1886,670 @@ Maliyet = (Kaplama Alanı m²) × (Pass Sayısı) × (ml/m²/pass) × (Fiyat/ml)
             }
         ],
         quiz: {
-            question: "10m² alana 3 pass white + 1 pass CMYK basarsanız toplam kaç ml white gider?",
-            options: ["150ml", "300ml", "450ml", "600ml"],
-            correct: 2,
-            explanation: "10m² × 3 pass × 15ml/m² = 450ml. White mürekkebi daha yoğundur (15ml/m²)."
+            questions: [
+                {
+                    question: "Beyaz mürekkep neden her sabah çalkalanmalıdır?",
+                    options: ["Hava kabarcığı için", "Pigment çökelmesini önlemek", "Kokusunu gidermek", "Rengini açmak"],
+                    correct: 1,
+                    explanation: "Beyaz mürekkep titanyum dioksit pigmenti içerir. Çökelir ve tıkanıklık yapar. Çalkalamak homojen dağılımı sağlar."
+                },
+                {
+                    question: "Kafa ile malzeme arası ideal mesafe nedir?",
+                    options: ["0.5 mm", "1.5-2.0 mm", "5 mm", "10 mm"],
+                    correct: 1,
+                    explanation: "1.5-2.0 mm standart mesafedir. Çok yakın çarpma riski, çok uzak bulanıklık ve israf yapar."
+                },
+                {
+                    question: "Nozzle check'te düzensiz aralıklarla eksik nozzle görülüyor. Sebep?",
+                    options: ["Kafa hasarı", "Encoder strip kirlenmesi", "Damper hava kabarcığı", "UV lamba arızası"],
+                    correct: 2,
+                    explanation: "Düzensiz eksik nozzle'lar genellikle damperdeki hava kabarcığı veya mürekkep akış problemi gösterir."
+                },
+                {
+                    question: "LED-UV lambaların beklenen ömrü nedir?",
+                    options: ["1000 saat", "5000 saat", "20,000+ saat", "Sınırsız"],
+                    correct: 2,
+                    explanation: "LED-UV lambalar 20,000+ saat ömür sunar. Geleneksel gel-UV ise 1000-2000 saat ömürlüdür."
+                },
+                {
+                    question: "Isı hassas malzeme (ince PVC) için UV güç ayarı ne olmalı?",
+                    options: ["%100", "%75", "%50", "Kapalı"],
+                    correct: 2,
+                    explanation: "Isı hassas malzemelerde %50 güç kullanılır. Bu malzeme deformasyonunu önler, yeterli kürlenme sağlar."
+                }
+            ]
+        }
+    },
+    {
+        id: 5,
+        title: "Arıza Tespiti ve Çözüm",
+        desc: "Banding, renk sapması ve mekanik sorunlar",
+        duration: "55 dk",
+        xp: 200,
+        locked: true,
+        lessons: [
+            {
+                title: "Banding (Çizgili Baskı) Analizi",
+                subtitle: "Yatay çizgilerin nedenleri ve çözümleri",
+                content: `
+                    <div class="content-block danger">
+                        <div class="block-title">🚨 Banding Tipleri ve Çözümler</div>
+                        <div class="block-content">
+                            <p><strong>1. Ink Starvation (Açlık):</strong></p>
+                            <ul>
+                                <li><strong>Belirti:</strong> Düzensiz hafif çizgiler, renk solması</li>
+                                <li><strong>Neden:</strong> Mürekkep yetmezliği, damper problemi</li>
+                                <li><strong>Çözüm:</strong> Damper kontrolü, mürekkep seviyesi, hattı havalandırma</li>
+                            </ul>
+                            <br>
+                            <p><strong>2. Pass Kayması (Pass Misalignment):</strong></p>
+                            <ul>
+                                <li><strong>Belirti:</strong> Düzenli aralıklarla koyu çizgiler</li>
+                                <li><strong>Neden:</strong> Bidirectional hizalama bozukluğu</li>
+                                <li><strong>Çözüm:</strong> Calibration wizard çalıştırın</li>
+                            </ul>
+                            <br>
+                            <p><strong>3. Encoder Strip Sorunu:</strong></p>
+                            <ul>
+                                <li><strong>Belirti:</strong> Düzenli aralıklarla tekrar eden hafif banding</li>
+                                <li><strong>Neden:</strong> Encoder strip kirli veya çizik</li>
+                                <li><strong>Çözüm:</strong> IPA ile temizleyin veya değiştirin</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="content-block">
+                        <div class="block-title">🔧 Calibration Prosedürü</div>
+                        <div class="block-content">
+                            <ol>
+                                <li>Makineyi sıfırlayın (homing)</li>
+                                <li>Kafa temizliği yapın</li>
+                                <li>Calibration pattern basın</li>
+                                <li>En iyi hizalamayı seçin (genellikle 0 veya +1/-1)</li>
+                                <li>Değeri RIP'e kaydedin</li>
+                                <li>Test baskısı doğrulayın</li>
+                            </ol>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Renk Sapması ve Profil Yönetimi",
+                subtitle: "ICC profilleri ve renk tutarlılığı",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">🎨 Renk Yönetimi</div>
+                        <div class="block-content">
+                            <p><strong>ICC Profili:</strong> Her malzeme+mürekkep+kafa kombinasyonu için özel profil gerekir.</p>
+                            <br>
+                            <table class="data-table">
+                                <tr><th>Sorun</th><th>Neden</th><th>Çözüm</th></tr>
+                                <tr><td>Renkler soluk</td><td>UV güçü düşük / hız yüksek</td><td>UV gücü artır veya hız düşür</td></tr>
+                                <tr><td>Renkler koyu</td><td>UV güçü yüksek / hız düşük</td><td>UV gücü azalt veya hız artır</td></tr>
+                                <tr><td>Sarımsı ton</td><td>UV sarartıyor (bazı malzemeler)</td><td>Düşük UV güç, özel profil</td></tr>
+                                <tr><td>Mavi/yeşil kayma</td><td>Kafa hizalama bozuk</td><td>Calibration yap</td></tr>
+                                <tr><td>Tutarsız renk</td><td>Sıcaklık değişimi</td><td>Ortam sıcaklığını sabit tut (20-25°C)</td></tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="content-block info">
+                        <div class="block-title">📊 Profil Oluşturma</div>
+                        <div class="block-content">
+                            <ol>
+                                <li>Colorimeter (X-Rite, Barbieri) ile ölçüm yapın</li>
+                                <li>Test chart basın (200+ renk yaması)</li>
+                                <li>Her yamayı ölçün</li>
+                                <li>Profil yazılımında (ProfileMaker, i1Profiler) işleyin</li>
+                                <li>ICC profilini RIP'e yükleyin</li>
+                            </ol>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Mekanik Sorunlar",
+                subtitle: "Motor, kayış ve sensör arızaları",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">⚙️ Mekanik Arıza Belirtileri</div>
+                        <div class="block-content">
+                            <table class="data-table">
+                                <tr><th>Sorun</th><th>Belirti</th><th>Çözüm</th></tr>
+                                <tr><td>Kayış gevşek</td><td>Adım kayması, bulanıklık</td><td>Gerdirme veya değiştirme</td></tr>
+                                <tr><td>Ray kirlenmesi</td><td>Titreşim, ses, düzensiz hareket</td><td>Temizle ve yağla</td></tr>
+                                <tr><td>Vakum zayıf</td><td>Malzeme kayması</td><td>Filtre temizliği, pompa kontrolü</td></tr>
+                                <tr><td>Limit switch</td><td>Hata kodu, sıfırlanamama</td><td>Temizle veya değiştir</td></tr>
+                                <tr><td>Motor ısınması</td><td>Koku, yavaşlama, durma</td><td>Soğutma, sürücü kontrolü</td></tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="content-block warning">
+                        <div class="block-title">🚨 Acil Durumlar</div>
+                        <div class="block-content">
+                            <p><strong>Makineyi Hemen Durdurun:</strong></p>
+                            <ul>
+                                <li>Yangın dumanı veya koku</li>
+                                <li>Anormal ses (metal çarpma)</li>
+                                <li>Mürekkep sızıntısı (elektrik kaçağı riski)</li>
+                                <li>Kafa çarpması (malzeme yüksek)</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Yazılım ve Bağlantı Sorunları",
+                subtitle: "RIP, sürücü ve iletişim hataları",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">💻 Yaygın Yazılım Sorunları</div>
+                        <div class="block-content">
+                            <p><strong>RIP Donma/Kilitlenme:</strong></p>
+                            <ul>
+                                <li>Büyük dosya (>500MB) - RIP'leme uzun sürer</li>
+                                <li>Yetersiz RAM (minimum 8GB önerilir)</li>
+                                <li>Ekran kartı sürücüsü güncellemesi</li>
+                            </ul>
+                            <br>
+                            <p><strong>Bağlantı Kopması:</strong></p>
+                            <ul>
+                                <li>USB kablosu uzunluğu max 3m</li>
+                                <li>Ethernet bağlantısı daha stabil</li>
+                                <li>Firewall/antivirüs engellemesi kontrolü</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            }
+        ],
+        quiz: {
+            questions: [
+                {
+                    question: "Düzenli aralıklarla tekrar eden hafif çizgilerin sebebi nedir?",
+                    options: ["Nozzle tıkanıklığı", "Encoder strip kirlenmesi", "Yanlış ICC profili", "Düşük UV gücü"],
+                    correct: 1,
+                    explanation: "Encoder strip (şerit sensör) kirliyse kafa pozisyonunu yanlış okur ve düzenli aralıklarla hizalama hatası oluşur."
+                },
+                {
+                    question: "Renkler soluk çıkıyor, UV gücü yeterli. Sorun ne olabilir?",
+                    options: ["Hız çok düşük", "Hız çok yüksek", "Beyaz mürekkep eksik", "Kafa çok yakın"],
+                    correct: 1,
+                    explanation: "Hız çok yüksekse UV ışını yeterince kürlenme sağlayamaz veya mürekkep yetersiz atılır. Hızı düşürün."
+                },
+                {
+                    question: "Bidirectional baskıda pass kayması var. Ne yapılmalı?",
+                    options: ["Kafa değiştir", "Calibration yap", "Mürekkep değiştir", "UV gücü artır"],
+                    correct: 1,
+                    explanation: "Bidirectional hizalama calibration wizard ile düzeltilir. Kafa değişimi sonrası mutlaka yapılmalıdır."
+                },
+                {
+                    question: "Malzeme baskı sırasında kayıyor. Çözüm?",
+                    options: ["Kafa yüksekliğini artır", "Vakum gücünü kontrol et", "Hızı artır", "UV gücü azalt"],
+                    correct: 1,
+                    explanation: "Vakum zayıfsa malzeme sabitlenemez. Vakum filtresi temizliği ve pompa kontrolü yapın."
+                },
+                {
+                    question: "Baskıda mavi renk yeşile kayıyor. Sebep?",
+                    options: ["UV fazla", "Kafa hizalama bozuk", "Mürekkep bitti", "Malzeme kirli"],
+                    correct: 1,
+                    explanation: "Renk kayması (özellikle tek kanalda) kafa hizalama bozukluğunu gösterir. Calibration şarttır."
+                }
+            ]
+        }
+    },
+    {
+        id: 6,
+        title: "İleri Teknikler",
+        desc: "Double pass, mirror print, 3D efektler ve özel uygulamalar",
+        duration: "50 dk",
+        xp: 180,
+        locked: true,
+        lessons: [
+            {
+                title: "Mirror Print (Ayna Baskı)",
+                subtitle: "Cam ve pleksi için ters baskı tekniği",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">🪞 Mirror Print Mantığı</div>
+                        <div class="block-content">
+                            <p>Cam üzerine baskıda görsel <strong>camın arkasından</strong> izlenir. Bu yüzden:</p>
+                            <ol>
+                                <li>Resmi yatay çevir (mirror/flip horizontal)</li>
+                                <li>Önce renkli katmanı bas (normalde altta kalır)</li>
+                                <li>Üzerine beyaz bas (normalde üstte kalır)</li>
+                                <li>Sonuç: Camın önü pürüzsüz, arka taraf baskılı</li>
+                            </ol>
+                            <br>
+                            <p><strong>Avantajları:</strong></p>
+                            <ul>
+                                <li>Baskı korunmuş (çizilmez, solmaz)</li>
+                                <li>Cam parlaklığı korunur</li>
+                                <li>Arkadan aydınlatma (backlight) mümkün</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="content-block warning">
+                        <div class="block-title">⚠️ Mirror Print Hataları</div>
+                        <div class="block-content">
+                            <ul>
+                                <li><strong>Metin unutulması:</strong> Metinleri de ters çevirmeyi unutmayın!</li>
+                                <li><strong>Katman sırası:</strong> Beyaz altta kalırsa renkler soluk görünür</li>
+                                <li><strong>Kalınlık:</strong> Çok kalın camda renkler derinde görünür</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Double Pass ve Multi-Layer",
+                subtitle: "Yüksek opaklık ve özel efektler",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">🎯 Double White Tekniği</div>
+                        <div class="block-content">
+                            <p>Ekstra opaklık için:</p>
+                            <ol>
+                                <li>İlk beyaz katman (düşük pass, hızlı)</li>
+                                <li>CMYK görsel</li>
+                                <li>İkinci beyaz katman (üstte, tam opaklık)</li>
+                            </ol>
+                            <br>
+                            <p><strong>Kullanım:</strong> Arkadan aydınlatmalı tabelalar, gece görünürlüğü yüksek işaretler.</p>
+                        </div>
+                    </div>
+
+                    <div class="content-block info">
+                        <div class="block-title">🥪 Sandwich Baskı</div>
+                        <div class="block-content">
+                            <p>İki pleksi arasına baskı:</p>
+                            <ol>
+                                <li>Alt pleksi üzerine normal baskı (beyaz+renk)</li>
+                                <li>Üzerine şeffaf yapıştırıcı (optical clear adhesive)</li>
+                                <li>Üst pleksi laminasyon</li>
+                            </ol>
+                            <br>
+                            <p>Sonuç: Baskı tamamen korunmuş, 3D efektli, çizilmez.</p>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "3D Kabartma (Varnish Efektleri)",
+                subtitle: "Relief baskı ve selektif vernik",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">📐 3D Kabartma Teknikleri</div>
+                        <div class="block-content">
+                            <p><strong>1. Basit Kabartma:</strong></p>
+                            <ul>
+                                <li>Varnish kanalında sadece kabartılacak alanlar</li>
+                                <li>2-3 pass varnish = hafif kabartma</li>
+                                <li>5-8 pass = belirgin 3D efekt</li>
+                            </ul>
+                            <br>
+                            <p><strong>2. Çok Katmanlı Kabartma:</strong></p>
+                            <ul>
+                                <li>Her pass arası küçük UV patlaması</li>
+                                <li>10+ pass = 1mm üzeri kabartma</li>
+                                <li>Braille (kabartma alfabe) için ideal</li>
+                            </ul>
+                            <br>
+                            <p><strong>3. Selektif Vernik:</strong></p>
+                            <ul>
+                                <li>Sadece belirli alanlarda parlaklık/matlık</li>
+                                <li>Spot UV efekti</li>
+                                <li>Lüks ambalaj ve kapaklarda kullanılır</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="content-block">
+                        <div class="block-title">🎨 Uygulama Alanları</div>
+                        <div class="block-content">
+                            <ul>
+                                <li><strong>Braille:</strong> Görme engelliler için dokunsal yazı</li>
+                                <li><strong>Logo kabartma:</strong> Kartvizit, davetiye</li>
+                                <li><strong>Doku taklidi:</strong> Ahşap deseni, kumaş dokusu</li>
+                                <li><strong>Güvenlik:</strong> Hologram etkisi, mikro yazı</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Değişken Veri Baskı",
+                subtitle: "Seri numara, barkod, kişiselleştirme",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">🔢 Değişken Veri Entegrasyonu</div>
+                        <div class="block-content">
+                            <p><strong>Excel/CSV Entegrasyonu:</strong></p>
+                            <ol>
+                                <li>Veri dosyasını hazırla (Numara, İsim, Barkod sütunları)</li>
+                                <li>RIP'te "Variable Data" modülünü aç</li>
+                                <li>Alanları tasarımdaki metin kutularına bağla</li>
+                                <li>Her baskıda otomatik değişim</li>
+                            </ol>
+                            <br>
+                            <p><strong>Uygulamalar:</strong></p>
+                            <ul>
+                                <li>Seri numaralı plaketler</li>
+                                <li>Kişiselleştirilmiş promosyonlar</li>
+                                <li>Barkod/QR kod etiketleri</li>
+                                <li>Sınav optik formları</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="content-block info">
+                        <div class="block-title">📱 QR Kod ve Barkod</div>
+                        <div class="block-content">
+                            <p><strong>Baskı Ayarları:</strong></p>
+                            <ul>
+                                <li>Minimum modül boyutu: 0.5mm (okunabilirlik için)</li>
+                                <li>Yüksek pass sayısı (kenar netliği)</li>
+                                <li>Kontrast için beyaz zemin şart</li>
+                                <li>Test edin: Telefonla okunabilmeli</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            }
+        ],
+        quiz: {
+            questions: [
+                {
+                    question: "Mirror print'te katman sırası nasıldır?",
+                    options: ["Beyaz altta, renk üstte", "Renk altta, beyaz üstte", "Sadece beyaz", "Sadece renk"],
+                    correct: 1,
+                    explanation: "Mirror print'te camın arkasına bakılır. Önce renk (ters çevrilmiş), üzerine beyaz basılır. Böylece camdan bakınca renk önde görünür."
+                },
+                {
+                    question: "3D kabartma için kaç pass varnish gerekir?",
+                    options: ["1 pass", "2-3 pass (hafif)", "5-8 pass (belirgin)", "50+ pass"],
+                    correct: 2,
+                    explanation: "2-3 pass hafif kabartma, 5-8 pass belirgin 3D efekt verir. Her pass arası UV kürlenmesi şarttır."
+                },
+                {
+                    question: "Double white tekniğinde beyaz katmanları nerededir?",
+                    options: ["Sadece altta", "Sadece üstte", "Hem altta hem üstte", "Arada"],
+                    correct: 2,
+                    explanation: "Double white'te alt beyaz zemin, üst beyaz ekstra opaklık sağlar. Arada CMYK vardır."
+                },
+                {
+                    question: "Değişken veri baskısında veri kaynağı nedir?",
+                    options: ["Sadece manuel giriş", "Excel/CSV dosyası", "Sadece barkod", "Sadece QR kod"],
+                    correct: 1,
+                    explanation: "Değişken veri için Excel veya CSV dosyası RIP'e bağlanır. Her satır bir baskı olur."
+                },
+                {
+                    question: "Mirror print'te metinleri unutulan işlem nedir?",
+                    options: ["Kalınlaştırmak", "Ters çevirmek (flip)", "Rengini değiştirmek", "Boyutunu küçültmek"],
+                    correct: 1,
+                    explanation: "Mirror print'te metinler de ters çevrilmelidir (flip horizontal). Unutulursa arkadan okunamaz."
+                }
+            ]
+        }
+    },
+    {
+        id: 7,
+        title: "Maliyet Optimizasyonu ve İşletme",
+        desc: "Mürekkep hesabı, fire oranı, fiyatlandırma ve verimlilik",
+        duration: "45 dk",
+        xp: 150,
+        locked: true,
+        lessons: [
+            {
+                title: "Mürekkep Maliyeti Hesaplama",
+                subtitle: "Gerçek maliyeti öğrenmek",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">💰 Detaylı Maliyet Formülü</div>
+                        <div class="block-content">
+                            <div class="code-block">
+Toplam Maliyet = (Kaplama Alanı m²) × (Pass Sayısı) × (ml/m²/pass) × (Fiyat/ml) + Sabit Maliyetler
+                            </div>
+                            <br>
+                            <table class="data-table">
+                                <tr><th>Tür</th><th>Tüketim (ml/m²/pass)</th><th>Fiyat (₺/ml)</th><th>Not</th></tr>
+                                <tr><td>CMYK (ortalama)</td><td>12</td><td>0.8</td><td>Renk dağılımına göre değişir</td></tr>
+                                <tr><td>White</td><td>15</td><td>1.2</td><td>%25 daha yoğun</td></tr>
+                                <tr><td>Varnish</td><td>18</td><td>0.6</td><td>Kabartma için 3-5x</td></tr>
+                                <tr><td>Primer</td><td>8</td><td>0.5</td><td>Sadece zor malzemeler</td></tr>
+                            </table>
+                            <br>
+                            <p><strong>Örnek Hesaplama:</strong></p>
+                            <p>2m² alan, 3 pass white + 2 pass CMYK:</p>
+                            <ul>
+                                <li>White: 2 × 3 × 15 × 1.2 = 108₺</li>
+                                <li>CMYK: 2 × 2 × 12 × 0.8 = 38.4₺</li>
+                                <li>Toplam: 146.4₺ mürekkep maliyeti</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="content-block info">
+                        <div class="block-title">📊 Tasarruf İpuçları</div>
+                        <div class="block-content">
+                            <ul>
+                                <li><strong>Pass optimizasyonu:</strong> Gereksiz pass kaldırın</li>
+                                <li><strong>Drop size:</strong> Büyük damla = daha hızlı, daha az mürekkep</li>
+                                <li><strong>White yerine:</strong> Açık renkli malzeme kullanın (beyaz basmayın)</li>
+                                <li><strong>Bulk mürekkep:</strong> 5L+ alımlarda %20-30 indirim</li>
+                                <li><strong>Test baskısı:</strong> Küçük alanda test edin, fireyi azaltın</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Fire Oranı ve Verimlilik",
+                subtitle: "Üretim optimizasyonu",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">📉 Fire Analizi</div>
+                        <div class="block-content">
+                            <p><strong>Tipik Fire Nedenleri:</strong></p>
+                            <table class="data-table">
+                                <tr><th>Neden</th><th>Oran</th><th>Önlem</th></tr>
+                                <tr><td>Hazırlık/test baskısı</td><td>%5-10</td><td>Digital proof, küçük test</td></tr>
+                                <tr><td>Tutunma sorunu</td><td>%3-5</td><td>Doğru primer/temizlik</td></tr>
+                                <tr><td>Kafa arızası</td><td>%2-3</td><td>Düzenli bakım</td></tr>
+                                <tr><td>Operatör hatası</td><td>%2-4</td><td>Eğitim, checklist</td></tr>
+                                <tr><td>Müşteri değişikliği</td><td>%1-2</td><td>Onaylı proof sistemi</td></tr>
+                            </table>
+                            <br>
+                            <p><strong>Hedef:</strong> Toplam fire oranı %10'un altında olmalıdır.</p>
+                        </div>
+                    </div>
+
+                    <div class="content-block">
+                        <div class="block-title">⚡ Üretim Verimliliği</div>
+                        <div class="block-content">
+                            <p><strong>Batch Üretim:</strong></p>
+                            <ul>
+                                <li>Aynı malzeme/mürekkep ayarıyla toplu üretim</li>
+                                <li>Kafa temizliği arası süreyi uzatır</li>
+                                <li>Ara malzeme değişimi zaman kaybıdır</li>
+                            </ul>
+                            <br>
+                            <p><strong>Gerçek Kapasite:</strong></p>
+                            <ul>
+                                <li>Teorik: 20m²/saat</li>
+                                <li>Gerçek: 12-15m²/saat (hazırlık, temizlik, fire dahil)</li>
+                                <li>Verimlilik: %60-75</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Fiyatlandırma Stratejisi",
+                subtitle: "Karlı teklif hazırlama",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">💵 Fiyatlandırma Formülü</div>
+                        <div class="block-content">
+                            <div class="code-block">
+Satış Fiyatı = (Malzeme + Mürekkep + İşçilik) × (1 + Kar Marjı) × Karmaşıklık Faktörü
+                            </div>
+                            <br>
+                            <p><strong>Karmaşıklık Faktörleri:</strong></p>
+                            <ul>
+                                <li>1.0: Tek renk, düz zemin</li>
+                                <li>1.2: CMYK+White, standart</li>
+                                <li>1.5: CMYK+White+Varnish, 3D efekt</li>
+                                <li>2.0+: Mirror print, double white, özel malzeme</li>
+                            </ul>
+                            <br>
+                            <p><strong>Minimum Sipariş:</strong> Maliyetin 3x'i (kar marjı %200)</p>
+                        </div>
+                    </div>
+
+                    <div class="content-block info">
+                        <div class="block-title">📋 Teklif Şablonu</div>
+                        <div class="block-content">
+                            <ol>
+                                <li>Tasarım kontrolü ve onayı (ücretli/ücretsiz)</li>
+                                <li>Test baskısı (malzeme bedeli alınır)</li>
+                                <li>Üretim süresi (iş yoğunluğuna göre)</li>
+                                <li>Revizyon hakkı (1-2 kez)</li>
+                                <li>Teslimat şartları (müşteri alım/kargo)</li>
+                            </ol>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Müşteri İlişkileri ve Kalite Yönetimi",
+                subtitle: "Profesyonel iş süreçleri",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">🤝 Müşteri Yönetimi</div>
+                        <div class="block-content">
+                            <p><strong>Onaylı Proof Sistemi:</strong></p>
+                            <ul>
+                                <li>Digital proof (PDF) - ücretsiz</li>
+                                <li>Fiziksel test baskısı - malzeme bedeli</li>
+                                <li>Müşteri imzalı onay formu</li>
+                                <li>Revizyon sonrası tekrar onay</li>
+                            </ul>
+                            <br>
+                            <p><strong>Şikayet Yönetimi:</strong></p>
+                            <ul>
+                                <li>24 saat içinde yanıt</li>
+                                <li>Fotoğraf/video ile belgelendirme</li>
+                                <li>Tutunma testi talep etme hakkı</li>
+                                <li>Ücretsiz yenileme veya iade politikası</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="content-block">
+                        <div class="block-title">✅ Kalite Kontrol Listesi</div>
+                        <div class="block-content">
+                            <ul class="checklist">
+                                <li>Renk tutarlılığı (Pantone eşleşmesi)</li>
+                                <li>Keskinlik ve detay (metin okunabilirliği)</li>
+                                <li>Tutunma testi (bant testi)</li>
+                                <li>Kuruma kontrolü (yapışkanlık)</li>
+                                <li>Temizlik (parmak izi, toz)</li>
+                                <li>Paketleme (koruyucu film, köşe koruyucu)</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            }
+        ],
+        quiz: {
+            questions: [
+                {
+                    question: "10m² alana 3 pass white + 1 pass CMYK basarsanız toplam kaç ml white gider?",
+                    options: ["150ml", "300ml", "450ml", "600ml"],
+                    correct: 2,
+                    explanation: "10m² × 3 pass × 15ml/m² = 450ml. White mürekkebi daha yoğundur (15ml/m²)."
+                },
+                {
+                    question: "Kabul edilebilir fire oranı nedir?",
+                    options: ["%25", "%15", "%10'un altı", "%50"],
+                    correct: 2,
+                    explanation: "Profesyonel üretimde fire oranı %10'un altında olmalıdır. %5 hedeflenir."
+                },
+                {
+                    question: "CMYK+White+Varnish baskı için karmaşıklık faktörü nedir?",
+                    options: ["1.0", "1.2", "1.5", "2.0"],
+                    correct: 2,
+                    explanation: "CMYK+White+Varnish kombinasyonu 1.5 faktörle fiyatlandırılır. Standart CMYK+White 1.2'dir."
+                },
+                {
+                    question: "Mürekkep tasarrufu için hangi yöntem önerilir?",
+                    options: ["Her zaman max pass", "Drop size büyütme", "Gereksiz pass kaldırma", "Hiç white kullanmama"],
+                    correct: 2,
+                    explanation: "Gereksiz pass'leri kaldırmak en etkili tasarruf yöntemidir. Kaliteyi korurken maliyeti düşürür."
+                },
+                {
+                    question: "Test baskısı maliyeti nasıl karşılanır?",
+                    options: ["Her zaman ücretsiz", "Müşteri malzeme bedeli öder", "Üretici karşılar", "Fiyata dahil edilmez"],
+                    correct: 1,
+                    explanation: "Test baskısı malzeme bedeli müşteriden alınır. Onay sonrası ana üretimde düşülebilir."
+                }
+            ]
         }
     },
     {
         id: 8,
         title: "Sertifika Sınavı",
-        desc: "Tüm modüllerin final değerlendirmesi",
-        duration: "20 dk",
+        desc: "Tüm modüllerin kapsamlı final değerlendirmesi",
+        duration: "30 dk",
         xp: 500,
         locked: true,
         isFinal: true,
-        lessons: [],
+        lessons: [
+            {
+                title: "Sınava Hazırlık",
+                subtitle: "Önemli konuların özeti",
+                content: `
+                    <div class="content-block">
+                        <div class="block-title">📚 Sınav Kapsamı</div>
+                        <div class="block-content">
+                            <p>Bu final sınavı tüm 7 modülü kapsar:</p>
+                            <ul>
+                                <li>UV baskı temelleri ve kimyasal süreçler</li>
+                                <li>Yüzey hazırlığı ve tutunma mekanizmaları</li>
+                                <li>CorelDRAW dosya hazırlama</li>
+                                <li>Makine operasyonu ve bakım</li>
+                                <li>Arıza tespiti ve çözümü</li>
+                                <li>İleri teknikler (mirror, 3D)</li>
+                                <li>Maliyet optimizasyonu</li>
+                            </ul>
+                            <br>
+                            <p><strong>Sınav Formatı:</strong></p>
+                            <ul>
+                                <li>10 çoktan seçmeli soru</li>
+                                <li>Geçme notu: %70 (7 doğru)</li>
+                                <li>Süre sınırı yok</li>
+                                <li>Tekrar hakları sınırsız</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="content-block info">
+                        <div class="block-title">🎯 Başarı İpuçları</div>
+                        <div class="block-content">
+                            <ul>
+                                <li>Her modülün quiz sorularını tekrar edin</li>
+                                <li>Simülasyonları pratik yapın</li>
+                                <li>Formülleri ezberlemeyin, mantığını anlayın</li>
+                                <li>Şüpheli sorularda ilk sezginize güvenin</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            }
+        ],
         finalQuiz: [
             {
                 question: "UV baskının en büyük avantajı nedir?",
@@ -1314,13 +2563,63 @@ Maliyet = (Kaplama Alanı m²) × (Pass Sayısı) × (ml/m²/pass) × (Fiyat/ml)
             },
             {
                 question: "Beyaz mürekkep neden çalkalanır?",
+                options: ["Hava için", "Pigment çökelmesi", "Rengi açmak", "Karınc
+                {
+                question: "Beyaz mürekkep neden çalkalanır?",
                 options: ["Hava için", "Pigment çökelmesi", "Rengi açmak", "Karıncalanmayı önlemek"],
+                correct: 1
+            },
+            {
+                question: "Mirror print'te hangi katman altta kalır?",
+                options: ["Beyaz", "Renk (CMYK)", "Varnish", "Hiçbiri"],
+                correct: 1
+            },
+            {
+                question: "LED-UV lambaların ömrü nedir?",
+                options: ["1000 saat", "5000 saat", "20,000+ saat", "1 yıl"],
+                correct: 2
+            },
+            {
+                question: "Nozzle check'te düzenli çizgilerin sebebi?",
+                options: ["Kafa arızası", "Encoder strip", "Mürekkep bitmesi", "UV lambası"],
+                correct: 1
+            },
+            {
+                question: "10m²'ye 3 pass white kaç ml gider?",
+                options: ["300ml", "450ml", "600ml", "150ml"],
+                correct: 1
+            },
+            {
+                question: "Kafa mesafesi ne olmalı?",
+                options: ["0.5mm", "1.5-2mm", "5mm", "10mm"],
+                correct: 1
+            },
+            {
+                question: "CorelDRAW'de beyaz nasıl tanımlanır?",
+                options: ["Beyaz renk", "RD_WHITE spot", "Sadece layer", "RIP'te manuel"],
+                correct: 1
+            },
+            {
+                question: "Kabul edilebilir fire oranı?",
+                options: ["%25", "%15", "%10 altı", "%50"],
+                correct: 2
+            },
+            {
+                question: "3D kabartma için kaç pass?",
+                options: ["1", "2-3", "5-8", "50"],
+                correct: 2
+            },
+            {
+                question: "Korona etkisi ne kadar sürer?",
+                options: ["Kalıcı", "24-48 saat", "1 hafta", "1 ay"],
                 correct: 1
             }
         ]
     }
 ];
 
+
+        
 // ==========================================
 // GLOBAL DEĞİŞKENLER
 // ==========================================
