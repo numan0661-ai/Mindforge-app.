@@ -484,7 +484,7 @@
             onclick="showScreen('uvAcademyMain')"
         </div>
     
-        <div class="module-card" onclick="showScreen('uvLabScreen'); setTimeout(function(){ if(typeof initUVLab === 'function') initUVLab(); }, 100);" style="background:linear-gradient(135deg, #1a1a2e, #0f3460); border:2px solid var(--accent); margin-top:15px;">
+        <div class="module-card" onclick="showScreen('uvLabScreen', null); console.log('Butona tıklandı');";" style="background:linear-gradient(135deg, #1a1a2e, #0f3460); border:2px solid var(--accent); margin-top:15px;">
             <span style="font-size:40px;">🔬</span>
             <div class="module-title" style="color:white; margin-top:10px;">UV LABORATUVARI</div>
             <div class="module-desc">Interaktif simülasyonlar ve deneyler</div>
@@ -900,6 +900,67 @@
 </div>
 
 <script>
+    // FONKSİYONLARI GLOBAL SCOPE'A AÇ
+window.showScreen = function(id, el) {
+    console.log('>>> showScreen çağrıldı:', id);
+    
+    document.querySelectorAll('.screen').forEach(function(screen) {
+        screen.classList.remove('active');
+        screen.style.display = 'none';
+    });
+    
+    var target = document.getElementById(id);
+    if (!target) {
+        console.error('Ekran yok:', id);
+        return;
+    }
+    
+    target.style.display = 'block';
+    setTimeout(function() {
+        target.classList.add('active');
+    }, 10);
+    
+    if (id === 'uvLabScreen' && typeof initUVLab === 'function') {
+        setTimeout(initUVLab, 200);
+    }
+};
+
+// Diğer fonksiyonları da global yap
+window.switchLabTab = function(tabName, element) {
+    console.log('Tab:', tabName);
+    
+    document.querySelectorAll('.lab-content').forEach(function(el) {
+        el.style.display = 'none';
+    });
+    document.querySelectorAll('.lab-tab').forEach(function(el) {
+        el.classList.remove('active');
+    });
+    
+    var content = document.getElementById('lab-' + tabName);
+    if (content) content.style.display = 'block';
+    if (element) element.classList.add('active');
+    
+    // Simülasyon init
+    if (tabName === 'curing' && typeof initCuringSimulation === 'function') {
+        setTimeout(initCuringSimulation, 50);
+    } else if (tabName === 'molecules' && typeof initMoleculeSimulation === 'function') {
+        setTimeout(initMoleculeSimulation, 50);
+    } else if (tabName === 'printer' && typeof initPrinterSimulation === 'function') {
+        setTimeout(initPrinterSimulation, 50);
+    }
+};
+
+window.toggleCuringSimulation = function() {
+    console.log('Toggle curing');
+    // ... önceki kod ...
+};
+
+window.initUVLab = function() {
+    console.log('Init UV Lab');
+    if (typeof initCuringSimulation === 'function') {
+        initCuringSimulation();
+    }
+};
     // ==========================================
 // UV LABORATUVARI - CANVAS SIMULASYONLAR (DÜZELTİLMİŞ)
 // ==========================================
@@ -2258,52 +2319,48 @@ function openModule(moduleId) {
     showLesson();
     showScreen('moduleDetail');
 }
-function showScreen(id, navElement) {
-    console.log('Showing screen:', id); // Debug için
+function showScreen(id, el) {
+    console.log('>>> showScreen çağrıldı:', id);
     
     // Tüm ekranları gizle
-    document.querySelectorAll('.screen').forEach(screen => {
+    document.querySelectorAll('.screen').forEach(function(screen) {
         screen.classList.remove('active');
-        screen.style.display = 'none'; // Ekstra güvenlik
+        screen.style.display = 'none';
     });
     
+    // Navigasyonu güncelle
+    if (el && el.classList) {
+        document.querySelectorAll('.nav-item').forEach(function(item) {
+            item.classList.remove('active');
+        });
+        el.classList.add('active');
+    }
+    
     // Hedef ekranı göster
-    const target = document.getElementById(id);
-    if (target) {
-        target.style.display = 'block';
-        // Küçük gecikme ile active class ekle (animasyon için)
-        setTimeout(() => {
-            target.classList.add('active');
-        }, 10);
-    } else {
-        console.error('Screen not found:', id);
+    var target = document.getElementById(id);
+    if (!target) {
+        console.error('HATA: Ekran bulunamadı:', id);
+        alert('Ekran bulunamadı: ' + id);
         return;
     }
     
-    // Navigasyon aktifliğini güncelle
-    if (navElement && navElement.classList.contains('nav-item')) {
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.classList.remove('active');
-        });
-        navElement.classList.add('active');
-    }
+    target.style.display = 'block';
+    setTimeout(function() {
+        target.classList.add('active');
+    }, 10);
+    
+    console.log('>>> Ekran açıldı:', id);
     
     // Özel init fonksiyonları
     if (id === 'uvLabScreen') {
-        console.log('Initializing UV Lab');
-        setTimeout(() => {
+        console.log('UV Lab açılıyor...');
+        setTimeout(function() {
             if (typeof initUVLab === 'function') {
                 initUVLab();
             } else {
-                console.error('initUVLab not found!');
+                console.error('initUVLab fonksiyonu bulunamadı!');
             }
-        }, 100);
-    } else if (id === 'uvAcademyMain') {
-        if (typeof initUVAcademy === 'function') initUVAcademy();
-    } else if (id === 'businessScreen') {
-        if (typeof loadPriceSettings === 'function') loadPriceSettings();
-    } else if (id === 'exerciseScreen') {
-        if (typeof initExercise === 'function') initExercise();
+        }, 200);
     }
 }
 function nextLesson() {
