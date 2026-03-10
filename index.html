@@ -817,7 +817,6 @@ const uvCurriculum = [
             {
                 title: "UV Baskı Nedir?",
                 subtitle: "Teknolojinin tanımı ve tarihçesi",
-                videoId: "dQw4w9WgXcQ", // YouTube video ID'si (örnek)
                 content: `
                     <div class="content-block">
                         <div class="block-title">📖 Tanım</div>
@@ -857,7 +856,6 @@ const uvCurriculum = [
             {
                 title: "UV Boya Türleri",
                 subtitle: "Mürekkep çeşitleri ve kullanım alanları",
-                videoId: "", // Video yoksa boş bırak
                 content: `
                     <div class="content-block">
                         <div class="block-title">🎨 Ana Mürekkep Türleri</div>
@@ -904,7 +902,7 @@ const uvCurriculum = [
                             <br>
                             <strong>Beyaz mürekkep kullanılmazsa:</strong> Renkler soluk, cansız ve şeffaf çıkar!
                         </div>
-                    </div>
+                                       </div>
 
                     <!-- UV KÜRLENME SİMÜLASYONU -->
                     <div class="interactive-demo" id="curingSimulation">
@@ -1016,7 +1014,6 @@ const uvCurriculum = [
             {
                 title: "Yüzey Enerjisi ve Tutunma",
                 subtitle: "Boya neden atar? Neden tutunur?",
-                videoId: "", // Video yoksa boş bırak
                 content: `
                     <div class="content-block">
                         <div class="block-title">🔬 Bilimsel Temel</div>
@@ -1096,7 +1093,6 @@ const uvCurriculum = [
             {
                 title: "Renk Yönetimi ve Spot Renkler",
                 subtitle: "White ve Varnish katmanları",
-                videoId: "", // Video yoksa boş bırak
                 content: `
                     <div class="content-block">
                         <div class="block-title">🎯 Spot Renk Mantığı</div>
@@ -1130,7 +1126,6 @@ const uvCurriculum = [
             {
                 title: "Günlük Başlangıç Prosedürü",
                 subtitle: "Sabit kalite için sabit rutin",
-                videoId: "", // Video yoksa boş bırak
                 content: `
                     <div class="content-block">
                         <div class="block-title">☀️ Sabah Rutini (Her Gün!)</div>
@@ -1167,7 +1162,6 @@ const uvCurriculum = [
             {
                 title: "Banding (Çizgili Baskı)",
                 subtitle: "Yatay çizgilerin nedenleri ve çözümleri",
-                videoId: "", // Video yoksa boş bırak
                 content: `
                     <div class="content-block danger">
                         <div class="block-title">🚨 Banding Tipleri</div>
@@ -1238,7 +1232,6 @@ const uvCurriculum = [
             {
                 title: "Mirror Print (Ayna Baskı)",
                 subtitle: "Cam ve pleksi için ters baskı",
-                videoId: "", // Video yoksa boş bırak
                 content: `
                     <div class="content-block">
                         <div class="block-title">🪞 Uygulama Alanları</div>
@@ -1273,7 +1266,6 @@ const uvCurriculum = [
             {
                 title: "Mürekkep Maliyeti Hesaplama",
                 subtitle: "Gerçek maliyeti öğrenmek",
-                videoId: "", // Video yoksa boş bırak
                 content: `
                     <div class="content-block">
                         <div class="block-title">💰 Formül</div>
@@ -1501,25 +1493,6 @@ function showLesson() {
     const nextBtn = document.getElementById('nextBtn');
     const prevBtn = document.querySelector('#lessonNav .btn-secondary');
     
-    // Video embed kodu oluştur (eğer videoId varsa)
-    const videoEmbed = lesson.videoId ? `
-        <div class="video-container" style="margin-bottom:20px; border-radius:12px; overflow:hidden; background:#0d0d1f; border:2px solid var(--uv);">
-            <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden;">
-                <iframe 
-                    src="https://www.youtube.com/embed/${lesson.videoId}?rel=0&modestbranding=1" 
-                    style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen
-                    title="${lesson.title} - Video Anlatım"
-                ></iframe>
-            </div>
-            <div style="padding:10px 15px; background:rgba(191,0,255,0.1); display:flex; align-items:center; gap:10px;">
-                <span style="font-size:20px;">🎬</span>
-                <span style="font-size:13px; color:var(--text-muted);">Video anlatım - ${lesson.duration || '5-10 dk'}</span>
-            </div>
-        </div>
-    ` : '';
-    
     if (lessonContent) {
         lessonContent.innerHTML = `
             <div class="lesson-header">
@@ -1527,9 +1500,188 @@ function showLesson() {
                 <h2 class="lesson-title">${lesson.title}</h2>
                 <div class="lesson-subtitle">${lesson.subtitle}</div>
             </div>
-            ${videoEmbed}
             ${lesson.content}
         `;
+    }
+    
+    if (prevBtn) prevBtn.style.visibility = currentLesson === 0 ? 'hidden' : 'visible';
+    
+    if (nextBtn) {
+        if (currentLesson === mod.lessons.length - 1) {
+            nextBtn.textContent = 'Quize Geç →';
+            nextBtn.onclick = startQuiz;
+        } else {
+            nextBtn.textContent = 'Sonraki →';
+            nextBtn.onclick = nextLesson;
+        }
+    }
+    
+    // Simülasyonları başlat
+    setTimeout(() => {
+        if (document.getElementById('adhesionCanvas')) {
+            startAdhesionSim();
+        }
+        if (document.getElementById('nozzleCanvas')) {
+            drawNozzlePattern();
+        }
+    }, 100);
+}
+
+function nextLesson() {
+    currentLesson++;
+    showLesson();
+}
+
+function prevLesson() {
+    currentLesson--;
+    showLesson();
+}
+
+function startQuiz() {
+    const mod = uvCurriculum[currentModule];
+    const quiz = mod.quiz;
+    
+    const quizTitle = document.getElementById('quizTitle');
+    const quizContent = document.getElementById('quizContent');
+    
+    if (quizTitle) quizTitle.textContent = `${mod.title} - Bilgi Kontrolü`;
+    
+    if (quizContent) {
+        quizContent.innerHTML = `
+            <div class="quiz-container">
+                <div class="quiz-question">${quiz.question}</div>
+                <div class="quiz-options" id="quizOptions">
+                    ${quiz.options.map((opt, idx) => `
+                        <div class="quiz-option" onclick="selectAnswer(${idx}, ${quiz.correct}, '${quiz.explanation.replace(/'/g, "\\'")}')">
+                            ${String.fromCharCode(65 + idx)}) ${opt}
+                        </div>
+                    `).join('')}
+                </div>
+                <div id="quizFeedback" style="margin-top:20px; display:none;"></div>
+            </div>
+        `;
+    }
+    
+    goToScreen('quizScreen');
+}
+
+function selectAnswer(selected, correct, explanation) {
+    const options = document.querySelectorAll('.quiz-option');
+    const feedback = document.getElementById('quizFeedback');
+    
+    options.forEach((opt, idx) => {
+        opt.classList.add('disabled');
+        if (idx === correct) opt.classList.add('correct');
+        else if (idx === selected && idx !== correct) opt.classList.add('wrong');
+    });
+    
+    const isCorrect = selected === correct;
+    if (feedback) {
+        feedback.style.display = 'block';
+        feedback.innerHTML = `
+            <div class="content-block ${isCorrect ? '' : 'warning'}" style="margin-top:20px;">
+                <div class="block-title">${isCorrect ? '✅ Doğru!' : '❌ Yanlış'}</div>
+                <div class="block-content">
+                    <p>${explanation}</p>
+                    ${isCorrect ? `<button class="btn btn-success" onclick="completeModule()" style="margin-top:15px;">Modülü Tamamla (+${uvCurriculum[currentModule].xp} XP)</button>` : 
+                    `<button class="btn" onclick="startQuiz()" style="margin-top:15px;">Tekrar Dene</button>`}
+                </div>
+            </div>
+        `;
+    }
+}
+
+function completeModule() {
+    const mod = uvCurriculum[currentModule];
+    
+    if (!userProgress.completedModules.includes(mod.id)) {
+        userProgress.completedModules.push(mod.id);
+        userProgress.totalXP += mod.xp;
+        
+        if (mod.id < uvCurriculum.length) {
+            userProgress.currentModule = mod.id + 1;
+        }
+        
+        localStorage.setItem('uv_progress', JSON.stringify(userProgress));
+        addExp(mod.xp);
+        showAchievement(`${mod.title} Tamamlandı! +${mod.xp} XP`);
+    }
+    
+    goToScreen('uvAcademyMain');
+    initUVAcademy();
+}
+
+function startFinalQuiz() {
+    const mod = uvCurriculum[currentModule];
+    let currentQ = 0;
+    let score = 0;
+    
+    function showQuestion() {
+        const q = mod.finalQuiz[currentQ];
+        const quizTitle = document.getElementById('quizTitle');
+        const quizContent = document.getElementById('quizContent');
+        
+        if (quizTitle) quizTitle.textContent = `🎓 FİNAL SINAVI (${currentQ + 1}/${mod.finalQuiz.length})`;
+        
+        if (quizContent) {
+            quizContent.innerHTML = `
+                <div class="quiz-container">
+                    <div class="quiz-question">${q.question}</div>
+                    <div class="quiz-options">
+                        ${q.options.map((opt, idx) => `
+                            <div class="quiz-option" onclick="window.finalSelect(${idx}, ${q.correct})">
+                                ${String.fromCharCode(65 + idx)}) ${opt}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+    }
+    
+    window.finalSelect = (selected, correct) => {
+        const options = document.querySelectorAll('.quiz-option');
+        options.forEach((opt, idx) => {
+            opt.classList.add('disabled');
+            if (idx === correct) opt.classList.add('correct');
+            else if (idx === selected && idx !== correct) opt.classList.add('wrong');
+        });
+        
+        if (selected === correct) score++;
+        
+        setTimeout(() => {
+            currentQ++;
+            if (currentQ < mod.finalQuiz.length) {
+                showQuestion();
+            } else {
+                showFinalResult();
+            }
+        }, 1500);
+    };
+    
+    function showFinalResult() {
+        const passed = score >= 2;
+        const percent = Math.round((score / mod.finalQuiz.length) * 100);
+        const quizContent = document.getElementById('quizContent');
+        
+        if (quizContent) {
+            quizContent.innerHTML = `
+                <div style="text-align:center; padding:40px 20px;">
+                    <div style="font-size:64px; margin-bottom:20px;">${passed ? '🏆' : '📚'}</div>
+                    <h2 style="color:${passed ? 'var(--success)' : 'var(--warning)'}">
+                        ${passed ? 'SERTİFİKA KAZANDINIZ!' : 'Tekrar Deneyin'}
+                    </h2>
+                    <p style="font-size:18px; margin:20px 0;">Skor: ${score}/${mod.finalQuiz.length} (${percent}%)</p>
+                    ${passed ? `
+                        <p style="color:var(--text-muted); margin-bottom:30px;">UV Baskı Uzmanı sertifikası kazandınız!</p>
+                        <button class="btn btn-success" onclick="completeModule()">Sertifikayı Al (+${mod.xp} XP)</button>
+                    ` : `
+                        <p style="color:var(--text-muted); margin-bottom:30px;">Tüm modülleri gözden geçirin.</p>
+                        <button class="btn" onclick="goToScreen('uvAcademyMain')">Akademiye Dön</button>
+                    `}
+                </div>
+            `;
+        }
     }
     
     goToScreen('quizScreen');
