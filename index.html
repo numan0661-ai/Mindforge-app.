@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>MindForge UV Master</title>
     <style>
         :root {
@@ -10,7 +12,7 @@
             --surface: #16162d; --surface-light: #1e1e3f; --text: #ffffff;
             --text-muted: #94a3b8; --success: #10b981; --gold: #f59e0b;
             --purple: #a855f7; --uv: #bf00ff; --danger: #ef4444;
-            --warning: #f59e0b; --info: #3b82f6; --corel: #ff6600;
+            --warning: #f59e0b; --info: #3b82f6;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
@@ -162,8 +164,6 @@
             padding: 15px; font-family: 'Courier New', monospace; font-size: 13px;
             color: #a5b4fc; overflow-x: auto; margin: 10px 0;
         }
-        .code-comment { color: #6b7280; }
-        .code-highlight { color: var(--uv); font-weight: bold; }
         
         .data-table {
             width: 100%; border-collapse: collapse; margin: 15px 0;
@@ -179,9 +179,6 @@
         }
         .data-table tr:hover td { background: rgba(255,255,255,0.02); color: var(--text); }
         
-        /* ========================================== */
-        /* NAV BAR - DÜZELTİLMİŞ */
-        /* ========================================== */
         .nav-bar {
             position: fixed;
             bottom: 0;
@@ -195,8 +192,6 @@
             backdrop-filter: blur(10px);
             border-top: 1px solid #2d2d44;
             z-index: 999999;
-            pointer-events: auto;
-            transform: translateZ(0);
         }
         
         .nav-item {
@@ -215,23 +210,11 @@
             border: none;
             outline: none;
             user-select: none;
-            -webkit-user-select: none;
             touch-action: manipulation;
-            -webkit-tap-highlight-color: rgba(255,255,255,0.2);
-            z-index: 999999;
-            pointer-events: auto;
         }
         
-        .nav-item:active {
-            transform: scale(0.9);
-            opacity: 0.8;
-        }
-        
-        .nav-item.active {
-            opacity: 1;
-            color: var(--accent);
-            transform: scale(1.1);
-        }
+        .nav-item:active { transform: scale(0.9); opacity: 0.8; }
+        .nav-item.active { opacity: 1; color: var(--accent); transform: scale(1.1); }
         
         .nav-item .badge {
             position: absolute;
@@ -243,7 +226,6 @@
             padding: 2px 6px;
             border-radius: 10px;
             font-weight: bold;
-            pointer-events: none;
         }
         
         .achievement-popup {
@@ -264,9 +246,7 @@
             font-weight: bold;
             pointer-events: none;
         }
-        .achievement-popup.show {
-            transform: translateX(-50%) translateY(0);
-        }
+        .achievement-popup.show { transform: translateX(-50%) translateY(0); }
         
         .tooltip {
             position: relative;
@@ -293,28 +273,9 @@
             transition: opacity 0.3s;
             pointer-events: none;
         }
-        .tooltip:hover .tooltip-text {
-            visibility: visible;
-            opacity: 1;
-        }
+        .tooltip:hover .tooltip-text { visibility: visible; opacity: 1; }
         
-        .img-placeholder {
-            background: linear-gradient(135deg, rgba(191, 0, 255, 0.1), rgba(99, 102, 241, 0.1));
-            border: 2px dashed rgba(191, 0, 255, 0.3);
-            border-radius: 12px;
-            height: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            margin: 15px 0;
-            font-size: 14px;
-        }
-        
-        .checklist {
-            list-style: none;
-            padding: 0;
-        }
+        .checklist { list-style: none; padding: 0; }
         .checklist li {
             padding: 12px 0 12px 35px;
             position: relative;
@@ -328,14 +289,8 @@
             font-size: 20px;
             font-weight: bold;
         }
-        .checklist li.checked::before {
-            content: '✓';
-            color: var(--success);
-        }
-        .checklist li.checked {
-            color: var(--text-muted);
-            text-decoration: line-through;
-        }
+        .checklist li.checked::before { content: '✓'; color: var(--success); }
+        .checklist li.checked { color: var(--text-muted); text-decoration: line-through; }
         
         input, select {
             width: 100%;
@@ -381,9 +336,7 @@
             color: white;
             font-weight: bold;
         }
-        .cal-day:hover {
-            background: rgba(255,255,255,0.1);
-        }
+        .cal-day:hover { background: rgba(255,255,255,0.1); }
         
         .exercise-item {
             display: flex;
@@ -394,13 +347,8 @@
             border-radius: 12px;
             margin-bottom: 10px;
         }
-        .exercise-name {
-            font-weight: bold;
-        }
-        .exercise-sets {
-            color: var(--text-muted);
-            font-size: 13px;
-        }
+        .exercise-name { font-weight: bold; }
+        .exercise-sets { color: var(--text-muted); font-size: 13px; }
         .exercise-check {
             width: 28px;
             height: 28px;
@@ -412,9 +360,7 @@
             justify-content: center;
             transition: all 0.2s;
         }
-        .exercise-check.completed {
-            background: var(--success);
-        }
+        .exercise-check.completed { background: var(--success); }
         
         .price-display {
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
@@ -442,16 +388,9 @@
             padding: 15px 0;
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-        .settings-label {
-            font-weight: bold;
-        }
-        .settings-value {
-            color: var(--text-muted);
-        }
+        .settings-label { font-weight: bold; }
+        .settings-value { color: var(--text-muted); }
         
-        /* ========================================== */
-        /* SİMÜLASYON STILLERİ */
-        /* ========================================== */
         .sim-svg {
             width: 100%;
             max-width: 400px;
@@ -493,9 +432,7 @@
             50% { opacity: 0.5; }
         }
         
-        .molecule {
-            animation: float 3s ease-in-out infinite;
-        }
+        .molecule { animation: float 3s ease-in-out infinite; }
         
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
@@ -581,7 +518,7 @@
             <div class="module-desc">Sıfırdan uzmanlığa UV baskı teknolojisi</div>
             <div class="module-meta">
                 <span>📚 8 Modül</span>
-                <span>⏱️ 4 Saat</span>
+                <span>⏱️ 6 Saat</span>
                 <span>🎯 Sertifikalı</span>
             </div>
         </div>
@@ -782,16 +719,14 @@
 
 </div> <!-- app-container sonu -->
 
-<!-- ========================================== -->
-<!-- NAV BAR - APP CONTAINER DIŞINDA -->
-<!-- ========================================== -->
+<!-- NAV BAR -->
 <div class="nav-bar" id="mainNavBar">
-    <div class="nav-item active" onclick="goToScreen('homeScreen')">🏠</div>
-    <div class="nav-item" onclick="goToScreen('uvAcademyMain')">
+    <div class="nav-item active" data-screen="homeScreen">🏠</div>
+    <div class="nav-item" data-screen="uvAcademyMain">
         🧪<span class="badge" id="navBadge" style="display:none;">!</span>
     </div>
-    <div class="nav-item" onclick="goToScreen('businessScreen')">📊</div>
-    <div class="nav-item" onclick="goToScreen('exerciseScreen')">🏋️</div>
+    <div class="nav-item" data-screen="businessScreen">📊</div>
+    <div class="nav-item" data-screen="exerciseScreen">🏋️</div>
 </div>
 
 <!-- Achievement Popup -->
@@ -802,8 +737,9 @@
 
 <script>
 // ==========================================
-// UV AKADEMİ KAPSAMLI MÜFREDAT
+// GENİŞLETİLMİŞ UV AKADEMİ MÜFREDATI
 // ==========================================
+
 const uvCurriculum = [
     {
         id: 1,
@@ -2563,9 +2499,6 @@ Satış Fiyatı = (Malzeme + Mürekkep + İşçilik) × (1 + Kar Marjı) × Karm
             },
             {
                 question: "Beyaz mürekkep neden çalkalanır?",
-                options: ["Hava için", "Pigment çökelmesi", "Rengi açmak", "Karınc
-                {
-                question: "Beyaz mürekkep neden çalkalanır?",
                 options: ["Hava için", "Pigment çökelmesi", "Rengi açmak", "Karıncalanmayı önlemek"],
                 correct: 1
             },
@@ -2603,23 +2536,11 @@ Satış Fiyatı = (Malzeme + Mürekkep + İşçilik) × (1 + Kar Marjı) × Karm
                 question: "Kabul edilebilir fire oranı?",
                 options: ["%25", "%15", "%10 altı", "%50"],
                 correct: 2
-            },
-            {
-                question: "3D kabartma için kaç pass?",
-                options: ["1", "2-3", "5-8", "50"],
-                correct: 2
-            },
-            {
-                question: "Korona etkisi ne kadar sürer?",
-                options: ["Kalıcı", "24-48 saat", "1 hafta", "1 ay"],
-                correct: 1
             }
         ]
     }
 ];
 
-
-        
 // ==========================================
 // GLOBAL DEĞİŞKENLER
 // ==========================================
@@ -2658,7 +2579,7 @@ const inkPrices = {
 };
 
 // ==========================================
-// NAVİGASYON FONKSİYONU
+// NAVİGASYON FONKSİYONU - DÜZELTİLMİŞ
 // ==========================================
 
 function goToScreen(screenId) {
@@ -2669,6 +2590,7 @@ function goToScreen(screenId) {
     allScreens.forEach(screen => {
         screen.classList.remove('active');
         screen.style.display = 'none';
+        screen.style.opacity = '0';
     });
     
     // Hedef ekranı göster
@@ -2678,21 +2600,29 @@ function goToScreen(screenId) {
         return;
     }
     
+    // Önce display:block yap, sonra animasyon
     target.style.display = 'block';
-    setTimeout(() => target.classList.add('active'), 10);
+    
+    // Küçük bir gecikme ile opacity animasyonu
+    setTimeout(() => {
+        target.classList.add('active');
+        target.style.opacity = '1';
+    }, 10);
     
     // Navigasyonu güncelle
     document.querySelectorAll('.nav-item').forEach(item => {
         item.classList.remove('active');
-        const onclick = item.getAttribute('onclick');
-        if (onclick && onclick.includes(screenId)) {
+        const dataScreen = item.getAttribute('data-screen');
+        if (dataScreen === screenId) {
             item.classList.add('active');
         }
     });
     
     // Ekran spesifik init
     if (screenId === 'uvAcademyMain') {
-        setTimeout(initUVAcademy, 50);
+        setTimeout(() => {
+            if (typeof initUVAcademy === 'function') initUVAcademy();
+        }, 50);
     }
     if (screenId === 'businessScreen') {
         setTimeout(() => {
@@ -2701,7 +2631,9 @@ function goToScreen(screenId) {
         }, 50);
     }
     if (screenId === 'exerciseScreen') {
-        setTimeout(initExercise, 50);
+        setTimeout(() => {
+            if (typeof initExercise === 'function') initExercise();
+        }, 50);
     }
     
     // Scroll top
@@ -2848,10 +2780,10 @@ function startQuiz() {
     if (quizContent) {
         quizContent.innerHTML = `
             <div class="quiz-container">
-                <div class="quiz-question">${quiz.question}</div>
+                <div class="quiz-question">${quiz.questions[0].question}</div>
                 <div class="quiz-options" id="quizOptions">
-                    ${quiz.options.map((opt, idx) => `
-                        <div class="quiz-option" onclick="selectAnswer(${idx}, ${quiz.correct}, '${quiz.explanation.replace(/'/g, "\\'")}')">
+                    ${quiz.questions[0].options.map((opt, idx) => `
+                        <div class="quiz-option" onclick="selectAnswer(${idx}, ${quiz.questions[0].correct}, '${quiz.questions[0].explanation.replace(/'/g, "\\'")}')">
                             ${String.fromCharCode(65 + idx)}) ${opt}
                         </div>
                     `).join('')}
@@ -2959,7 +2891,7 @@ function startFinalQuiz() {
     };
     
     function showFinalResult() {
-        const passed = score >= 2;
+        const passed = score >= 7;
         const percent = Math.round((score / mod.finalQuiz.length) * 100);
         const quizContent = document.getElementById('quizContent');
         
@@ -3670,7 +3602,7 @@ function initExercise() {
     const checks = document.querySelectorAll('.exercise-check');
     checks.forEach((check, idx) => {
         if (todayExercises.completed[idx]) {
-            check.classList.add ('completed');
+            check.classList.add('completed');
             check.innerHTML = '✓';
         } else {
             check.classList.remove('completed');
@@ -3851,241 +3783,35 @@ function showConfetti() {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('MindForge UV Master yüklendi');
     
-    updateMasteryUI();
-    loadPriceSettings();
-    
-    // İlk ekran
-    goToScreen('homeScreen');
-    
-    // Nav item'lara tıklama olayı ekle (yedek)
-    document.querySelectorAll('.nav-item').forEach(item => {
+    // Nav item'lara tıklama olayı ekle - DÜZELTİLMİŞ
+    document.querySelectorAll('.nav-item').forEach((item) => {
         item.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             
-            const onclick = this.getAttribute('onclick');
-            if (onclick) {
-                const match = onclick.match(/goToScreen\(['"]([^'"]+)['"]\)/);
-                if (match) {
-                    goToScreen(match[ 
-        // ==========================================
-// DÜZELTİLMİŞ NAVİGASYON FONKSİYONU
-// ==========================================
-// ==========================================
-// DÜZELTİLMİŞ NAVİGASYON FONKSİYONU
-// ==========================================
-
-function goToScreen(screenId) {
-    console.log('Navigating to:', screenId);
-    
-    // Tüm ekranları gizle
-    const allScreens = document.querySelectorAll('.screen');
-    allScreens.forEach(screen => {
-        screen.classList.remove('active');
-        screen.style.display = 'none';
-        screen.style.opacity = '0';
-    });
-    
-    // Hedef ekranı göster
-    const target = document.getElementById(screenId);
-    if (!target) {
-        console.error('Ekran bulunamadı:', screenId);
-        return;
-    }
-    
-    // Önce display:block yap, sonra animasyon
-    target.style.display = 'block';
-    
-    // Küçük bir gecikme ile opacity animasyonu
-    setTimeout(() => {
-        target.classList.add('active');
-        target.style.opacity = '1';
-    }, 10);
-    
-    // Navigasyonu güncelle
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
-        const onclick = item.getAttribute('onclick');
-        if (onclick && onclick.includes(screenId)) {
-            item.classList.add('active');
-        }
-    });
-    
-    // Ekran spesifik init
-    if (screenId === 'uvAcademyMain') {
-        setTimeout(() => {
-            if (typeof initUVAcademy === 'function') initUVAcademy();
-        }, 50);
-    }
-    if (screenId === 'businessScreen') {
-        setTimeout(() => {
-            if (typeof loadPriceSettings === 'function') loadPriceSettings();
-            if (typeof updateInkChart === 'function') updateInkChart();
-        }, 50);
-    }
-    if (screenId === 'exerciseScreen') {
-        setTimeout(() => {
-            if (typeof initExercise === 'function') initExercise();
-        }, 50);
-    }
-    
-    // Scroll top
-    window.scrollTo(0, 0);
-}
-
-// ==========================================
-// NAVBAR TIKLAMA OLAYLARI - DÜZELTME
-// ==========================================
-
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('MindForge UV Master yüklendi');
-    
-    // Nav item'lara tıklama olayı ekle
-    document.querySelectorAll('.nav-item').forEach((item, index) => {
-        // Önce eski onclick'i kaldır
-        const oldOnclick = item.getAttribute('onclick');
-        item.removeAttribute('onclick');
-        
-        // Yeni click event listener ekle
-        item.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
+            const targetScreen = this.getAttribute('data-screen');
+            console.log('Nav item clicked:', targetScreen);
             
-            console.log('Nav item clicked:', index);
-            
-            // Hangi ekrana gideceğini belirle
-            let targetScreen = 'homeScreen';
-            if (index === 0) targetScreen = 'homeScreen';
-            else if (index === 1) targetScreen = 'uvAcademyMain';
-            else if (index === 2) targetScreen = 'businessScreen';
-            else if (index === 3) targetScreen = 'exerciseScreen';
-            
-            goToScreen(targetScreen);
+            if (targetScreen) {
+                goToScreen(targetScreen);
+            }
         });
         
         // Touch desteği (mobil için)
         item.addEventListener('touchend', function(e) {
             e.preventDefault();
-            let targetScreen = 'homeScreen';
-            if (index === 0) targetScreen = 'homeScreen';
-            else if (index === 1) targetScreen = 'uvAcademyMain';
-            else if (index === 2) targetScreen = 'businessScreen';
-            else if (index === 3) targetScreen = 'exerciseScreen';
-            
-            goToScreen(targetScreen);
+            const targetScreen = this.getAttribute('data-screen');
+            if (targetScreen) {
+                goToScreen(targetScreen);
+            }
         });
     });
     
-    // Başlangıç ekranını göster
+    // Başlangıç
     updateMasteryUI();
     loadPriceSettings();
     goToScreen('homeScreen');
 });
-
-    // Tüm ekranları gizle
-    const allScreens = document.querySelectorAll('.screen');
-    allScreens.forEach(screen => {
-        screen.classList.remove('active');
-        screen.style.display = 'none';
-        screen.style.opacity = '0';
-    });
-    
-    // Hedef ekranı göster
-    const target = document.getElementById(screenId);
-    if (!target) {
-        console.error('Ekran bulunamadı:', screenId);
-        return;
-    }
-    
-    // Önce display:block yap, sonra animasyon
-    target.style.display = 'block';
-    
-    // Küçük bir gecikme ile opacity animasyonu
-    setTimeout(() => {
-        target.classList.add('active');
-        target.style.opacity = '1';
-    }, 10);
-    
-    // Navigasyonu güncelle
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
-        const onclick = item.getAttribute('onclick');
-        if (onclick && onclick.includes(screenId)) {
-            item.classList.add('active');
-        }
-    });
-    
-    // Ekran spesifik init
-    if (screenId === 'uvAcademyMain') {
-        setTimeout(() => {
-            if (typeof initUVAcademy === 'function') initUVAcademy();
-        }, 50);
-    }
-    if (screenId === 'businessScreen') {
-        setTimeout(() => {
-            if (typeof loadPriceSettings === 'function') loadPriceSettings();
-            if (typeof updateInkChart === 'function') updateInkChart();
-        }, 50);
-    }
-    if (screenId === 'exerciseScreen') {
-        setTimeout(() => {
-            if (typeof initExercise === 'function') initExercise();
-        }, 50);
-    }
-    
-    // Scroll top
-    window.scrollTo(0, 0);
-}
-
-// ==========================================
-// NAVBAR TIKLAMA OLAYLARI - DÜZELTME
-// ==========================================
-
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('MindForge UV Master yüklendi');
-    
-    // Nav item'lara tıklama olayı ekle
-    document.querySelectorAll('.nav-item').forEach((item, index) => {
-        // Önce eski onclick'i kaldır
-        const oldOnclick = item.getAttribute('onclick');
-        item.removeAttribute('onclick');
-        
-        // Yeni click event listener ekle
-        item.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            console.log('Nav item clicked:', index);
-            
-            // Hangi ekrana gideceğini belirle
-            let targetScreen = 'homeScreen';
-            if (index === 0) targetScreen = 'homeScreen';
-            else if (index === 1) targetScreen = 'uvAcademyMain';
-            else if (index === 2) targetScreen = 'businessScreen';
-            else if (index === 3) targetScreen = 'exerciseScreen';
-            
-            goToScreen(targetScreen);
-        });
-        
-        // Touch desteği (mobil için)
-        item.addEventListener('touchend', function(e) {
-            e.preventDefault();
-            let targetScreen = 'homeScreen';
-            if (index === 0) targetScreen = 'homeScreen';
-            else if (index === 1) targetScreen = 'uvAcademyMain';
-            else if (index === 2) targetScreen = 'businessScreen';
-            else if (index === 3) targetScreen = 'exerciseScreen';
-            
-            goToScreen(targetScreen);
-        });
-    });
-    
-    // Başlangıç ekranını göster
-    updateMasteryUI();
-    loadPriceSettings();
-    goToScreen('homeScreen');
-});
-
 </script>
 
 </body>
