@@ -2030,6 +2030,7 @@
 
 completed_code = '''
         <!-- MALİYET HESAPLAMA EKRANI - DEVAM -->
+                <!-- MALİYET HESAPLAMA EKRANI -->
         <div class="screen" id="businessScreen">
             <div class="page-header">
                 <button class="back-btn" onclick="showScreen('homeScreen')">←</button>
@@ -2112,8 +2113,8 @@ completed_code = '''
                 </div>
             </div>
         </div>
-
         <!-- EGZERSİZ EKRANI -->
+              <!-- EGZERSİZ EKRANI -->
         <div class="screen" id="exerciseScreen">
             <div class="page-header">
                 <button class="back-btn" onclick="showScreen('homeScreen')">←</button>
@@ -2145,8 +2146,6 @@ completed_code = '''
                 <div class="calendar-grid" id="exerciseCalendar"></div>
             </div>
         </div>
-
-    </div>
 
     <!-- Bottom Navigation -->
     <div class="nav-bar">
@@ -2193,34 +2192,35 @@ completed_code = '''
             }
         };
 
-        // ==================== DATA: MODULES & LESSONS ====================
+               // ==================== DATA: MODULES & LESSONS ====================
         const modulesData = [
             {
                 id: 1,
                 title: "UV Baskı Temelleri",
                 desc: "UV teknolojisinin temel prensipleri ve çalışma mekanizması",
-                duration: "30 dk",
+                duration: "45 dk",
                 lessons: [
                     {
-                        title: "UV Işığı Nedir?",
+                        title: "UV Işığı ve Polimerizasyon",
                         content: `
                             <div class="content-block">
                                 <div class="block-title">🌟 Temel Tanım</div>
                                 <div class="block-content">
-                                    <strong>UV (Ultraviyole)</strong> ışığı, görünür ışığın hemen ötesinde, dalga boyu 10-400 nm arasında olan elektromanyetik radyasyondur.
+                                    <strong>UV (Ultraviyole)</strong> ışığı, dalga boyu 10-400 nm arasında olan elektromanyetik radyasyondur. UV baskıda 365-395 nm arası kullanılır.
                                     <br><br>
-                                    UV baskıda kullanılan <span class="tooltip">UV-LED<span class="tooltip-text">Son teknoloji, düşük enerji tüketimli ve uzun ömürlü UV ışık kaynağı</span></span> sistemler genellikle 365-395 nm dalga boyunda çalışır.
+                                    <span class="tooltip">Fotoinitiatörler<span class="tooltip-text">UV ışığını absorbe ederek polimerizasyonu başlatan kimyasal bileşikler</span></span> 
+                                    UV ışığına maruz kaldığında serbest radikaller oluşturur ve mürekkep anında katılaşır.
                                 </div>
                             </div>
                             <div class="content-block info">
-                                <div class="block-title">💡 Çalışma Prensibi</div>
+                                <div class="block-title">⚡ Anında Kuruma</div>
                                 <div class="block-content">
-                                    UV mürekkep, UV ışığına maruz kaldığında <strong>anında polimerleşir</strong> (kurur). Bu süreç saniyeler içinde tamamlanır:
+                                    UV mürekkep saniyeler içinde kurur:
                                     <ul>
-                                        <li>Fotoinitiatörler UV ışığı absorbe eder</li>
-                                        <li>Serbest radikaller oluşur</li>
-                                        <li>Monomerler zincirleme bağlanır (polimerizasyon)</li>
-                                        <li>Anında katı halde, yapışkan olmayan yüzey oluşur</li>
+                                        <li>0.1 saniye - UV ışığı teması</li>
+                                        <li>0.5 saniye - Fotoinitiasyon başlar</li>
+                                        <li>1-2 saniye - Tam polimerizasyon</li>
+                                        <li>Sonuç: Dokunulabilir, yapışkan olmayan yüzey</li>
                                     </ul>
                                 </div>
                             </div>
@@ -2234,21 +2234,28 @@ completed_code = '''
                                     <div class="step-number">1</div>
                                     <div class="step-title">Baskı Kafası (Print Head)</div>
                                     <div class="step-content">
-                                        Piezoelektrik teknoloji kullanarak mürekkebi püskürtür. Ricoh Gen5/Gen6 veya Epson PrecisionCore en yaygın modellerdir.
+                                        Piezoelektrik teknoloji kullanarak mürekkebi püskürtür. 
+                                        <strong>Ricoh Gen5/Gen6</strong> veya <strong>Epson PrecisionCore</strong> en yaygın modellerdir.
+                                        Çözünürlük: 600x600 dpi'dan 1200x1200 dpi'a kadar.
                                     </div>
                                 </div>
                                 <div class="step-item">
                                     <div class="step-number">2</div>
                                     <div class="step-title">UV Lamba Sistemi</div>
                                     <div class="step-content">
-                                        LED UV lambalar mürekkebi anında kürlatır. Merdane (roll) veya flatbed sistemlerde konumlandırılır.
+                                        LED UV lambalar mürekkebi anında kürlatır. 
+                                        Merkezi dalga boyu: 395 nm (en yaygın).
+                                        Lamba ömrü: 10.000-20.000 saat.
                                     </div>
                                 </div>
                                 <div class="step-item">
                                     <div class="step-number">3</div>
                                     <div class="step-title">Hareket Mekaniği</div>
                                     <div class="step-content">
-                                        Servo motorlar ve lineer raylar ile hassas konumlandırma. X, Y ve Z eksen kontrolü.
+                                        Servo motorlar ve lineer raylar ile hassas konumlandırma.
+                                        X ekseni: Baskı kafası hareketi
+                                        Y ekseni: Malzeme ilerlemesi
+                                        Z ekseni: Yükseklik ayarı
                                     </div>
                                 </div>
                             </div>
@@ -2257,43 +2264,305 @@ completed_code = '''
                 ],
                 quiz: [
                     { q: "UV mürekkep ne ile kurur?", options: ["Isı", "UV ışığı", "Hava", "Su"], correct: 1 },
-                    { q: "UV-LED sistemler hangi dalga boyunda çalışır?", options: ["200-300 nm", "365-395 nm", "500-600 nm", "800-900 nm"], correct: 1 }
+                    { q: "UV-LED sistemler hangi dalga boyunda çalışır?", options: ["200-300 nm", "365-395 nm", "500-600 nm", "800-900 nm"], correct: 1 },
+                    { q: "Hangi baskı kafası markası en yaygındır?", options: ["HP", "Ricoh/Epson", "Canon", "Lexmark"], correct: 1 }
                 ]
             },
             {
                 id: 2,
-                title: "Mürekkep Türleri",
-                desc: "Farklı UV mürekkep çeşitleri ve uygulama alanları",
-                duration: "45 dk",
+                title: "Mürekkep Türleri ve Renk Yönetimi",
+                desc: "Farklı UV mürekkep çeşitleri, CMYK+W+V kullanımı ve renk profilleri",
+                duration: "60 dk",
                 lessons: [
                     {
-                        title: "Mürekkep Çeşitleri",
+                        title: "CMYK + White + Varnish",
                         content: `
                             <div class="content-block">
-                                <div class="block-title">🎨 CMYK + White + Varnish</div>
+                                <div class="block-title">🎨 Standart Renk Seti</div>
                                 <div class="block-content">
-                                    Standart UV mürekkep seti 6 renkten oluşur:
                                     <ul>
-                                        <li><strong>C (Cyan):</strong> Camgöbeği/Mavi tonlar</li>
+                                        <li><strong>C (Cyan):</strong> Camgöbeği - Mavi tonlar</li>
                                         <li><strong>M (Magenta):</strong> Kırmızı/Pembe tonlar</li>
                                         <li><strong>Y (Yellow):</strong> Sarı tonlar</li>
-                                        <li><strong>K (Key/Black):</strong> Siyah, kontrast ve derinlik</li>
-                                        <li><strong>W (White):</strong> Opak zemin, cam ve aynalarda zorunlu</li>
-                                        <li><strong>V (Varnish):</strong> Parlak/mat selektif lak</li>
+                                        <li><strong>K (Key/Black):</strong> Siyah, kontrast</li>
+                                        <li><strong>W (White):</strong> Opak zemin, cam/metal için zorunlu</li>
+                                        <li><strong>V (Varnish):</strong> Selektif lak - parlak/mat efektler</li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="content-block warning">
-                                <div class="block-title">⚠️ Önemli Uyarı</div>
+                                <div class="block-title">⚠️ Beyaz Mürekkep Bakımı</div>
                                 <div class="block-content">
-                                    Beyaz mürekkep kullanımında <strong>günde en az bir kez</strong> sistem temizliği yapılmalıdır. Aksi halde pigment çökelmesi ve kafa tıkanıklığı oluşur.
+                                    Beyaz mürekkep pigment içerir ve çökelme yapar.
+                                    <strong>Günde en az bir kez</strong> dolaşım (recirculation) yapılmalıdır.
+                                    Aksi halde kafa tıkanıklığı kaçınılmazdır.
+                                </div>
+                            </div>
+                        `
+                    },
+                    {
+                        title: "Renk Profilleri (ICC)",
+                        content: `
+                            <div class="content-block">
+                                <div class="block-title">🎯 ICC Profil Yönetimi</div>
+                                <div class="block-content">
+                                    Her malzeme için özel ICC profili oluşturulmalıdır.
+                                    <br><br>
+                                    <strong>Profil Oluşturma Adımları:</strong>
+                                    <ol>
+                                        <li>Test chart baskı (IT8.7/4 veya TC1617)</li>
+                                        <li>Spectrophotometre ile ölçüm</li>
+                                        <li>Profil oluşturma yazılımı (i1Profiler, ProfileMaker)</li>
+                                        <li>RIP yazılımına profil yükleme</li>
+                                    </ol>
                                 </div>
                             </div>
                         `
                     }
                 ],
                 quiz: [
-                    { q: "Cam üzerine baskı için hangi renk zorunludur?", options: ["Siyah", "Beyaz", "Sarı", "Lak"], correct: 1 }
+                    { q: "Cam üzerine baskı için hangi renk zorunludur?", options: ["Siyah", "Beyaz", "Sarı", "Lak"], correct: 1 },
+                    { q: "ICC profili ne için kullanılır?", options: ["Hız ayarı", "Renk tutarlılığı", "Baskı boyutu", "Maliyet hesaplama"], correct: 1 },
+                    { q: "Beyaz mürekkep neden önemlidir?", options: ["Daha ucuz", "Pigment içerir, opaklık sağlar", "Daha hızlı kurur", "Kokusuzdur"], correct: 1 }
+                ]
+            },
+            {
+                id: 3,
+                title: "Malzeme Bilgisi ve Pre-treatment",
+                desc: "Baskı yapılabilecek malzemeler ve ön işlem teknikleri",
+                duration: "50 dk",
+                lessons: [
+                    {
+                        title: "Baskı Malzemeleri",
+                        content: `
+                            <div class="content-block">
+                                <div class="block-title">📋 Uygun Malzemeler</div>
+                                <div class="block-content">
+                                    <strong>PVC (Polyvinyl Chloride):</strong> En yaygın malzeme, esnek, dayanıklı
+                                    <br><br>
+                                    <strong>Akrilik/Pleksi:</strong> Şeffaf, yüksek kalite, pahalı
+                                    <br><br>
+                                    <strong>Alüminyum Kompozit (Dibond):</strong> Dış mekan, hafif, sağlam
+                                    <br><br>
+                                    <strong>Cam:</strong> Pre-treatment gerekli, şık sonuç
+                                    <br><br>
+                                    <strong>Ahşap:</strong> Doğal görünüm, zımpara gerekebilir
+                                </div>
+                            </div>
+                        `
+                    },
+                    {
+                        title: "Pre-treatment (Ön İşlem)",
+                        content: `
+                            <div class="content-block warning">
+                                <div class="block-title">🧪 Kimyasal Pre-treatment</div>
+                                <div class="block-content">
+                                    <strong>Neden gerekli?</strong> UV mürekkebinin malzemeye yapışmasını sağlar.
+                                    <br><br>
+                                    <strong>Uygulama yöntemleri:</strong>
+                                    <ul>
+                                        <li>Sprey (manuel)</li>
+                                        <li>Rulo/kaplamalı sistem (otomatik)</li>
+                                        <li>Plazma tedavisi (yüksek teknoloji)</li>
+                                    </ul>
+                                    <br>
+                                    <strong>Kuruma süresi:</strong> 30 saniye - 2 dakika
+                                </div>
+                            </div>
+                        `
+                    }
+                ],
+                quiz: [
+                    { q: "Hangi malzeme en yaygın kullanılır?", options: ["Cam", "PVC", "Ahşap", "Metal"], correct: 1 },
+                    { q: "Pre-treatment ne işe yarar?", options: ["Rengi artırır", "Yapışmayı sağlar", "Kurumayı hızlandırır", "Maliyeti düşürür"], correct: 1 }
+                ]
+            },
+            {
+                id: 4,
+                title: "RIP Yazılımı ve Dosya Hazırlığı",
+                desc: "Print workflow, RIP ayarları ve dosya optimizasyonu",
+                duration: "55 dk",
+                lessons: [
+                    {
+                        title: "RIP Yazılımı Nedir?",
+                        content: `
+                            <div class="content-block">
+                                <div class="block-title">💻 Raster Image Processor</div>
+                                <div class="block-content">
+                                    RIP yazılımı, vektör dosyalarını yazıcının anlayacağı raster veriye dönüştürür.
+                                    <br><br>
+                                    <strong>Popüler RIP Yazılımları:</strong>
+                                    <ul>
+                                        <li>Caldera (en yaygın)</li>
+                                        <li>Onyx</li>
+                                        <li>EFI Fiery</li>
+                                        <li>SAi Flexi</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        `
+                    },
+                    {
+                        title: "Dosya Hazırlama Kuralları",
+                        content: `
+                            <div class="content-block info">
+                                <div class="block-title">📐 Teknik Şartlar</div>
+                                <div class="block-content">
+                                    <ul>
+                                        <li>Çözünürlük: 150-300 dpi (büyük format için 150 yeterli)</li>
+                                        <li>Renk modu: CMYK (RGB'den dönüşüm yapılır)</li>
+                                        <li>Bleed (kesme payı): En az 3mm</li>
+                                        <li>Fontları outline yapın (vektörize)</li>
+                                        <li>PDF/X-4 formatı en güvenlisi</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        `
+                    }
+                ],
+                quiz: [
+                    { q: "RIP ne iş yapar?", options: ["Mürekkep püskürtür", "Vektörü rastera çevirir", "Malzeme hazırlar", "Lamba kontrol eder"], correct: 1 },
+                    { q: "Büyük format için yeterli çözünürlük?", options: ["72 dpi", "150 dpi", "600 dpi", "1200 dpi"], correct: 1 }
+                ]
+            },
+            {
+                id: 5,
+                title: "Baskı Kalitesi ve Optimizasyon",
+                desc: "DPI, pass sayısı, hız ve kalite dengesi",
+                duration: "40 dk",
+                lessons: [
+                    {
+                        title: "Kalite Parametreleri",
+                        content: `
+                            <div class="content-block">
+                                <div class="block-title">🎯 Pass Sayısı ve DPI</div>
+                                <div class="block-content">
+                                    <strong>Pass:</strong> Baskı kafasının aynı alandan geçiş sayısı
+                                    <br><br>
+                                    <strong>4 Pass:</strong> Hızlı, taslak kalitesi
+                                    <br>
+                                    <strong>8 Pass:</strong> Standart, iyi kalite
+                                    <br>
+                                    <strong>16 Pass:</strong> Yüksek kalite, yavaş
+                                    <br><br>
+                                    <strong>DPI (Dots Per Inch):</strong> İnç başına düşen nokta sayısı.
+                                    600x600 dpi standart, 1200x1200 dpi fotoğraf kalitesi.
+                                </div>
+                            </div>
+                        `
+                    }
+                ],
+                quiz: [
+                    { q: "En yüksek kalite için kaç pass?", options: ["4 Pass", "8 Pass", "16 Pass", "2 Pass"], correct: 2 },
+                    { q: "Standart DPI değeri?", options: ["300 dpi", "600 dpi", "1200 dpi", "2400 dpi"], correct: 1 }
+                ]
+            },
+            {
+                id: 6,
+                title: "Bakım ve Arıza Giderme",
+                desc: "Günlük, haftalık, aylık bakım rutinleri ve yayın sorunlar",
+                duration: "50 dk",
+                lessons: [
+                    {
+                        title: "Bakım Programı",
+                        content: `
+                            <div class="content-block warning">
+                                <div class="block-title">🔧 Günlük Bakım</div>
+                                <div class="block-content">
+                                    <ul>
+                                        <li>Kapak temizliği</li>
+                                        <li>Baskı kafası kontrolü</li>
+                                        <li>UV lamba yüzeyi temizliği</li>
+                                        <li>Mürekkep seviyesi kontrolü</li>
+                                        <li>Nozzle check (test baskı)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="content-block danger">
+                                <div class="block-title">🚨 Haftalık Bakım</div>
+                                <div class="block-content">
+                                    <ul>
+                                        <li>Kapak wiper değişimi</li>
+                                        <li>Mürekkep filtresi kontrolü</li>
+                                        <li>Ray ve dişli temizliği</li>
+                                        <li>Kalibrasyon kontrolü</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        `
+                    }
+                ],
+                quiz: [
+                    { q: "Nozzle check ne işe yarar?", options: ["Hızı ölçer", "Kafa tıkanıklığını kontrol eder", "Rengi ayarlar", "Maliyet hesaplar"], correct: 1 }
+                ]
+            },
+            {
+                id: 7,
+                title: "İş Akışı ve Verimlilik",
+                desc: "Üretim planlama, maliyet hesaplama ve müşteri yönetimi",
+                duration: "45 dk",
+                lessons: [
+                    {
+                        title: "Verimli Üretim",
+                        content: `
+                            <div class="content-block">
+                                <div class="block-title">⚡ İş Sıralama Stratejileri</div>
+                                <div class="block-content">
+                                    <ul>
+                                        <li>Benzer malzemeleri gruplayın (setup süresini azaltır)</li>
+                                        <li>Beyaz mürekkep gerektiren işleri planlayın</li>
+                                        <li>RIP'te kuyruk (queue) yönetimi kullanın</li>
+                                        <li>Nesting (yerleştirme) ile malzeme israfını azaltın</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        `
+                    }
+                ],
+                quiz: [
+                    { q: "Nesting ne demektir?", options: ["Mürekkep karıştırma", "Malzeme yerleştirme optimizasyonu", "Renk ayarı", "Kurutma işlemi"], correct: 1 }
+                ]
+            },
+            {
+                id: 8,
+                title: "İleri Teknikler ve Uygulamalar",
+                desc: "3D efekt, embossing, white layer teknikleri ve özel uygulamalar",
+                duration: "60 dk",
+                lessons: [
+                    {
+                        title: "İleri Baskı Teknikleri",
+                        content: `
+                            <div class="content-block featured">
+                                <div class="block-title">✨ 3D Embossing</div>
+                                <div class="block-content">
+                                    Birden fazla lak katmanı üst üste baskı yapılarak kabartma efekti oluşturulur.
+                                    <br><br>
+                                    <strong>Adımlar:</strong>
+                                    <ol>
+                                        <li>Normal CMYK baskı</li>
+                                        <li>Spot varnish (lak) katmanı</li>
+                                        <li>UV ile kürleme</li>
+                                        <li>2-3 kat daha lak (her seferinde kürleme)</li>
+                                        <li>Sonuç: 0.5-2mm kabartma</li>
+                                    </ol>
+                                </div>
+                            </div>
+                            <div class="content-block">
+                                <div class="block-title">🔮 Şeffaf Efektler</div>
+                                <div class="block-content">
+                                    <strong>Glass Effect:</strong> Beyaz + CMYK + Clear varnish
+                                    <br>
+                                    <strong>Frosted Effect:</strong> Mat selektif lak
+                                    <br>
+                                    <strong>Metallic:</strong> Gümüş/altın alt katman + CMYK
+                                </div>
+                            </div>
+                        `
+                    }
+                ],
+                quiz: [
+                    { q: "3D embossing nasıl yapılır?", options: ["Tek seferde kalın baskı", "Çok kat lak üst üste", "Özel mürekkep", "Farklı malzeme"], correct: 1 },
+                    { q: "Glass effect için ne gerekir?", options: ["Sadece CMYK", "Beyaz + CMYK + Clear", "Sadece lak", "Metalik mürekkep"], correct: 1 }
                 ]
             }
         ];
