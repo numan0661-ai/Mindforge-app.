@@ -1994,67 +1994,122 @@
         </div>
 
         <!-- MALİYET HESAPLAMA EKRANI -->
-        <div class="screen" id="businessScreen">
-            <div class="page-header">
-                <button class="back-btn" onclick="showScreen('homeScreen')">←</button>
-                <h2 style="margin:0;">📊 Maliyet Hesaplama</h2>
+        <!-- MALİYET HESAPLAMA EKRANI - DÜZGÜN KAPANMIŞ -->
+<div class="screen" id="businessScreen">
+    <div class="page-header">
+        <button class="back-btn" onclick="showScreen('homeScreen')">←</button>
+        <h2 style="margin:0;">📊 Maliyet Hesaplama</h2>
+    </div>
+    
+    <div class="card">
+        <h3 style="margin:0 0 20px 0; color:var(--accent); font-size:16px;">Ölçüler</h3>
+        <div class="grid-2">
+            <div class="form-group" style="margin:0;">
+                <label class="form-label">En (cm)</label>
+                <input type="number" id="w" placeholder="Örn: 50" oninput="calculate()" step="0.1">
             </div>
-            
-            <div class="card">
-                <h3 style="margin:0 0 20px 0; color:var(--accent); font-size:16px;">Ölçüler</h3>
-                <div class="grid-2">
-                    <div class="form-group" style="margin:0;">
-                        <label class="form-label">En (cm)</label>
-                        <input type="number" id="w" placeholder="Örn: 50" oninput="calculate()" step="0.1">
-                    </div>
-                    <div class="form-group" style="margin:0;">
-                        <label class="form-label">Boy (cm)</label>
-                        <input type="number" id="h" placeholder="Örn: 70" oninput="calculate()" step="0.1">
-                    </div>
-                </div>
-                
-                <h3 style="color:var(--accent); margin:24px 0 16px 0; font-size:16px;">Malzeme ve Fiyat</h3>
-                
-                <div class="form-group">
-                    <label class="form-label">Malzeme Tipi</label>
-                    <select id="mType" onchange="updatePriceFromSelection()">
-                        <option value="">Malzeme Seçin...</option>
-                        <option value="trans">Şeffaf Pleksi</option>
-                        <option value="color">Opak/Renkli Malzeme</option>
-                        <option value="custom">Özel Fiyat</option>
-                    </select>
-                </div>
-                
-                <div id="customPriceArea" style="display:none;" class="form-group">
-                    <label class="form-label">Özel Fiyat (₺/m²)</label>
-                    <input type="number" id="customPrice" placeholder="Örn: 750" oninput="calculate()">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Birim Fiyat (₺/m²)</label>
-                    <input type="number" id="uPrice" placeholder="Fiyat seçin veya girin" oninput="calculate()">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Sabit Maliyet (₺)</label>
-                    <input type="number" id="fixedCost" value="50" oninput="calculate()">
-                </div>
-                
-                <div class="price-display">
-                    <div class="price-amount" id="finalRes">0₺</div>
-                    <div class="price-detail" id="calcDetail">0 m² × 0₺ + 50₺ sabit</div>
-                </div>
-                
-                <div class="data
-                <div class="data-actions" style="margin-top:20px;">
-                    <button class="btn" onclick="saveCalculation()" style="flex:1;">
-                        💾 Kaydet
-                    </button>
-                    <button class="btn btn-secondary" onclick="shareCalculation()" style="flex:1;">
-                        📤 Paylaş
-                    </button>
-                </div>
+            <div class="form-group" style="margin:0;">
+                <label class="form-label">Boy (cm)</label>
+                <input type="number" id="h" placeholder="Örn: 70" oninput="calculate()" step="0.1">
             </div>
+        </div>
+        
+        <h3 style="color:var(--accent); margin:24px 0 16px 0; font-size:16px;">Malzeme ve Fiyat</h3>
+        
+        <div class="form-group">
+            <label class="form-label">Malzeme Tipi</label>
+            <select id="mType" onchange="updatePriceFromSelection()">
+                <option value="">Malzeme Seçin...</option>
+                <option value="trans">Şeffaf Pleksi</option>
+                <option value="color">Opak/Renkli Malzeme</option>
+                <option value="custom">Özel Fiyat</option>
+            </select>
+        </div>
+        
+        <div id="customPriceArea" style="display:none;" class="form-group">
+            <label class="form-label">Özel Fiyat (₺/m²)</label>
+            <input type="number" id="customPrice" placeholder="Örn: 750" oninput="calculate()">
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Birim Fiyat (₺/m²)</label>
+            <input type="number" id="uPrice" placeholder="Fiyat seçin veya girin" oninput="calculate()">
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Sabit Maliyet (₺)</label>
+            <input type="number" id="fixedCost" value="50" oninput="calculate()">
+        </div>
+        
+        <div class="price-display">
+            <div class="price-amount" id="finalRes">0₺</div>
+            <div class="price-detail" id="calcDetail">0 m² × 0₺ + 50₺ sabit</div>
+        </div>
+        
+        <div class="data-actions" style="margin-top:20px;">
+            <button class="btn" onclick="saveCalculation()" style="flex:1;">
+                💾 Kaydet
+            </button>
+            <button class="btn btn-secondary" onclick="shareCalculation()" style="flex:1;">
+                📤 Paylaş
+            </button>
+        </div>
+    </div>
+    
+    <!-- Calculation History -->
+    <div class="card" style="margin-top:16px;">
+        <h3 style="margin:0 0 16px 0; color:var(--gold); font-size:16px;">📜 Hesaplama Geçmişi</h3>
+        <div id="calcHistory" style="max-height:300px; overflow-y:auto;">
+            <p style="color:var(--text-muted); text-align:center; padding:20px;">Henüz kayıt yok</p>
+        </div>
+    </div>
+    
+    <div class="card" style="margin-top:16px;">
+        <h3 style="margin:0 0 20px 0; color:var(--gold); font-size:16px;">⚙️ Fiyat Ayarları</h3>
+        
+        <div class="settings-row">
+            <span class="settings-label">Şeffaf m² Fiyatı</span>
+            <input type="number" id="set_trans" value="450" style="width:120px; text-align:right;" onchange="savePriceSettings()">
+        </div>
+        <div class="settings-row">
+            <span class="settings-label">Renkli m² Fiyatı</span>
+            <input type="number" id="set_color" value="550" style="width:120px; text-align:right;" onchange="savePriceSettings()">
+        </div>
+    </div>
+</div>  <!-- ← BU KAPANIŞ EKSİKTİ -->
+
+<!-- EGZERSİZ EKRANI - ŞİMDİ DÜZGÜN AYRILMIŞ -->
+<div class="screen" id="exerciseScreen">
+    <div class="page-header">
+        <button class="back-btn" onclick="showScreen('homeScreen')">←</button>
+        <h2 style="margin:0;">🏋️ Günlük Antrenman</h2>
+    </div>
+    
+    <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <div>
+                <div style="font-size:24px; font-weight:700;" id="currentDate"></div>
+                <div style="font-size:13px; color:var(--text-muted);">Bugünkü program</div>
+            </div>
+            <div style="font-size:36px;">💪</div>
+        </div>
+        
+        <div class="progress-bar" style="margin-bottom:24px;">
+            <div class="progress-fill" id="exerciseProgress" style="width:0%"></div>
+        </div>
+        
+        <div id="exerciseList"></div>
+        
+        <button class="btn btn-success" onclick="completeAllExercises()" style="width:100%; margin-top:20px;">
+            ✓ Tümünü Tamamla
+        </button>
+    </div>
+    
+    <div class="card" style="margin-top:16px;">
+        <h3 style="margin:0 0 16px 0; color:var(--gold); font-size:16px;">📅 Takvim</h3>
+        <div class="calendar-grid" id="exerciseCalendar"></div>
+    </div>
+</div>
             
             <!-- Calculation History -->
             <div class="card" style="margin-top:16px;">
@@ -2162,6 +2217,39 @@ completed_code = '''
                 </div>
             </div>
         </div>
+                // ==================== DATA: EXERCISES ====================
+// BU DİZİ FONKSİYONLARDAN ÖNCE TANIMLANMALI
+const exercises = [
+    { name: "Baskı Kafası Temizliği", sets: "Günde 1x" },
+    { name: "Kapak ve Platform Kontrolü", sets: "Her baskı öncesi" },
+    { name: "UV Lamba Toz Temizliği", sets: "Haftada 2x" },
+    { name: "Mürekkep Seviye Kontrolü", sets: "Günde 1x" },
+    { name: "Kalibrasyon Test Baskısı", sets: "Haftada 1x" }
+];
+
+// ==================== EXERCISE FUNCTIONS ====================
+function initExerciseScreen() {
+    // Tarihi ayarla
+    const now = new Date();
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('currentDate').textContent = now.toLocaleDateString('tr-TR', options);
+    
+    // Bugünün tarihi
+    const today = now.toDateString();
+    const completed = state.user.exerciseHistory[today] || [];
+    
+    // Egzersiz listesini oluştur
+    const list = document.getElementById('exerciseList');
+    list.innerHTML = '';
+    
+    exercises.forEach((ex, idx) => {
+        const isCompleted = completed.includes(idx);
+        const item = document.createElement('div');
+        item.className = 'exercise-item';
+        item.innerHTML = `
+            <div>
+                <div class="exercise-name">${ex.name}</div>
+                <div class="exercise-sets
         <!-- EGZERSİZ EKRANI -->
               <!-- EGZERSİZ EKRANI -->
         <div class="screen" id="exerciseScreen">
