@@ -3871,10 +3871,117 @@ document.addEventListener('DOMContentLoaded', function() {
         // ==========================================
 // DÜZELTİLMİŞ NAVİGASYON FONKSİYONU
 // ==========================================
+// ==========================================
+// DÜZELTİLMİŞ NAVİGASYON FONKSİYONU
+// ==========================================
 
 function goToScreen(screenId) {
     console.log('Navigating to:', screenId);
     
+    // Tüm ekranları gizle
+    const allScreens = document.querySelectorAll('.screen');
+    allScreens.forEach(screen => {
+        screen.classList.remove('active');
+        screen.style.display = 'none';
+        screen.style.opacity = '0';
+    });
+    
+    // Hedef ekranı göster
+    const target = document.getElementById(screenId);
+    if (!target) {
+        console.error('Ekran bulunamadı:', screenId);
+        return;
+    }
+    
+    // Önce display:block yap, sonra animasyon
+    target.style.display = 'block';
+    
+    // Küçük bir gecikme ile opacity animasyonu
+    setTimeout(() => {
+        target.classList.add('active');
+        target.style.opacity = '1';
+    }, 10);
+    
+    // Navigasyonu güncelle
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+        const onclick = item.getAttribute('onclick');
+        if (onclick && onclick.includes(screenId)) {
+            item.classList.add('active');
+        }
+    });
+    
+    // Ekran spesifik init
+    if (screenId === 'uvAcademyMain') {
+        setTimeout(() => {
+            if (typeof initUVAcademy === 'function') initUVAcademy();
+        }, 50);
+    }
+    if (screenId === 'businessScreen') {
+        setTimeout(() => {
+            if (typeof loadPriceSettings === 'function') loadPriceSettings();
+            if (typeof updateInkChart === 'function') updateInkChart();
+        }, 50);
+    }
+    if (screenId === 'exerciseScreen') {
+        setTimeout(() => {
+            if (typeof initExercise === 'function') initExercise();
+        }, 50);
+    }
+    
+    // Scroll top
+    window.scrollTo(0, 0);
+}
+
+// ==========================================
+// NAVBAR TIKLAMA OLAYLARI - DÜZELTME
+// ==========================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('MindForge UV Master yüklendi');
+    
+    // Nav item'lara tıklama olayı ekle
+    document.querySelectorAll('.nav-item').forEach((item, index) => {
+        // Önce eski onclick'i kaldır
+        const oldOnclick = item.getAttribute('onclick');
+        item.removeAttribute('onclick');
+        
+        // Yeni click event listener ekle
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            console.log('Nav item clicked:', index);
+            
+            // Hangi ekrana gideceğini belirle
+            let targetScreen = 'homeScreen';
+            if (index === 0) targetScreen = 'homeScreen';
+            else if (index === 1) targetScreen = 'uvAcademyMain';
+            else if (index === 2) targetScreen = 'businessScreen';
+            else if (index === 3) targetScreen = 'exerciseScreen';
+            
+            goToScreen(targetScreen);
+        });
+        
+        // Touch desteği (mobil için)
+        item.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            let targetScreen = 'homeScreen';
+            if (index === 0) targetScreen = 'homeScreen';
+            else if (index === 1) targetScreen = 'uvAcademyMain';
+            else if (index === 2) targetScreen = 'businessScreen';
+            else if (index === 3) targetScreen = 'exerciseScreen';
+            
+            goToScreen(targetScreen);
+        });
+    });
+    
+    // Başlangıç ekranını göster
+    updateMasteryUI();
+    loadPriceSettings();
+    goToScreen('homeScreen');
+});
+
     // Tüm ekranları gizle
     const allScreens = document.querySelectorAll('.screen');
     allScreens.forEach(screen => {
