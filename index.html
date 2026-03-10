@@ -1173,6 +1173,55 @@
         }
 
         /* Exercise Specific */
+                /* ============================================
+           EGZERSİZ (ANTRENMAN) EKRANI STILLERİ
+           ============================================ */
+
+        /* Ana Egzersiz Kartı */
+        #exerciseScreen .card {
+            background: linear-gradient(135deg, var(--surface) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+        }
+
+        /* Tarih Başlığı */
+        #currentDate {
+            background: linear-gradient(90deg, var(--text) 0%, var(--success) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        /* İlerleme Çubuğu Özel */
+        #exerciseProgress {
+            background: linear-gradient(90deg, var(--success) 0%, #34d399 50%, var(--success) 100%);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #exerciseProgress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Egzersiz Listesi Konteyner */
+        #exerciseList {
+            margin-top: 20px;
+        }
         .exercise-item {
             display: flex;
             align-items: center;
@@ -2161,7 +2210,111 @@ completed_code = '''
         <span style="font-size:24px;">🏆</span>
         <span id="achievementText">Başarım Kazanıldı!</span>
     </div>
+        // ==================== EXERCISE FUNCTIONS ====================
+        
+        function initExerciseScreen() {
+            // Tarihi ayarla
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('tr-TR', options);
+            
+            // Bugünün tarihi
+            const today = now.toDateString();
+            const completed = state.user.exerciseHistory[today] || [];
+            
+            // Egzersiz listesini oluştur
+            const list = document.getElementById('exerciseList');
+            list.innerHTML = '';
+            
+            exercises.forEach((ex, idx) => {
+                const isCompleted = completed.includes(idx);
+                const item = document.createElement('div');
+                item.className = 'exercise-item';
+                item.innerHTML = `
+                    <div>
+                        <div class="exercise-name">${ex.name}</div>
+                        <div class="exercise-sets">${ex.sets}</div>
+                    </div>
+                    <div class="exercise-check ${isCompleted ? 'completed' : ''}" onclick="toggleExercise(${idx})">
+                        ${isCompleted ? '✓' : ''}
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+            
+            // İlerleme çubuğunu güncelle
+            updateExerciseProgress(completed.length);
+            
+            // Takvimi oluştur
+            renderExerciseCalendar();
+        }
 
+        function toggleExercise(idx) {
+            const today = new Date().toDateString();
+            
+            if (!state.user.exerciseHistory[today]) {
+                state.user.exerciseHistory[today] = [];
+            }
+            
+            const arr = state.user.exerciseHistory[today];
+            const index = arr.indexOf(idx);
+            
+            if (index > -1) {
+                arr.splice(index, 1); // Kaldır
+            } else {
+                arr.push(idx); // Ekle
+                addXP(5); // XP kazan
+            }
+            
+            saveUserData();
+            initExerciseScreen(); // Ekranı yenile
+        }
+
+        function completeAllExercises() {
+            const today = new Date().toDateString();
+            state.user.exerciseHistory[today] = exercises.map((_, idx) => idx);
+            
+            saveUserData();
+            initExerciseScreen();
+            addXP(25);
+            showToast('Tüm egzersizler tamamlandı! 💪', 'success');
+        }
+
+        function updateExerciseProgress(completedCount) {
+            const percent = (completedCount / exercises.length) * 100;
+            document.getElementById('exerciseProgress').style.width = percent + '%';
+        }
+
+        function renderExerciseCalendar() {
+            const calendar = document.getElementById('exerciseCalendar');
+            const today = new Date();
+            
+            let html = '';
+            
+            // Son 30 günü göster
+            for (let i = 29; i >= 0; i--) {
+                const d = new Date(today);
+                d.setDate(d.getDate() - i);
+                const dateStr = d.toDateString();
+                const isDone = state.user.exerciseHistory[dateStr]?.length === exercises.length;
+                const isToday = i === 0;
+                
+                html += `<div class="cal-day ${isDone ? 'done' : ''} ${isToday ? 'today' : ''}" title="${d.toLocaleDateString('tr-TR')}">
+                    ${d.getDate()}
+                </div>`;
+            }
+            
+            calendar.innerHTML = html;
+        }
+
+        // ==================== DATA: EXERCISES ====================
+        const exercises = [
+            { name: "Baskı Kafası Temizliği", sets: "Günde 1x" },
+            { name: "Kapak ve Platform Kontrolü", sets: "Her baskı öncesi" },
+            { name: "UV Lamba Toz Temizliği", sets: "Haftada 2x" },
+            { name: "Mürekkep Seviye Kontrolü", sets: "Günde 1x" },
+            { name: "Kalibrasyon Test Baskısı", sets: "Haftada 1x" }
+        ];
     <script>
         // ==================== GLOBAL STATE ====================
         const state = {
