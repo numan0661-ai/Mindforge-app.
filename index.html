@@ -474,58 +474,7 @@
         
         <div id="modulesList"></div>
     </div>
-<!-- ARIZA KÜTÜPHANESİ EKRANI -->
-    <div class="screen" id="faultLibraryScreen">
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
-            <button class="btn btn-secondary" style="flex:0; padding:12px 16px;" onclick="goToScreen('homeScreen')">←</button>
-            <h2 style="margin:0; color:var(--danger)">🔧 Arıza Kütüphanesi</h2>
-        </div>
-        
-        <!-- Arama -->
-        <div class="lesson-container" style="margin-bottom:15px;">
-            <input 
-                type="text" 
-                id="faultSearchInput" 
-                placeholder="Arıza ara: çizgi, renk, ses, kod (örn: PQ-001)..."
-                style="width:100%; padding:14px; border-radius:12px; border:1px solid var(--uv); background:var(--bg); color:var(--text); font-size:15px;"
-                oninput="searchFaults(this.value)"
-            >
-            <div id="faultSearchStats" style="margin-top:10px; font-size:12px; color:var(--text-muted);"></div>
-        </div>
 
-        <!-- Hızlı Kategoriler -->
-        <div class="grid-2" style="margin-bottom:15px;">
-            <button class="module-card" onclick="filterFaultsByCategory('PRINT_QUALITY')" style="text-align:center; border-color:var(--primary);">
-                <div style="font-size:24px;">🎨</div>
-                <div style="font-size:14px; font-weight:bold;">Baskı Kalitesi</div>
-            </button>
-            <button class="module-card" onclick="filterFaultsByCategory('MECHANICAL')" style="text-align:center; border-color:var(--warning);">
-                <div style="font-size:24px;">⚙️</div>
-                <div style="font-size:14px; font-weight:bold;">Mekanik</div>
-            </button>
-            <button class="module-card" onclick="filterFaultsByCategory('ELECTRICAL')" style="text-align:center; border-color:var(--danger);">
-                <div style="font-size:24px;">⚡</div>
-                <div style="font-size:14px; font-weight:bold;">Elektrik</div>
-            </button>
-            <button class="module-card" onclick="filterFaultsByCategory('INK_SYSTEM')" style="text-align:center; border-color:var(--info);">
-                <div style="font-size:24px;">💧</div>
-                <div style="font-size:14px; font-weight:bold;">Mürekkep</div>
-            </button>
-        </div>
-
-        <!-- Sonuç Listesi -->
-        <div id="faultResultsList"></div>
-    </div>
-
-    <!-- ARIZA DETAY EKRANI -->
-    <div class="screen" id="faultDetailScreen">
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
-            <button class="btn btn-secondary" style="flex:0; padding:12px 16px;" onclick="goToScreen('faultLibraryScreen')">←</button>
-            <h2 style="margin:0; color:var(--danger)">Arıza Detayı</h2>
-        </div>
-        
-        <div id="faultDetailContent"></div>
-    </div>
     <!-- MODÜL DETAY EKRANI -->
     <div class="screen" id="moduleDetail">
         <div class="lesson-container" id="lessonContent"></div>
@@ -571,16 +520,6 @@
                 <span>📚 8 Modül</span>
                 <span>⏱️ 6 Saat</span>
                 <span>🎯 Sertifikalı</span>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
-            <!-- Mevcut kartlar... -->
-            
-            <!-- YENİ: Arıza Kütüphanesi kartı -->
-            <div class="module-card" onclick="goToScreen('faultLibraryScreen'); initFaultLibrary();" 
-                 style="text-align:center; border-color:var(--danger); background:linear-gradient(135deg, #16162d, #3b0000);">
-                <div style="font-size:30px;">🔧</div>
-                <div class="module-title" style="font-size:16px;">Arıza Kütüphanesi</div>
-            </div>
-        </div>
             </div>
         </div>
 
@@ -781,16 +720,14 @@
 </div> <!-- app-container sonu -->
 
 <!-- NAV BAR -->
-<!-- Mevcut nav-bar'ı bulun ve içine ekleyin: -->
 <div class="nav-bar" id="mainNavBar">
-    <div class="nav-item active" onclick="goToScreen('homeScreen')">🏠</div>
-    <div class="nav-item" onclick="goToScreen('uvAcademyMain')">🧪</div>
-    <div class="nav-item" onclick="goToScreen('businessScreen')">📊</div>
-    <div class="nav-item" onclick="goToScreen('exerciseScreen')">🏋️</div>
-    <!-- YENİ: Arıza Kütüphanesi -->
-    <div class="nav-item" onclick="goToScreen('faultLibraryScreen'); initFaultLibrary();">🔧</div>
+    <div class="nav-item active" data-screen="homeScreen">🏠</div>
+    <div class="nav-item" data-screen="uvAcademyMain">
+        🧪<span class="badge" id="navBadge" style="display:none;">!</span>
+    </div>
+    <div class="nav-item" data-screen="businessScreen">📊</div>
+    <div class="nav-item" data-screen="exerciseScreen">🏋️</div>
 </div>
-    
 
 <!-- Achievement Popup -->
 <div class="achievement-popup" id="achievementPopup">
@@ -802,205 +739,7 @@
 // ==========================================
 // GENİŞLETİLMİŞ UV AKADEMİ MÜFREDATI
 // ==========================================
-// ==========================================
-// ARIZA KÜTÜPHANESİ VERİ YAPISI
-// ==========================================
 
-const FaultLibrary = {
-    metadata: {
-        version: "1.0.0",
-        lastUpdated: "2024-03-15",
-        totalFaults: 50
-    },
-
-    faults: [
-        {
-            id: "PQ-001",
-            code: "BANDING-H-REGULAR",
-            names: { tr: "Düzenli Yatay Banding", en: "Regular Horizontal Banding" },
-            metadata: {
-                category: "PRINT_QUALITY",
-                severity: "MEDIUM",
-                frequency: "COMMON",
-                keywords: ["çizgi", "banding", "yatay", "düzenli", "şerit", "aralık"],
-                relatedFaults: ["PQ-002", "ME-003", "IS-004"]
-            },
-            diagnosis: {
-                visual: {
-                    pattern: {
-                        type: "HORIZONTAL_LINES",
-                        regularity: "REGULAR",
-                        spacing: { min: 3, max: 15, unit: "mm", typical: 5 }
-                    },
-                    appearance: {
-                        tr: "Baskıda düzenli aralıklarla yatay çizgiler veya ton farklılıkları"
-                    },
-                    severityLevels: [
-                        { level: 1, description: "Hafif ton farklılığı, yakından fark edilir" },
-                        { level: 2, description: "Belirgin çizgiler, 1 metreden görülür" },
-                        { level: 3, description: "Şiddetli banding, tüm baskıyı bozar" }
-                    ]
-                },
-                operational: {
-                    symptoms: [
-                        "Baskı hızında hissedilir düşüş",
-                        "Kafa hareketinde mikro duraklamalar",
-                        "Pass sayısında artış hissedilir"
-                    ]
-                }
-            },
-            causes: {
-                primary: [
-                    {
-                        id: "CAUSE-ENCODER-DIRTY",
-                        name: { tr: "Encoder Strip Kirlenmesi", en: "Dirty Encoder Strip" },
-                        probability: 0.45,
-                        quickCheck: "Şerit üzerinde siyah mürekkep lekesi veya toz"
-                    },
-                    {
-                        id: "CAUSE-ENCODER-SENSOR",
-                        name: { tr: "Encoder Sensörü Arızası", en: "Encoder Sensor Failure" },
-                        probability: 0.25,
-                        quickCheck: "Sensör LED ışığı zayıf veya yanıp sönüyor"
-                    },
-                    {
-                        id: "CAUSE-DAMPER-ISSUE",
-                        name: { tr: "Damper Deformasyonu", en: "Damper Deformation" },
-                        probability: 0.20,
-                        quickCheck: "Damperlerde hava kabarcığı veya çökme"
-                    }
-                ]
-            },
-            solutions: {
-                quickFixes: [{
-                    name: "Encoder Strip Temizliği",
-                    duration: "5 dk",
-                    difficulty: "BEGINNER",
-                    successRate: 0.65,
-                    steps: [
-                        "Makineyi durdurun ve kafayı home pozisyonuna getirin",
-                        "İsopropil alkol (>%99) ve mikrofiber bez hazırlayın",
-                        "Bezi hafif nemlendirin (damla damla değil)",
-                        "Şeridi tek yönde silin, bastırmadan",
-                        "5 dk kuruma bekleyin, test baskı yapın"
-                    ]
-                }]
-            }
-        },
-        // Daha fazla arıza ekleyin...
-        {
-            id: "PQ-002",
-            code: "BANDING-H-IRREGULAR",
-            names: { tr: "Düzensiz Yatay Banding", en: "Irregular Horizontal Banding" },
-            metadata: {
-                category: "PRINT_QUALITY",
-                severity: "HIGH",
-                frequency: "OCCASIONAL",
-                keywords: ["çizgi", "banding", "düzensiz", "rastgele", "düzensiz aralık"]
-            },
-            // ... benzer yapı
-        },
-        {
-            id: "IS-001",
-            code: "CLOGGING-WHITE",
-            names: { tr: "Beyaz Mürekkep Tıkanıklığı", en: "White Ink Clogging" },
-            metadata: {
-                category: "INK_SYSTEM",
-                severity: "HIGH",
-                frequency: "COMMON",
-                keywords: ["beyaz", "tıkanıklık", "nozzle", "baskı yok", "white"]
-            },
-            // ... benzer yapı
-        }
-    ]
-};
-
-// ==========================================
-// ARIZA ARAMA MOTORU
-// ==========================================
-
-class FaultSearchEngine {
-    constructor(library) {
-        this.library = library;
-        this.index = this.buildIndex();
-    }
-
-    buildIndex() {
-        const index = new Map();
-        
-        this.library.faults.forEach(fault => {
-            const allText = [
-                fault.id,
-                fault.code,
-                fault.names.tr,
-                fault.names.en,
-                ...fault.metadata.keywords,
-                fault.diagnosis.visual?.appearance?.tr,
-                ...fault.diagnosis.operational?.symptoms || []
-            ].join(' ').toLowerCase();
-
-            const tokens = this.tokenize(allText);
-            
-            tokens.forEach(token => {
-                if (!index.has(token)) index.set(token, new Set());
-                index.get(token).add(fault.id);
-            });
-        });
-        
-        return index;
-    }
-
-    tokenize(text) {
-        return text
-            .toLowerCase()
-            .replace(/[çğışöü]/g, c => ({ç:'c',ğ:'g',ı:'i',ş:'s',ö:'o',ü:'u'})[c])
-            .replace(/[^a-z0-9]/g, ' ')
-            .split(' ')
-            .filter(t => t.length > 2);
-    }
-
-    search(query) {
-        const normalized = query.toLowerCase();
-        
-        // Tam ID eşleşmesi
-        const exactMatch = this.library.faults.find(f => 
-            f.id.toLowerCase() === normalized || 
-            f.code.toLowerCase() === normalized
-        );
-        if (exactMatch) return [{ fault: exactMatch, score: 1.0, matchType: 'EXACT' }];
-
-        // Token bazlı arama
-        const queryTokens = this.tokenize(normalized);
-        const scores = new Map();
-
-        queryTokens.forEach(token => {
-            const matches = this.index.get(token) || new Set();
-            matches.forEach(faultId => {
-                scores.set(faultId, (scores.get(faultId) || 0) + 1);
-            });
-        });
-
-        return Array.from(scores.entries())
-            .map(([faultId, score]) => ({
-                fault: this.library.faults.find(f => f.id === faultId),
-                score: score / queryTokens.length,
-                matchType: 'PARTIAL'
-            }))
-            .filter(r => r.fault)
-            .sort((a, b) => b.score - a.score);
-    }
-
-    getById(id) {
-        return this.library.faults.find(f => f.id === id);
-    }
-
-    getByCategory(category) {
-        return this.library.faults.filter(f => f.metadata.category === category);
-    }
-}
-
-// Global instance
-const faultEngine = new FaultSearchEngine(FaultLibrary);
 const uvCurriculum = [
     {
         id: 1,
@@ -2838,225 +2577,7 @@ const inkPrices = {
     white: 1.2,
     varnish: 0.6
 };
-// ==========================================
-// ARIZA KÜTÜPHANESİ FONKSİYONLARI
-// ==========================================
 
-function initFaultLibrary() {
-    // İlk açılışta tüm arızaları göster
-    showAllFaults();
-}
-
-function searchFaults(query) {
-    const resultsList = document.getElementById('faultResultsList');
-    const statsDiv = document.getElementById('faultSearchStats');
-    
-    if (!query || query.length < 2) {
-        showAllFaults();
-        return;
-    }
-    
-    const results = faultEngine.search(query);
-    
-    statsDiv.innerHTML = `${results.length} sonuç bulundu "${query}" için`;
-    
-    if (results.length === 0) {
-        resultsList.innerHTML = `
-            <div class="lesson-container" style="text-align:center; color:var(--text-muted);">
-                <div style="font-size:48px; margin-bottom:15px;">🔍</div>
-                <p>Sonuç bulunamadı.</p>
-                <p style="font-size:13px; margin-top:10px;">Farklı anahtar kelimeler deneyin:<br>çizgi, renk, ses, tıkanıklık, kod</p>
-            </div>
-        `;
-        return;
-    }
-    
-    renderFaultResults(results);
-}
-
-function showAllFaults() {
-    const allFaults = FaultLibrary.faults.map(f => ({ fault: f, score: 1 }));
-    document.getElementById('faultSearchStats').innerHTML = `Toplam ${allFaults.length} arıza`;
-    renderFaultResults(allFaults);
-}
-
-function filterFaultsByCategory(category) {
-    const faults = faultEngine.getByCategory(category);
-    const results = faults.map(f => ({ fault: f, score: 1 }));
-    
-    const categoryNames = {
-        'PRINT_QUALITY': '🎨 Baskı Kalitesi',
-        'MECHANICAL': '⚙️ Mekanik',
-        'ELECTRICAL': '⚡ Elektrik',
-        'INK_SYSTEM': '💧 Mürekkep Sistemi'
-    };
-    
-    document.getElementById('faultSearchStats').innerHTML = 
-        `${categoryNames[category]}: ${results.length} arıza`;
-    
-    renderFaultResults(results);
-}
-
-function renderFaultResults(results) {
-    const container = document.getElementById('faultResultsList');
-    
-    container.innerHTML = results.map(r => {
-        const fault = r.fault;
-        const severityColors = {
-            'LOW': { bg: 'rgba(34,197,94,0.2)', text: '#22c55e' },
-            'MEDIUM': { bg: 'rgba(245,158,11,0.2)', text: '#f59e0b' },
-            'HIGH': { bg: 'rgba(239,68,68,0.2)', text: '#ef4444' },
-            'CRITICAL': { bg: 'rgba(127,29,29,0.2)', text: '#ef4444' }
-        };
-        const sev = severityColors[fault.metadata.severity] || severityColors['MEDIUM'];
-        
-        return `
-            <div class="module-card" onclick="showFaultDetail('${fault.id}')" 
-                 style="cursor:pointer; margin-bottom:10px; border-left:4px solid ${sev.text};">
-                <div style="display:flex; justify-content:space-between; align-items:start;">
-                    <div>
-                        <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">
-                            ${fault.id} • ${fault.code}
-                        </div>
-                        <div style="font-size:16px; font-weight:bold; margin-bottom:6px;">
-                            ${fault.names.tr}
-                        </div>
-                        <div style="font-size:12px; color:var(--text-muted); line-height:1.5;">
-                            ${fault.diagnosis.visual.appearance.tr.substring(0, 60)}...
-                        </div>
-                    </div>
-                    <div style="text-align:right;">
-                        <span style="display:inline-block; padding:3px 10px; border-radius:12px; 
-                                     font-size:11px; font-weight:bold; background:${sev.bg}; color:${sev.text};">
-                            ${fault.metadata.severity}
-                        </span>
-                        ${r.score < 1 ? `<div style="font-size:11px; color:var(--accent); margin-top:5px;">%${Math.round(r.score*100)}</div>` : ''}
-                    </div>
-                </div>
-            </div>
-        `;
-    }).join('');
-}
-
-function showFaultDetail(faultId) {
-    const fault = faultEngine.getById(faultId);
-    if (!fault) return;
-    
-    const primaryCause = fault.causes.primary[0];
-    const solution = fault.solutions?.quickFixes?.[0];
-    
-    document.getElementById('faultDetailContent').innerHTML = `
-        <div class="lesson-container">
-            <div style="margin-bottom:20px;">
-                <div style="font-size:12px; color:var(--text-muted); margin-bottom:5px;">
-                    ${fault.id} • ${fault.code}
-                </div>
-                <h2 style="color:var(--text); margin:0 0 10px 0;">${fault.names.tr}</h2>
-                <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                    <span style="padding:4px 12px; border-radius:20px; font-size:11px; 
-                                 background:rgba(99,102,241,0.2); color:var(--primary);">
-                        ${fault.metadata.category}
-                    </span>
-                    <span style="padding:4px 12px; border-radius:20px; font-size:11px;
-                                 background:${fault.metadata.severity === 'HIGH' ? 'rgba(239,68,68,0.2)' : 'rgba(245,158,11,0.2)'};
-                                 color:${fault.metadata.severity === 'HIGH' ? '#ef4444' : '#f59e0b'};">
-                        ${fault.metadata.severity}
-                    </span>
-                </div>
-            </div>
-
-            <div class="content-block" style="border-left-color:var(--primary);">
-                <div class="block-title">🎨 Görsel Belirtiler</div>
-                <div class="block-content">
-                    ${fault.diagnosis.visual.appearance.tr}
-                    ${fault.diagnosis.visual.pattern ? `
-                        <div style="margin-top:10px; padding:10px; background:rgba(255,255,255,0.03); border-radius:8px;">
-                            <strong>Desen:</strong> ${fault.diagnosis.visual.pattern.type}<br>
-                            <strong>Düzenlilik:</strong> ${fault.diagnosis.visual.pattern.regularity}<br>
-                            ${fault.diagnosis.visual.pattern.spacing ? `
-                                <strong>Aralık:</strong> ${fault.diagnosis.visual.pattern.spacing.min}-${fault.diagnosis.visual.pattern.spacing.max} ${fault.diagnosis.visual.pattern.spacing.unit}
-                            ` : ''}
-                        </div>
-                    ` : ''}
-                </div>
-            </div>
-
-            ${fault.diagnosis.operational?.symptoms ? `
-                <div class="content-block" style="border-left-color:var(--warning);">
-                    <div class="block-title">⚙️ Operasyonel Belirtiler</div>
-                    <div class="block-content">
-                        <ul class="checklist">
-                            ${fault.diagnosis.operational.symptoms.map(s => `<li>${s}</li>`).join('')}
-                        </ul>
-                    </div>
-                </div>
-            ` : ''}
-
-            <div class="content-block" style="border-left-color:var(--danger);">
-                <div class="block-title">🔍 En Olası Neden (%${Math.round(primaryCause.probability*100)})</div>
-                <div class="block-content">
-                    <strong style="color:var(--text);">${primaryCause.name.tr}</strong>
-                    <p style="margin-top:8px; font-size:13px;">${primaryCause.quickCheck}</p>
-                </div>
-            </div>
-
-            ${solution ? `
-                <div class="content-block" style="border-left-color:var(--success);">
-                    <div class="block-title">🛠️ Önerilen Çözüm</div>
-                    <div class="block-content">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                            <strong>${solution.name}</strong>
-                            <span style="font-size:12px; color:var(--text-muted);">⏱️ ${solution.duration}</span>
-                        </div>
-                        <div style="font-size:12px; color:var(--success); margin-bottom:15px;">
-                            Başarı oranı: %${Math.round(solution.successRate * 100)}
-                        </div>
-                        <div class="step-guide">
-                            ${solution.steps.map((step, idx) => `
-                                <div class="step-item">
-                                    <div class="step-number">${idx + 1}</div>
-                                    <div class="step-content">${step}</div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                </div>
-            ` : ''}
-
-            <div class="nav-buttons" style="margin-top:30px;">
-                <button class="btn btn-success" onclick="markFaultSolved('${fault.id}')">
-                    ✓ Sorun Çözüldü
-                </button>
-                <button class="btn btn-secondary" onclick="notSolvedFeedback('${fault.id}')">
-                    ✗ Çözülmedi
-                </button>
-            </div>
-        </div>
-    `;
-    
-    goToScreen('faultDetailScreen');
-}
-
-function markFaultSolved(faultId) {
-    // XP kazandır
-    addExp(15);
-    showAchievement(`Arıza Çözüldü! +15 XP`);
-    
-    // Geçmişe kaydet
-    const history = JSON.parse(localStorage.getItem('fault_history') || '[]');
-    history.push({
-        faultId,
-        solved: true,
-        date: new Date().toISOString()
-    });
-    localStorage.setItem('fault_history', JSON.stringify(history));
-    
-    goToScreen('faultLibraryScreen');
-}
-
-function notSolvedFeedback(faultId) {
-    alert('Alternatif çözümler ve uzman desteği yakında eklenecek!');
-}
 // ==========================================
 // NAVİGASYON FONKSİYONU - DÜZELTİLMİŞ
 // ==========================================
@@ -3069,6 +2590,7 @@ function goToScreen(screenId) {
     allScreens.forEach(screen => {
         screen.classList.remove('active');
         screen.style.display = 'none';
+        screen.style.opacity = '0';
     });
     
     // Hedef ekranı göster
@@ -3078,21 +2600,29 @@ function goToScreen(screenId) {
         return;
     }
     
+    // Önce display:block yap, sonra animasyon
     target.style.display = 'block';
-    setTimeout(() => target.classList.add('active'), 10);
+    
+    // Küçük bir gecikme ile opacity animasyonu
+    setTimeout(() => {
+        target.classList.add('active');
+        target.style.opacity = '1';
+    }, 10);
     
     // Navigasyonu güncelle
     document.querySelectorAll('.nav-item').forEach(item => {
         item.classList.remove('active');
-        const onclick = item.getAttribute('onclick');
-        if (onclick && onclick.includes(screenId)) {
+        const dataScreen = item.getAttribute('data-screen');
+        if (dataScreen === screenId) {
             item.classList.add('active');
         }
     });
     
-    // Ekran spesifik init - YENİ CASE'LER EKLEYİN
+    // Ekran spesifik init
     if (screenId === 'uvAcademyMain') {
-        setTimeout(initUVAcademy, 50);
+        setTimeout(() => {
+            if (typeof initUVAcademy === 'function') initUVAcademy();
+        }, 50);
     }
     if (screenId === 'businessScreen') {
         setTimeout(() => {
@@ -3101,13 +2631,12 @@ function goToScreen(screenId) {
         }, 50);
     }
     if (screenId === 'exerciseScreen') {
-        setTimeout(initExercise, 50);
-    }
-    // YENİ:
-    if (screenId === 'faultLibraryScreen') {
-        setTimeout(initFaultLibrary, 50);
+        setTimeout(() => {
+            if (typeof initExercise === 'function') initExercise();
+        }, 50);
     }
     
+    // Scroll top
     window.scrollTo(0, 0);
 }
 
