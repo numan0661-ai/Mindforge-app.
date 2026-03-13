@@ -606,7 +606,7 @@
             </div>
         </div>
 
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
+       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
     <div class="module-card" onclick="goToScreen('businessScreen')" style="text-align:center;">
         <div style="font-size:30px;">📊</div>
         <div class="module-title" style="font-size:16px;">Maliyet Hesaplama</div>
@@ -627,7 +627,6 @@
 
     <!-- MALİYET HESAPLAMA EKRANI -->
     <div class="screen" id="businessScreen">
-        
         <button class="btn btn-secondary" onclick="goToScreen('homeScreen')" style="margin-bottom:20px;">← Ana Menü</button>
         <h2 style="margin-bottom:20px;">📊 Maliyet Hesaplama</h2>
         
@@ -664,14 +663,14 @@
             <input type="number" id="fixedCost" value="50" oninput="calculate()">
             
             <div class="price-display">
-    <div class="price-amount" id="finalRes">0₺</div>
-    <div class="price-detail" id="calcDetail">0 m² × 0₺ + 50₺ sabit</div>
-</div>
-<button class="btn" onclick="saveCalculation()" style="margin-top:15px;">💾 Hesaplamayı Kaydet</button>
-<!-- YENİ: Önizleme butonu -->
-<button class="btn btn-outline" onclick="openInPreview()" style="margin-top:10px; width:100%; border:2px solid var(--uv); color:var(--uv);">
+                <div class="price-amount" id="finalRes">0₺</div>
+                <div class="price-detail" id="calcDetail">0 m² × 0₺ + 50₺ sabit</div>
+            </div>
+            <button class="btn btn-outline" onclick="openInPreview()" style="margin-top:10px; width:100%;">
     🎨 Önizlemede Aç
 </button>
+            <button class="btn" onclick="saveCalculation()" style="margin-top:15px;">💾 Hesaplamayı Kaydet</button>
+        </div>
         
         <!-- MÜREKKEP ANALİZİ -->
         <div class="lesson-container" style="margin-top:20px;">
@@ -806,10 +805,7 @@
                 <span style="display:flex; align-items:center; gap:5px;">
                     <span style="width:12px; height:12px; background:rgba(255,255,255,0.05); border-radius:3px;"></span> Boş
                 </span>
-            </div>
-        </div>
-    </div>
-<!-- ==========================================
+           <!-- ==========================================
      BASKI ÖNİZLEME EKRANI (YENİ)
      ========================================== -->
 <div class="screen" id="previewScreen">
@@ -1113,6 +1109,9 @@
         </div>
     </div>
 </div>
+            </div>
+        </div>
+    </div>
 
 </div> <!-- app-container sonu -->
 
@@ -1129,6 +1128,7 @@
     </div>
     <div class="nav-item" data-screen="exerciseScreen">🏋️</div>
 </div>
+
 <!-- Achievement Popup -->
 <div class="achievement-popup" id="achievementPopup">
     <span style="font-size:24px;">🏆</span>
@@ -1598,26 +1598,6 @@ goToScreen = function(screenId) {
         }, 100);
     }
 };
-    function openInPreview() {
-    // Mevcut hesaplamaları preview state'e aktar
-    const w = document.getElementById('w')?.value || 50;
-    const h = document.getElementById('h')?.value || 70;
-    const mType = document.getElementById('mType')?.value || 'trans';
-    
-    // Malzeme tipini eşleştir
-    const matMapping = {
-        'trans': 'pleksi',
-        'color': 'pvc',
-        'custom': 'pleksi'
-    };
-    
-    previewState.material = matMapping[mType] || 'pleksi';
-    previewState.designSize = { width: parseFloat(w), height: parseFloat(h) };
-    
-    // Preview ekranına git
-    goToScreen('previewScreen');
-    initPreviewModule();
-}
 <script>
 // ==========================================
 // GENİŞLETİLMİŞ UV AKADEMİ MÜFREDATI
@@ -4666,7 +4646,7 @@ function showConfetti() {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('MindForge UV Master yüklendi');
     
-    // Nav item'lara tıklama olayı ekle - DÜZELTİLMİŞ
+    // Nav item'lara tıklama olayı ekle
     document.querySelectorAll('.nav-item').forEach((item) => {
         item.addEventListener('click', function(e) {
             e.preventDefault();
@@ -4679,15 +4659,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 goToScreen(targetScreen);
             }
         });
-        
-        // Touch desteği (mobil için)
-        item.addEventListener('touchend', function(e) {
-            e.preventDefault();
-            const targetScreen = this.getAttribute('data-screen');
-            if (targetScreen) {
-                goToScreen(targetScreen);
-            }
-        });
     });
     
     // Başlangıç
@@ -4695,6 +4666,39 @@ document.addEventListener('DOMContentLoaded', function() {
     loadPriceSettings();
     goToScreen('homeScreen');
 });
+
+// ==========================================
+// MALİYET HESAPLAMA - ÖNİZLEME BAĞLANTISI (YENİ)
+// ==========================================
+
+function openInPreview() {
+    // Mevcut hesaplamaları al
+    const w = document.getElementById('w')?.value || 50;
+    const h = document.getElementById('h')?.value || 70;
+    const mType = document.getElementById('mType')?.value || 'trans';
+    
+    // Malzeme tipini eşleştir
+    const matMapping = {
+        'trans': 'pleksi',
+        'color': 'pvc',
+        'custom': 'pleksi'
+    };
+    
+    // Preview state'ini güncelle
+    previewState.material = matMapping[mType] || 'pleksi';
+    previewState.designSize = { 
+        width: parseFloat(w), 
+        height: parseFloat(h) 
+    };
+    
+    // Preview ekranına git ve başlat
+    goToScreen('previewScreen');
+    
+    // Biraz bekle ve modülü başlat
+    setTimeout(() => {
+        initPreviewModule();
+    }, 100);
+}
 </script>
 
 </body>
