@@ -1325,32 +1325,38 @@ const uvTroubleshootingLibrary = {
         }
     ],
     
-    search: function(query) {
-        const results = [];
-        const q = query.toLowerCase();
-        this.categories.forEach(cat => {
-            cat.issues.forEach(issue => {
-                let score = 0;
-                if (issue.title.toLowerCase().includes(q)) score += 10;
-                issue.symptoms.forEach(s => {
-                    if (s.toLowerCase().includes(q)) score += 5;
-                });
+   search: function(query) {
+    const results = [];
+    const q = query.toLowerCase();
+    this.categories.forEach(cat => {
+        cat.issues.forEach(issue => {
+            let score = 0;
+            if (issue.title.toLowerCase().includes(q)) score += 10;
+            
+            // symptoms her zaman var
+            issue.symptoms.forEach(s => {
+                if (s.toLowerCase().includes(q)) score += 5;
+            });
+            
+            // quickChecks olmayabilir - kontrol ekle!
+            if (issue.quickChecks && Array.isArray(issue.quickChecks)) {
                 issue.quickChecks.forEach(c => {
                     if (c.toLowerCase().includes(q)) score += 3;
                 });
-                if (score > 0) {
-                    results.push({
-                        ...issue,
-                        category: cat.name,
-                        categoryIcon: cat.icon,
-                        score: score
-                    });
-                }
-            });
+            }
+            
+            if (score > 0) {
+                results.push({
+                    ...issue,
+                    category: cat.name,
+                    categoryIcon: cat.icon,
+                    score: score
+                });
+            }
         });
-        return results.sort((a, b) => b.score - a.score);
-    }
-};
+    });
+    return results.sort((a, b) => b.score - a.score);
+}
                 `
             },
             {
