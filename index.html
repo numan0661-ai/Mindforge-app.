@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -623,7 +624,6 @@
         <div style="font-size:11px; color:var(--text-muted); margin-top:5px;">3D simülasyon & maliyet</div>
     </div>
 </div>
-    </div>
 
     <!-- MALİYET HESAPLAMA EKRANI -->
     <div class="screen" id="businessScreen">
@@ -666,10 +666,11 @@
                 <div class="price-amount" id="finalRes">0₺</div>
                 <div class="price-detail" id="calcDetail">0 m² × 0₺ + 50₺ sabit</div>
             </div>
+            
+            <button class="btn" onclick="saveCalculation()" style="margin-top:15px;">💾 Hesaplamayı Kaydet</button>
             <button class="btn btn-outline" onclick="openInPreview()" style="margin-top:10px; width:100%;">
     🎨 Önizlemede Aç
 </button>
-            <button class="btn" onclick="saveCalculation()" style="margin-top:15px;">💾 Hesaplamayı Kaydet</button>
         </div>
         
         <!-- MÜREKKEP ANALİZİ -->
@@ -805,7 +806,25 @@
                 <span style="display:flex; align-items:center; gap:5px;">
                     <span style="width:12px; height:12px; background:rgba(255,255,255,0.05); border-radius:3px;"></span> Boş
                 </span>
-           <!-- ==========================================
+            </div>
+        </div>
+    </div>
+
+</div> <!-- app-container sonu -->
+
+<!-- NAV BAR -->
+<div class="nav-bar" id="mainNavBar">
+    <div class="nav-item active" data-screen="homeScreen">🏠</div>
+    <div class="nav-item" data-screen="uvAcademyMain">
+        🧪<span class="badge" id="navBadge" style="display:none;">!</span>
+    </div>
+    <div class="nav-item" data-screen="businessScreen">📊</div>
+    <!-- YENİ: Baskı Önizleme -->
+    <div class="nav-item" data-screen="previewScreen" onclick="goToScreen('previewScreen'); initPreviewModule();">
+        🎨<span class="badge" id="previewBadge" style="display:none;">!</span>
+    </div>
+    <div class="nav-item" data-screen="exerciseScreen">🏋️</div>
+    <!-- ==========================================
      BASKI ÖNİZLEME EKRANI (YENİ)
      ========================================== -->
 <div class="screen" id="previewScreen">
@@ -1109,31 +1128,11 @@
         </div>
     </div>
 </div>
-            </div>
-        </div>
-    </div>
-
-</div> <!-- app-container sonu -->
-
-<!-- NAV BAR -->
-<div class="nav-bar" id="mainNavBar">
-    <div class="nav-item active" data-screen="homeScreen">🏠</div>
-    <div class="nav-item" data-screen="uvAcademyMain">
-        🧪<span class="badge" id="navBadge" style="display:none;">!</span>
-    </div>
-    <div class="nav-item" data-screen="businessScreen">📊</div>
-    <!-- YENİ: Baskı Önizleme -->
-    <div class="nav-item" data-screen="previewScreen" onclick="goToScreen('previewScreen'); initPreviewModule();">
-        🎨<span class="badge" id="previewBadge" style="display:none;">!</span>
-    </div>
-    <div class="nav-item" data-screen="exerciseScreen">🏋️</div>
 </div>
-
 <!-- Achievement Popup -->
 <div class="achievement-popup" id="achievementPopup">
     <span style="font-size:24px;">🏆</span>
     <span id="achievementText">Başarım Kazanıldı!</span>
-</div>
 // ==========================================
 // BASKI ÖNİZLEME FONKSİYONLARI (YENİ)
 // ==========================================
@@ -1598,6 +1597,28 @@ goToScreen = function(screenId) {
         }, 100);
     }
 };
+    function openInPreview() {
+    // Mevcut hesaplamaları preview state'e aktar
+    const w = document.getElementById('w')?.value || 50;
+    const h = document.getElementById('h')?.value || 70;
+    const mType = document.getElementById('mType')?.value || 'trans';
+    
+    // Malzeme tipini eşleştir
+    const matMapping = {
+        'trans': 'pleksi',
+        'color': 'pvc',
+        'custom': 'pleksi'
+    };
+    
+    previewState.material = matMapping[mType] || 'pleksi';
+    previewState.designSize = { width: parseFloat(w), height: parseFloat(h) };
+    
+    // Preview ekranına git
+    goToScreen('previewScreen');
+    initPreviewModule();
+}
+</div>
+    
 <script>
 // ==========================================
 // GENİŞLETİLMİŞ UV AKADEMİ MÜFREDATI
@@ -4646,7 +4667,7 @@ function showConfetti() {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('MindForge UV Master yüklendi');
     
-    // Nav item'lara tıklama olayı ekle
+    // Nav item'lara tıklama olayı ekle - DÜZELTİLMİŞ
     document.querySelectorAll('.nav-item').forEach((item) => {
         item.addEventListener('click', function(e) {
             e.preventDefault();
@@ -4659,6 +4680,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 goToScreen(targetScreen);
             }
         });
+        
+        // Touch desteği (mobil için)
+        item.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            const targetScreen = this.getAttribute('data-screen');
+            if (targetScreen) {
+                goToScreen(targetScreen);
+            }
+        });
     });
     
     // Başlangıç
@@ -4666,39 +4696,6 @@ document.addEventListener('DOMContentLoaded', function() {
     loadPriceSettings();
     goToScreen('homeScreen');
 });
-
-// ==========================================
-// MALİYET HESAPLAMA - ÖNİZLEME BAĞLANTISI (YENİ)
-// ==========================================
-
-function openInPreview() {
-    // Mevcut hesaplamaları al
-    const w = document.getElementById('w')?.value || 50;
-    const h = document.getElementById('h')?.value || 70;
-    const mType = document.getElementById('mType')?.value || 'trans';
-    
-    // Malzeme tipini eşleştir
-    const matMapping = {
-        'trans': 'pleksi',
-        'color': 'pvc',
-        'custom': 'pleksi'
-    };
-    
-    // Preview state'ini güncelle
-    previewState.material = matMapping[mType] || 'pleksi';
-    previewState.designSize = { 
-        width: parseFloat(w), 
-        height: parseFloat(h) 
-    };
-    
-    // Preview ekranına git ve başlat
-    goToScreen('previewScreen');
-    
-    // Biraz bekle ve modülü başlat
-    setTimeout(() => {
-        initPreviewModule();
-    }, 100);
-}
 </script>
 
 </body>
