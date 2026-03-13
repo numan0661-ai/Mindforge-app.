@@ -1,3 +1,1670 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UV Akademi - Profesyonel UV Baskı Eğitim Platformu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #06b6d4;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --success: #10b981;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --glass: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--dark);
+        }
+
+        /* Ana Konteyner */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 2px solid var(--primary);
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            background: linear-gradient(45deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .logo p {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 5px;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 10px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            color: #cbd5e1;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--primary);
+            color: white;
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .nav-link i {
+            margin-right: 12px;
+            font-size: 20px;
+            width: 30px;
+            text-align: center;
+        }
+
+        .badge {
+            background: var(--accent);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            margin-left: auto;
+        }
+
+        /* Ana İçerik */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h2 {
+            color: var(--dark);
+            font-size: 28px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .progress-ring {
+            width: 50px;
+            height: 50px;
+            position: relative;
+        }
+
+        /* Bölümler */
+        .section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Kart Tasarımı */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .card-title {
+            font-size: 22px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Akademi Müfredatı */
+        .curriculum-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .lesson-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 16px;
+            padding: 25px;
+            border-left: 5px solid var(--primary);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lesson-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent 0%, rgba(99, 102, 241, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .lesson-card:hover::before {
+            opacity: 1;
+        }
+
+        .lesson-number {
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .lesson-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .lesson-content {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .lesson-meta {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .lesson-tag {
+            background: var(--secondary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+        }
+
+        /* Makine Animasyonu */
+        .machine-container {
+            background: #0f172a;
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .uv-machine {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .machine-part {
+            background: linear-gradient(145deg, #334155, #1e293b);
+            border: 2px solid #475569;
+            border-radius: 10px;
+            margin: 10px 0;
+            padding: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .machine-part:hover {
+            border-color: var(--secondary);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+            transform: scale(1.02);
+        }
+
+        .machine-part.active {
+            border-color: var(--success);
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
+        }
+
+        .part-label {
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: var(--secondary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .led-indicator {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #ef4444;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        .machine-part.active .led-indicator {
+            background: var(--success);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .specs-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            color: #cbd5e1;
+        }
+
+        .specs-table th, .specs-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+        }
+
+        .specs-table th {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        /* Arıza Kütüphanesi */
+        .troubleshoot-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+
+        .error-list {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .error-item {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        .error-item:hover, .error-item.active {
+            background: #f1f5f9;
+            border-left: 4px solid var(--danger);
+        }
+
+        .error-code {
+            font-family: monospace;
+            background: var(--danger);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+
+        .error-solution {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .solution-step {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-left: 4px solid var(--success);
+        }
+
+        .step-number {
+            background: var(--success);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        /* Maliyet Hesaplama */
+        .calc-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .calc-tab {
+            padding: 12px 24px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .calc-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .calc-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #475569;
+        }
+
+        .form-group input, .form-group select {
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .price-result {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .price-amount {
+            font-size: 48px;
+            font-weight: 800;
+            margin: 10px 0;
+        }
+
+        /* Egzersiz Programı */
+        .exercise-timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .exercise-timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        .exercise-day {
+            position: relative;
+            margin-bottom: 30px;
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .day-badge {
+            position: absolute;
+            left: -40px;
+            top: 25px;
+            background: var(--primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .exercise-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .exercise-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .exercise-item::before {
+            content: '▸';
+            color: var(--secondary);
+            font-weight: bold;
+        }
+
+        .difficulty-badge {
+            margin-left: auto;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .difficulty-easy { background: #dcfce7; color: #166534; }
+        .difficulty-medium { background: #fef3c7; color: #92400e; }
+        .difficulty-hard { background: #fee2e2; color: #991b1b; }
+
+        /* Corel Draw Kısayollar */
+        .shortcuts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .shortcut-card {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border: 2px solid #bae6fd;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .shortcut-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.2);
+        }
+
+        .key-combo {
+            display: inline-flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .key {
+            background: white;
+            border: 2px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 5px 12px;
+            font-family: monospace;
+            font-weight: bold;
+            color: var(--dark);
+            box-shadow: 0 2px 0 #cbd5e1;
+        }
+
+        .shortcut-desc {
+            font-size: 14px;
+            color: #475569;
+            line-height: 1.5;
+        }
+
+        .shortcut-category {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            margin-bottom: 10px;
+        }
+
+        /* Video Eğitim */
+        .video-container {
+            position: relative;
+            background: #0f172a;
+            border-radius: 16px;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .play-button {
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .play-button:hover {
+            background: var(--primary);
+            transform: scale(1.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .troubleshoot-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animasyonlar */
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hover-lift {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 8px;
+            margin-top: 10px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.5s;
+            border-radius: 10px;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--dark);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+        }
+
+        /* Chat Widget */
+        .chat-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+            transition: all 0.3s;
+            z-index: 999;
+        }
+
+        .chat-widget:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .chat-window {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            z-index: 998;
+            overflow: hidden;
+        }
+
+        .chat-window.active {
+            display: flex;
+        }
+
+        .chat-header {
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+
+        .chat-input {
+            padding: 20px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            outline: none;
+        }
+
+        .chat-input button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .message.bot {
+            background: white;
+            border: 1px solid #e2e8f0;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.user {
+            background: var(--primary);
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <h1>☀️ UV AKADEMİ</h1>
+                <p>Profesyonel UV Baskı Eğitimi</p>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a class="nav-link active" onclick="showSection('dashboard')">
+                        <i>📊</i> Ana Sayfa
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showSection('curriculum')">
+                        <i>📚</i> UV Müfredatı
+                        <span class="badge">8 Ders</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showSection('machine')">
+                        <i>⚙️</i> UV Makinesi
+                        <span class="badge">3D</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showSection('troubleshoot')">
+                        <i>🔧</i> Arıza Kütüphanesi
+                        <span class="badge">AI</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showSection('calculator')">
+                        <i>💰</i> Maliyet Hesaplama
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showSection('exercise')">
+                        <i>💪</i> Günlük Egzersiz
+                        <span class="badge">Seviye</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showSection('corel')">
+                        <i>🎨</i> CorelDRAW Kısayollar
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showSection('tutorials')">
+                        <i>🎥</i> Video Eğitimler
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Ana İçerik -->
+        <main class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div>
+                    <h2 id="page-title">Hoş Geldiniz</h2>
+                    <p style="color: #64748b; margin-top: 5px;">UV Baskı dünyasına adım atın</p>
+                </div>
+                <div class="user-info">
+                    <div style="text-align: right;">
+                        <div style="font-weight: 600;">Seviye 1</div>
+                        <div style="font-size: 12px; color: #64748b;">Başlangıç</div>
+                    </div>
+                    <div class="progress-ring">
+                        <svg width="50" height="50">
+                            <circle cx="25" cy="25" r="20" stroke="#e2e8f0" stroke-width="4" fill="none"/>
+                            <circle cx="25" cy="25" r="20" stroke="var(--primary)" stroke-width="4" fill="none" 
+                                    stroke-dasharray="125.6" stroke-dashoffset="94.2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard -->
+            <section id="dashboard" class="section active">
+                <div class="card fade-in-up">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span style="font-size: 30px;">🎯</span>
+                            <div>
+                                <div>Öğrenme Yolculuğunuz</div>
+                                <div style="font-size: 14px; color: #64748b; font-weight: normal;">Başlamak için müfredat bölümüne gidin</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                        <div style="text-align: center; padding: 20px;">
+                            <div style="font-size: 36px; margin-bottom: 10px;">0/8</div>
+                            <div style="color: #64748b;">Tamamlanan Ders</div>
+                        </div>
+                        <div style="text-align: center; padding: 20px;">
+                            <div style="font-size: 36px; margin-bottom: 10px;">0/30</div>
+                            <div style="color: #64748b;">Gün Egzersiz</div>
+                        </div>
+                        <div style="text-align: center; padding: 20px;">
+                            <div style="font-size: 36px; margin-bottom: 10px;">%0</div>
+                            <div style="color: #64748b;">İlerleme</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card fade-in-up">
+                    <h3 style="margin-bottom: 20px;">🚀 Hızlı Başlangıç</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                        <button onclick="showSection('curriculum')" class="calc-tab active" style="text-align: left; display: flex; align-items: center; gap: 10px;">
+                            <span style="font-size: 24px;">📚</span>
+                            <div>
+                                <div style="font-weight: 600;">Müfredata Başla</div>
+                                <div style="font-size: 12px; opacity: 0.8;">8 detaylı ders</div>
+                            </div>
+                        </button>
+                        <button onclick="showSection('machine')" class="calc-tab" style="text-align: left; display: flex; align-items: center; gap: 10px;">
+                            <span style="font-size: 24px;">⚙️</span>
+                            <div>
+                                <div style="font-weight: 600;">Makineyi Tanı</div>
+                                <div style="font-size: 12px; opacity: 0.8;">İnteraktif 3D model</div>
+                            </div>
+                        </button>
+                        <button onclick="showSection('troubleshoot')" class="calc-tab" style="text-align: left; display: flex; align-items: center; gap: 10px;">
+                            <span style="font-size: 24px;">🔧</span>
+                            <div>
+                                <div style="font-weight: 600;">Arıza Çözücü</div>
+                                <div style="font-size: 12px; opacity: 0.8;">AI destekli teşhis</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Müfredat -->
+            <section id="curriculum" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">📚 UV Akademi Müfredatı</div>
+                        <span style="background: var(--primary); color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px;">Toplam 8 Ders</span>
+                    </div>
+                    <p style="color: #64748b; margin-bottom: 25px;">Her ders gerçek iş senaryolarıyla pratik uygulamalar içerir. Detaylı ve öğretici içeriklerle UV baskı uzmanı olun.</p>
+                    
+                    <div class="curriculum-grid">
+                        <!-- Ders 1 -->
+                        <div class="lesson-card hover-lift">
+                            <div class="lesson-number">1</div>
+                            <div class="lesson-title">UV Baskı Temelleri ve Kimya</div>
+                            <div class="lesson-content">
+                                UV mürekkebinin kimyasal yapısı, kürleşme reaksiyonları, fotoinitiatörlerin çalışma prensibi. LED UV vs. geleneksel UV lambalar. Mürekkep viskozitesi ve yüzey gerilimi kavramları.
+                            </div>
+                            <div class="lesson-meta">
+                                <span>⏱️ 45 dk</span>
+                                <span>📖 Teori</span>
+                                <span class="lesson-tag">Temel</span>
+                            </div>
+                            <div class="progress-container" style="margin-top: 15px;">
+                                <div class="progress-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Ders 2 -->
+                        <div class="lesson-card hover-lift">
+                            <div class="lesson-number">2</div>
+                            <div class="lesson-title">Materyal Bilimi ve Yüzey Hazırlığı</div>
+                            <div class="lesson-content">
+                                Pleksi, PVC, ahşap, metal, cam ve seramik yüzeyleri. Plazma ve korona tedavisi. Aderans testleri (çapraz kesme test, bant test). Yüzey enerjisi ölçümü ve kritik yüzey gerilimi.
+                            </div>
+                            <div class="lesson-meta">
+                                <span>⏱️ 60 dk</span>
+                                <span>🔬 Pratik</span>
+                                <span class="lesson-tag">Önemli</span>
+                            </div>
+                            <div class="progress-container" style="margin-top: 15px;">
+                                <div class="progress-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Ders 3 -->
+                        <div class="lesson-card hover-lift">
+                            <div class="lesson-number">3</div>
+                            <div class="lesson-title">Renk Yönetimi ve Profil Oluşturma</div>
+                            <div class="lesson-content">
+                                ICC profilleri, renk uzayları (RGB, CMYK, Lab), spektrofotometre kullanımı. Linearizasyon ve ink limit ayarları. Spot renk eşleştirme (Pantone). Renk tutarlılığı ve delta E değerleri.
+                            </div>
+                            <div class="lesson-meta">
+                                <span>⏱️ 90 dk</span>
+                                <span>🎨 Uzman</span>
+                                <span class="lesson-tag">Gelişmiş</span>
+                            </div>
+                            <div class="progress-container" style="margin-top: 15px;">
+                                <div class="progress-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Ders 4 -->
+                        <div class="lesson-card hover-lift">
+                            <div class="lesson-number">4</div>
+                            <div class="lesson-title">Baskı Kalitesi ve Optimizasyon</div>
+                            <div class="lesson-content">
+                                Drop volume ayarları, frekans optimizasyonu, çoklu geçiş teknikleri. Banding (şeritlenme) sorunları ve çözümleri. Pass kenarlarında kürleşme ayarları. 3D efektler ve kabartma baskı.
+                            </div>
+                            <div class="lesson-meta">
+                                <span>⏱️ 75 dk</span>
+                                <span>⚙️ Teknik</span>
+                                <span class="lesson-tag">İleri</span>
+                            </div>
+                            <div class="progress-container" style="margin-top: 15px;">
+                                <div class="progress-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Ders 5 -->
+                        <div class="lesson-card hover-lift">
+                            <div class="lesson-number">5</div>
+                            <div class="lesson-title">UV Makine Bakımı ve Kalibrasyon</div>
+                            <div class="lesson-content">
+                                Günlük, haftalık ve aylık bakım protokolleri. Kafaların temizliği ve kaplama. UV lambaların ömrü ve değişimi. Konveyör bandı ayarları ve temizliği. Yazılım güncellemeleri ve yedekleme.
+                            </div>
+                            <div class="lesson-meta">
+                                <span>⏱️ 50 dk</span>
+                                <span>🔧 Bakım</span>
+                                <span class="lesson-tag">Zorunlu</span>
+                            </div>
+                            <div class="progress-container" style="margin-top: 15px;">
+                                <div class="progress-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Ders 6 -->
+                        <div class="lesson-card hover-lift">
+                            <div class="lesson-number">6</div>
+                            <div class="lesson-title">Üretim İş Akışı ve Otomasyon</div>
+                            <div class="lesson-content">
+                                RIP yazılım ayarları, sıra yönetimi (queuing), otomatik düzen (nesting). XML ve JDF entegrasyonları. Barcode ve variable data baskı. Üretim raporlama ve verimlilik analizi.
+                            </div>
+                            <div class="lesson-meta">
+                                <span>⏱️ 80 dk</span>
+                                <span>💼 Profesyonel</span>
+                                <span class="lesson-tag">İş</span>
+                            </div>
+                            <div class="progress-container" style="margin-top: 15px;">
+                                <div class="progress-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Ders 7 -->
+                        <div class="lesson-card hover-lift">
+                            <div class="lesson-number">7</div>
+                            <div class="lesson-title">Sorun Giderme ve Kalite Kontrol</div>
+                            <div class="lesson-content">
+                                Yaygın baskı hataları: ghosting, mottling, pinholing. Elektrostatik sorunlar ve çözümleri. Nem kontrolü ve ortam koşulları. Kalite kontrol check-list'leri ve müşteri kabul kriterleri.
+                            </div>
+                            <div class="lesson-meta">
+                                <span>⏱️ 70 dk</span>
+                                <span>🛠️ Problem</span>
+                                <span class="lesson-tag">Kritik</span>
+                            </div>
+                            <div class="progress-container" style="margin-top: 15px;">
+                                <div class="progress-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Ders 8 -->
+                        <div class="lesson-card hover-lift">
+                            <div class="lesson-number">8</div>
+                            <div class="lesson-title">İleri Teknikler ve Uzmanlık</div>
+                            <div class="lesson-content">
+                                Beyaz mürekkep stratejileri, vernik uygulamaları, çift kafalı baskı. Braille ve dokunsal baskı. Güvenlik baskıları (guilloche). Endüstriyel uygulamalar: 3D parçalar, silindirik baskı.
+                            </div>
+                            <div class="lesson-meta">
+                                <span>⏱️ 120 dk</span>
+                                <span>🏆 Uzmanlık</span>
+                                <span class="lesson-tag">Master</span>
+                            </div>
+                            <div class="progress-container" style="margin-top: 15px;">
+                                <div class="progress-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Makine Animasyonu -->
+            <section id="machine" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">⚙️ UV Makinesi Teknik Özellikler</div>
+                        <button onclick="startAnimation()" style="background: var(--success); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            ▶ Animasyonu Başlat
+                        </button>
+                    </div>
+                    
+                    <div class="machine-container">
+                        <div class="uv-machine">
+                            <!-- Baskı Kafası -->
+                            <div class="machine-part" id="part1" onclick="showPartDetails('head')">
+                                <span class="part-label">BASKI KAFASI</span>
+                                <div class="led-indicator"></div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; color: #94a3b8;">
+                                    <span>Ricoh Gen5 / Konica Minolta</span>
+                                    <span style="font-family: monospace; color: var(--secondary);">180 nozul × 8 satır</span>
+                                </div>
+                                <div style="margin-top: 10px; font-size: 12px; color: #64748b;">
+                                    Piezoelektrik inkjet teknolojisi. Değişken damla boyutu (3.5pl - 21pl). 600×1200 dpi çözünürlük.
+                                </div>
+                            </div>
+
+                            <!-- UV Lambalar -->
+                            <div class="machine-part" id="part2" onclick="showPartDetails('uv')">
+                                <span class="part-label" style="background: var(--accent);">UV LAMBA SİSTEMİ</span>
+                                <div class="led-indicator"></div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; color: #94a3b8;">
+                                    <span>LED UV 395nm / Geleneksel UV</span>
+                                    <span style="font-family: monospace; color: var(--accent);">10.000 saat ömür</span>
+                                </div>
+                                <div style="margin-top: 10px; font-size: 12px; color: #64748b;">
+                                    Anında kürleşme, düşük ısı çıkışı. Su soğutmalı sistem. Ayarlanabilir UV dozu (0-100%).
+                                </div>
+                            </div>
+
+                            <!-- Konveyör Sistemi -->
+                            <div class="machine-part" id="part3" onclick="showPartDetails('conveyor')">
+                                <span class="part-label" style="background: var(--success);">KONVEYÖR SİSTEMİ</span>
+                                <div class="led-indicator"></div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; color: #94a3b8;">
+                                    <span>Vakumlu Taşıma Bandı</span>
+                                    <span style="font-family: monospace; color: var(--success);">0-30 m/dk</span>
+                                </div>
+                                <div style="margin-top: 10px; font-size: 12px; color: #64748b;">
+                                    Servo motor kontrolü, hassas konumlandırma. Otomatik yükseklik ayarı (0-100mm). Statik eliminasyon.
+                                </div>
+                            </div>
+
+                            <!-- Mürekkep Sistemi -->
+                            <div class="machine-part" id="part4" onclick="showPartDetails('ink')">
+                                <span class="part-label" style="background: #ec4899;">MÜREKKEP SİSTEMİ</span>
+                                <div class="led-indicator"></div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; color: #94a3b8;">
+                                    <span>CMYK + W + Varnish</span>
+                                    <span style="font-family: monospace; color: #ec4899;">1.5L kartuş</span>
+                                </div>
+                                <div style="margin-top: 10px; font-size: 12px; color: #64748b;">
+                                    Negatif basınç sistemi, otomatik dolaşım. Sıcaklık kontrollü (25-30°C). Filtreleme ve degaussing.
+                                </div>
+                            </div>
+
+                            <!-- Kontrol Paneli -->
+                            <div class="machine-part" id="part5" onclick="showPartDetails('control')">
+                                <span class="part-label" style="background: #8b5cf6;">KONTROL ÜNİTESİ</span>
+                                <div class="led-indicator"></div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; color: #94a3b8;">
+                                    <span>PC + RIP Yazılımı</span>
+                                    <span style="font-family: monospace; color: #8b5cf6;">Windows 10 IoT</span>
+                                </div>
+                                <div style="margin-top: 10px; font-size: 12px; color: #64748b;">
+                                    Onyx/Caldera RIP entegrasyonu. Remote monitoring. Otomatik bakım hatırlatıcıları.
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="specs-table" style="margin-top: 30px;">
+                            <thead>
+                                <tr>
+                                    <th>Parametre</th>
+                                    <th>Değer</th>
+                                    <th>Açıklama</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Maks. Baskı Genişliği</td>
+                                    <td>2500mm × 1300mm</td>
+                                    <td>Tabla boyutları (X × Y ekseni)</td>
+                                </tr>
+                                <tr>
+                                    <td>Baskı Kalınlığı</td>
+                                    <td>0-100mm</td>
+                                    <td>Otomatik sensörlü yükseklik ayarı</td>
+                                </tr>
+                                <tr>
+                                    <td>Çözünürlük</td>
+                                    <td>600 × 1200 dpi</td>
+                                    <td>Maksimum optik çözünürlük</td>
+                                </tr>
+                                <tr>
+                                    <td>Baskı Hızı</td>
+                                    <td>36 m²/saat</td>
+                                    <td>Taslak mod (4 pass)</td>
+                                </tr>
+                                <tr>
+                                    <td>Güç Tüketimi</td>
+                                    <td>3.5 kW</td>
+                                    <td>Tam yükte ortalama</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="part-details" style="margin-top: 25px; padding: 20px; background: #f8fafc; border-radius: 12px; display: none;">
+                        <h4 style="margin-bottom: 15px; color: var(--primary);">Detaylı Bilgi</h4>
+                        <p id="part-description">Bir parça seçin...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Arıza Kütüphanesi -->
+            <section id="troubleshoot" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">🔧 Akıllı Arıza Çözücü</div>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="error-search" placeholder="Arıza kodu veya sorun ara..." 
+                                   style="padding: 10px 15px; border: 2px solid #e2e8f0; border-radius: 8px; width: 250px;">
+                            <button onclick="searchError()" style="background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">
+                                🔍 Ara
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="troubleshoot-container">
+                        <div class="error-list">
+                            <div class="error-item active" onclick="showError('E001')">
+                                <span class="error-code">E001</span>
+                                <div style="font-weight: 600; margin-top: 5px;">Kafa Tıkanıklığı</div>
+                                <div style="font-size: 12px; color: #64748b; margin-top: 3px;">Nozul kaybı veya damla atışı yok</div>
+                            </div>
+                            <div class="error-item" onclick="showError('E002')">
+                                <span class="error-code">E002</span>
+                                <div style="font-weight: 600; margin-top: 5px;">UV Kürleşme Hatası</div>
+                                <div style="font-size: 12px; color: #64748b; margin-top: 3px;">Mürekkep yapışmıyor veya ıslak kalıyor</div>
+                            </div>
+                            <div class="error-item" onclick="showError('E003')">
+                                <span class="error-code">E003</span>
+                                <div style="font-weight: 600; margin-top: 5px;">Renk Kayması (Banding)</div>
+                                <div style="font-size: 12px; color: #64748b; margin-top: 3px;">Yatay şeritler veya ton farklılıkları</div>
+                            </div>
+                            <div class="error-item" onclick="showError('E004')">
+                                <span class="error-code">E004</span>
+                                <div style="font-weight: 600; margin-top: 5px;">Mürekkep Akması (Bleeding)</div>
+                                <div style="font-size: 12px; color: #64748b; margin-top: 3px;">Kenar bulaşması veya bulanıklık</div>
+                            </div>
+                            <div class="error-item" onclick="showError('E005')">
+                                <span class="error-code">E005</span>
+                                <div style="font-weight: 600; margin-top: 5px;">Elektrostatik Sorun</div>
+                                <div style="font-size: 12px; color: #64748b; margin-top: 3px;">Toz çekme veya baskı hataları</div>
+                            </div>
+                            <div class="error-item" onclick="showError('E006')">
+                                <span class="error-code">E006</span>
+                                <div style="font-weight: 600; margin-top: 5px;">Konveyör Hatası</div>
+                                <div style="font-size: 12px; color: #64748b; margin-top: 3px;">Taşıma kayması veya durma</div>
+                            </div>
+                        </div>
+
+                        <div class="error-solution" id="solution-panel">
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 2px solid #e2e8f0;">
+                                <span class="error-code" style="font-size: 18px; padding: 8px 16px;">E001</span>
+                                <div>
+                                    <h3 style="color: var(--dark);">Kafa Tıkanıklığı - Kritik Arıza</h3>
+                                    <p style="color: #64748b; font-size: 14px; margin-top: 5px;">Otomatik teşhis sistemi tarafından tespit edildi</p>
+                                </div>
+                            </div>
+
+                            <div class="solution-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <div class="step-title">Acil Durum Kontrolü</div>
+                                    <p>Baskıyı durdurun. Kafa park pozisyonuna alın. UV lambaları kapatın. Mürekkep sirkülasyonunu kontrol edin (pompa sesi duyulmalı).</p>
+                                </div>
+                            </div>
+
+                            <div class="solution-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <div class="step-title">Manuel Temizlik</div>
+                                    <p>Soft temizleme fitili kullanın. İsopropil alkol (IPA) %99 uygulayın. Kafayı 10 saniye bekletin, hafifçe bastırarak silin. KAPLAMA BANDINI ASLA ÇİZMEDEN temizleyin.</p>
+                                </div>
+                            </div>
+
+                            <div class="solution-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <div class="step-title">Güçlü Temizlik (Heavy Clean)</div>
+                                    <p>Yazılımdan "Strong Clean" seçeneğini çalıştırın. 3-5 döngü bekleyin. Kafayı kontrol edin. Eğer düzelmediyse "Wipe" fonksiyonunu kullanın.</p>
+                                </div>
+                            </div>
+
+                            <div class="solution-step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <div class="step-title">Test ve Kalibrasyon</div>
+                                    <p>Nozul test pattern'i basın. Eğer 90% üzeri nozul aktif değilse tekrar temizleyin. Banding testi yapın. Gerekirse kafa değişimi planlayın.</p>
+                                </div>
+                            </div>
+
+                            <div style="background: #fef3c7; border-left: 4px solid var(--accent); padding: 15px; border-radius: 8px; margin-top: 20px;">
+                                <strong>⚠️ Önemli:</strong> Haftada en az 2 kez otomatik temizlik yapın. Ortam nemini %40-60 arasında tutun. Toz koruması kullanın.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Maliyet Hesaplama -->
+            <section id="calculator" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">💰 Maliyet ve Fiyat Hesaplama</div>
+                    </div>
+
+                    <div class="calc-tabs">
+                        <button class="calc-tab active" onclick="switchCalc('pleksi')">Pleksi İşlemleri</button>
+                        <button class="calc-tab" onclick="switchCalc('uvbaski')">UV Baskı</button>
+                        <button class="calc-tab" onclick="switchCalc('kurulum')">Kurulum Maliyeti</button>
+                    </div>
+
+                    <!-- Pleksi Hesaplama -->
+                    <div id="calc-pleksi" class="calc-content">
+                        <div class="calc-form">
+                            <div class="form-group">
+                                <label>Malzeme Tipi</label>
+                                <select id="pleksi-type" onchange="calculatePleksi()">
+                                    <option value="2">Şeffaf Pleksi 2mm</option>
+                                    <option value="3">Şeffaf Pleksi 3mm</option>
+                                    <option value="5">Şeffaf Pleksi 5mm</option>
+                                    <option value="8">Opak Pleksi 3mm</option>
+                                    <option value="12">Renkli Pleksi 3mm</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>En (cm)</label>
+                                <input type="number" id="pleksi-width" value="100" oninput="calculatePleksi()">
+                            </div>
+                            <div class="form-group">
+                                <label>Boy (cm)</label>
+                                <input type="number" id="pleksi-height" value="100" oninput="calculatePleksi()">
+                            </div>
+                            <div class="form-group">
+                                <label>İşlem Tipi</label>
+                                <select id="pleksi-process" onchange="calculatePleksi()">
+                                    <option value="kesim">Lazer Kesim</option>
+                                    <option value="kazima">Lazer Kazıma</option>
+                                    <option value="baski">UV Baskı + Kesim</option>
+                                    <option value="bukme">Termo Büküm</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Adet</label>
+                                <input type="number" id="pleksi-qty" value="1" min="1" oninput="calculatePleksi()">
+                            </div>
+                            <div class="form-group">
+                                <label>Fire Oranı (%)</label>
+                                <input type="number" id="pleksi-waste" value="15" oninput="calculatePleksi()">
+                            </div>
+                        </div>
+                        <div class="price-result" id="pleksi-result">
+                            <div style="font-size: 14px; opacity: 0.9;">Tahmini Maliyet</div>
+                            <div class="price-amount">₺0</div>
+                            <div style="font-size: 14px; opacity: 0.9;">Birim Fiyat: ₺0 | Toplam: ₺0</div>
+                        </div>
+                    </div>
+
+                    <!-- UV Baskı Hesaplama -->
+                    <div id="calc-uvbaski" class="calc-content" style="display: none;">
+                        <div class="calc-form">
+                            <div class="form-group">
+                                <label>Baskı Alanı (m²)</label>
+                                <input type="number" id="uv-area" value="1" step="0.1" oninput="calculateUV()">
+                            </div>
+                            <div class="form-group">
+                                <label>Mürekkep Yoğunluğu</label>
+                                <select id="uv-density" onchange="calculateUV()">
+                                    <option value="8">Taslak (8 ml/m²)</option>
+                                    <option value="12" selected>Standart (12 ml/m²)</option>
+                                    <option value="18">Kaliteli (18 ml/m²)</option>
+                                    <option value="25">Yüksek Kaplama (25 ml/m²)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Beyaz Mürekkep</label>
+                                <select id="uv-white" onchange="calculateUV()">
+                                    <option value="0">Yok</option>
+                                    <option value="10">Tek Kat (10 ml/m²)</option>
+                                    <option value="20">Çift Kat (20 ml/m²)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Vernik/Lak</label>
+                                <select id="uv-varnish" onchange="calculateUV()">
+                                    <option value="0">Yok</option>
+                                    <option value="8">Mat Vernik (8 ml/m²)</option>
+                                    <option value="12">Parlak Vernik (12 ml/m²)</option>
+                                    <option value="15">Selektif Vernik (15 ml/m²)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Materyal</label>
+                                <select id="uv-material" onchange="calculateUV()">
+                                    <option value="0">Pleksi (0 hazırlık)</option>
+                                    <option value="15">PVC (15 dk hazırlık)</option>
+                                    <option value="25">Metal (25 dk hazırlık)</option>
+                                    <option value="30">Cam (30 dk hazırlık)</option>
+                                    <option value="20">Ahşap (20 dk hazırlık)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Kar Marjı (%)</label>
+                                <input type="number" id="uv-margin" value="40" oninput="calculateUV()">
+                            </div>
+                        </div>
+                        <div class="price-result" id="uv-result">
+                            <div style="font-size: 14px; opacity: 0.9;">Teklif Fiyatı</div>
+                            <div class="price-amount">₺0</div>
+                            <div style="font-size: 14px; opacity: 0.9;">
+                                Maliyet: ₺0 | Mürekkep: 0ml | İşçilik: 0dk
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kurulum Maliyeti -->
+                    <div id="calc-kurulum" class="calc-content" style="display: none;">
+                        <div style="padding: 40px; text-align: center; background: #f8fafc; border-radius: 12px;">
+                            <h3 style="color: var(--dark); margin-bottom: 20px;">UV Baskı Hizmeti Kurulum Maliyetleri</h3>
+                            <table style="width: 100%; text-align: left; border-collapse: collapse;">
+                                <tr style="border-bottom: 2px solid #e2e8f0;">
+                                    <th style="padding: 15px;">Kalem</th>
+                                    <th style="padding: 15px;">Min.</th>
+                                    <th style="padding: 15px;">Ort.</th>
+                                    <th style="padding: 15px;">Max.</th>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 15px;">UV Makinesi (Flatbed)</td>
+                                    <td style="padding: 15px;">₺150.000</td>
+                                    <td style="padding: 15px;">₺350.000</td>
+                                    <td style="padding: 15px;">₺800.000</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 15px;">Yıllık Bakım</td>
+                                    <td style="padding: 15px;">₺15.000</td>
+                                    <td style="padding: 15px;">₺35.000</td>
+                                    <td style="padding: 15px;">₺75.000</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 15px;">Mürekkep (Litre)</td>
+                                    <td style="padding: 15px;">₺80</td>
+                                    <td style="padding: 15px;">₺120</td>
+                                    <td style="padding: 15px;">₺200</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px;"><strong>Personel (Tekniker)</strong></td>
+                                    <td style="padding: 15px;"><strong>₺15.000/ay</strong></td>
+                                    <td style="padding: 15px;"><strong>₺25.000/ay</strong></td>
+                                    <td style="padding: 15px;"><strong>₺40.000/ay</strong></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Egzersiz Programı -->
+            <section id="exercise" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">💪 Seviyeli Egzersiz Programı</div>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <span style="color: #64748b;">Gün:</span>
+                            <select id="exercise-day-select" onchange="showExerciseDay(this.value)" style="padding: 8px 15px; border-radius: 8px; border: 2px solid #e2e8f0;">
+                                <option value="1">Gün 1-5: Başlangıç</option>
+                                <option value="6">Gün 6-10: Temel</option>
+                                <option value="11">Gün 11-20: İleri</option>
+                                <option value="21">Gün 21-30: Uzman</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="exercise-timeline" id="exercise-container">
+                        <!-- Gün 1 -->
+                        <div class="exercise-day" data-days="1">
+                            <div class="day-badge">1</div>
+                            <h4 style="color: var(--dark); margin-bottom: 10px;">Temel Kavramlar ve Güvenlik</h4>
+                            <p style="color: #64748b; font-size: 14px; margin-bottom: 15px;">UV baskı temellerini öğrenin. Güvenlik protokollerini uygulayın.</p>
+                            <ul class="exercise-list">
+                                <li class="exercise-item">
+                                    UV mürekkep bileşenlerini tanıma (5 çeşit)
+                                    <span class="difficulty-badge difficulty-easy">Kolay</span>
+                                </li>
+                                <li class="exercise-item">
+                                    MSDS dokümanlarını inceleme ve saklama koşullarını kontrol etme
+                                    <span class="difficulty-badge difficulty-easy">Kolay</span>
+                                </li>
+                                <li class="exercise-item">
+                                    Kişisel koruyucu ekipmanları (PPE) doğru kullanma pratiği
+                                    <span class="difficulty-badge difficulty-easy">Kolay</span>
+                                </li>
+                                <li class="exercise-item">
+                                    UV ışın riskleri ve göz/koruma önlemleri testi
+                                    <span class="difficulty-badge difficulty-easy">Kolay</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Gün 2 -->
+                        <div class="exercise-day" data-days="2">
+                            <div class="day-badge">2</div>
+                            <h4 style="color: var(--dark); margin-bottom: 10px;">Materyal Tanıma ve Hazırlık</h4>
+                            <p style="color: #64748b; font-size: 14px; margin-bottom: 15px;">Farklı yüzeyleri tanıyın ve hazırlama tekniklerini öğrenin.</p>
+                            <ul class="exercise-list">
+                                <li class="exercise-item">
+                                    5 farklı pleksi numunesini dokunarak ayırt etme (şeffaf/opak/dokulu)
+                                    <span class="difficulty-badge difficulty-easy">Kolay</span>
+                                </li>
+                                    <li class="exercise-item">
+                                    Yüzey temizliği: Alkol ile silme, anti-statik temizleyici kullanımı
+                                    <span class="difficulty-badge difficulty-easy">Kolay</span>
+                                </li>
+                                <li class="exercise-item">
+                                    Bant testi (adhesion test) uygulama ve sonuçları değerlendirme
+                                    <span class="difficulty-badge difficulty-medium">Orta</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Gün 3 -->
+                        <div class="exercise-day" data-days="3">
+                            <div class="day-badge">3</div>
+                            <h4 style="color: var(--dark); margin-bottom: 10px;">CorelDRAW Temel Operasyonlar</h4>
+                            <p style="color: #64748b; font-size: 14px; margin-bottom: 15px;">Vektör grafik temellerini pratik yapın.</p>
+                            <ul class="exercise-list">
+                                <li class="exercise-item">
+                                    Basit logo vektörizasyonu (Node edit araçları kullanımı)
+                                    <span class="difficulty-badge difficulty-easy">Kolay</span>
+                                </li>
+                                <li class="exercise-item">
+                                    Renk ayırımı: CMYK ve Spot renklerin ayrılması (Ctrl+Shift+A)
+                                    <span class="difficulty-badge difficulty-medium">Orta</span>
+                                </li>
+                                <li class="exercise-item">
+                                    Trap (renk taşması) ayarlarını 0.2mm uygulama
+                                    <span class="difficulty-badge difficulty-medium">Orta</span>
+                                </li>
+                                <li class="exercise-item">
+                                    PowerClip ile maskeleme teknikleri
+                                    <span class="difficulty-badge difficulty-medium">Orta</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Gün 5 -->
+                        <div class="exercise-day" data-days="5">
+                            <div class="day-badge">5</div>
+                            <h4 style="color: var(--dark); margin-bottom: 10px;">İlk Baskı Deneyimi</h4>
+                            <p style="color: #64748b; font-size: 14px; margin-bottom: 15px;">Teoriyi pratiğe dökün. İlk baskınızı yapın.</p>
+                            <ul class="exercise-list">
+                                <li class="exercise-item">
+                                    Test pattern hazırlama ve RIP'e gönderme
+                                    <span class="difficulty-badge difficulty-medium">Orta</span>
+                                </li>
+                                <li class="exercise-item">
+                                    Makine hazırlığı: Kafa temizliği, mürekkep seviye kontrolü
+                                    <span class="difficulty-badge difficulty-medium">Orta</span>
+                                </li>
+                                <li class="exercise-item">
+                                    10×10cm test baskısı (CMYK renk geçişleri)
+                                    <span class="difficulty-badge difficulty-medium">Orta</span>
+                                </li>
+                                <li class="exercise-item">
+                                    Baskı sonrası kürleşme kontrolü ve yüzey testi
+                                    <span class="difficulty-badge difficulty-medium">Orta</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Gün 7 -->
+                        <div class="exercise-day" data-days="7">
+                            <div class="day-badge">7</div>
+                            <h4 style="color: var(--dark); margin-bottom: 10px;">Renk
+                            <h4 style="color: var(--dark); margin-bottom: 10px;">Renk Yönetimi ve Kalibrasyon</h4>
+                            <p style="color: #64748b; font-size: 14px; margin-bottom: 15px;">Profesyonel renk kalibrasyonu yapın.</p>
+                            <ul class="exercise-list">
+                                <li class="exercise-item">
+                                    ICC profili oluşturma: ColorMunki ile renk ölçümü
+                                    <span class="difficulty-badge difficulty-medium">Orta</span>
+                                </li>
+                                <li class="exercise-item">
+                                    Linearizasyon: 21 step gradient baskı ve ölçüm
+                                    <span class="difficulty-badge difficulty-hard">Zor</span>
+                                </li>
+                                <li class="exercise-item">
+                                    Ink limit ayarları: %400'den %320'ye düşürme pratiği
+                                    <span class="difficulty-badge difficulty-hard">Zor</span>
+                                </li>
+                                <li class="exercise-item">
+                                    Delta E hesaplama ve <2 tolerans hedefi
+                                    <span class="difficulty-badge difficulty-hard">Zor</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Gün 10 -->
+                        <div class="exercise-day" data-days="10">
+                            <div class="day-badge">10</div>
                             <h4 style="color: var(--dark); margin-bottom: 10px;">Beyaz Mürekkep ve Özel Efektler</h4>
                             <p style="color: #64748b; font-size: 14px; margin-bottom: 15px;">Beyaz mürekkep stratejilerini öğrenin.</p>
                             <ul class="exercise-list">
@@ -241,7 +1908,7 @@
                                 <span class="key">Q</span>
                             </div>
                             <div class="shortcut-desc">
-                                <strong>Contour:</strong> Seçili objeye dış/iç kontur oluşturur. UV baskıda kesim payı (bleed) eklemek için kullanılır. 3mm kontur standarttır.
+                                <strong>Contour:</strong> Seçili objeye dış/b iç kontur oluşturur. UV baskıda kesim payı (bleed) eklemek için kullanılır. 3mm kontur standarttır.
                             </div>
                         </div>
 
@@ -384,218 +2051,148 @@
                 </div>
             </section>
 
-            <!-- Video Eğitimler - GÜNCELLENMİŞ ÇALIŞAN VERSİYON -->
+            <!-- Video Eğitimler -->
             <section id="tutorials" class="section">
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">🎥 Detaylı Video Eğitimler</div>
                         <div style="display: flex; gap: 10px;">
-                            <button onclick="filterVideos('all')" class="calc-tab active" style="border: none;">Tümü</button>
-                            <button onclick="filterVideos('basic')" class="calc-tab" style="border: none;">Temel</button>
-                            <button onclick="filterVideos('advanced')" class="calc-tab" style="border: none;">İleri</button>
-                            <button onclick="filterVideos('technical')" class="calc-tab" style="border: none;">Teknik</button>
+                            <button onclick="filterVideos('all')" style="padding: 8px 16px; border: 2px solid #e2e8f0; background: white; border-radius: 20px; cursor: pointer;">Tümü</button>
+                            <button onclick="filterVideos('temel')" style="padding: 8px 16px; border: 2px solid #e2e8f0; background: white; border-radius: 20px; cursor: pointer;">Temel</button>
+                            <button onclick="filterVideos('ileri')" style="padding: 8px 16px; border: 2px solid #e2e8f0; background: white; border-radius: 20px; cursor: pointer;">İleri</button>
                         </div>
                     </div>
 
-                    <div class="video-grid" id="video-grid">
-                        <!-- Video 1: YouTube Embed -->
-                        <div class="video-card" data-category="basic">
-                            <div class="video-wrapper">
-                                <div class="video-thumbnail" onclick="openVideoModal('youtube', 'dQw4w9WgXcQ')" 
-                                     style="background-image: url('https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg');">
-                                    <div class="play-overlay">▶</div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px;">
+                        <div class="video-card" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                            <div class="video-container" style="height: 200px;">
+                                <div class="video-placeholder">
+                                    <div class="play-button">▶</div>
                                 </div>
                             </div>
-                            <div class="video-info">
-                                <div class="video-header">
-                                    <div>
-                                        <div class="video-title">Ders 1: UV Baskıya Giriş</div>
-                                        <div style="font-size: 13px; color: #64748b; margin-top: 5px;">UV teknolojisi temelleri ve kimya</div>
-                                    </div>
-                                    <span class="level-badge level-basic">Temel</span>
+                            <div style="padding: 20px;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                                    <h4 style="color: var(--dark);">Ders 1: UV Baskıya Giriş</h4>
+                                    <span style="background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 20px; font-size: 12px;">Temel</span>
                                 </div>
-                                <p style="color: #64748b; font-size: 14px; line-height: 1.5; margin: 10px 0;">
-                                    UV mürekkebinin yapısı, kürleşme prensipleri, LED vs geleneksel UV lambalar. Gerçek makine üzerinde detaylı anlatım.
+                                <p style="color: #64748b; font-size: 14px; line-height: 1.5; margin-bottom: 15px;">
+                                    UV baskının temel prensipleri, mürekkep türleri ve kürleşme mekanizması. Gerçek makine üzerinde detaylı anlatım.
                                 </p>
-                                <div class="video-meta">
-                                    <span>⏱️ 45:32</span>
-                                    <span>👁️ 1.2K</span>
-                                    <span>📅 2 hafta önce</span>
+                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #94a3b8;">
+                                    <span>⏱️ 45 dakika</span>
+                                    <span>👁️ 1.2K görüntülenme</span>
                                 </div>
-                                <a href="#" class="download-btn" onclick="downloadVideo('ders1-giris.mp4')">📥 İndir (HD)</a>
                             </div>
                         </div>
 
-                        <!-- Video 2: HTML5 Video -->
-                        <div class="video-card" data-category="basic">
-                            <div class="video-wrapper">
-                                <div class="video-thumbnail" onclick="openVideoModal('local', 'video2')" 
-                                     style="background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                                    <div class="play-overlay">▶</div>
+                        <div class="video-card" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                            <div class="video-container" style="height: 200px;">
+                                <div class="video-placeholder">
+                                    <div class="play-button">▶</div>
                                 </div>
                             </div>
-                            <div class="video-info">
-                                <div class="video-header">
-                                    <div>
-                                        <div class="video-title">CorelDRAW: RIP Hazırlığı</div>
-                                        <div style="font-size: 13px; color: #64748b; margin-top: 5px;">Print&Cut işlemleri ve renk ayırımı</div>
-                                    </div>
-                                    <span class="level-badge level-basic">Temel</span>
+                            <div style="padding: 20px;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                                    <h4 style="color: var(--dark);">CorelDRAW: RIP Hazırlığı</h4>
+                                    <span style="background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 20px; font-size: 12px;">Temel</span>
                                 </div>
-                                <p style="color: #64748b; font-size: 14px; line-height: 1.5; margin: 10px 0;">
-                                    Kontur oluşturma, renk ayırımı (Ctrl+Shift+A), trap ayarları ve RIP yazılımına hazırlık. Pratik örneklerle adım adım.
+                                <p style="color: #64748b; font-size: 14px; line-height: 1.5; margin-bottom: 15px;">
+                                    Print&Cut işlemleri, kontur oluşturma, renk ayırımı ve RIP yazılımına hazırlık. Pratik örneklerle adım adım.
                                 </p>
-                                <div class="video-meta">
-                                    <span>⏱️ 62:15</span>
-                                    <span>👁️ 890</span>
-                                    <span>📅 1 ay önce</span>
+                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #94a3b8;">
+                                    <span>⏱️ 60 dakika</span>
+                                    <span>👁️ 890 görüntülenme</span>
                                 </div>
-                                <a href="#" class="download-btn" onclick="downloadVideo('corel-rip-hazirlik.mp4')">📥 İndir (HD)</a>
                             </div>
                         </div>
 
-                        <!-- Video 3: YouTube -->
-                        <div class="video-card" data-category="advanced">
-                            <div class="video-wrapper">
-                                <div class="video-thumbnail" onclick="openVideoModal('youtube', '9bZkp7q19f0')" 
-                                     style="background-image: url('https://img.youtube.com/vi/9bZkp7q19f0/maxresdefault.jpg');">
-                                    <div class="play-overlay">▶</div>
+                        <div class="video-card" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                            <div class="video-container" style="height: 200px;">
+                                <div class="video-placeholder">
+                                    <div class="play-button">▶</div>
                                 </div>
                             </div>
-                            <div class="video-info">
-                                <div class="video-header">
-                                    <div>
-                                        <div class="video-title">Beyaz Mürekkep Stratejileri</div>
-                                        <div style="font-size: 13px; color: #64748b; margin-top: 5px;">Underbase ve spot beyaz teknikleri</div>
-                                    </div>
-                                    <span class="level-badge level-intermediate">İleri</span>
+                            <div style="padding: 20px;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                                    <h4 style="color: var(--dark);">Beyaz Mürekkep Stratejileri</h4>
+                                    <span style="background: #fef3c7; color: #92400e; padding: 4px 12px; border-radius: 20px; font-size: 12px;">İleri</span>
                                 </div>
-                                <p style="color: #64748b; font-size: 14px; line-height: 1.5; margin: 10px 0;">
+                                <p style="color: #64748b; font-size: 14px; line-height: 1.5; margin-bottom: 15px;">
                                     Underbase hesaplama, spot beyaz kullanımı, çift kat teknikleri. Şeffaf ve koyu malzemeler üzerinde uygulamalar.
                                 </p>
-                                <div class="video-meta">
-                                    <span>⏱️ 55:48</span>
-                                    <span>👁️ 650</span>
-                                    <span>📅 3 hafta önce</span>
+                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #94a3b8;">
+                                    <span>⏱️ 55 dakika</span>
+                                    <span>👁️ 650 görüntülenme</span>
                                 </div>
-                                <a href="#" class="download-btn" onclick="downloadVideo('beyaz-murekkep.mp4')">📥 İndir (HD)</a>
                             </div>
                         </div>
 
-                        <!-- Video 4: Teknik -->
-                        <div class="video-card" data-category="technical">
-                            <div class="video-wrapper">
-                                <div class="video-thumbnail" onclick="openVideoModal('local', 'video4')" 
-                                     style="background-image: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                                    <div class="play-overlay">▶</div>
+                        <div class="video-card" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                            <div class="video-container" style="height: 200px;">
+                                <div class="video-placeholder">
+                                    <div class="play-button">▶</div>
                                 </div>
                             </div>
-                            <div class="video-info">
-                                <div class="video-header">
-                                    <div>
-                                        <div class="video-title">Arıza Giderme: Kafa Temizliği</div>
-                                        <div style="font-size: 13px; color: #64748b; margin-top: 5px;">Manuel ve otomatik temizlik prosedürleri</div>
-                                    </div>
-                                    <span class="level-badge level-technical">Teknik</span>
+                            <div style="padding: 20px;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                                    <h4 style="color: var(--dark);">Arıza Giderme: Kafa Temizliği</h4>
+                                    <span style="background: #fee2e2; color: #991b1b; padding: 4px 12px; border-radius: 20px; font-size: 12px;">Teknik</span>
                                 </div>
-                                <p style="color: #64748b; font-size: 14px; line-height: 1.5; margin: 10px 0;">
-                                    Wipe işlemi, kurtarma modları, gerçek tıkanıklık senaryosu üzerinde çözüm. Kafa değişimi ne zaman gerekir?
+                                <p style="color: #64748b; font-size: 14px; line-height: 1.5; margin-bottom: 15px;">
+                                    Manuel ve otomatik temizlik prosedürleri, Wipe işlemi, kurtarma modları. Gerçek tıkanıklık senaryosu üzerinde çözüm.
                                 </p>
-                                <div class="video-meta">
-                                    <span>⏱️ 38:22</span>
-                                    <span>👁️ 2.1K</span>
-                                    <span>📅 5 gün önce</span>
+                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #94a3b8;">
+                                    <span>⏱️ 40 dakika</span>
+                                    <span>👁️ 2.1K görüntülenme</span>
                                 </div>
-                                <a href="#" class="download-btn" onclick="downloadVideo('kafa-temizlik.mp4')">📥 İndir (HD)</a>
                             </div>
                         </div>
 
-                        <!-- Video 5: İleri -->
-                        <div class="video-card" data-category="advanced">
-                            <div class="video-wrapper">
-                                <div class="video-thumbnail" onclick="openVideoModal('youtube', 'kJQP7kiw5Fk')" 
-                                     style="background-image: url('https://img.youtube.com/vi/kJQP7kiw5Fk/maxresdefault.jpg');">
-                                    <div class="play-overlay">▶</div>
+                        <div class="video-card" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                            <div class="video-container" style="height: 200px;">
+                                <div class="video-placeholder">
+                                    <div class="play-button">▶</div>
                                 </div>
                             </div>
-                            <div class="video-info">
-                                <div class="video-header">
-                                    <div>
-                                        <div class="video-title">3D Kabartma ve Vernik</div>
-                                        <div style="font-size: 13px; color: #64748b; margin-top: 5px;">Multi-pass tekniği ve selektif vernik</div>
-                                    </div>
-                                    <span class="level-badge level-intermediate">İleri</span>
+                            <div style="padding: 20px;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                                    <h4 style="color: var(--dark);">3D Kabartma ve Vernik</h4>
+                                    <span style="background: #fef3c7; color: #92400e; padding: 4px 12px; border-radius: 20px; font-size: 12px;">İleri</span>
                                 </div>
-                                <p style="color: #64748b; font-size: 14px; line-height: 1.5; margin: 10px 0;">
-                                    Kabartma baskı, parlak/mat kontrast, Braille standartları ve guilloche güvenlik baskısı hazırlama.
+                                <p style="color: #64748b; font-size: 14px; line-height: 1.5; margin-bottom: 15px;">
+                                    Multi-pass tekniği, selektif vernik uygulaması, dokulu baskı. Braille ve güvenlik baskısı hazırlama.
                                 </p>
-                                <div class="video-meta">
-                                    <span>⏱️ 78:45</span>
-                                    <span>👁️ 430</span>
-                                    <span>📅 2 ay önce</span>
+                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #94a3b8;">
+                                    <span>⏱️ 75 dakika</span>
+                                    <span>👁️ 430 görüntülenme</span>
                                 </div>
-                                <a href="#" class="download-btn" onclick="downloadVideo('3d-kabartma-vernik.mp4')">📥 İndir (HD)</a>
                             </div>
                         </div>
 
-                        <!-- Video 6: İleri -->
-                        <div class="video-card" data-category="advanced">
-                            <div class="video-wrapper">
-                                <div class="video-thumbnail" onclick="openVideoModal('local', 'video6')" 
-                                     style="background-image: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                                    <div class="play-overlay">▶</div>
+                        <div class="video-card" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                            <div class="video-container" style="height: 200px;">
+                                <div class="video-placeholder">
+                                    <div class="play-button">▶</div>
                                 </div>
                             </div>
-                            <div class="video-info">
-                                <div class="video-header">
-                                    <div>
-                                        <div class="video-title">Renk Yönetimi ve ICC Profilleri</div>
-                                        <div style="font-size: 13px; color: #64748b; margin-top: 5px;">Linearizasyon ve delta E hesaplama</div>
-                                    </div>
-                                    <span class="level-badge level-intermediate">İleri</span>
+                            <div style="padding: 20px;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                                    <h4 style="color: var(--dark);">Renk Yönetimi ve ICC</h4>
+                                    <span style="background: #fef3c7; color: #92400e; padding: 4px 12px; border-radius: 20px; font-size: 12px;">İleri</span>
                                 </div>
-                                <p style="color: #64748b; font-size: 14px; line-height: 1.5; margin: 10px 0;">
-                                    Profil oluşturma, ink limit ayarları, spectrofotometre kullanımı. Soft proofing ve renk tutarlılığı.
+                                <p style="color: #64748b; font-size: 14px; line-height: 1.5; margin-bottom: 15px;">
+                                    Profil oluşturma, linearizasyon, ink limit. Spectrofotometre kullanımı ve delta E hesaplama. Soft proofing teknikleri.
                                 </p>
-                                <div class="video-meta">
-                                    <span>⏱️ 92:10</span>
-                                    <span>👁️ 380</span>
-                                    <span>📅 1 ay önce</span>
+                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #94a3b8;">
+                                    <span>⏱️ 90 dakika</span>
+                                    <span>👁️ 380 görüntülenme</span>
                                 </div>
-                                <a href="#" class="download-btn" onclick="downloadVideo('renk-yonetimi-icc.mp4')">📥 İndir (HD)</a>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Video Yükleme Butonu -->
-                    <div style="margin-top: 30px; padding: 30px; background: #f8fafc; border-radius: 12px; text-align: center;">
-                        <h4 style="margin-bottom: 15px; color: var(--dark);">Daha Fazla Video</h4>
-                        <p style="color: #64748b; margin-bottom: 20px;">Yeni videolar her hafta ekleniyor. Bildirimleri açın!</p>
-                        <button onclick="loadMoreVideos()" style="background: var(--primary); color: white; border: none; padding: 12px 30px; border-radius: 8px; cursor: pointer; font-weight: 600;">
-                            Daha Fazla Video Yükle
-                        </button>
                     </div>
                 </div>
             </section>
         </main>
-    </div>
-
-    <!-- Video Modal - Çalışan Video Oynatıcı -->
-    <div class="video-modal" id="video-modal">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeVideoModal()">×</button>
-            <div class="modal-video-container" id="modal-video-container">
-                <!-- Video buraya yüklenecek -->
-            </div>
-            <div class="video-controls">
-                <button class="control-btn" onclick="togglePlay()">⏯</button>
-                <div class="progress-bar" onclick="seekVideo(event)">
-                    <div class="progress-fill" id="progress-fill"></div>
-                </div>
-                <span id="time-display" style="color: white; font-size: 14px;">00:00 / 00:00</span>
-                <button class="control-btn" onclick="toggleFullscreen()">⛶</button>
-            </div>
-        </div>
     </div>
 
     <!-- Chat Widget -->
@@ -626,24 +2223,25 @@
     </div>
 
     <script>
-        // Global değişkenler
-        let currentVideo = null;
-        let isPlaying = false;
-        let videoInterval = null;
-
         // Bölüm gösterme
         function showSection(sectionId) {
+            // Tüm bölümleri gizle
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
             });
             
+            // Tüm menü linklerini pasif yap
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('active');
             });
             
+            // Seçili bölümü göster
             document.getElementById(sectionId).classList.add('active');
+            
+            // Menüde aktif yap
             event.target.closest('.nav-link').classList.add('active');
             
+            // Başlık güncelle
             const titles = {
                 'dashboard': 'Hoş Geldiniz',
                 'curriculum': 'UV Akademi Müfredatı',
@@ -778,6 +2376,8 @@
             `;
 
             document.getElementById('solution-panel').innerHTML = html;
+            
+            // Aktif sınıfı güncelle
             document.querySelectorAll('.error-item').forEach(item => item.classList.remove('active'));
             event.currentTarget.classList.add('active');
         }
@@ -785,9 +2385,14 @@
         function searchError() {
             const query = document.getElementById('error-search').value.toLowerCase();
             const items = document.querySelectorAll('.error-item');
+            
             items.forEach(item => {
                 const text = item.textContent.toLowerCase();
-                item.style.display = text.includes(query) ? 'block' : 'none';
+                if (text.includes(query)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
             });
         }
 
@@ -795,6 +2400,7 @@
         function switchCalc(type) {
             document.querySelectorAll('.calc-tab').forEach(tab => tab.classList.remove('active'));
             event.target.classList.add('active');
+            
             document.querySelectorAll('.calc-content').forEach(content => content.style.display = 'none');
             document.getElementById('calc-' + type).style.display = 'block';
         }
@@ -807,8 +2413,8 @@
             const qty = parseInt(document.getElementById('pleksi-qty').value) || 1;
             const waste = parseFloat(document.getElementById('pleksi-waste').value) || 0;
 
-            const area = (width * height) / 10000;
-            const materialCost = area * type * 100;
+            const area = (width * height) / 10000; // m2
+            const materialCost = area * type * 100; // TL/m2 baz fiyat
             const wasteFactor = 1 + (waste / 100);
             
             let processCost = 0;
@@ -821,7 +2427,7 @@
 
             const unitCost = (materialCost + processCost) * wasteFactor;
             const totalCost = unitCost * qty;
-            const salePrice = totalCost * 1.4;
+            const salePrice = totalCost * 1.4; // %40 kar
 
             document.getElementById('pleksi-result').innerHTML = `
                 <div style="font-size: 14px; opacity: 0.9;">Tahmini Maliyet</div>
@@ -830,6 +2436,11 @@
                     Birim Maliyet: ₺${unitCost.toFixed(2)} | 
                     Toplam Maliyet: ₺${totalCost.toFixed(2)} | 
                     Adet: ${qty}
+                </div>
+                <div style="margin-top: 15px; font-size: 12px; opacity: 0.8;">
+                    Malzeme: ₺${(materialCost * wasteFactor).toFixed(2)} | 
+                    İşçilik: ₺${(processCost * wasteFactor).toFixed(2)} | 
+                    Fire: %${waste}
                 </div>
             `;
         }
@@ -843,10 +2454,10 @@
             const margin = parseFloat(document.getElementById('uv-margin').value) || 0;
 
             const inkVolume = (density + white + varnish) * area;
-            const inkCost = inkVolume * 1.2;
-            const laborTime = 15 + (area * 10) + material;
-            const laborCost = (laborTime / 60) * 150;
-            const overhead = area * 25;
+            const inkCost = inkVolume * 1.2; // 1.2 TL/ml
+            const laborTime = 15 + (area * 10) + material; // dk
+            const laborCost = (laborTime / 60) * 150; // 150 TL/saat
+            const overhead = area * 25; // amortisman, elektrik vb.
 
             const totalCost = inkCost + laborCost + overhead;
             const salePrice = totalCost * (1 + (margin / 100));
@@ -859,6 +2470,12 @@
                     Mürekkep: ${inkVolume.toFixed(0)}ml | 
                     İşçilik: ${laborTime.toFixed(0)}dk
                 </div>
+                <div style="margin-top: 15px; font-size: 12px; opacity: 0.8;">
+                    Mürekkep: ₺${inkCost.toFixed(2)} | 
+                    İşçilik: ₺${laborCost.toFixed(2)} | 
+                    Genel Gider: ₺${overhead.toFixed(2)} | 
+                    Kar: %${margin}
+                </div>
             `;
         }
 
@@ -867,7 +2484,11 @@
             const days = document.querySelectorAll('.exercise-day');
             days.forEach(d => {
                 const dayNum = parseInt(d.getAttribute('data-days'));
-                d.style.display = (dayNum >= parseInt(day) && dayNum < parseInt(day) + 5) ? 'block' : 'none';
+                if (dayNum >= parseInt(day) && dayNum < parseInt(day) + 5) {
+                    d.style.display = 'block';
+                } else {
+                    d.style.display = 'none';
+                }
             });
         }
 
@@ -875,122 +2496,8 @@
         function searchShortcuts(query) {
             const cards = document.querySelectorAll('.shortcut-card');
             cards.forEach(card => {
-                card.style.display = card.textContent.toLowerCase().includes(query.toLowerCase()) ? 'block' : 'none';
-            });
-        }
-
-        // ================= VIDEO FONKSİYONLARI - ÇALIŞAN =================
-        
-        // Video Modal Aç
-        function openVideoModal(type, id) {
-            const modal = document.getElementById('video-modal');
-            const container = document.getElementById('modal-video-container');
-            
-            modal.classList.add('active');
-            
-            if (type === 'youtube') {
-                // YouTube Embed
-                container.innerHTML = `
-                    <iframe 
-                        src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen>
-                    </iframe>
-                `;
-            } else {
-                // HTML5 Video (Local/Demo)
-                container.innerHTML = `
-                    <video id="local-video" controls autoplay style="width: 100%; height: 100%;">
-                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-                        <source src="https://www.w3schools.com/html/mov_bbb.ogg" type="video/ogg">
-                        Tarayıcınız video etiketini desteklemiyor.
-                    </video>
-                `;
-                
-                // Local video kontrolü
-                const video = document.getElementById('local-video');
-                if (video) {
-                    currentVideo = video;
-                    video.addEventListener('timeupdate', updateProgress);
-                    video.addEventListener('loadedmetadata', () => {
-                        document.getElementById('time-display').textContent = 
-                            `00:00 / ${formatTime(video.duration)}`;
-                    });
-                }
-            }
-        }
-
-        // Video Modal Kapat
-        function closeVideoModal() {
-            const modal = document.getElementById('video-modal');
-            const container = document.getElementById('modal-video-container');
-            
-            modal.classList.remove('active');
-            container.innerHTML = ''; // Videoyu durdur
-            currentVideo = null;
-            clearInterval(videoInterval);
-        }
-
-        // Oynat/Duraklat
-        function togglePlay() {
-            if (currentVideo) {
-                if (currentVideo.paused) {
-                    currentVideo.play();
-                    isPlaying = true;
-                } else {
-                    currentVideo.pause();
-                    isPlaying = false;
-                }
-            }
-        }
-
-        // İlerleme çubuğu güncelle
-        function updateProgress() {
-            if (currentVideo) {
-                const progress = (currentVideo.currentTime / currentVideo.duration) * 100;
-                document.getElementById('progress-fill').style.width = progress + '%';
-                document.getElementById('time-display').textContent = 
-                    `${formatTime(currentVideo.currentTime)} / ${formatTime(currentVideo.duration)}`;
-            }
-        }
-
-        // Seek (zıplama)
-        function seekVideo(event) {
-            if (currentVideo) {
-                const rect = event.target.getBoundingClientRect();
-                const pos = (event.clientX - rect.left) / rect.width;
-                currentVideo.currentTime = pos * currentVideo.duration;
-            }
-        }
-
-        // Zaman formatı
-        function formatTime(seconds) {
-            if (isNaN(seconds)) return '00:00';
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        }
-
-        // Tam ekran
-        function toggleFullscreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-            } else {
-                document.exitFullscreen();
-            }
-        }
-
-        // Video filtreleme
-        function filterVideos(category) {
-            const cards = document.querySelectorAll('.video-card');
-            const buttons = document.querySelectorAll('#tutorials .calc-tab');
-            
-            buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            cards.forEach(card => {
-                if (category === 'all' || card.getAttribute('data-category') === category) {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(query.toLowerCase())) {
                     card.style.display = 'block';
                 } else {
                     card.style.display = 'none';
@@ -998,14 +2505,10 @@
             });
         }
 
-        // Video indirme (simülasyon)
-        function downloadVideo(filename) {
-            alert(`"${filename}" indiriliyor...\n\nGerçek uygulamada bu dosya sunucudan indirilecektir.`);
-        }
-
-        // Daha fazla video yükle
-        function loadMoreVideos() {
-            alert('Daha fazla video yükleniyor... API bağlantısı gereklidir.');
+        // Video filtreleme
+        function filterVideos(type) {
+            // Basit filtreleme mantığı
+            console.log('Filtreleme: ' + type);
         }
 
         // Chat fonksiyonları
@@ -1019,16 +2522,17 @@
             if (!message) return;
 
             const messagesDiv = document.getElementById('chat-messages');
+            
+            // Kullanıcı mesajı
             messagesDiv.innerHTML += `<div class="message user">${message}</div>`;
             
+            // Bot yanıtı (basit AI simülasyonu)
             let response = 'Anladım, size yardımcı olmaya çalışayım. Daha detaylı bilgi için ilgili bölüme göz atabilirsiniz.';
             
             if (message.includes('arıza') || message.includes('hata')) {
                 response = 'Arıza kütüphanesine giderek E001-E006 kodları arasında çözüm bulabilirsiniz. Spesifik bir hata kodu var mı?';
             } else if (message.includes('fiyat') || message.includes('maliyet')) {
                 response = 'Maliyet hesaplama bölümünde pleksi ve UV baskı fiyatlandırması yapabilirsiniz. Hangi malzeme üzerinde çalışıyorsunuz?';
-            } else if (message.includes('video') || message.includes('film')) {
-                response = 'Video eğitimler bölümünde 6 adet HD video mevcut. YouTube ve local video player desteği ile çalışıyorlar.';
             } else if (message.includes('corel') || message.includes('kısayol')) {
                 response = 'CorelDRAW kısayollar bölümünde 20+ kısayol ve kullanım amaçları detaylı anlatılıyor. Hangi işlem için kısayol arıyorsunuz?';
             } else if (message.includes('ders') || message.includes('müfredat')) {
@@ -1044,25 +2548,11 @@
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
 
-        // ESC ile modal kapat
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeVideoModal();
-            }
-        });
-
         // Sayfa yüklendiğinde
         window.onload = function() {
             calculatePleksi();
             calculateUV();
             showExerciseDay(1);
-            
-            // İlk 5 egzersiz gününü göster
-            const days = document.querySelectorAll('.exercise-day');
-            days.forEach((d, index) => {
-                if (index < 2) d.style.display = 'block';
-                else d.style.display = 'none';
-            });
         };
     </script>
 </body>
