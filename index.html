@@ -1373,15 +1373,7 @@ const uvTroubleshootingLibrary = {
                 }
             });
         });
-        
-        return results.sort((a, b) => b.score - a.score);
-    }
-};
-    return results.sort((a, b) => b.score - a.score);
-}
-                `
-            },
-            {
+
                 title: "Endüstriyel Uygulamalar ve Karlılık",
                 subtitle: "Sektörler, kullanım alanları ve fiyatlandırma",
                 content: `
@@ -2898,7 +2890,11 @@ const inkPrices = {
 
 function goToScreen(screenId) {
     console.log('Navigating to:', screenId);
-    
+    if (screenId === 'troubleshootingScreen') {
+    setTimeout(() => {
+        if (typeof initTroubleshooting === 'function') initTroubleshooting();
+    }, 50);
+}
     // Tüm ekranları gizle
     const allScreens = document.querySelectorAll('.screen');
     allScreens.forEach(screen => {
@@ -4098,15 +4094,20 @@ function showConfetti() {
 // BAŞLANGIÇ
 // ==========================================
 // ==========================================
-// ARIZA KÜTÜPHANESİ FONKSİYONLARI - YENİ EKLENECEK
+// ARIZA KÜTÜPHANESİ FONKSİYONLARI - EKSİK FONKSİYONLAR
 // ==========================================
 
 function initTroubleshooting() {
     renderTroubleCategories();
-    document.getElementById('troubleSearch').value = '';
-    document.getElementById('troubleResults').style.display = 'none';
-    document.getElementById('troubleCategories').style.display = 'block';
-    document.getElementById('emergencyBanner').style.display = 'none';
+    const searchInput = document.getElementById('troubleSearch');
+    if (searchInput) searchInput.value = '';
+    const resultsDiv = document.getElementById('troubleResults');
+    const catDiv = document.getElementById('troubleCategories');
+    const emergencyDiv = document.getElementById('emergencyBanner');
+    
+    if (resultsDiv) resultsDiv.style.display = 'none';
+    if (catDiv) catDiv.style.display = 'block';
+    if (emergencyDiv) emergencyDiv.style.display = 'none';
 }
 
 function renderTroubleCategories() {
@@ -4392,6 +4393,7 @@ function findIssueById(id) {
         if (issue) return issue;
     }
     return null;
+}
 }
 document.addEventListener('DOMContentLoaded', function() {
     console.log('MindForge UV Master yüklendi');
