@@ -1,13 +1,31 @@
-Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğru çalışmıyor. İşte düzeltilmiş ve geliştirilmiş kod:
-    :root {
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Project T-800 | Vücut Ağırlığı Terminatör</title>
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiUHJvamVjdCBULTgwMCIsInNob3J0X25hbWUiOiJULTgwMCIsInN0YXJ0X3VybCI6Ii4iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjMGEwYTBhIiwidGhlbWVfY29sb3IiOiIjZmY2NjAwIn0=">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+          :root {
         --neon-red: #ff2a2a;
         --neon-orange: #ff6600;
         --neon-blue: #00d4ff;
         --neon-green: #00ff88;
         --metal-dark: #0a0a0a;
-        --metal-mid: #151515;
+        --metal-mid: #1a1a1a;
         --metal-light: #2a2a2a;
-        --grid-color: rgba(255, 102, 0, 0.08);
+        --eye-red: #ff0000;
+        --grid-color: rgba(255, 102, 0, 0.1);
     }
     
     body {
@@ -19,9 +37,10 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
         background-image: 
             linear-gradient(var(--grid-color) 1px, transparent 1px),
             linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-        background-size: 40px 40px;
+        background-size: 50px 50px;
     }
     
+    /* Scanline Effect */
     body::before {
         content: '';
         position: fixed;
@@ -31,10 +50,10 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
         height: 100%;
         background: repeating-linear-gradient(
             0deg,
-            rgba(0,0,0,0.12),
-            rgba(0,0,0,0.12) 1px,
+            rgba(0,0,0,0.15),
+            rgba(0,0,0,0.15) 1px,
             transparent 1px,
-            transparent 3px
+            transparent 2px
         );
         pointer-events: none;
         z-index: 1000;
@@ -43,13 +62,14 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
     .container {
         max-width: 480px;
         margin: 0 auto;
-        padding: 15px;
+        padding: 20px;
         padding-bottom: 100px;
     }
     
+    /* Header */
     .header {
         text-align: center;
-        padding: 25px 0;
+        padding: 20px 0;
         border-bottom: 2px solid var(--neon-orange);
         margin-bottom: 20px;
         position: relative;
@@ -62,10 +82,9 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
         left: 50%;
         transform: translateX(-50%);
         background: var(--metal-dark);
-        padding: 0 15px;
+        padding: 0 10px;
         color: var(--neon-orange);
         font-size: 0.7rem;
-        letter-spacing: 2px;
         animation: blink 2s infinite;
     }
     
@@ -75,53 +94,40 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
     }
     
     h1 {
-        font-size: 2rem;
+        font-size: 1.8rem;
         color: var(--neon-orange);
         text-transform: uppercase;
-        letter-spacing: 4px;
-        text-shadow: 0 0 20px rgba(255, 102, 0, 0.5);
-        font-weight: bold;
+        letter-spacing: 3px;
+        text-shadow: 0 0 10px var(--neon-orange);
     }
     
     .subtitle {
-        font-size: 0.75rem;
-        color: #888;
-        margin-top: 8px;
-        letter-spacing: 2px;
+        font-size: 0.8rem;
+        color: #666;
+        margin-top: 5px;
     }
     
-    /* Navigation Tabs - DÜZELTİLMİŞ */
+    /* Navigation Tabs */
     .nav-tabs {
         display: flex;
-        gap: 8px;
+        gap: 5px;
         margin-bottom: 20px;
         overflow-x: auto;
         padding-bottom: 5px;
-        -webkit-overflow-scrolling: touch;
     }
     
     .nav-tab {
         flex: 1;
-        min-width: 80px;
+        min-width: 70px;
         padding: 12px 8px;
         background: var(--metal-mid);
         border: 1px solid var(--metal-light);
-        color: #888;
+        color: #666;
         text-align: center;
         cursor: pointer;
         transition: all 0.3s;
-        font-size: 0.7rem;
+        font-size: 0.75rem;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        border-radius: 4px;
-        user-select: none;
-        -webkit-user-select: none;
-        touch-action: manipulation;
-    }
-    
-    .nav-tab:hover {
-        border-color: var(--neon-orange);
-        color: var(--neon-orange);
     }
     
     .nav-tab.active {
@@ -129,9 +135,9 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
         color: #000;
         border-color: var(--neon-orange);
         box-shadow: 0 0 15px rgba(255, 102, 0, 0.4);
-        font-weight: bold;
     }
     
+    /* Stats Panel */
     .stats-panel {
         background: var(--metal-mid);
         border: 1px solid var(--metal-light);
@@ -141,66 +147,59 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
         grid-template-columns: repeat(4, 1fr);
         gap: 10px;
         font-size: 0.8rem;
-        border-radius: 8px;
     }
     
     .stat-box {
         text-align: center;
-        padding: 12px 5px;
+        padding: 10px 5px;
         background: rgba(0,0,0,0.3);
         border-left: 2px solid var(--neon-orange);
-        border-radius: 4px;
     }
     
     .stat-label {
         color: #666;
-        font-size: 0.6rem;
-        margin-bottom: 6px;
+        font-size: 0.65rem;
+        margin-bottom: 5px;
         text-transform: uppercase;
-        letter-spacing: 1px;
     }
     
     .stat-value {
         color: var(--neon-orange);
-        font-size: 1.3rem;
+        font-size: 1.1rem;
         font-weight: bold;
     }
     
+    /* Progress Section */
     .progress-container {
         margin-bottom: 20px;
         background: var(--metal-mid);
-        padding: 20px;
+        padding: 15px;
         border: 1px solid var(--metal-light);
-        border-radius: 8px;
     }
     
     .progress-header {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
         font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
     }
     
     .progress-bar {
-        height: 14px;
+        height: 12px;
         background: var(--metal-light);
         overflow: hidden;
         position: relative;
-        border-radius: 7px;
-        box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+        border-radius: 2px;
     }
     
     .progress-fill {
         height: 100%;
         background: linear-gradient(90deg, var(--neon-red), var(--neon-orange));
         width: 0%;
-        transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 0 15px var(--neon-orange);
+        transition: width 0.5s;
+        box-shadow: 0 0 10px var(--neon-orange);
         position: relative;
         overflow: hidden;
-        border-radius: 7px;
     }
     
     .progress-fill::after {
@@ -210,7 +209,7 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
         animation: shimmer 2s infinite;
     }
     
@@ -224,47 +223,43 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
         grid-template-columns: repeat(3, 1fr);
         gap: 10px;
         margin-top: 15px;
+        font-size: 0.75rem;
     }
     
     .progress-stat {
         text-align: center;
-        padding: 12px 8px;
+        padding: 8px;
         background: rgba(0,0,0,0.3);
-        border-radius: 4px;
     }
     
     .progress-stat-value {
         color: var(--neon-orange);
-        font-size: 1.4rem;
+        font-size: 1.2rem;
         font-weight: bold;
-        margin-bottom: 4px;
     }
     
+    /* Level Selector */
     .level-tabs {
         display: flex;
         gap: 8px;
         margin-bottom: 20px;
         overflow-x: auto;
         padding-bottom: 10px;
-        -webkit-overflow-scrolling: touch;
     }
     
     .level-tab {
         flex: 1;
-        min-width: 70px;
-        padding: 14px 8px;
+        min-width: 75px;
+        padding: 12px 8px;
         background: var(--metal-mid);
         border: 1px solid var(--metal-light);
-        color: #888;
+        color: #666;
         text-align: center;
         cursor: pointer;
         transition: all 0.3s;
-        font-size: 0.8rem;
+        font-size: 0.85rem;
         position: relative;
         overflow: hidden;
-        border-radius: 6px;
-        user-select: none;
-        touch-action: manipulation;
     }
     
     .level-tab.active {
@@ -272,29 +267,34 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
         color: #000;
         border-color: var(--neon-orange);
         box-shadow: 0 0 20px rgba(255, 102, 0, 0.4);
-        font-weight: bold;
     }
     
     .level-tab.locked {
-        opacity: 0.4;
+        opacity: 0.5;
         cursor: not-allowed;
     }
     
-    .level-tab.locked::after {
-        content: '🔒';
+    .level-tab::before {
+        content: '';
         position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 1.2rem;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
     }
     
+    .level-tab:hover::before {
+        left: 100%;
+    }
+    
+    /* Workout Plan Section */
     .workout-plan {
         background: var(--metal-mid);
         border: 1px solid var(--metal-light);
-        padding: 20px;
+        padding: 15px;
         margin-bottom: 20px;
-        border-radius: 8px;
     }
     
     .plan-header {
@@ -305,39 +305,33 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
         display: flex;
         justify-content: space-between;
         align-items: center;
-        letter-spacing: 1px;
-        font-weight: bold;
     }
     
     .week-selector {
         display: flex;
-        gap: 6px;
+        gap: 5px;
     }
     
     .week-btn {
-        padding: 6px 12px;
+        padding: 5px 10px;
         background: var(--metal-dark);
         border: 1px solid var(--metal-light);
-        color: #888;
+        color: #666;
         cursor: pointer;
         font-size: 0.75rem;
         transition: all 0.3s;
-        border-radius: 4px;
-        font-family: inherit;
-        touch-action: manipulation;
     }
     
     .week-btn.active {
         background: var(--neon-orange);
         color: #000;
         border-color: var(--neon-orange);
-        font-weight: bold;
     }
     
     .day-grid {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
-        gap: 6px;
+        gap: 5px;
         margin-bottom: 15px;
     }
     
@@ -351,22 +345,17 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
         justify-content: center;
         cursor: pointer;
         transition: all 0.3s;
-        font-size: 0.65rem;
-        border-radius: 6px;
-        position: relative;
-        touch-action: manipulation;
+        font-size: 0.7rem;
     }
     
     .day-box:hover {
         border-color: var(--neon-orange);
-        transform: translateY(-2px);
     }
     
     .day-box.active {
         background: var(--neon-orange);
         color: #000;
         border-color: var(--neon-orange);
-        box-shadow: 0 0 15px rgba(255, 102, 0, 0.4);
     }
     
     .day-box.completed {
@@ -382,16 +371,16 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
     }
     
     .day-number {
-        font-size: 1rem;
+        font-size: 0.9rem;
         font-weight: bold;
     }
     
     .day-label {
-        font-size: 0.55rem;
-        margin-top: 3px;
-        opacity: 0.8;
+        font-size: 0.6rem;
+        margin-top: 2px;
     }
     
+    /* Exercise Card */
     .exercise-card {
         background: var(--metal-mid);
         border: 1px solid var(--metal-light);
@@ -399,51 +388,46 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
         overflow: hidden;
         transition: all 0.3s;
         position: relative;
-        border-radius: 8px;
     }
     
     .exercise-card:hover {
         transform: translateX(5px);
         border-color: var(--neon-orange);
-        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
     }
     
     .exercise-card.completed {
-        opacity: 0.85;
+        opacity: 0.7;
         border-color: var(--neon-green);
     }
     
     .exercise-header {
-        padding: 18px 15px;
+        padding: 15px;
         background: linear-gradient(90deg, var(--metal-mid), var(--metal-light));
         display: flex;
         justify-content: space-between;
         align-items: center;
         cursor: pointer;
-        touch-action: manipulation;
     }
     
     .exercise-name {
-        font-size: 0.95rem;
+        font-size: 1rem;
         color: #fff;
         text-transform: uppercase;
         letter-spacing: 1px;
         display: flex;
         align-items: center;
-        gap: 12px;
-        font-weight: bold;
+        gap: 10px;
     }
     
     .exercise-check {
-        width: 26px;
-        height: 26px;
+        width: 24px;
+        height: 24px;
         border: 2px solid var(--neon-orange);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         transition: all 0.3s;
-        flex-shrink: 0;
     }
     
     .exercise-card.completed .exercise-check {
@@ -458,7 +442,6 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
         opacity: 0;
         transform: scale(0);
         transition: all 0.3s;
-        font-size: 1rem;
     }
     
     .exercise-card.completed .exercise-check::after {
@@ -467,18 +450,17 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
     }
     
     .difficulty-badge {
-        padding: 5px 10px;
-        font-size: 0.6rem;
+        padding: 4px 8px;
+        font-size: 0.65rem;
+        background: var(--neon-red);
+        color: #fff;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        border-radius: 3px;
-        font-weight: bold;
     }
     
     .difficulty-badge.easy { background: var(--neon-green); color: #000; }
     .difficulty-badge.medium { background: #ffcc00; color: #000; }
-    .difficulty-badge.hard { background: var(--neon-orange); color: #000; }
-    .difficulty-badge.elite { background: var(--neon-red); color: #fff; }
+    .difficulty-badge.hard { background: var(--neon-orange); }
+    .difficulty-badge.elite { background: var(--neon-red); }
     
     .exercise-content {
         display: none;
@@ -496,6 +478,7 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
         to { opacity: 1; transform: translateY(0); }
     }
     
+    /* Sets & Reps Tracker */
     .sets-tracker {
         margin: 20px 0;
     }
@@ -504,29 +487,23 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
         font-size: 0.85rem;
-        color: var(--neon-orange);
-        text-transform: uppercase;
-        letter-spacing: 1px;
     }
     
     .set-row {
         display: flex;
         gap: 10px;
         align-items: center;
-        margin-bottom: 10px;
-        padding: 12px;
+        margin-bottom: 8px;
+        padding: 10px;
         background: rgba(0,0,0,0.3);
-        border-radius: 6px;
-        transition: all 0.3s;
     }
     
     .set-number {
-        width: 35px;
+        width: 30px;
         color: var(--neon-orange);
         font-weight: bold;
-        font-size: 0.9rem;
     }
     
     .set-inputs {
@@ -536,20 +513,18 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
     }
     
     .set-input {
-        width: 65px;
-        padding: 10px;
+        width: 60px;
+        padding: 8px;
         background: var(--metal-dark);
         border: 1px solid var(--metal-light);
         color: #fff;
         text-align: center;
         font-family: inherit;
-        border-radius: 4px;
-        font-size: 0.9rem;
     }
     
     .set-check {
-        width: 36px;
-        height: 36px;
+        width: 30px;
+        height: 30px;
         border: 2px solid var(--metal-light);
         background: transparent;
         cursor: pointer;
@@ -557,9 +532,6 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
         align-items: center;
         justify-content: center;
         transition: all 0.3s;
-        border-radius: 6px;
-        flex-shrink: 0;
-        touch-action: manipulation;
     }
     
     .set-check.completed {
@@ -571,9 +543,9 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
         content: '✓';
         color: #000;
         font-weight: bold;
-        font-size: 1.2rem;
     }
     
+    /* Anatomy Display */
     .anatomy-container {
         display: flex;
         gap: 20px;
@@ -587,8 +559,6 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
         position: relative;
         background: var(--metal-dark);
         border: 1px solid var(--metal-light);
-        border-radius: 8px;
-        overflow: hidden;
     }
     
     .body-svg {
@@ -597,8 +567,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
     }
     
     .muscle-group {
-        fill: #2a2a2a;
-        stroke: #444;
+        fill: #333;
+        stroke: #555;
         stroke-width: 1;
         transition: all 0.3s;
     }
@@ -606,13 +576,13 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
     .muscle-group.active {
         fill: var(--neon-orange);
         stroke: var(--neon-red);
-        filter: drop-shadow(0 0 8px var(--neon-orange));
-        animation: pulse 2s infinite;
+        filter: drop-shadow(0 0 5px var(--neon-orange));
+        animation: pulse 1.5s infinite;
     }
     
     @keyframes pulse {
         0%, 100% { opacity: 1; }
-        50% { opacity: 0.7; }
+        50% { opacity: 0.6; }
     }
     
     .muscle-info {
@@ -622,11 +592,9 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
     
     .muscle-title {
         color: var(--neon-orange);
-        font-size: 0.85rem;
-        margin-bottom: 12px;
+        font-size: 0.9rem;
+        margin-bottom: 10px;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: bold;
     }
     
     .muscle-list {
@@ -635,103 +603,93 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
     }
     
     .muscle-list li {
-        padding: 8px 0;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding: 6px 0;
+        border-bottom: 1px solid var(--metal-light);
         display: flex;
         align-items: center;
         gap: 10px;
-        color: #ccc;
     }
     
     .muscle-list li::before {
         content: '▸';
         color: var(--neon-orange);
-        font-size: 1.2rem;
     }
     
+    /* Exercise Details */
     .details-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 8px;
+        gap: 10px;
         margin-bottom: 20px;
     }
     
     .detail-box {
         background: rgba(0,0,0,0.3);
-        padding: 14px 8px;
+        padding: 12px 8px;
         border-left: 3px solid var(--neon-orange);
         text-align: center;
-        border-radius: 4px;
     }
     
     .detail-label {
-        font-size: 0.6rem;
-        color: #888;
+        font-size: 0.65rem;
+        color: #666;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 6px;
+        margin-bottom: 5px;
     }
     
     .detail-value {
-        font-size: 1.1rem;
+        font-size: 1rem;
         color: #fff;
         font-weight: bold;
     }
     
     .progression-path {
-        background: rgba(255, 102, 0, 0.08);
+        background: rgba(255, 102, 0, 0.1);
         border: 1px solid var(--neon-orange);
-        padding: 18px;
+        padding: 15px;
         margin-top: 15px;
-        border-radius: 6px;
     }
     
     .progression-title {
         color: var(--neon-orange);
         font-size: 0.85rem;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: bold;
     }
     
     .progression-steps {
         font-size: 0.8rem;
-        line-height: 1.7;
-        color: #aaa;
+        line-height: 1.6;
+        color: #ccc;
     }
     
     .tip-box {
-        background: rgba(255, 42, 42, 0.08);
-        border-left: 4px solid var(--neon-red);
-        padding: 18px;
+        background: rgba(255, 42, 42, 0.1);
+        border-left: 3px solid var(--neon-red);
+        padding: 15px;
         margin-top: 15px;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         color: #ff9999;
-        border-radius: 0 6px 6px 0;
-        line-height: 1.6;
     }
     
     .tip-box::before {
         content: '⚠ T-800 PROTOCOL: ';
         color: var(--neon-red);
         font-weight: bold;
-        display: block;
-        margin-bottom: 5px;
     }
     
+    /* Video Placeholder */
     .video-container {
         width: 100%;
         height: 200px;
         background: var(--metal-dark);
         border: 1px solid var(--metal-light);
-        margin-bottom: 20px;
+        margin-bottom: 15px;
         display: flex;
         align-items: center;
         justify-content: center;
         position: relative;
         overflow: hidden;
-        border-radius: 8px;
     }
     
     .video-placeholder {
@@ -740,38 +698,35 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
     }
     
     .play-btn {
-        width: 70px;
-        height: 70px;
+        width: 60px;
+        height: 60px;
         border: 3px solid var(--neon-orange);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 15px;
+        margin: 0 auto 10px;
         cursor: pointer;
         transition: all 0.3s;
-        background: rgba(255,102,0,0.1);
-        touch-action: manipulation;
     }
     
     .play-btn:hover {
         background: var(--neon-orange);
         transform: scale(1.1);
-        box-shadow: 0 0 30px rgba(255,102,0,0.4);
     }
     
     .play-btn::after {
         content: '▶';
         color: var(--neon-orange);
-        font-size: 1.8rem;
+        font-size: 1.5rem;
         margin-left: 5px;
-        transition: all 0.3s;
     }
     
     .play-btn:hover::after {
         color: #000;
     }
     
+    /* Timer Modal */
     .timer-modal {
         display: none;
         position: fixed;
@@ -779,27 +734,20 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0,0,0,0.95);
+        background: rgba(0,0,0,0.9);
         z-index: 2000;
         align-items: center;
         justify-content: center;
         flex-direction: column;
-        backdrop-filter: blur(10px);
     }
     
     .timer-modal.active {
         display: flex;
-        animation: fadeIn 0.3s ease;
-    }
-    
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
     }
     
     .timer-circle {
-        width: 280px;
-        height: 280px;
+        width: 250px;
+        height: 250px;
         border: 4px solid var(--neon-orange);
         border-radius: 50%;
         display: flex;
@@ -807,53 +755,43 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
         align-items: center;
         justify-content: center;
         position: relative;
-        margin-bottom: 40px;
-        box-shadow: 0 0 60px rgba(255,102,0,0.2);
-        background: radial-gradient(circle, rgba(255,102,0,0.1) 0%, transparent 70%);
+        margin-bottom: 30px;
     }
     
     .timer-display-large {
-        font-size: 4.5rem;
+        font-size: 4rem;
         color: var(--neon-orange);
         font-weight: bold;
         font-family: 'Courier New', monospace;
-        text-shadow: 0 0 20px rgba(255,102,0,0.5);
     }
     
     .timer-label-large {
         font-size: 1rem;
-        color: #888;
-        margin-top: 15px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
+        color: #666;
+        margin-top: 10px;
     }
     
     .timer-controls {
         display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
-        justify-content: center;
+        gap: 20px;
     }
     
     .timer-btn {
-        padding: 16px 32px;
+        padding: 15px 30px;
         background: var(--neon-orange);
         color: #000;
         border: none;
         font-family: inherit;
-        font-size: 0.9rem;
+        font-size: 1rem;
         font-weight: bold;
         cursor: pointer;
         text-transform: uppercase;
         transition: all 0.3s;
-        border-radius: 6px;
-        letter-spacing: 1px;
-        touch-action: manipulation;
     }
     
     .timer-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 30px rgba(255, 102, 0, 0.4);
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(255, 102, 0, 0.5);
     }
     
     .timer-btn.secondary {
@@ -862,34 +800,29 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
         border: 1px solid var(--metal-light);
     }
     
-    .timer-btn.secondary:hover {
-        background: var(--metal-light);
-        border-color: var(--neon-orange);
-    }
-    
+    /* Quick Timer */
     .quick-timer {
         position: fixed;
-        bottom: 25px;
-        right: 25px;
+        bottom: 20px;
+        right: 20px;
         background: var(--metal-mid);
         border: 2px solid var(--neon-orange);
         padding: 15px;
         border-radius: 50%;
-        width: 75px;
-        height: 75px;
+        width: 70px;
+        height: 70px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        box-shadow: 0 0 25px rgba(255, 102, 0, 0.3);
+        box-shadow: 0 0 20px rgba(255, 102, 0, 0.3);
         z-index: 100;
         transition: all 0.3s;
-        touch-action: manipulation;
     }
     
     .quick-timer:hover {
-        transform: scale(1.1) rotate(5deg);
+        transform: scale(1.1);
     }
     
     .quick-timer.active {
@@ -898,12 +831,12 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
     }
     
     @keyframes pulse-timer {
-        0%, 100% { box-shadow: 0 0 25px rgba(255, 102, 0, 0.3); }
-        50% { box-shadow: 0 0 50px rgba(255, 102, 0, 0.6); }
+        0%, 100% { box-shadow: 0 0 20px rgba(255, 102, 0, 0.3); }
+        50% { box-shadow: 0 0 40px rgba(255, 102, 0, 0.6); }
     }
     
     .timer-display {
-        font-size: 1.1rem;
+        font-size: 1rem;
         color: var(--neon-orange);
         font-weight: bold;
     }
@@ -914,14 +847,14 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
     
     .timer-label {
         font-size: 0.55rem;
-        color: #888;
-        margin-top: 3px;
-        text-transform: uppercase;
+        color: #666;
+        margin-top: 2px;
     }
     
+    /* Complete Button */
     .complete-btn {
         width: 100%;
-        padding: 18px;
+        padding: 15px;
         background: var(--neon-orange);
         color: #000;
         border: none;
@@ -930,17 +863,13 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
         text-transform: uppercase;
         font-weight: bold;
         cursor: pointer;
-        margin-top: 20px;
+        margin-top: 15px;
         transition: all 0.3s;
-        border-radius: 6px;
-        letter-spacing: 2px;
-        touch-action: manipulation;
     }
     
     .complete-btn:hover {
         background: var(--neon-red);
-        box-shadow: 0 0 30px rgba(255, 102, 0, 0.5);
-        transform: translateY(-2px);
+        box-shadow: 0 0 20px rgba(255, 102, 0, 0.5);
     }
     
     .complete-btn.completed {
@@ -948,120 +877,82 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
         color: #000;
     }
     
+    /* Notes Section */
     .notes-section {
-        margin-top: 20px;
-        padding-top: 20px;
+        margin-top: 15px;
+        padding-top: 15px;
         border-top: 1px solid var(--metal-light);
-    }
-    
-    .notes-label {
-        color: var(--neon-orange);
-        font-size: 0.85rem;
-        margin-bottom: 10px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: bold;
     }
     
     .notes-textarea {
         width: 100%;
-        min-height: 100px;
+        min-height: 80px;
         background: var(--metal-dark);
         border: 1px solid var(--metal-light);
         color: #fff;
-        padding: 12px;
+        padding: 10px;
         font-family: inherit;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         resize: vertical;
-        border-radius: 6px;
-        line-height: 1.5;
     }
     
     .notes-textarea:focus {
         outline: none;
         border-color: var(--neon-orange);
-        box-shadow: 0 0 15px rgba(255,102,0,0.2);
     }
     
+    /* Rest Day */
     .rest-day {
         text-align: center;
-        padding: 50px 25px;
+        padding: 40px 20px;
         background: var(--metal-mid);
         border: 2px dashed var(--metal-light);
-        border-radius: 12px;
     }
     
     .rest-icon {
-        font-size: 4rem;
-        margin-bottom: 20px;
+        font-size: 3rem;
+        margin-bottom: 15px;
         animation: float 3s ease-in-out infinite;
-        filter: drop-shadow(0 0 20px rgba(0,212,255,0.3));
     }
     
     @keyframes float {
         0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-15px); }
+        50% { transform: translateY(-10px); }
     }
     
     .rest-title {
-        color: var(--neon-blue);
-        font-size: 1.5rem;
-        margin-bottom: 15px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        font-weight: bold;
+        color: var(--neon-orange);
+        font-size: 1.3rem;
+        margin-bottom: 10px;
     }
     
+    /* History Section */
     .history-list {
-        max-height: 500px;
+        max-height: 400px;
         overflow-y: auto;
     }
     
     .history-item {
-        padding: 18px;
+        padding: 15px;
         background: var(--metal-mid);
-        border-left: 4px solid var(--neon-orange);
-        margin-bottom: 12px;
-        border-radius: 0 8px 8px 0;
-        transition: all 0.3s;
-    }
-    
-    .history-item:hover {
-        transform: translateX(5px);
-        background: var(--metal-light);
+        border-left: 3px solid var(--neon-orange);
+        margin-bottom: 10px;
     }
     
     .history-date {
         color: var(--neon-orange);
-        font-size: 0.9rem;
-        margin-bottom: 8px;
-        font-weight: bold;
-        display: flex;
-        justify-content: space-between;
+        font-size: 0.85rem;
+        margin-bottom: 5px;
     }
     
     .history-stats {
-        font-size: 0.85rem;
-        color: #aaa;
-        line-height: 1.6;
+        font-size: 0.8rem;
+        color: #999;
     }
     
-    .history-delete {
-        color: var(--neon-red);
-        cursor: pointer;
-        font-size: 0.75rem;
-        opacity: 0.7;
-        transition: all 0.3s;
-        touch-action: manipulation;
-    }
-    
-    .history-delete:hover {
-        opacity: 1;
-        text-decoration: underline;
-    }
-    
+    /* Settings Section */
     .settings-group {
-        margin-bottom: 25px;
+        margin-bottom: 20px;
     }
     
     .settings-label {
@@ -1070,196 +961,37 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
         font-size: 0.85rem;
         margin-bottom: 10px;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: bold;
     }
     
     .settings-input {
         width: 100%;
-        padding: 14px;
+        padding: 12px;
         background: var(--metal-dark);
         border: 1px solid var(--metal-light);
         color: #fff;
         font-family: inherit;
-        border-radius: 6px;
-        font-size: 0.9rem;
-    }
-    
-    .settings-input:focus {
-        outline: none;
-        border-color: var(--neon-orange);
-        box-shadow: 0 0 15px rgba(255,102,0,0.2);
     }
     
     .settings-btn {
         width: 100%;
-        padding: 16px;
+        padding: 12px;
         background: var(--metal-mid);
         border: 1px solid var(--neon-orange);
         color: var(--neon-orange);
         font-family: inherit;
         cursor: pointer;
         transition: all 0.3s;
-        margin-bottom: 12px;
-        border-radius: 6px;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        letter-spacing: 1px;
-        font-weight: bold;
-        touch-action: manipulation;
+        margin-bottom: 10px;
     }
     
     .settings-btn:hover {
         background: var(--neon-orange);
         color: #000;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 20px rgba(255,102,0,0.3);
     }
     
-    .section {
-        display: none;
-    }
-    
-    .section.active {
-        display: block;
-        animation: fadeIn 0.4s ease;
-    }
-    
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .achievement {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        padding: 12px 16px;
-        background: rgba(255, 215, 0, 0.1);
-        border: 1px solid #ffd700;
-        color: #ffd700;
-        font-size: 0.8rem;
-        margin: 6px;
-        border-radius: 6px;
-        transition: all 0.3s;
-    }
-    
-    .achievement:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 5px 20px rgba(255,215,0,0.2);
-    }
-    
-    .achievement.locked {
-        opacity: 0.4;
-        border-color: #666;
-        color: #666;
-    }
-    
-    .warmup-section {
-        background: rgba(0, 212, 255, 0.08);
-        border: 1px solid var(--neon-blue);
-        padding: 20px;
-        margin-bottom: 25px;
-        border-radius: 8px;
-    }
-    
-    .warmup-title {
-        color: var(--neon-blue);
-        font-size: 0.9rem;
-        margin-bottom: 15px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    .warmup-list {
-        list-style: none;
-        font-size: 0.85rem;
-    }
-    
-    .warmup-list li {
-        padding: 8px 0;
-        color: #bbb;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-    
-    .warmup-list li:last-child {
-        border-bottom: none;
-    }
-    
-    .warmup-list li::before {
-        content: '→';
-        color: var(--neon-blue);
-        font-weight: bold;
-    }
-    
-    .level-progress-item {
-        margin-bottom: 20px;
-        padding: 18px;
-        background: rgba(0,0,0,0.2);
-        border-radius: 8px;
-        border-left: 4px solid var(--neon-orange);
-    }
-    
-    .level-progress-header {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 10px;
-        font-size: 0.9rem;
-    }
-    
-    .level-progress-bar {
-        height: 10px;
-        background: var(--metal-light);
-        border-radius: 5px;
-        overflow: hidden;
-    }
-    
-    .level-progress-fill {
-        height: 100%;
-        background: linear-gradient(90deg, var(--neon-orange), var(--neon-red));
-        border-radius: 5px;
-        transition: width 0.5s;
-    }
-    
-    .toast {
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%) translateY(-100px);
-        background: var(--neon-green);
-        color: #000;
-        padding: 16px 32px;
-        border-radius: 8px;
-        font-weight: bold;
-        z-index: 3000;
-        opacity: 0;
-        transition: all 0.4s;
-        box-shadow: 0 10px 40px rgba(0,255,136,0.3);
-        font-size: 0.9rem;
-        text-align: center;
-        max-width: 90%;
-    }
-    
-    .toast.show {
-        transform: translateX(-50%) translateY(0);
-        opacity: 1;
-    }
-    
-    .toast.error {
-        background: var(--neon-red);
-        color: #fff;
-        box-shadow: 0 10px 40px rgba(255,42,42,0.3);
-    }
-    
+    /* Scrollbar */
     ::-webkit-scrollbar {
-        width: 8px;
+        width: 6px;
     }
     
     ::-webkit-scrollbar-track {
@@ -1268,24 +1000,79 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
     
     ::-webkit-scrollbar-thumb {
         background: var(--neon-orange);
-        border-radius: 4px;
     }
     
-    ::-webkit-scrollbar-thumb:hover {
-        background: var(--neon-red);
+    /* Section Display */
+    .section {
+        display: none;
+    }
+    
+    .section.active {
+        display: block;
+        animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    /* Achievement Badge */
+    .achievement {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        background: rgba(255, 215, 0, 0.1);
+        border: 1px solid #ffd700;
+        color: #ffd700;
+        font-size: 0.75rem;
+        margin: 5px;
+    }
+    
+    /* Warmup Section */
+    .warmup-section {
+        background: rgba(0, 212, 255, 0.1);
+        border: 1px solid var(--neon-blue);
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .warmup-title {
+        color: var(--neon-blue);
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+    }
+    
+    .warmup-list {
+        list-style: none;
+        font-size: 0.85rem;
+    }
+    
+    .warmup-list li {
+        padding: 5px 0;
+        color: #ccc;
+    }
+    
+    .warmup-list li::before {
+        content: '→';
+        color: var(--neon-blue);
+        margin-right: 8px;
     }
 </style>
 
-    <!-- Navigation - DÜZELTİLMİŞ -->
+    <!-- Navigation -->
     <div class="nav-tabs">
-        <div class="nav-tab active" data-section="workout">Antrenman</div>
-        <div class="nav-tab" data-section="progress">İlerleme</div>
-        <div class="nav-tab" data-section="history">Geçmiş</div>
-        <div class="nav-tab" data-section="settings">Ayarlar</div>
+        <div class="nav-tab active" onclick="showSection('workout')">Antrenman</div>
+        <div class="nav-tab" onclick="showSection('progress')">İlerleme</div>
+        <div class="nav-tab" onclick="showSection('history')">Geçmiş</div>
+        <div class="nav-tab" onclick="showSection('settings')">Ayarlar</div>
     </div>
     
     <!-- Workout Section -->
     <div id="workout-section" class="section active">
+        <!-- Stats Panel -->
         <div class="stats-panel">
             <div class="stat-box">
                 <div class="stat-label">Seviye</div>
@@ -1305,6 +1092,7 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
             </div>
         </div>
         
+        <!-- Progress -->
         <div class="progress-container">
             <div class="progress-header">
                 <span>TERMINATÖR EVOLÜSYONU</span>
@@ -1316,42 +1104,47 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
             <div class="progress-stats">
                 <div class="progress-stat">
                     <div class="progress-stat-value" id="totalWorkouts">0</div>
-                    <div style="font-size: 0.65rem; color: #888;">Antrenman</div>
+                    <div style="font-size: 0.65rem; color: #666;">Antrenman</div>
                 </div>
                 <div class="progress-stat">
                     <div class="progress-stat-value" id="totalSets">0</div>
-                    <div style="font-size: 0.65rem; color: #888;">Set</div>
+                    <div style="font-size: 0.65rem; color: #666;">Set</div>
                 </div>
                 <div class="progress-stat">
                     <div class="progress-stat-value" id="totalReps">0</div>
-                    <div style="font-size: 0.65rem; color: #888;">Tekrar</div>
+                    <div style="font-size: 0.65rem; color: #666;">Tekrar</div>
                 </div>
             </div>
         </div>
         
+        <!-- Workout Plan -->
         <div class="workout-plan">
             <div class="plan-header">
                 <span>ANTRENMAN PLANI</span>
                 <div class="week-selector">
-                    <button class="week-btn active" data-week="1">H1</button>
-                    <button class="week-btn" data-week="2">H2</button>
-                    <button class="week-btn" data-week="3">H3</button>
-                    <button class="week-btn" data-week="4">H4</button>
+                    <button class="week-btn active" onclick="changeWeek(1)">H1</button>
+                    <button class="week-btn" onclick="changeWeek(2)">H2</button>
+                    <button class="week-btn" onclick="changeWeek(3)">H3</button>
+                    <button class="week-btn" onclick="changeWeek(4)">H4</button>
                 </div>
             </div>
-            <div class="day-grid" id="dayGrid"></div>
+            <div class="day-grid" id="dayGrid">
+                <!-- Generated by JS -->
+            </div>
         </div>
         
+        <!-- Level Tabs -->
         <div class="level-tabs">
-            <div class="level-tab active" data-level="1">S1<br><small>BAŞLANGIÇ</small></div>
-            <div class="level-tab" data-level="2">S2<br><small>GEÇİŞ</small></div>
-            <div class="level-tab" data-level="3">S3<br><small>ORTA</small></div>
-            <div class="level-tab" data-level="4">S4<br><small>İLERİ</small></div>
-            <div class="level-tab" data-level="5">S5<br><small>ELİT</small></div>
+            <div class="level-tab active" onclick="changeLevel(1)">S1<br><small>BAŞLANGIÇ</small></div>
+            <div class="level-tab" onclick="changeLevel(2)">S2<br><small>GEÇİŞ</small></div>
+            <div class="level-tab" onclick="changeLevel(3)">S3<br><small>ORTA</small></div>
+            <div class="level-tab" onclick="changeLevel(4)">S4<br><small>İLERİ</small></div>
+            <div class="level-tab" onclick="changeLevel(5)">S5<br><small>ELİT</small></div>
         </div>
         
+        <!-- Warmup -->
         <div class="warmup-section">
-            <div class="warmup-title">🔥 ISINMA PROTOCOLÜ (5-10 dk)</div>
+            <div class="warmup-title">ISINMA PROTOCOLÜ (5-10 dk)</div>
             <ul class="warmup-list">
                 <li>Jumping Jacks - 2 dk</li>
                 <li>Arm Circles - 1 dk</li>
@@ -1361,38 +1154,50 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
             </ul>
         </div>
         
-        <div id="workoutContainer"></div>
+        <!-- Workout Container -->
+        <div id="workoutContainer">
+            <!-- Content will be loaded dynamically -->
+        </div>
     </div>
     
+    <!-- Progress Section -->
     <div id="progress-section" class="section">
         <div class="workout-plan">
             <div class="plan-header">
-                <span>🏆 BAŞARILAR</span>
+                <span>BAŞARILAR</span>
             </div>
-            <div id="achievementsContainer"></div>
+            <div id="achievementsContainer">
+                <!-- Generated by JS -->
+            </div>
         </div>
         
         <div class="workout-plan">
             <div class="plan-header">
-                <span>📊 SEVİYE İLERLEMESİ</span>
+                <span>SEVİYE İLERLEMESİ</span>
             </div>
-            <div id="levelProgressContainer"></div>
+            <div id="levelProgressContainer">
+                <!-- Generated by JS -->
+            </div>
         </div>
     </div>
     
+    <!-- History Section -->
     <div id="history-section" class="section">
         <div class="workout-plan">
             <div class="plan-header">
-                <span>📜 ANTRENMAN GEÇMİŞİ</span>
+                <span>ANTRENMAN GEÇMİŞİ</span>
             </div>
-            <div class="history-list" id="historyList"></div>
+            <div class="history-list" id="historyList">
+                <!-- Generated by JS -->
+            </div>
         </div>
     </div>
     
+    <!-- Settings Section -->
     <div id="settings-section" class="section">
         <div class="workout-plan">
             <div class="plan-header">
-                <span>⚙️ KİŞİSEL AYARLAR</span>
+                <span>KİŞİSEL AYARLAR</span>
             </div>
             <div class="settings-group">
                 <label class="settings-label">Kullanıcı Adı</label>
@@ -1406,19 +1211,21 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                 <label class="settings-label">Varsayılan Dinlenme Süresi (sn)</label>
                 <input type="number" class="settings-input" id="defaultRest" value="60" min="10" max="300">
             </div>
-            <button class="settings-btn" onclick="saveSettings()">💾 Ayarları Kaydet</button>
-            <button class="settings-btn" onclick="exportData()">📤 Verileri Dışa Aktar</button>
-            <button class="settings-btn" onclick="importData()">📥 Verileri İçe Aktar</button>
-            <button class="settings-btn" onclick="resetAll()" style="border-color: var(--neon-red); color: var(--neon-red);">⚠️ Tüm Verileri Sıfırla</button>
+            <button class="settings-btn" onclick="saveSettings()">Ayarları Kaydet</button>
+            <button class="settings-btn" onclick="exportData()">Verileri Dışa Aktar</button>
+            <button class="settings-btn" onclick="importData()">Verileri İçe Aktar</button>
+            <button class="settings-btn" onclick="resetAll()" style="border-color: var(--neon-red); color: var(--neon-red);">Tüm Verileri Sıfırla</button>
         </div>
     </div>
 </div>
 
-<div class="quick-timer" id="quickTimer">
+<!-- Quick Timer -->
+<div class="quick-timer" onclick="openTimerModal()">
     <div class="timer-display" id="quickTimerDisplay">00:00</div>
     <div class="timer-label">DİNLENME</div>
 </div>
 
+<!-- Timer Modal -->
 <div class="timer-modal" id="timerModal">
     <div class="timer-circle">
         <div class="timer-display-large" id="modalTimerDisplay">00:00</div>
@@ -1429,24 +1236,21 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
         <button class="timer-btn secondary" onclick="resetTimer()">SIFIRLA</button>
         <button class="timer-btn secondary" onclick="closeTimerModal()">KAPAT</button>
     </div>
-    <div style="margin-top: 25px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+    <div style="margin-top: 20px; display: flex; gap: 10px;">
         <button class="timer-btn secondary" onclick="addTime(30)">+30s</button>
         <button class="timer-btn secondary" onclick="addTime(60)">+1dk</button>
         <button class="timer-btn secondary" onclick="addTime(90)">+1:30</button>
-        <button class="timer-btn secondary" onclick="addTime(120)">+2dk</button>
     </div>
 </div>
 
-<div class="toast" id="toast"></div>
-
 <script>
-    // Program Data
+    // Enhanced Program Data with week/day structure
     const programData = {
         1: {
             name: "BAŞLANGIÇ PROTOCOL",
             description: "Temel hareket kalıplarını öğrenme ve bağ dokularını güçlendirme",
             frequency: "3 gün/haf",
-            schedule: [1, 0, 1, 0, 1, 0, 0],
+            schedule: [1, 0, 1, 0, 1, 0, 0], // 1=workout, 0=rest
             exercises: [
                 {
                     id: "l1_1",
@@ -1458,7 +1262,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["göğüs", "ön omuz", "arka kol"],
                     description: "Düz bir duvara ellerinizi omuz genişliğinde koyun, vücudunuzu duvara doğru eğip itin.",
                     progression: "Duvar şınavı → Eğik şınav (yüksek platform) → Diz üstü şınav → Tam şınav",
-                    tips: "Dirseklerinizi vücuda yakın tutun, 90 derece açıya kadar inin."
+                    tips: "Dirseklerinizi vücuda yakın tutun, 90 derece açıya kadar inin.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l1_2",
@@ -1470,7 +1275,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["arka kol", "ön omuz", "göğüs altı"],
                     description: "Sırtınızı bir koltuğa veya basamağa dayayın, ellerinizle vücudunuzu indirip kaldırın.",
                     progression: "Koltuk dip → Bench dip → Yer dip → Derin dip",
-                    tips: "Dirseklerinizi arkaya doğru değil, yanlara doğru bükün."
+                    tips: "Dirseklerinizi arkaya doğru değil, yanlara doğru bükün.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l1_3",
@@ -1482,7 +1288,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["sırt altı", "bel", "arka bacak"],
                     description: "Yüzüstü yatın, aynı anda kollarınızı ve bacaklarınızı yukarı kaldırın.",
                     progression: "Süpermen → Tek kol/bacak → Arch hold → Arch rock",
-                    tips: "Bakışınız yere paralel olsun, belinizi aşırı zorlamayın."
+                    tips: "Bakışınız yere paralel olsun, belinizi aşırı zorlamayın.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l1_4",
@@ -1494,7 +1301,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["kalça", "arka bacak", "bel"],
                     description: "Sırtüstü yatın, ayaklarınız yere basacak şekilde kalçanızı yukarı kaldırın.",
                     progression: "Glute bridge → Tek bacak → Hip thrust → Weighted hip thrust",
-                    tips: "Üst vücudunuzu yerden kaldırmayın, sadece kalçayı sıkın."
+                    tips: "Üst vücudunuzu yerden kaldırmayın, sadece kalçayı sıkın.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l1_5",
@@ -1506,7 +1314,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["karın", "bel", "omuz"],
                     description: "Forearm plank pozisyonunda bekleyin, vücut düz bir çizgi olsun.",
                     progression: "Diz plank → Tam plank → Yan plank → Plank variations",
-                    tips: "Kalçanızı yukarı veya aşağı sarkıtmayın, nefes almaya devam edin."
+                    tips: "Kalçanızı yukarı veya aşağı sarkıtmayın, nefes almaya devam edin.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l1_6",
@@ -1518,7 +1327,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["ön bacak", "kalça"],
                     description: "Sırtınız duvara dayalı, dizler 90 derece pozisyonda bekleyin.",
                     progression: "Duvar oturmaşı → Yarı squat → Tam squat → Tek bacak",
-                    tips: "Dizleriniz ayak parmaklarınızın önüne geçmesin."
+                    tips: "Dizleriniz ayak parmaklarınızın önüne geçmesin.",
+                    videoUrl: "#"
                 }
             ]
         },
@@ -1538,7 +1348,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["göğüs", "ön omuz", "arka kol"],
                     description: "Ellerinizi bir platforma (bench, masa) koyun, vücudunuzu indirip kaldırın.",
                     progression: "Yüksek platform → Alçak platform → Yer seviyesi → Decline",
-                    tips: "Vücudunuz düz bir çizgi olsun, göğsünüzü platforma dokundurun."
+                    tips: "Vücudunuz düz bir çizgi olsun, göğsünüzü platforma dokundurun.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l2_2",
@@ -1550,7 +1361,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["sırt", "arka kol", "ön kol", "omuz"],
                     description: "Bara zıplayın veya yardımla çıkın, yavaşça (5 saniye) inin.",
                     progression: "Negative → Assisted → Jump pull-up → Tam pull-up",
-                    tips: "İniş tamamen kontrollü olsun, sadece bırakmayın."
+                    tips: "İniş tamamen kontrollü olsun, sadece bırakmayın.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l2_3",
@@ -1562,7 +1374,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["ön bacak", "kalça", "denge kasları"],
                     description: "Bir bacağınız arkada yüksekte, öndeki bacakla squat yapın.",
                     progression: "Düşük yükseklik → Yüksek yükseklik → Ağırlık → Pistol squat",
-                    tips: "Diziniz ayak parmaklarınızın önüne geçmesin, gövde dik kalsın."
+                    tips: "Diziniz ayak parmaklarınızın önüne geçmesin, gövde dik kalsın.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l2_4",
@@ -1574,7 +1387,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["karın derin", "bel", "kalça fleksör"],
                     description: "Sırtüstü yatın, kollar ve bacaklar kalkık, bel yere bastırılmış.",
                     progression: "Bent knee → Tam hollow → Hollow rock → Hollow pull-up",
-                    tips: "Belinizin yere temas ettiğinden emin olun, titremeye başlayana kadar tutun."
+                    tips: "Belinizin yere temas ettiğinden emin olun, titremeye başlayana kadar tutun.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l2_5",
@@ -1586,7 +1400,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["ön omuz", "üst göğüs", "arka kol"],
                     description: "Kalçanız yukarıda, başınız yere yakın şekilde şınav pozisyonu.",
                     progression: "Pike push-up → Elevated pike → Handstand push-up neg → HSPU",
-                    tips: "Başınızı öne doğru değil, yere doğru indirin."
+                    tips: "Başınızı öne doğru değil, yere doğru indirin.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l2_6",
@@ -1598,7 +1413,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["sırt orta", "arka kol", "ön kol", "omuz arka"],
                     description: "Düşük bir barın altına girin, göğsünüzü bara çekin.",
                     progression: "Yüksek bar → Düşük bar → Ayaklar yukarı → Front lever row",
-                    tips: "Dirseklerinizi vücudunuza yakın tutun, omuzları geriye çekin."
+                    tips: "Dirseklerinizi vücudunuza yakın tutun, omuzları geriye çekin.",
+                    videoUrl: "#"
                 }
             ]
         },
@@ -1618,7 +1434,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["göğüs", "ön omuz", "arka kol", "karın"],
                     description: "Yerden kalkmadan klasik şınav, vücut düz çizgi.",
                     progression: "Tam şınav → El yakınlaştırma → El genişletme → Archer → One-arm neg",
-                    tips: "Göğsünüzü yere hafifçe dokundurun, tam kilit açın."
+                    tips: "Göğsünüzü yere hafifçe dokundurun, tam kilit açın.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l3_2",
@@ -1630,7 +1447,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["sırt geniş", "latissimus", "biceps", "omuz", "el kavrama"],
                     description: "Barı avuç içleri size bakacak veya dışa bakacak şekilde çeneniz üstüne çekin.",
                     progression: "Chin-up → Pull-up → Chest-to-bar → Muscle-up neg → Muscle-up",
-                    tips: "Bacaklarınızı öne kaldırmayın, omuzları aktif tutun."
+                    tips: "Bacaklarınızı öne kaldırmayın, omuzları aktif tutun.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l3_3",
@@ -1642,7 +1460,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["ön bacak", "kalça", "denge", "bacağın tümü"],
                     description: "Tek bacakla squat, diğer bacak önde veya tutunarak.",
                     progression: "Box pistol → Assisted pistol → Tam pistol → Weighted pistol",
-                    tips: "Ağırlığı topuğunuzda tutun, kontrollü düşün."
+                    tips: "Ağırlığı topuğunuzda tutun, kontrollü düşün.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l3_4",
@@ -1654,7 +1473,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["göğüs altı", "ön omuz", "arka kol"],
                     description: "Paralel barlarda veya sandalyelerde vücudu indirip kaldırma.",
                     progression: "Bench dip → Bar dip → Ring dip → Weighted dip",
-                    tips: "Dirseklerinizi yanlara değil, arkaya doğru bükün."
+                    tips: "Dirseklerinizi yanlara değil, arkaya doğru bükün.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l3_5",
@@ -1666,7 +1486,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["karın", "kalça fleksör", "ön omuz", "triceps"],
                     description: "Yerde veya parmaklarda oturur pozisyonda bacaklar havada L şeklinde.",
                     progression: "Tuck sit → One leg → L-sit → V-sit → Manna",
-                    tips: "Omuzlarınızı aşağı bastırın, bacaklarınızı kaldırabildiğiniz kadar kaldırın."
+                    tips: "Omuzlarınızı aşağı bastırın, bacaklarınızı kaldırabildiğiniz kadar kaldırın.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l3_6",
@@ -1678,7 +1499,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["sırt üstü", "arka omuz", "biceps", "karın"],
                     description: "Düşük barın altında, gövde düz, barı göğsüne çekme.",
                     progression: "High bar → Low bar → Feet elevated → Front lever row",
-                    tips: "Gövdenizi düz tutun, dirsekleri vücuda yakın çekin."
+                    tips: "Gövdenizi düz tutun, dirsekleri vücuda yakın çekin.",
+                    videoUrl: "#"
                 }
             ]
         },
@@ -1698,7 +1520,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["triceps", "iç göğüs", "ön omuz"],
                     description: "Eller elmas şeklinde, işaret parmakları ve baş parmaklar birbirine değecek.",
                     progression: "Diamond → Pseudo planche → 90-degree push-up → Planche lean",
-                    tips: "Dirseklerinizi yanlara doğru değil, geriye doğru bükün."
+                    tips: "Dirseklerinizi yanlara doğru değil, geriye doğru bükün.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l4_2",
@@ -1710,7 +1533,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["sırt", "göğüs", "omuz", "kol (tümü)"],
                     description: "Barı çekip üzerinden geçiş, dip pozisyonuna tamamlama.",
                     progression: "Chest-to-bar → Muscle-up neg → Kipping → Strict muscle-up",
-                    tips: "Önce barı göğsünüze çekin, sonra başınızı öne atın."
+                    tips: "Önce barı göğsünüze çekin, sonra başınızı öne atın.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l4_3",
@@ -1722,7 +1546,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["quadriceps", "gluteus", "hamstring", "core", "bacağın tümü"],
                     description: "Tek bacakla derin squat, diğer bacak önde havada.",
                     progression: "Tam pistol → Shrimp squat → Dragon pistol → Weighted pistol",
-                    tips: "Bacak kaslarınızı sürekli gergin tutun, düşüşü kontrol edin."
+                    tips: "Bacak kaslarınızı sürekli gergin tutun, düşüşü kontrol edin.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l4_4",
@@ -1734,7 +1559,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["omuz", "trapez", "triceps", "core", "el bileği"],
                     description: "Duvara veya serbest olarak el üstünde duruş.",
                     progression: "Duvar tırmanma → Duvar hold → Serbest hold → Handstand walk",
-                    tips: "Omuzlarınızı kulaklarınıza kadar itin, parmaklarla denge yapın."
+                    tips: "Omuzlarınızı kulaklarınıza kadar itin, parmaklarla denge yapın.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l4_5",
@@ -1746,7 +1572,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["sırt", "latissimus", "core", "ön kol"],
                     description: "Bar tutunarak vücudu yatay tutma (tuck, straddle, tam).",
                     progression: "Tuck → Advanced tuck → Straddle → Half lay → Full front lever",
-                    tips: "Omuzlarınızı sıkın, kalçanızı kaldırmayın."
+                    tips: "Omuzlarınızı sıkın, kalçanızı kaldırmayın.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l4_6",
@@ -1758,7 +1585,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["göğüs", "omuz", "triceps (asimetrik yük)"],
                     description: "Bir kol uzatılmış, diğeri bükülü şekilde şınav.",
                     progression: "Archer → One-arm neg → One-arm assisted → One-arm push-up",
-                    tips: "Ağırlığı aktif kola verin, uzatılan kol sadece denge için."
+                    tips: "Ağırlığı aktif kola verin, uzatılan kol sadece denge için.",
+                    videoUrl: "#"
                 }
             ]
         },
@@ -1778,7 +1606,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["göğüs", "omuz", "triceps", "core (asimetrik)"],
                     description: "Tek elle şınav, diğer kol belde veya havada.",
                     progression: "One-arm → One-arm feet elevated → One-arm planche → 90-degree one-arm",
-                    tips: "Ayaklarınızı geniş açın, gövdenizi aktif kola yakın tutun."
+                    tips: "Ayaklarınızı geniş açın, gövdenizi aktif kola yakın tutun.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l5_2",
@@ -1790,7 +1619,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["ön omuz", "göğüs üstü", "core", "ön kol"],
                     description: "Yerde eller üzerinde vücudu yatay tutma.",
                     progression: "Lean → Tuck planche → Advanced tuck → Straddle → Full planche",
-                    tips: "Omuzlarınızı öne doğru itin, kalçanızı sıkın."
+                    tips: "Omuzlarınızı öne doğru itin, kalçanızı sıkın.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l5_3",
@@ -1802,7 +1632,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["oblique", "latissimus", "omuz", "core (yan)"],
                     description: "Dikey direkte yatay tutunma pozisyonu.",
                     progression: "Tuck flag → Straddle flag → Full flag → Flag pull-up",
-                    tips: "Üst el çekiş, alt el itiş yapar, vücut gergin."
+                    tips: "Üst el çekiş, alt el itiş yapar, vücut gergin.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l5_4",
@@ -1814,7 +1645,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["ön omuz", "trapez", "triceps", "üst göğüs"],
                     description: "El üstünde duruş pozisyonunda baş üstü şınav.",
                     progression: "Wall HSPU → Free HSPU → Deficit HSPU → 90-degree HSPU",
-                    tips: "Başınızı yere hafifçe dokundurun, kontrollü iniş ve kalkış."
+                    tips: "Başınızı yere hafifçe dokundurun, kontrollü iniş ve kalkış.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l5_5",
@@ -1826,7 +1658,8 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["tüm üst vücut", "güç zinciri"],
                     description: "Muscle-up üzerine dönüş veya geçiş hareketleri.",
                     progression: "Muscle-up → Slow muscle-up → Muscle-up 360 → Iron cross prep",
-                    tips: "Her aşamada kontrolü kaybetmeyin, momentum yerine güç kullanın."
+                    tips: "Her aşamada kontrolü kaybetmeyin, momentum yerine güç kullanın.",
+                    videoUrl: "#"
                 },
                 {
                     id: "l5_6",
@@ -1838,1911 +1671,14 @@ Sorunu buldum - showSection fonksiyonu event parametresini kullanıyor ama doğr
                     muscles: ["core (tümü)", "kalça fleksör", "sırt altı"],
                     description: "Sırtüstü yatarken bacakları ve gövdeyi kaldırıp kontrollü indirme.",
                     progression: "Tuck dragon → One leg → Straddle → Full dragon flag",
-                    tips: "Sırtınızı yere yapıştırın, sadece omuzlarınız destek alsın."
+                    tips: "Sırtınızı yere yapıştırın, sadece omuzlarınız destek alsın.",
+                    videoUrl: "#"
                 }
             ]
         }
     };
 
-    // Achievements
-    const achievements = [
-        { id: 'first_workout', name: 'İlk Adım', desc: 'İlk antrenmanını tamamla', icon: '🎯', condition: () => workoutHistory.length >= 1 },
-        { id: 'week_warrior', name: 'Hafta Savaşçısı', desc: '7 gün üst üste antrenman yap', icon: '🔥', condition: () => calculateStreak() >= 7 },
-        { id: 'level_master', name: 'Seviye Ustası', desc: 'Bir seviyenin tüm hareketlerini tamamla', icon: '⭐', condition: () => checkLevelMaster() },
-        { id: 'rep_machine', name: 'Tekrar Makinesi', desc: 'Toplam 1000 tekrar yap', icon: '💪', condition: () => getTotalReps() >= 1000 },
-        { id: 'time_lord', name: 'Zaman Lordu', desc: 'Toplam 10 saat antrenman yap', icon: '⏱️', condition: () => getTotalTime() >= 600 },
-        { id: 'perfectionist', name: 'Mükemmeliyetçi', desc: 'Bir günde tüm setleri %100 tamamla', icon: '💎', condition: () => checkPerfectDay() }
-    ];
-
-    // State
-    let currentLevel = 1;
-    let currentWeek = 1;
-    let currentDay = 1;
-    let completedExercises = [];
-    let workoutHistory = [];
-    let exerciseData = {};
-    let timerInterval;
-    let timerSeconds = 0;
-    let isTimerRunning = false;
-    let userSettings = {
-        userName: 'Terminator',
-        weeklyGoal: 3,
-        defaultRest: 60
-    };
-
-    // Initialize with event listeners
-    function init() {
-        loadData();
-        setupEventListeners();
-        renderDayGrid();
-        updateProgress();
-        renderWorkout();
-        renderAchievements();
-        renderHistory();
-        updateLevelLocks();
-    }
-
-    function setupEventListeners() {
-        // Navigation tabs - DÜZELTİLMİŞ
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                const section =
-
-System is currently busy. Please try again later.
-Kod tamam, işte eksik kısımlarla birlikte tam hali:
-    :root {
-        --neon-red: #ff2a2a;
-        --neon-orange: #ff6600;
-        --neon-blue: #00d4ff;
-        --neon-green: #00ff88;
-        --metal-dark: #0a0a0a;
-        --metal-mid: #151515;
-        --metal-light: #2a2a2a;
-        --grid-color: rgba(255, 102, 0, 0.08);
-    }
-    
-    body {
-        font-family: 'Courier New', monospace;
-        background: var(--metal-dark);
-        color: #fff;
-        overflow-x: hidden;
-        min-height: 100vh;
-        background-image: 
-            linear-gradient(var(--grid-color) 1px, transparent 1px),
-            linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-        background-size: 40px 40px;
-    }
-    
-    body::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: repeating-linear-gradient(
-            0deg,
-            rgba(0,0,0,0.12),
-            rgba(0,0,0,0.12) 1px,
-            transparent 1px,
-            transparent 3px
-        );
-        pointer-events: none;
-        z-index: 1000;
-    }
-    
-    .container {
-        max-width: 480px;
-        margin: 0 auto;
-        padding: 15px;
-        padding-bottom: 100px;
-    }
-    
-    .header {
-        text-align: center;
-        padding: 25px 0;
-        border-bottom: 2px solid var(--neon-orange);
-        margin-bottom: 20px;
-        position: relative;
-    }
-    
-    .header::after {
-        content: '● SYSTEM ONLINE';
-        position: absolute;
-        bottom: -10px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: var(--metal-dark);
-        padding: 0 15px;
-        color: var(--neon-orange);
-        font-size: 0.7rem;
-        letter-spacing: 2px;
-        animation: blink 2s infinite;
-    }
-    
-    @keyframes blink {
-        0%, 50% { opacity: 1; }
-        51%, 100% { opacity: 0.3; }
-    }
-    
-    h1 {
-        font-size: 2rem;
-        color: var(--neon-orange);
-        text-transform: uppercase;
-        letter-spacing: 4px;
-        text-shadow: 0 0 20px rgba(255, 102, 0, 0.5);
-        font-weight: bold;
-    }
-    
-    .subtitle {
-        font-size: 0.75rem;
-        color: #888;
-        margin-top: 8px;
-        letter-spacing: 2px;
-    }
-    
-    .nav-tabs {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 20px;
-        overflow-x: auto;
-        padding-bottom: 5px;
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    .nav-tab {
-        flex: 1;
-        min-width: 80px;
-        padding: 12px 8px;
-        background: var(--metal-mid);
-        border: 1px solid var(--metal-light);
-        color: #888;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.3s;
-        font-size: 0.7rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        border-radius: 4px;
-        user-select: none;
-        -webkit-user-select: none;
-        touch-action: manipulation;
-    }
-    
-    .nav-tab:hover {
-        border-color: var(--neon-orange);
-        color: var(--neon-orange);
-    }
-    
-    .nav-tab.active {
-        background: var(--neon-orange);
-        color: #000;
-        border-color: var(--neon-orange);
-        box-shadow: 0 0 15px rgba(255, 102, 0, 0.4);
-        font-weight: bold;
-    }
-    
-    .stats-panel {
-        background: var(--metal-mid);
-        border: 1px solid var(--metal-light);
-        padding: 15px;
-        margin-bottom: 20px;
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-        font-size: 0.8rem;
-        border-radius: 8px;
-    }
-    
-    .stat-box {
-        text-align: center;
-        padding: 12px 5px;
-        background: rgba(0,0,0,0.3);
-        border-left: 2px solid var(--neon-orange);
-        border-radius: 4px;
-    }
-    
-    .stat-label {
-        color: #666;
-        font-size: 0.6rem;
-        margin-bottom: 6px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-    
-    .stat-value {
-        color: var(--neon-orange);
-        font-size: 1.3rem;
-        font-weight: bold;
-    }
-    
-    .progress-container {
-        margin-bottom: 20px;
-        background: var(--metal-mid);
-        padding: 20px;
-        border: 1px solid var(--metal-light);
-        border-radius: 8px;
-    }
-    
-    .progress-header {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 12px;
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-    
-    .progress-bar {
-        height: 14px;
-        background: var(--metal-light);
-        overflow: hidden;
-        position: relative;
-        border-radius: 7px;
-        box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
-    }
-    
-    .progress-fill {
-        height: 100%;
-        background: linear-gradient(90deg, var(--neon-red), var(--neon-orange));
-        width: 0%;
-        transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 0 15px var(--neon-orange);
-        position: relative;
-        overflow: hidden;
-        border-radius: 7px;
-    }
-    
-    .progress-fill::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-        animation: shimmer 2s infinite;
-    }
-    
-    @keyframes shimmer {
-        0% { transform: translateX(-100%); }
-        100% { transform: translateX(100%); }
-    }
-    
-    .progress-stats {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
-        margin-top: 15px;
-    }
-    
-    .progress-stat {
-        text-align: center;
-        padding: 12px 8px;
-        background: rgba(0,0,0,0.3);
-        border-radius: 4px;
-    }
-    
-    .progress-stat-value {
-        color: var(--neon-orange);
-        font-size: 1.4rem;
-        font-weight: bold;
-        margin-bottom: 4px;
-    }
-    
-    .level-tabs {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 20px;
-        overflow-x: auto;
-        padding-bottom: 10px;
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    .level-tab {
-        flex: 1;
-        min-width: 70px;
-        padding: 14px 8px;
-        background: var(--metal-mid);
-        border: 1px solid var(--metal-light);
-        color: #888;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.3s;
-        font-size: 0.8rem;
-        position: relative;
-        overflow: hidden;
-        border-radius: 6px;
-        user-select: none;
-        touch-action: manipulation;
-    }
-    
-    .level-tab.active {
-        background: var(--neon-orange);
-        color: #000;
-        border-color: var(--neon-orange);
-        box-shadow: 0 0 20px rgba(255, 102, 0, 0.4);
-        font-weight: bold;
-    }
-    
-    .level-tab.locked {
-        opacity: 0.4;
-        cursor: not-allowed;
-    }
-    
-    .level-tab.locked::after {
-        content: '🔒';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 1.2rem;
-    }
-    
-    .workout-plan {
-        background: var(--metal-mid);
-        border: 1px solid var(--metal-light);
-        padding: 20px;
-        margin-bottom: 20px;
-        border-radius: 8px;
-    }
-    
-    .plan-header {
-        color: var(--neon-orange);
-        font-size: 0.9rem;
-        margin-bottom: 15px;
-        text-transform: uppercase;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        letter-spacing: 1px;
-        font-weight: bold;
-    }
-    
-    .week-selector {
-        display: flex;
-        gap: 6px;
-    }
-    
-    .week-btn {
-        padding: 6px 12px;
-        background: var(--metal-dark);
-        border: 1px solid var(--metal-light);
-        color: #888;
-        cursor: pointer;
-        font-size: 0.75rem;
-        transition: all 0.3s;
-        border-radius: 4px;
-        font-family: inherit;
-        touch-action: manipulation;
-    }
-    
-    .week-btn.active {
-        background: var(--neon-orange);
-        color: #000;
-        border-color: var(--neon-orange);
-        font-weight: bold;
-    }
-    
-    .day-grid {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 6px;
-        margin-bottom: 15px;
-    }
-    
-    .day-box {
-        aspect-ratio: 1;
-        background: var(--metal-dark);
-        border: 1px solid var(--metal-light);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.3s;
-        font-size: 0.65rem;
-        border-radius: 6px;
-        position: relative;
-        touch-action: manipulation;
-    }
-    
-    .day-box:hover {
-        border-color: var(--neon-orange);
-        transform: translateY(-2px);
-    }
-    
-    .day-box.active {
-        background: var(--neon-orange);
-        color: #000;
-        border-color: var(--neon-orange);
-        box-shadow: 0 0 15px rgba(255, 102, 0, 0.4);
-    }
-    
-    .day-box.completed {
-        background: var(--neon-green);
-        color: #000;
-        border-color: var(--neon-green);
-    }
-    
-    .day-box.rest {
-        background: rgba(0, 212, 255, 0.1);
-        border-color: var(--neon-blue);
-        color: var(--neon-blue);
-    }
-    
-    .day-number {
-        font-size: 1rem;
-        font-weight: bold;
-    }
-    
-    .day-label {
-        font-size: 0.55rem;
-        margin-top: 3px;
-        opacity: 0.8;
-    }
-    
-    .exercise-card {
-        background: var(--metal-mid);
-        border: 1px solid var(--metal-light);
-        margin-bottom: 15px;
-        overflow: hidden;
-        transition: all 0.3s;
-        position: relative;
-        border-radius: 8px;
-    }
-    
-    .exercise-card:hover {
-        transform: translateX(5px);
-        border-color: var(--neon-orange);
-        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-    }
-    
-    .exercise-card.completed {
-        opacity: 0.85;
-        border-color: var(--neon-green);
-    }
-    
-    .exercise-header {
-        padding: 18px 15px;
-        background: linear-gradient(90deg, var(--metal-mid), var(--metal-light));
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        cursor: pointer;
-        touch-action: manipulation;
-    }
-    
-    .exercise-name {
-        font-size: 0.95rem;
-        color: #fff;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        font-weight: bold;
-    }
-    
-    .exercise-check {
-        width: 26px;
-        height: 26px;
-        border: 2px solid var(--neon-orange);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s;
-        flex-shrink: 0;
-    }
-    
-    .exercise-card.completed .exercise-check {
-        background: var(--neon-green);
-        border-color: var(--neon-green);
-    }
-    
-    .exercise-check::after {
-        content: '✓';
-        color: #000;
-        font-weight: bold;
-        opacity: 0;
-        transform: scale(0);
-        transition: all 0.3s;
-        font-size: 1rem;
-    }
-    
-    .exercise-card.completed .exercise-check::after {
-        opacity: 1;
-        transform: scale(1);
-    }
-    
-    .difficulty-badge {
-        padding: 5px 10px;
-        font-size: 0.6rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        border-radius: 3px;
-        font-weight: bold;
-    }
-    
-    .difficulty-badge.easy { background: var(--neon-green); color: #000; }
-    .difficulty-badge.medium { background: #ffcc00; color: #000; }
-    .difficulty-badge.hard { background: var(--neon-orange); color: #000; }
-    .difficulty-badge.elite { background: var(--neon-red); color: #fff; }
-    
-    .exercise-content {
-        display: none;
-        padding: 20px;
-        border-top: 1px solid var(--metal-light);
-    }
-    
-    .exercise-content.active {
-        display: block;
-        animation: slideDown 0.3s ease;
-    }
-    
-    @keyframes slideDown {
-        from { opacity: 0; transform: translateY(-10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .sets-tracker {
-        margin: 20px 0;
-    }
-    
-    .sets-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 12px;
-        font-size: 0.85rem;
-        color: var(--neon-orange);
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-    
-    .set-row {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        margin-bottom: 10px;
-        padding: 12px;
-        background: rgba(0,0,0,0.3);
-        border-radius: 6px;
-        transition: all 0.3s;
-    }
-    
-    .set-number {
-        width: 35px;
-        color: var(--neon-orange);
-        font-weight: bold;
-        font-size: 0.9rem;
-    }
-    
-    .set-inputs {
-        flex: 1;
-        display: flex;
-        gap: 10px;
-    }
-    
-    .set-input {
-        width: 65px;
-        padding: 10px;
-        background: var(--metal-dark);
-        border: 1px solid var(--metal-light);
-        color: #fff;
-        text-align: center;
-        font-family: inherit;
-        border-radius: 4px;
-        font-size: 0.9rem;
-    }
-    
-    .set-check {
-        width: 36px;
-        height: 36px;
-        border: 2px solid var(--metal-light);
-        background: transparent;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s;
-        border-radius: 6px;
-        flex-shrink: 0;
-        touch-action: manipulation;
-    }
-    
-    .set-check.completed {
-        background: var(--neon-green);
-        border-color: var(--neon-green);
-    }
-    
-    .set-check.completed::after {
-        content: '✓';
-        color: #000;
-        font-weight: bold;
-        font-size: 1.2rem;
-    }
-    
-    .anatomy-container {
-        display: flex;
-        gap: 20px;
-        margin-bottom: 20px;
-        flex-wrap: wrap;
-    }
-    
-    .body-figure {
-        width: 100px;
-        height: 180px;
-        position: relative;
-        background: var(--metal-dark);
-        border: 1px solid var(--metal-light);
-        border-radius: 8px;
-        overflow: hidden;
-    }
-    
-    .body-svg {
-        width: 100%;
-        height: 100%;
-    }
-    
-    .muscle-group {
-        fill: #2a2a2a;
-        stroke: #444;
-        stroke-width: 1;
-        transition: all 0.3s;
-    }
-    
-    .muscle-group.active {
-        fill: var(--neon-orange);
-        stroke: var(--neon-red);
-        filter: drop-shadow(0 0 8px var(--neon-orange));
-        animation: pulse 2s infinite;
-    }
-    
-    @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.7; }
-    }
-    
-    .muscle-info {
-        flex: 1;
-        min-width: 200px;
-    }
-    
-    .muscle-title {
-        color: var(--neon-orange);
-        font-size: 0.85rem;
-        margin-bottom: 12px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: bold;
-    }
-    
-    .muscle-list {
-        list-style: none;
-        font-size: 0.85rem;
-    }
-    
-    .muscle-list li {
-        padding: 8px 0;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: #ccc;
-    }
-    
-    .muscle-list li::before {
-        content: '▸';
-        color: var(--neon-orange);
-        font-size: 1.2rem;
-    }
-    
-    .details-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 8px;
-        margin-bottom: 20px;
-    }
-    
-    .detail-box {
-        background: rgba(0,0,0,0.3);
-        padding: 14px 8px;
-        border-left: 3px solid var(--neon-orange);
-        text-align: center;
-        border-radius: 4px;
-    }
-    
-    .detail-label {
-        font-size: 0.6rem;
-        color: #888;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 6px;
-    }
-    
-    .detail-value {
-        font-size: 1.1rem;
-        color: #fff;
-        font-weight: bold;
-    }
-    
-    .progression-path {
-        background: rgba(255, 102, 0, 0.08);
-        border: 1px solid var(--neon-orange);
-        padding: 18px;
-        margin-top: 15px;
-        border-radius: 6px;
-    }
-    
-    .progression-title {
-        color: var(--neon-orange);
-        font-size: 0.85rem;
-        margin-bottom: 12px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: bold;
-    }
-    
-    .progression-steps {
-        font-size: 0.8rem;
-        line-height: 1.7;
-        color: #aaa;
-    }
-    
-    .tip-box {
-        background: rgba(255, 42, 42, 0.08);
-        border-left: 4px solid var(--neon-red);
-        padding: 18px;
-        margin-top: 15px;
-        font-size: 0.85rem;
-        color: #ff9999;
-        border-radius: 0 6px 6px 0;
-        line-height: 1.6;
-    }
-    
-    .tip-box::before {
-        content: '⚠ T-800 PROTOCOL: ';
-        color: var(--neon-red);
-        font-weight: bold;
-        display: block;
-        margin-bottom: 5px;
-    }
-    
-    .video-container {
-        width: 100%;
-        height: 200px;
-        background: var(--metal-dark);
-        border: 1px solid var(--metal-light);
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        overflow: hidden;
-        border-radius: 8px;
-    }
-    
-    .video-placeholder {
-        text-align: center;
-        color: #666;
-    }
-    
-    .play-btn {
-        width: 70px;
-        height: 70px;
-        border: 3px solid var(--neon-orange);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 15px;
-        cursor: pointer;
-        transition: all 0.3s;
-        background: rgba(255,102,0,0.1);
-        touch-action: manipulation;
-    }
-    
-    .play-btn:hover {
-        background: var(--neon-orange);
-        transform: scale(1.1);
-        box-shadow: 0 0 30px rgba(255,102,0,0.4);
-    }
-    
-    .play-btn::after {
-        content: '▶';
-        color: var(--neon-orange);
-        font-size: 1.8rem;
-        margin-left: 5px;
-        transition: all 0.3s;
-    }
-    
-    .play-btn:hover::after {
-        color: #000;
-    }
-    
-    .timer-modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.95);
-        z-index: 2000;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        backdrop-filter: blur(10px);
-    }
-    
-    .timer-modal.active {
-        display: flex;
-        animation: fadeIn 0.3s ease;
-    }
-    
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    
-    .timer-circle {
-        width: 280px;
-        height: 280px;
-        border: 4px solid var(--neon-orange);
-        border-radius: 50%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        margin-bottom: 40px;
-        box-shadow: 0 0 60px rgba(255,102,0,0.2);
-        background: radial-gradient(circle, rgba(255,102,0,0.1) 0%, transparent 70%);
-    }
-    
-    .timer-display-large {
-        font-size: 4.5rem;
-        color: var(--neon-orange);
-        font-weight: bold;
-        font-family: 'Courier New', monospace;
-        text-shadow: 0 0 20px rgba(255,102,0,0.5);
-    }
-    
-    .timer-label-large {
-        font-size: 1rem;
-        color: #888;
-        margin-top: 15px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-    }
-    
-    .timer-controls {
-        display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    
-    .timer-btn {
-        padding: 16px 32px;
-        background: var(--neon-orange);
-        color: #000;
-        border: none;
-        font-family: inherit;
-        font-size: 0.9rem;
-        font-weight: bold;
-        cursor: pointer;
-        text-transform: uppercase;
-        transition: all 0.3s;
-        border-radius: 6px;
-        letter-spacing: 1px;
-        touch-action: manipulation;
-    }
-    
-    .timer-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 30px rgba(255, 102, 0, 0.4);
-    }
-    
-    .timer-btn.secondary {
-        background: var(--metal-mid);
-        color: #fff;
-        border: 1px solid var(--metal-light);
-    }
-    
-    .timer-btn.secondary:hover {
-        background: var(--metal-light);
-        border-color: var(--neon-orange);
-    }
-    
-    .quick-timer {
-        position: fixed;
-        bottom: 25px;
-        right: 25px;
-        background: var(--metal-mid);
-        border: 2px solid var(--neon-orange);
-        padding: 15px;
-        border-radius: 50%;
-        width: 75px;
-        height: 75px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        box-shadow: 0 0 25px rgba(255, 102, 0, 0.3);
-        z-index: 100;
-        transition: all 0.3s;
-        touch-action: manipulation;
-    }
-    
-    .quick-timer:hover {
-        transform: scale(1.1) rotate(5deg);
-    }
-    
-    .quick-timer.active {
-        background: var(--neon-orange);
-        animation: pulse-timer 1s infinite;
-    }
-    
-    @keyframes pulse-timer {
-        0%, 100% { box-shadow: 0 0 25px rgba(255, 102, 0, 0.3); }
-        50% { box-shadow: 0 0 50px rgba(255, 102, 0, 0.6); }
-    }
-    
-    .timer-display {
-        font-size: 1.1rem;
-        color: var(--neon-orange);
-        font-weight: bold;
-    }
-    
-    .quick-timer.active .timer-display {
-        color: #000;
-    }
-    
-    .timer-label {
-        font-size: 0.55rem;
-        color: #888;
-        margin-top: 3px;
-        text-transform: uppercase;
-    }
-    
-    .complete-btn {
-        width: 100%;
-        padding: 18px;
-        background: var(--neon-orange);
-        color: #000;
-        border: none;
-        font-family: inherit;
-        font-size: 0.9rem;
-        text-transform: uppercase;
-        font-weight: bold;
-        cursor: pointer;
-        margin-top: 20px;
-        transition: all 0.3s;
-        border-radius: 6px;
-        letter-spacing: 2px;
-        touch-action: manipulation;
-    }
-    
-    .complete-btn:hover {
-        background: var(--neon-red);
-        box-shadow: 0 0 30px rgba(255, 102, 0, 0.5);
-        transform: translateY(-2px);
-    }
-    
-    .complete-btn.completed {
-        background: var(--neon-green);
-        color: #000;
-    }
-    
-    .notes-section {
-        margin-top: 20px;
-        padding-top: 20px;
-        border-top: 1px solid var(--metal-light);
-    }
-    
-    .notes-label {
-        color: var(--neon-orange);
-        font-size: 0.85rem;
-        margin-bottom: 10px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: bold;
-    }
-    
-    .notes-textarea {
-        width: 100%;
-        min-height: 100px;
-        background: var(--metal-dark);
-        border: 1px solid var(--metal-light);
-        color: #fff;
-        padding: 12px;
-        font-family: inherit;
-        font-size: 0.9rem;
-        resize: vertical;
-        border-radius: 6px;
-        line-height: 1.5;
-    }
-    
-    .notes-textarea:focus {
-        outline: none;
-        border-color: var(--neon-orange);
-        box-shadow: 0 0 15px rgba(255,102,0,0.2);
-    }
-    
-    .rest-day {
-        text-align: center;
-        padding: 50px 25px;
-        background: var(--metal-mid);
-        border: 2px dashed var(--metal-light);
-        border-radius: 12px;
-    }
-    
-    .rest-icon {
-        font-size: 4rem;
-        margin-bottom: 20px;
-        animation: float 3s ease-in-out infinite;
-        filter: drop-shadow(0 0 20px rgba(0,212,255,0.3));
-    }
-    
-    @keyframes float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-15px); }
-    }
-    
-    .rest-title {
-        color: var(--neon-blue);
-        font-size: 1.5rem;
-        margin-bottom: 15px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        font-weight: bold;
-    }
-    
-    .history-list {
-        max-height: 500px;
-        overflow-y: auto;
-    }
-    
-    .history-item {
-        padding: 18px;
-        background: var(--metal-mid);
-        border-left: 4px solid var(--neon-orange);
-        margin-bottom: 12px;
-        border-radius: 0 8px 8px 0;
-        transition: all 0.3s;
-    }
-    
-    .history-item:hover {
-        transform: translateX(5px);
-        background: var(--metal-light);
-    }
-    
-    .history-date {
-        color: var(--neon-orange);
-        font-size: 0.9rem;
-        margin-bottom: 8px;
-        font-weight: bold;
-        display: flex;
-        justify-content: space-between;
-    }
-    
-    .history-stats {
-        font-size: 0.85rem;
-        color: #aaa;
-        line-height: 1.6;
-    }
-    
-    .history-delete {
-        color: var(--neon-red);
-        cursor: pointer;
-        font-size: 0.75rem;
-        opacity: 0.7;
-        transition: all 0.3s;
-        touch-action: manipulation;
-    }
-    
-    .history-delete:hover {
-        opacity: 1;
-        text-decoration: underline;
-    }
-    
-    .settings-group {
-        margin-bottom: 25px;
-    }
-    
-    .settings-label {
-        display: block;
-        color: var(--neon-orange);
-        font-size: 0.85rem;
-        margin-bottom: 10px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: bold;
-    }
-    
-    .settings-input {
-        width: 100%;
-        padding: 14px;
-        background: var(--metal-dark);
-        border: 1px solid var(--metal-light);
-        color: #fff;
-        font-family: inherit;
-        border-radius: 6px;
-        font-size: 0.9rem;
-    }
-    
-    .settings-input:focus {
-        outline: none;
-        border-color: var(--neon-orange);
-        box-shadow: 0 0 15px rgba(255,102,0,0.2);
-    }
-    
-    .settings-btn {
-        width: 100%;
-        padding: 16px;
-        background: var(--metal-mid);
-        border: 1px solid var(--neon-orange);
-        color: var(--neon-orange);
-        font-family: inherit;
-        cursor: pointer;
-        transition: all 0.3s;
-        margin-bottom: 12px;
-        border-radius: 6px;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        letter-spacing: 1px;
-        font-weight: bold;
-        touch-action: manipulation;
-    }
-    
-    .settings-btn:hover {
-        background: var(--neon-orange);
-        color: #000;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 20px rgba(255,102,0,0.3);
-    }
-    
-    .section {
-        display: none;
-    }
-    
-    .section.active {
-        display: block;
-        animation: fadeInSection 0.4s ease;
-    }
-    
-    @keyframes fadeInSection {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .achievement {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        padding: 12px 16px;
-        background: rgba(255, 215, 0, 0.1);
-        border: 1px solid #ffd700;
-        color: #ffd700;
-        font-size: 0.8rem;
-        margin: 6px;
-        border-radius: 6px;
-        transition: all 0.3s;
-    }
-    
-    .achievement:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 5px 20px rgba(255,215,0,0.2);
-    }
-    
-    .achievement.locked {
-        opacity: 0.4;
-        border-color: #666;
-        color: #666;
-    }
-    
-    .warmup-section {
-        background: rgba(0, 212, 255, 0.08);
-        border: 1px solid var(--neon-blue);
-        padding: 20px;
-        margin-bottom: 25px;
-        border-radius: 8px;
-    }
-    
-    .warmup-title {
-        color: var(--neon-blue);
-        font-size: 0.9rem;
-        margin-bottom: 15px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    .warmup-list {
-        list-style: none;
-        font-size: 0.85rem;
-    }
-    
-    .warmup-list li {
-        padding: 8px 0;
-        color: #bbb;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-    
-    .warmup-list li:last-child {
-        border-bottom: none;
-    }
-    
-    .warmup-list li::before {
-        content: '→';
-        color: var(--neon-blue);
-        font-weight: bold;
-    }
-    
-    .level-progress-item {
-        margin-bottom: 20px;
-        padding: 18px;
-        background: rgba(0,0,0,0.2);
-        border-radius: 8px;
-        border-left: 4px solid var(--neon-orange);
-    }
-    
-    .level-progress-header {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 10px;
-        font-size: 0.9rem;
-    }
-    
-    .level-progress-bar {
-        height: 10px;
-        background: var(--metal-light);
-        border-radius: 5px;
-        overflow: hidden;
-    }
-    
-    .level-progress-fill {
-        height: 100%;
-        background: linear-gradient(90deg, var(--neon-orange), var(--neon-red));
-        border-radius: 5px;
-        transition: width 0.5s;
-    }
-    
-    .toast {
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%) translateY(-100px);
-        background: var(--neon-green);
-        color: #000;
-        padding: 16px 32px;
-        border-radius: 8px;
-        font-weight: bold;
-        z-index: 3000;
-        opacity: 0;
-        transition: all 0.4s;
-        box-shadow: 0 10px 40px rgba(0,255,136,0.3);
-        font-size: 0.9rem;
-        text-align: center;
-        max-width: 90%;
-    }
-    
-    .toast.show {
-        transform: translateX(-50%) translateY(0);
-        opacity: 1;
-    }
-    
-    .toast.error {
-        background: var(--neon-red);
-        color: #fff;
-        box-shadow: 0 10px 40px rgba(255,42,42,0.3);
-    }
-    
-    ::-webkit-scrollbar {
-        width: 8px;
-    }
-    
-    ::-webkit-scrollbar-track {
-        background: var(--metal-dark);
-    }
-    
-    ::-webkit-scrollbar-thumb {
-        background: var(--neon-orange);
-        border-radius: 4px;
-    }
-    
-    ::-webkit-scrollbar-thumb:hover {
-        background: var(--neon-red);
-    }
-</style>
-
-    <div class="nav-tabs">
-        <div class="nav-tab active" data-section="workout">Antrenman</div>
-        <div class="nav-tab" data-section="progress">İlerleme</div>
-        <div class="nav-tab" data-section="history">Geçmiş</div>
-        <div class="nav-tab" data-section="settings">Ayarlar</div>
-    </div>
-    
-    <div id="workout-section" class="section active">
-        <div class="stats-panel">
-            <div class="stat-box">
-                <div class="stat-label">Seviye</div>
-                <div class="stat-value" id="currentLevel">1</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-label">Hafta</div>
-                <div class="stat-value" id="currentWeek">1</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-label">Gün</div>
-                <div class="stat-value" id="currentDay">1</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-label">Streak</div>
-                <div class="stat-value" id="currentStreak">0</div>
-            </div>
-        </div>
-        
-        <div class="progress-container">
-            <div class="progress-header">
-                <span>TERMINATÖR EVOLÜSYONU</span>
-                <span id="progressPercent">0%</span>
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-            <div class="progress-stats">
-                <div class="progress-stat">
-                    <div class="progress-stat-value" id="totalWorkouts">0</div>
-                    <div style="font-size: 0.65rem; color: #888;">Antrenman</div>
-                </div>
-                <div class="progress-stat">
-                    <div class="progress-stat-value" id="totalSets">0</div>
-                    <div style="font-size: 0.65rem; color: #888;">Set</div>
-                </div>
-                <div class="progress-stat">
-                    <div class="progress-stat-value" id="totalReps">0</div>
-                    <div style="font-size: 0.65rem; color: #888;">Tekrar</div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="workout-plan">
-            <div class="plan-header">
-                <span>ANTRENMAN PLANI</span>
-                <div class="week-selector">
-                    <button class="week-btn active" data-week="1">H1</button>
-                    <button class="week-btn" data-week="2">H2</button>
-                    <button class="week-btn" data-week="3">H3</button>
-                    <button class="week-btn" data-week="4">H4</button>
-                </div>
-            </div>
-            <div class="day-grid" id="dayGrid"></div>
-        </div>
-        
-        <div class="level-tabs">
-            <div class="level-tab active" data-level="1">S1<br><small>BAŞLANGIÇ</small></div>
-            <div class="level-tab" data-level="2">S2<br><small>GEÇİŞ</small></div>
-            <div class="level-tab" data-level="3">S3<br><small>ORTA</small></div>
-            <div class="level-tab" data-level="4">S4<br><small>İLERİ</small></div>
-            <div class="level-tab" data-level="5">S5<br><small>ELİT</small></div>
-        </div>
-        
-        <div class="warmup-section">
-            <div class="warmup-title">🔥 ISINMA PROTOCOLÜ (5-10 dk)</div>
-            <ul class="warmup-list">
-                <li>Jumping Jacks - 2 dk</li>
-                <li>Arm Circles - 1 dk</li>
-                <li>Leg Swings - 1 dk</li>
-                <li>Hip Circles - 1 dk</li>
-                <li>Light Cardio - 2 dk</li>
-            </ul>
-        </div>
-        
-        <div id="workoutContainer"></div>
-    </div>
-    
-    <div id="progress-section" class="section">
-        <div class="workout-plan">
-            <div class="plan-header">
-                <span>🏆 BAŞARILAR</span>
-            </div>
-            <div id="achievementsContainer"></div>
-        </div>
-        
-        <div class="workout-plan">
-            <div class="plan-header">
-                <span>📊 SEVİYE İLERLEMESİ</span>
-            </div>
-            <div id="levelProgressContainer"></div>
-        </div>
-    </div>
-    
-    <div id="history-section" class="section">
-        <div class="workout-plan">
-            <div class="plan-header">
-                <span>📜 ANTRENMAN GEÇMİŞİ</span>
-            </div>
-            <div class="history-list" id="historyList"></div>
-        </div>
-    </div>
-    
-    <div id="settings-section" class="section">
-        <div class="workout-plan">
-            <div class="plan-header">
-                <span>⚙️ KİŞİSEL AYARLAR</span>
-            </div>
-            <div class="settings-group">
-                <label class="settings-label">Kullanıcı Adı</label>
-                <input type="text" class="settings-input" id="userName" placeholder="Terminator">
-            </div>
-            <div class="settings-group">
-                <label class="settings-label">Hedef Haftalık Antrenman</label>
-                <input type="number" class="settings-input" id="weeklyGoal" value="3" min="1" max="7">
-            </div>
-            <div class="settings-group">
-                <label class="settings-label">Varsayılan Dinlenme Süresi (sn)</label>
-                <input type="number" class="settings-input" id="defaultRest" value="60" min="10" max="300">
-            </div>
-            <button class="settings-btn" onclick="saveSettings()">💾 Ayarları Kaydet</button>
-            <button class="settings-btn" onclick="exportData()">📤 Verileri Dışa Aktar</button>
-            <button class="settings-btn" onclick="importData()">📥 Verileri İçe Aktar</button>
-            <button class="settings-btn" onclick="resetAll()" style="border-color: var(--neon-red); color: var(--neon-red);">⚠️ Tüm Verileri Sıfırla</button>
-        </div>
-    </div>
-</div>
-
-<div class="quick-timer" id="quickTimer">
-    <div class="timer-display" id="quickTimerDisplay">00:00</div>
-    <div class="timer-label">DİNLENME</div>
-</div>
-
-<div class="timer-modal" id="timerModal">
-    <div class="timer-circle">
-        <div class="timer-display-large" id="modalTimerDisplay">00:00</div>
-        <div class="timer-label-large">DİNLENME MODU</div>
-    </div>
-    <div class="timer-controls">
-        <button class="timer-btn" onclick="toggleTimer()">BAŞLAT/DURDUR</button>
-        <button class="timer-btn secondary" onclick="resetTimer()">SIFIRLA</button>
-        <button class="timer-btn secondary" onclick="closeTimerModal()">KAPAT</button>
-    </div>
-    <div style="margin-top: 25px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
-        <button class="timer-btn secondary" onclick="addTime(30)">+30s</button>
-        <button class="timer-btn secondary" onclick="addTime(60)">+1dk</button>
-        <button class="timer-btn secondary" onclick="addTime(90)">+1:30</button>
-        <button class="timer-btn secondary" onclick="addTime(120)">+2dk</button>
-    </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script>
-    // Program Data
-    const programData = {
-        1: {
-            name: "BAŞLANGIÇ PROTOCOL",
-            description: "Temel hareket kalıplarını öğrenme ve bağ dokularını güçlendirme",
-            frequency: "3 gün/haf",
-            schedule: [1, 0, 1, 0, 1, 0, 0],
-            exercises: [
-                {
-                    id: "l1_1",
-                    name: "Duvar Şınavı",
-                    difficulty: "easy",
-                    sets: "3",
-                    reps: "8-12",
-                    rest: "60-90 sn",
-                    muscles: ["göğüs", "ön omuz", "arka kol"],
-                    description: "Düz bir duvara ellerinizi omuz genişliğinde koyun, vücudunuzu duvara doğru eğip itin.",
-                    progression: "Duvar şınavı → Eğik şınav (yüksek platform) → Diz üstü şınav → Tam şınav",
-                    tips: "Dirseklerinizi vücuda yakın tutun, 90 derece açıya kadar inin."
-                },
-                {
-                    id: "l1_2",
-                    name: "Koltuk/Dip",
-                    difficulty: "easy",
-                    sets: "3",
-                    reps: "6-10",
-                    rest: "60-90 sn",
-                    muscles: ["arka kol", "ön omuz", "göğüs altı"],
-                    description: "Sırtınızı bir koltuğa veya basamağa dayayın, ellerinizle vücudunuzu indirip kaldırın.",
-                    progression: "Koltuk dip → Bench dip → Yer dip → Derin dip",
-                    tips: "Dirseklerinizi arkaya doğru değil, yanlara doğru bükün."
-                },
-                {
-                    id: "l1_3",
-                    name: "Süpermen (Sırt Uzatma)",
-                    difficulty: "easy",
-                    sets: "3",
-                    reps: "10-15",
-                    rest: "45 sn",
-                    muscles: ["sırt altı", "bel", "arka bacak"],
-                    description: "Yüzüstü yatın, aynı anda kollarınızı ve bacaklarınızı yukarı kaldırın.",
-                    progression: "Süpermen → Tek kol/bacak → Arch hold → Arch rock",
-                    tips: "Bakışınız yere paralel olsun, belinizi aşırı zorlamayın."
-                },
-                {
-                    id: "l1_4",
-                    name: "Glute Bridge",
-                    difficulty: "easy",
-                    sets: "3",
-                    reps: "12-15",
-                    rest: "45 sn",
-                    muscles: ["kalça", "arka bacak", "bel"],
-                    description: "Sırtüstü yatın, ayaklarınız yere basacak şekilde kalçanızı yukarı kaldırın.",
-                    progression: "Glute bridge → Tek bacak → Hip thrust → Weighted hip thrust",
-                    tips: "Üst vücudunuzu yerden kaldırmayın, sadece kalçayı sıkın."
-                },
-                {
-                    id: "l1_5",
-                    name: "Plank",
-                    difficulty: "easy",
-                    sets: "3",
-                    reps: "20-30 sn",
-                    rest: "60 sn",
-                    muscles: ["karın", "bel", "omuz"],
-                    description: "Forearm plank pozisyonunda bekleyin, vücut düz bir çizgi olsun.",
-                    progression: "Diz plank → Tam plank → Yan plank → Plank variations",
-                    tips: "Kalçanızı yukarı veya aşağı sarkıtmayın, nefes almaya devam edin."
-                },
-                {
-                    id: "l1_6",
-                    name: "Duvar Oturmaşı",
-                    difficulty: "easy",
-                    sets: "3",
-                    reps: "20-30 sn",
-                    rest: "60 sn",
-                    muscles: ["ön bacak", "kalça"],
-                    description: "Sırtınız duvara dayalı, dizler 90 derece pozisyonda bekleyin.",
-                    progression: "Duvar oturmaşı → Yarı squat → Tam squat → Tek bacak",
-                    tips: "Dizleriniz ayak parmaklarınızın önüne geçmesin."
-                }
-            ]
-        },
-        2: {
-            name: "GEÇİŞ PROTOCOL",
-            description: "Temel hareketlerden fonksiyonel güce geçiş",
-            frequency: "3-4 gün/haf",
-            schedule: [1, 0, 1, 0, 1, 1, 0],
-            exercises: [
-                {
-                    id: "l2_1",
-                    name: "Eğik Şınav",
-                    difficulty: "medium",
-                    sets: "3-4",
-                    reps: "8-12",
-                    rest: "60 sn",
-                    muscles: ["göğüs", "ön omuz", "arka kol"],
-                    description: "Ellerinizi bir platforma (bench, masa) koyun, vücudunuzu indirip kaldırın.",
-                    progression: "Yüksek platform → Alçak platform → Yer seviyesi → Decline",
-                    tips: "Vücudunuz düz bir çizgi olsun, göğsünüzü platforma dokundurun."
-                },
-                {
-                    id: "l2_2",
-                    name: "Negative Pull-up",
-                    difficulty: "medium",
-                    sets: "3",
-                    reps: "3-5 (5 sn iniş)",
-                    rest: "90 sn",
-                    muscles: ["sırt", "arka kol", "ön kol", "omuz"],
-                    description: "Bara zıplayın veya yardımla çıkın, yavaşça (5 saniye) inin.",
-                    progression: "Negative → Assisted → Jump pull-up → Tam pull-up",
-                    tips: "İniş tamamen kontrollü olsun, sadece bırakmayın."
-                },
-                {
-                    id: "l2_3",
-                    name: "Bulgarian Split Squat",
-                    difficulty: "medium",
-                    sets: "3",
-                    reps: "8-10/ bacak",
-                    rest: "60 sn",
-                    muscles: ["ön bacak", "kalça", "denge kasları"],
-                    description: "Bir bacağınız arkada yüksekte, öndeki bacakla squat yapın.",
-                    progression: "Düşük yükseklik → Yüksek yükseklik → Ağırlık → Pistol squat",
-                    tips: "Diziniz ayak parmaklarınızın önüne geçmesin, gövde dik kalsın."
-                },
-                {
-                    id: "l2_4",
-                    name: "Hollow Body Hold",
-                    difficulty: "medium",
-                    sets: "3",
-                    reps: "20-40 sn",
-                    rest: "60 sn",
-                    muscles: ["karın derin", "bel", "kalça fleksör"],
-                    description: "Sırtüstü yatın, kollar ve bacaklar kalkık, bel yere bastırılmış.",
-                    progression: "Bent knee → Tam hollow → Hollow rock → Hollow pull-up",
-                    tips: "Belinizin yere temas ettiğinden emin olun, titremeye başlayana kadar tutun."
-                },
-                {
-                    id: "l2_5",
-                    name: "Pike Push-up",
-                    difficulty: "medium",
-                    sets: "3",
-                    reps: "6-10",
-                    rest: "60-90 sn",
-                    muscles: ["ön omuz", "üst göğüs", "arka kol"],
-                    description: "Kalçanız yukarıda, başınız yere yakın şekilde şınav pozisyonu.",
-                    progression: "Pike push-up → Elevated pike → Handstand push-up neg → HSPU",
-                    tips: "Başınızı öne doğru değil, yere doğru indirin."
-                },
-                {
-                    id: "l2_6",
-                    name: "Inverted Row",
-                    difficulty: "medium",
-                    sets: "3",
-                    reps: "8-12",
-                    rest: "60 sn",
-                    muscles: ["sırt orta", "arka kol", "ön kol", "omuz arka"],
-                    description: "Düşük bir barın altına girin, göğsünüzü bara çekin.",
-                    progression: "Yüksek bar → Düşük bar → Ayaklar yukarı → Front lever row",
-                    tips: "Dirseklerinizi vücudunuza yakın tutun, omuzları geriye çekin."
-                }
-            ]
-        },
-        3: {
-            name: "ORTA SEVİYE PROTOCOL",
-            description: "Temel vücut ağırlığı hareketlerinin ustalaşması",
-            frequency: "4 gün/haf",
-            schedule: [1, 0, 1, 0, 1, 1, 0],
-            exercises: [
-                {
-                    id: "l3_1",
-                    name: "Tam Şınav",
-                    difficulty: "medium",
-                    sets: "4",
-                    reps: "10-20",
-                    rest: "60 sn",
-                    muscles: ["göğüs", "ön omuz", "arka kol", "karın"],
-                    description: "Yerden kalkmadan klasik şınav, vücut düz çizgi.",
-                    progression: "Tam şınav → El yakınlaştırma → El genişletme → Archer → One-arm neg",
-                    tips: "Göğsünüzü yere hafifçe dokundurun, tam kilit açın."
-                },
-                {
-                    id: "l3_2",
-                    name: "Tam Pull-up",
-                    difficulty: "hard",
-                    sets: "3-4",
-                    reps: "5-10",
-                    rest: "90 sn",
-                    muscles: ["sırt geniş", "latissimus", "biceps", "omuz", "el kavrama"],
-                    description: "Barı avuç içleri size bakacak veya dışa bakacak şekilde çeneniz üstüne çekin.",
-                    progression: "Chin-up → Pull-up → Chest-to-bar → Muscle-up neg → Muscle-up",
-                    tips: "Bacaklarınızı öne kaldırmayın, omuzları aktif tutun."
-                },
-                {
-                    id: "l3_3",
-                    name: "Pistol Squat (Assisted)",
-                    difficulty: "hard",
-                    sets: "3",
-                    reps: "3-5/ bacak",
-                    rest: "90 sn",
-                    muscles: ["ön bacak", "kalça", "denge", "bacağın tümü"],
-                    description: "Tek bacakla squat, diğer bacak önde veya tutunarak.",
-                    progression: "Box pistol → Assisted pistol → Tam pistol → Weighted pistol",
-                    tips: "Ağırlığı topuğunuzda tutun, kontrollü düşün."
-                },
-                {
-                    id: "l3_4",
-                    name: "Dip",
-                    difficulty: "medium",
-                    sets: "3-4",
-                    reps: "8-12",
-                    rest: "60 sn",
-                    muscles: ["göğüs altı", "ön omuz", "arka kol"],
-                    description: "Paralel barlarda veya sandalyelerde vücudu indirip kaldırma.",
-                    progression: "Bench dip → Bar dip → Ring dip → Weighted dip",
-                    tips: "Dirseklerinizi yanlara değil, arkaya doğru bükün."
-                },
-                {
-                    id: "l3_5",
-                    name: "L-Sit",
-                    difficulty: "hard",
-                    sets: "3",
-                    reps: "10-20 sn",
-                    rest: "60 sn",
-                    muscles: ["karın", "kalça fleksör", "ön omuz", "triceps"],
-                    description: "Yerde veya parmaklarda oturur pozisyonda bacaklar havada L şeklinde.",
-                    progression: "Tuck sit → One leg → L-sit → V-sit → Manna",
-                    tips: "Omuzlarınızı aşağı bastırın, bacaklarınızı kaldırabildiğiniz kadar kaldırın."
-                },
-                {
-                    id: "l3_6",
-                    name: "Australian Pull-up",
-                    difficulty: "medium",
-                    sets: "3",
-                    reps: "10-15",
-                    rest: "60 sn",
-                    muscles: ["sırt üstü", "arka omuz", "biceps", "karın"],
-                    description: "Düşük barın altında, gövde düz, barı göğsüne çekme.",
-                    progression: "High bar → Low bar → Feet elevated → Front lever row",
-                    tips: "Gövdenizi düz tutun, dirsekleri vücuda yakın çekin."
-                }
-            ]
-        },
-        4: {
-            name: "İLERİ PROTOCOL",
-            description: "Teknik zorluk ve hacim artışı",
-            frequency: "4-5 gün/haf",
-            schedule: [1, 1, 0, 1, 0, 1, 1],
-            exercises: [
-                {
-                    id: "l4_1",
-                    name: "Diamond Push-up",
-                    difficulty: "hard",
-                    sets: "4",
-                    reps: "8-15",
-                    rest: "60 sn",
-                    muscles: ["triceps", "iç göğüs", "ön omuz"],
-                    description: "Eller elmas şeklinde, işaret parmakları ve baş parmaklar birbirine değecek.",
-                    progression: "Diamond → Pseudo planche → 90-degree push-up → Planche lean",
-                    tips: "Dirseklerinizi yanlara doğru değil, geriye doğru bükün."
-                },
-                {
-                    id: "l4_2",
-                    name: "Muscle-up",
-                    difficulty: "hard",
-                    sets: "3",
-                    reps: "3-8",
-                    rest: "2 dk",
-                    muscles: ["sırt", "göğüs", "omuz", "kol (tümü)"],
-                    description: "Barı çekip üzerinden geçiş, dip pozisyonuna tamamlama.",
-                    progression: "Chest-to-bar → Muscle-up neg → Kipping → Strict muscle-up",
-                    tips: "Önce barı göğsünüze çekin, sonra başınızı öne atın."
-                },
-                {
-                    id: "l4_3",
-                    name: "Tam Pistol Squat",
-                    difficulty: "hard",
-                    sets: "3-4",
-                    reps: "5-8/ bacak",
-                    rest: "90 sn",
-                    muscles: ["quadriceps", "gluteus", "hamstring", "core", "bacağın tümü"],
-                    description: "Tek bacakla derin squat, diğer bacak önde havada.",
-                    progression: "Tam pistol → Shrimp squat → Dragon pistol → Weighted pistol",
-                    tips: "Bacak kaslarınızı sürekli gergin tutun, düşüşü kontrol edin."
-                },
-                {
-                    id: "l4_4",
-                    name: "Handstand Hold",
-                    difficulty: "hard",
-                    sets: "4",
-                    reps: "20-45 sn",
-                    rest: "90 sn",
-                    muscles: ["omuz", "trapez", "triceps", "core", "el bileği"],
-                    description: "Duvara veya serbest olarak el üstünde duruş.",
-                    progression: "Duvar tırmanma → Duvar hold → Serbest hold → Handstand walk",
-                    tips: "Omuzlarınızı kulaklarınıza kadar itin, parmaklarla denge yapın."
-                },
-                {
-                    id: "l4_5",
-                    name: "Front Lever Progression",
-                    difficulty: "hard",
-                    sets: "3",
-                    reps: "10-20 sn",
-                    rest: "2 dk",
-                    muscles: ["sırt", "latissimus", "core", "ön kol"],
-                    description: "Bar tutunarak vücudu yatay tutma (tuck, straddle, tam).",
-                    progression: "Tuck → Advanced tuck → Straddle → Half lay → Full front lever",
-                    tips: "Omuzlarınızı sıkın, kalçanızı kaldırmayın."
-                },
-                {
-                    id: "l4_6",
-                    name: "Archer Push-up",
-                    difficulty: "hard",
-                    sets: "3",
-                    reps: "5-8/ taraf",
-                    rest: "90 sn",
-                    muscles: ["göğüs", "omuz", "triceps (asimetrik yük)"],
-                    description: "Bir kol uzatılmış, diğeri bükülü şekilde şınav.",
-                    progression: "Archer → One-arm neg → One-arm assisted → One-arm push-up",
-                    tips: "Ağırlığı aktif kola verin, uzatılan kol sadece denge için."
-                }
-            ]
-        },
-        5: {
-            name: "ELİT PROTOCOL",
-            description: "İnsanüstü güç ve kontrol seviyesi",
-            frequency: "5-6 gün/haf",
-            schedule: [1, 1, 0, 1, 1, 0, 1],
-            exercises: [
-                {
-                    id: "l5_1",
-                    name: "One-Arm Push-up",
-                    difficulty: "elite",
-                    sets: "3-4",
-                    reps: "3-6/ kol",
-                    rest: "2 dk",
-                    muscles: ["göğüs", "omuz", "triceps", "core (asimetrik)"],
-                    description: "Tek elle şınav, diğer kol belde veya havada.",
-                    progression: "One-arm → One-arm feet elevated → One-arm planche → 90-degree one-arm",
-                    tips: "Ayaklarınızı geniş açın, gövdenizi aktif kola yakın tutun."
-                },
-                {
-                    id: "l5_2",
-                    name: "Planche Progression",
-                    difficulty: "elite",
-                    sets: "4",
-                    reps: "10-30 sn",
-                    rest: "2-3 dk",
-                    muscles: ["ön omuz", "göğüs üstü", "core", "ön kol"],
-                    description: "Yerde eller üzerinde vücudu yatay tutma.",
-                    progression: "Lean → Tuck planche → Advanced tuck → Straddle → Full planche",
-                    tips: "Omuzlarınızı öne doğru itin, kalçanızı sıkın."
-                },
-                {
-                    id: "l5_3",
-                    name: "Human Flag",
-                    difficulty: "elite",
-                    sets: "3",
-                    reps: "5-15 sn",
-                    rest: "2 dk",
-                    muscles: ["oblique", "latissimus", "omuz", "core (yan)"],
-                    description: "Dikey direkte yatay tutunma pozisyonu.",
-                    progression: "Tuck flag → Straddle flag → Full flag → Flag pull-up",
-                    tips: "Üst el çekiş, alt el itiş yapar, vücut gergin."
-                },
-                {
-                    id: "l5_4",
-                    name: "Handstand Push-up",
-                    difficulty: "elite",
-                    sets: "3-4",
-                    reps: "3-8",
-                    rest: "2 dk",
-                    muscles: ["ön omuz", "trapez", "triceps", "üst göğüs"],
-                    description: "El üstünde duruş pozisyonunda baş üstü şınav.",
-                    progression: "Wall HSPU → Free HSPU → Deficit HSPU → 90-degree HSPU",
-                    tips: "Başınızı yere hafifçe dokundurun, kontrollü iniş ve kalkış."
-                },
-                {
-                    id: "l5_5",
-                    name: "Muscle-up 360 / Transition",
-                    difficulty: "elite",
-                    sets: "3",
-                    reps: "3-6",
-                    rest: "2-3 dk",
-                    muscles: ["tüm üst vücut", "güç zinciri"],
-                    description: "Muscle-up üzerine dönüş veya geçiş hareketleri.",
-                    progression: "Muscle-up → Slow muscle-up → Muscle-up 360 → Iron cross prep",
-                    tips: "Her aşamada kontrolü kaybetmeyin, momentum yerine güç kullanın."
-                },
-                {
-                    id: "l5_6",
-                    name: "Dragon Flag",
-                    difficulty: "elite",
-                    sets: "3",
-                    reps: "5-10",
-                    rest: "2 dk",
-                    muscles: ["core (tümü)", "kalça fleksör", "sırt altı"],
-                    description: "Sırtüstü yatarken bacakları ve gövdeyi kaldırıp kontrollü indirme.",
-                    progression: "Tuck dragon → One leg → Straddle → Full dragon flag",
-                    tips: "Sırtınızı yere yapıştırın, sadece omuzlarınız destek alsın."
-                }
-            ]
-        }
-    };
-
-    // Achievements
-    const achievements = [
-        { id: 'first_workout', name: 'İlk Adım', desc: 'İlk antrenmanını tamamla', icon: '🎯', condition: () => workoutHistory.length >= 1 },
-        { id: 'week_warrior', name: 'Hafta Savaşçısı', desc: '7 gün üst üste antrenman yap', icon: '🔥', condition: () => calculateStreak() >= 7 },
-        { id: 'level_master', name: 'Seviye Ustası', desc: 'Bir seviyenin tüm hareketlerini tamamla', icon: '⭐', condition: () => checkLevelMaster() },
-        { id: 'rep_machine', name: 'Tekrar Makinesi', desc: 'Toplam 1000 tekrar yap', icon: '💪', condition: () => getTotalReps() >= 1000 },
-        { id: 'time_lord', name: 'Zaman Lordu', desc: 'Toplam 10 saat antrenman yap', icon: '⏱️', condition: () => getTotalTime() >= 600 },
-        { id: 'perfectionist', name: 'Mükemmeliyetçi', desc: 'Bir günde tüm setleri %100 tamamla', icon: '💎', condition: () => checkPerfectDay() }
-    ];
-
-    // State
+    // State Management
     let currentLevel = 1;
     let currentWeek = 1;
     let currentDay = 1;
@@ -3761,45 +1697,222 @@ Kod tamam, işte eksik kısımlarla birlikte tam hali:
     // Initialize
     function init() {
         loadData();
-        setupEventListeners();
         renderDayGrid();
         updateProgress();
         renderWorkout();
         renderAchievements();
         renderHistory();
-        updateLevelLocks();
     }
 
-    function setupEventListeners() {
-        // Navigation tabs
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                const section = this.getAttribute('data-section');
-                showSection(section);
-            });
+    function loadData() {
+        const saved = localStorage.getItem('t800_data');
+        if (saved) {
+            const data = JSON.parse(saved);
+            currentLevel = data.currentLevel || 1;
+            currentWeek = data.currentWeek || 1;
+            currentDay = data.currentDay || 1;
+            completedExercises = data.completedExercises || [];
+            workoutHistory = data.workoutHistory || [];
+            exerciseData = data.exerciseData || {};
+            userSettings = { ...userSettings, ...data.userSettings };
+            
+            document.getElementById('userName').value = userSettings.userName;
+            document.getElementById('weeklyGoal').value = userSettings.weeklyGoal;
+            document.getElementById('defaultRest').value = userSettings.defaultRest;
+        }
+    }
+
+    function saveData() {
+        const data = {
+            currentLevel,
+            currentWeek,
+            currentDay,
+            completedExercises,
+            workoutHistory,
+            exerciseData,
+            userSettings
+        };
+        localStorage.setItem('t800_data', JSON.stringify(data));
+    }
+
+    // Navigation
+    function showSection(section) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        event.target.classList.add('active');
+        document.getElementById(`${section}-section`).classList.add('active');
+        
+        if (section === 'progress') renderAchievements();
+        if (section === 'history') renderHistory();
+    }
+
+    // Week/Day Management
+    function changeWeek(week) {
+        currentWeek = week;
+        document.querySelectorAll('.week-btn').forEach((btn, i) => {
+            btn.classList.toggle('active', i + 1 === week);
         });
+        renderDayGrid();
+    }
 
-        // Week buttons
-        document.querySelectorAll('.week-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const week = parseInt(this.getAttribute('data-week'));
-                changeWeek(week);
-            });
+    function renderDayGrid() {
+        const grid = document.getElementById('dayGrid');
+        const schedule = programData[currentLevel].schedule;
+        let html = '';
+        
+        for (let i = 1; i <= 7; i++) {
+            const isWorkout = schedule[i - 1] === 1;
+            const isToday = i === currentDay;
+            const isCompleted = workoutHistory.some(h => 
+                h.week === currentWeek && h.day === i && h.level === currentLevel
+            );
+            
+            let className = 'day-box';
+            if (isCompleted) className += ' completed';
+            else if (isToday) className += ' active';
+            else if (!isWorkout) className += ' rest';
+            
+            const labels = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
+            
+            html += `
+                <div class="${className}" onclick="selectDay(${i})">
+                    <div class="day-number">${i}</div>
+                    <div class="day-label">${labels[i-1]}</div>
+                </div>
+            `;
+        }
+        grid.innerHTML = html;
+        document.getElementById('currentWeek').textContent = currentWeek;
+        document.getElementById('currentDay').textContent = currentDay;
+    }
+
+    function selectDay(day) {
+        currentDay = day;
+        renderDayGrid();
+        renderWorkout();
+    }
+
+    // Level Management
+    function changeLevel(level) {
+        currentLevel = level;
+        document.querySelectorAll('.level-tab').forEach((tab, index) => {
+            tab.classList.toggle('active', index + 1 === level);
         });
+        document.getElementById('currentLevel').textContent = level;
+        renderDayGrid();
+        renderWorkout();
+        saveData();
+    }
 
-        // Level tabs
-        document.query
+    // Workout Rendering
+    function renderWorkout() {
+        const container = document.getElementById('workoutContainer');
+        const data = programData[currentLevel];
+        const isRestDay = data.schedule[currentDay - 1] === 0;
+        
+        if (isRestDay) {
+            container.innerHTML = `
+                <div class="rest-day">
+                    <div class="rest-icon">🔋</div>
+                    <div class="rest-title">İYİLEŞME GÜNÜ</div>
+                    <div style="font-size: 0.9rem; color: #999; margin-bottom: 15px;">
+                        Bugün dinlenme gününüz. Kaslarınızın onarılması için dinlenmek en az antrenman kadar önemli.
+                    </div>
+                    <div style="font-size: 0.8rem; color: var(--neon-orange);">
+                        Önerilen: 7-9 saat uyku | Yüksek protein | Bol su (3-4L/gün) | Hafif stretching
+                    </div>
+                </div>
+            `;
+            return;
+        }
+        
+        let html = `
+            <div style="margin-bottom: 20px; padding: 15px; background: rgba(255,102,0,0.1); border-left: 3px solid var(--neon-orange);">
+                <div style="color: var(--neon-orange); font-size: 1.1rem; margin-bottom: 5px;">${data.name}</div>
+                <div style="font-size: 0.85rem; color: #999; margin-bottom: 5px;">${data.description}</div>
+                <div style="font-size: 0.8rem; color: var(--neon-orange);">Frekans: ${data.frequency}</div>
+            </div>
+        `;
 
-System is currently busy. Please try again later.
-            document.querySelectorAll('.level-tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const level = parseInt(this.getAttribute('data-level'));
-                    changeLevel(level);
-                });
-            });
+        data.exercises.forEach((ex, index) => {
+            const isCompleted = completedExercises.includes(`${currentLevel}_${currentWeek}_${currentDay}_${ex.id}`);
+            const exData = exerciseData[`${currentLevel}_${ex.id}`] || { sets: [] };
+            
+            html += `
+                <div class="exercise-card ${isCompleted ? 'completed' : ''}" id="card-${ex.id}">
+                    <div class="exercise-header" onclick="toggleExercise('${ex.id}')">
+                        <div class="exercise-name">
+                            <div class="exercise-check"></div>
+                            ${index + 1}. ${ex.name}
+                        </div>
+                        <span class="difficulty-badge ${ex.difficulty}">${ex.difficulty}</span>
+                    </div>
+                    <div class="exercise-content" id="content-${ex.id}">
+                        <!-- Video Placeholder -->
+                        <div class="video-container">
+                            <div class="video-placeholder">
+                                <div class="play-btn" onclick="event.stopPropagation(); alert('Video özelliği yakında geliyor!')"></div>
+                                <div style="font-size: 0.8rem;">Hareket Videosu</div>
+                            </div>
+                        </div>
+                        
+                        <div class="anatomy-container">
+                            <div class="body-figure">
+                                <svg class="body-svg" viewBox="0 0 100 200">
+                                    <path class="muscle-group ${ex.muscles.includes('göğüs') || ex.muscles.includes('göğüs üstü') || ex.muscles.includes('göğüs altı') || ex.muscles.includes('iç göğüs') ? 'active' : ''}" 
+                                          d="M30,40 Q50,35 70,40 L65,60 Q50,65 35,60 Z"/>
+                                    <path class="muscle-group ${ex.muscles.includes('ön omuz') || ex.muscles.includes('omuz') || ex.muscles.includes('trapez') ? 'active' : ''}" 
+                                          d="M25,35 L35,40 L35,50 L25,45 Z M75,35 L65,40 L65,50 L75,45 Z"/>
+                                    <path class="muscle-group ${ex.muscles.includes('arka kol') || ex.muscles.includes('triceps') || ex.muscles.includes('biceps') || ex.muscles.includes('ön kol') ? 'active' : ''}" 
+                                          d="M20,50 L30,80 L25,85 L15,55 Z M80,50 L70,80 L75,85 L85,55 Z"/>
+                                    <path class="muscle-group ${ex.muscles.includes('karın') || ex.muscles.includes('core') || ex.muscles.includes('oblique') || ex.muscles.includes('bel') ? 'active' : ''}" 
+                                          d="M35,65 L65,65 L60,90 L40,90 Z"/>
+                                    <path class="muscle-group ${ex.muscles.includes('sırt') || ex.muscles.includes('sırt altı') || ex.muscles.includes('sırt orta') || ex.muscles.includes('sırt üstü’) || 
+ex.muscles.includes('latissimus') ? 'active' : ''}" 
+                                              d="M30,40 L25,65 L35,65 L40,40 Z M70,40 L75,65 L65,65 L60,40 Z"/>
+                                        <path class
+                        Sırtınızı yere yapıştırın, sadece omuzlarınız destek alsın.",
+                        videoUrl: "#"
+                    }
+                ]
+            }
+        };
 
-            // Quick timer
-            document.getElementById('quickTimer').addEventListener('click', openTimerModal);
+        // Achievements System
+        const achievements = [
+            { id: 'first_workout', name: 'İlk Adım', desc: 'İlk antrenmanını tamamla', icon: '🎯', condition: () => workoutHistory.length >= 1 },
+            { id: 'week_warrior', name: 'Hafta Savaşçısı', desc: '7 gün üst üste antrenman yap', icon: '🔥', condition: () => calculateStreak() >= 7 },
+            { id: 'level_master', name: 'Seviye Ustası', desc: 'Bir seviyenin tüm hareketlerini tamamla', icon: '⭐', condition: () => checkLevelMaster() },
+            { id: 'rep_machine', name: 'Tekrar Makinesi', desc: 'Toplam 1000 tekrar yap', icon: '💪', condition: () => getTotalReps() >= 1000 },
+            { id: 'time_lord', name: 'Zaman Lordu', desc: 'Toplam 10 saat antrenman yap', icon: '⏱️', condition: () => getTotalTime() >= 600 },
+            { id: 'perfectionist', name: 'Mükemmeliyetçi', desc: 'Bir günde tüm setleri %100 tamamla', icon: '💎', condition: () => checkPerfectDay() }
+        ];
+
+        // State Management
+        let currentLevel = 1;
+        let currentWeek = 1;
+        let currentDay = 1;
+        let completedExercises = [];
+        let workoutHistory = [];
+        let exerciseData = {};
+        let timerInterval;
+        let timerSeconds = 0;
+        let isTimerRunning = false;
+        let userSettings = {
+            userName: 'Terminator',
+            weeklyGoal: 3,
+            defaultRest: 60
+        };
+
+        // Initialize
+        function init() {
+            loadData();
+            renderDayGrid();
+            updateProgress();
+            renderWorkout();
+            renderAchievements();
+            renderHistory();
+            updateLevelLocks();
         }
 
         function loadData() {
@@ -3833,20 +1946,13 @@ System is currently busy. Please try again later.
             localStorage.setItem('t800_data', JSON.stringify(data));
         }
 
+        // Navigation
         function showSection(section) {
-            // Update nav tabs
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.classList.remove('active');
-                if (tab.getAttribute('data-section') === section) {
-                    tab.classList.add('active');
-                }
-            });
-
-            // Update sections
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
             document.getElementById(`${section}-section`).classList.add('active');
-
-            // Render specific content
+            
             if (section === 'progress') {
                 renderAchievements();
                 renderLevelProgress();
@@ -3854,10 +1960,11 @@ System is currently busy. Please try again later.
             if (section === 'history') renderHistory();
         }
 
+        // Week/Day Management
         function changeWeek(week) {
             currentWeek = week;
-            document.querySelectorAll('.week-btn').forEach(btn => {
-                btn.classList.toggle('active', parseInt(btn.getAttribute('data-week')) === week);
+            document.querySelectorAll('.week-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i + 1 === week);
             });
             renderDayGrid();
             saveData();
@@ -3901,6 +2008,7 @@ System is currently busy. Please try again later.
             saveData();
         }
 
+        // Level Management with Lock System
         function changeLevel(level) {
             if (isLevelLocked(level)) {
                 showToast(`Seviye ${level} kilitli! Önceki seviyeyi tamamlayın.`, 'error');
@@ -3908,8 +2016,8 @@ System is currently busy. Please try again later.
             }
             
             currentLevel = level;
-            document.querySelectorAll('.level-tab').forEach(tab => {
-                tab.classList.toggle('active', parseInt(tab.getAttribute('data-level')) === level);
+            document.querySelectorAll('.level-tab').forEach((tab, index) => {
+                tab.classList.toggle('active', index + 1 === level);
             });
             document.getElementById('currentLevel').textContent = level;
             renderDayGrid();
@@ -3920,6 +2028,7 @@ System is currently busy. Please try again later.
         function isLevelLocked(level) {
             if (level === 1) return false;
             
+            // Check if previous level is completed
             const prevLevel = level - 1;
             const prevLevelData = programData[prevLevel];
             const prevLevelExercises = prevLevelData.exercises.length;
@@ -3927,23 +2036,25 @@ System is currently busy. Please try again later.
                 id.startsWith(`${prevLevel}_`)
             ).length;
             
+            // Require at least 80% completion to unlock next level
             return completedInPrev < prevLevelExercises * 0.8;
         }
 
         function updateLevelLocks() {
-            document.querySelectorAll('.level-tab').forEach(tab => {
-                const level = parseInt(tab.getAttribute('data-level'));
+            document.querySelectorAll('.level-tab').forEach((tab, index) => {
+                const level = index + 1;
                 if (isLevelLocked(level)) {
                     tab.classList.add('locked');
                     tab.innerHTML = `S${level}<br><small>KİLİTLİ</small>`;
                 } else {
                     tab.classList.remove('locked');
                     const names = ['BAŞLANGIÇ', 'GEÇİŞ', 'ORTA', 'İLERİ', 'ELİT'];
-                    tab.innerHTML = `S${level}<br><small>${names[level-1]}</small>`;
+                    tab.innerHTML = `S${level}<br><small>${names[index]}</small>`;
                 }
             });
         }
 
+        // Workout Rendering
         function renderWorkout() {
             const container = document.getElementById('workoutContainer');
             const data = programData[currentLevel];
@@ -3985,6 +2096,7 @@ System is currently busy. Please try again later.
                 const isCompleted = completedExercises.includes(exerciseKey);
                 const exData = exerciseData[exerciseKey] || { sets: [], notes: '' };
                 
+                // Initialize sets data if not exists
                 if (exData.sets.length === 0) {
                     const setCount = parseInt(ex.sets.split('-')[0]) || 3;
                     for (let i = 0; i < setCount; i++) {
@@ -4002,6 +2114,7 @@ System is currently busy. Please try again later.
                             <span class="difficulty-badge ${ex.difficulty}">${ex.difficulty}</span>
                         </div>
                         <div class="exercise-content" id="content-${ex.id}">
+                            <!-- Video Placeholder -->
                             <div class="video-container">
                                 <div class="video-placeholder">
                                     <div class="play-btn" onclick="event.stopPropagation(); showVideoDemo('${ex.name}')"></div>
@@ -4064,6 +2177,7 @@ System is currently busy. Please try again later.
                                 ${ex.description}
                             </div>
                             
+                            <!-- Sets Tracker -->
                             <div class="sets-tracker">
                                 <div class="sets-header">
                                     <span>Set Takibi</span>
@@ -4111,6 +2225,7 @@ System is currently busy. Please try again later.
                 `;
             });
 
+            // Add finish workout button
             html += `
                 <button class="complete-btn" onclick="finishWorkout()" style="background: var(--neon-green); color: #000; margin-top: 30px; font-size: 1.1rem;">
                     🏆 ANTRENMANI BİTİR
@@ -4150,6 +2265,7 @@ System is currently busy. Please try again later.
             saveData();
             renderWorkout();
             
+            // Auto-start rest timer
             if (exerciseData[exerciseKey].sets[setIndex].completed) {
                 const restTime = parseInt(userSettings.defaultRest) || 60;
                 startRestTimer(restTime);
@@ -4183,6 +2299,7 @@ System is currently busy. Please try again later.
                 btn.textContent = '✓ TAMAMLANDI';
                 card.classList.add('completed');
                 
+                // Celebration effect
                 btn.style.transform = 'scale(1.05)';
                 setTimeout(() => btn.style.transform = 'scale(1)', 200);
                 
@@ -4196,6 +2313,7 @@ System is currently busy. Please try again later.
         }
 
         function finishWorkout() {
+            // Calculate stats
             const todayExercises = programData[currentLevel].exercises;
             const completedToday = todayExercises.filter(ex => {
                 const key = `${currentLevel}_${currentWeek}_${currentDay}_${ex.id}`;
@@ -4207,6 +2325,7 @@ System is currently busy. Please try again later.
                 return;
             }
             
+            // Save workout to history
             const workoutStats = calculateWorkoutStats();
             const historyEntry = {
                 date: new Date().toISOString(),
@@ -4220,6 +2339,7 @@ System is currently busy. Please try again later.
                 duration: workoutStats.duration || 30
             };
             
+            // Check if already exists
             const existingIndex = workoutHistory.findIndex(h => 
                 h.level === currentLevel && h.week === currentWeek && h.day === currentDay
             );
@@ -4236,6 +2356,7 @@ System is currently busy. Please try again later.
             showToast(`Antrenman kaydedildi! ${completedToday}/${todayExercises.length} egzersiz tamamlandı. 🎉`);
             checkAchievements();
             
+            // Auto-advance to next day if all exercises completed
             if (completedToday === todayExercises.length) {
                 setTimeout(() => {
                     const nextDay = currentDay + 1;
@@ -4297,6 +2418,7 @@ System is currently busy. Please try again later.
             return { sets, reps };
         }
 
+        // Progress Tracking
         function updateProgress() {
             const totalExercises = Object.values(programData).reduce((acc, level) => acc + level.exercises.length, 0);
             const uniqueCompleted = [...new Set(completedExercises.map(id => id.split('_').slice(0, 2).join('_')))].length;
@@ -4305,11 +2427,13 @@ System is currently busy. Please try again later.
             document.getElementById('progressFill').style.width = percent + '%';
             document.getElementById('progressPercent').textContent = percent + '%';
             
+            // Calculate stats
             const stats = calculateAllStats();
             document.getElementById('totalWorkouts').textContent = workoutHistory.filter(h => !h.isRestDay).length;
             document.getElementById('totalSets').textContent = stats.totalSets;
             document.getElementById('totalReps').textContent = stats.totalReps;
             
+            // Update streak
             document.getElementById('currentStreak').textContent = calculateStreak();
         }
 
@@ -4355,6 +2479,7 @@ System is currently busy. Please try again later.
             return streak;
         }
 
+        // Achievements
         function renderAchievements() {
             const container = document.getElementById('achievementsContainer');
             let html = '';
@@ -4441,6 +2566,7 @@ System is currently busy. Please try again later.
             });
         }
 
+        // History
         function renderHistory() {
             const container = document.getElementById('historyList');
             
@@ -4520,10 +2646,10 @@ System is currently busy. Please try again later.
             if (isTimerRunning) {
                 clearInterval(timerInterval);
                 isTimerRunning = false;
-                document.getElementById('quickTimer').classList.remove('active');
+                document.querySelector('.quick-timer').classList.remove('active');
             } else {
                 isTimerRunning = true;
-                document.getElementById('quickTimer').classList.add('active');
+                document.querySelector('.quick-timer').classList.add('active');
                 timerInterval = setInterval(() => {
                     timerSeconds++;
                     updateTimerDisplay();
@@ -4536,7 +2662,7 @@ System is currently busy. Please try again later.
             isTimerRunning = false;
             timerSeconds = 0;
             updateTimerDisplay();
-            document.getElementById('quickTimer').classList.remove('active');
+            document.querySelector('.quick-timer').classList.remove('active');
         }
 
         function addTime(seconds) {
@@ -4627,7 +2753,8 @@ System is currently busy. Please try again later.
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             toast.textContent = message;
-            toast.className = 'toast ' + (type === 'error' ? 'error' : '');
+            toast.style.background = type === 'error' ? 'var(--neon-red)' : 'var(--neon-green)';
+            toast.style.color = type === 'error' ? '#fff' : '#000';
             toast.classList.add('show');
             
             setTimeout(() => {
@@ -4641,19 +2768,227 @@ System is currently busy. Please try again later.
 
         // Keyboard Shortcuts
         document.addEventListener('keydown', (e) => {
+            // Space to toggle timer when modal open
             if (e.code === 'Space' && document.getElementById('timerModal').classList.contains('active')) {
                 e.preventDefault();
                 toggleTimer();
             }
+            // ESC to close modal
             if (e.code === 'Escape') {
                 closeTimerModal();
             }
         });
 
-        // Initialize
+        // Initialize app
         init();
         
-        // Service Worker
+        // Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('data:text/javascript,' + encodeURIComponent(`
+                self.addEventListener('install', e => {
+                    self.skipWaiting();
+                    console.log('T-800 Service Worker installed');
+                });
+                self.addEventListener('activate', e => {
+                    e.waitUntil(clients.claim());
+                    console.log('T-800 Service Worker activated');
+                });
+                self.addEventListener('fetch', e => {
+                    e.respondWith(
+                        fetch(e.request).catch(() => {
+                            return new Response('Offline mode - T-800 Protocol Active');
+                        })
+                    );
+                });
+            `)).catch(() => {});
+        }
+
+        // Daily reminder check
+        if ('Notification' in window && Notification.permission === 'granted') {
+            // Check if workout done today
+            const today = new Date().toDateString();
+            const workedOutToday = workoutHistory.some(h => 
+                new Date(h.date).toDateString() === today
+            );
+            
+            if (!workedOutToday && new Date().getHours() > 18) {
+                new Notification('Project T-800', {
+                    body: 'Bugün antrenman yapmadınız! Terminatör protokolü bekliyor. 💪',
+                    icon: '💪'
+                });
+            }
+        }
+
+        // Request notification permission
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+    </script>
+</body>
+</html>
+="
+muscle-group ${ex.muscles.includes('ön bacak') || ex.muscles.includes('quadriceps') ? 'active' : ''}" 
+                                              d="M30,100 L45,100 L40,150 L32,150 Z M55,100 L70,100 L68,150 L60,150 Z"/>
+                                        <path class="muscle-group ${ex.muscles.includes('arka bacak') || ex.muscles.includes('hamstring') ? 'active' : ''}" 
+                                              d="M32,100 L40,100 L38,140 L34,140 Z M60,100 L68,100 L66,140 L62,140 Z"/>
+                                        <path class="muscle-group ${ex.muscles.includes('kalça') || ex.muscles.includes('gluteus') ? 'active' : ''}" 
+                                              d="M30,90 Q50,85 70,90 L70,100 Q50,105 30,100 Z"/>
+                                        <!-- Body outline -->
+                                        <path fill="none" stroke="#555" stroke-width="1" 
+                                              d="M50,20 L50,25 M45,25 Q35,30 30,40 L25,65 L20,100 L25,150 L30,180 M55,25 Q65,30 70,40 L75,65 L80,100 L75,150 L70,180 M30,40 Q50,35 70,40"/>
+                                    </svg>
+                                </div>
+                                <div class="muscle-info">
+                                    <div class="muscle-title">Hedef Kas Grupları</div>
+                                    <ul class="muscle-list">
+                                        ${ex.muscles.map(m => `<li>${m}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="details-grid">
+                                <div class="detail-box">
+                                    <div class="detail-label">Set</div>
+                                    <div class="detail-value">${ex.sets}</div>
+                                </div>
+                                <div class="detail-box">
+                                    <div class="detail-label">Tekrar</div>
+                                    <div class="detail-value">${ex.reps}</div>
+                                </div>
+                                <div class="detail-box">
+                                    <div class="detail-label">Dinlenme</div>
+                                    <div class="detail-value">${ex.rest}</div>
+                                </div>
+                                <div class="detail-box">
+                                    <div class="detail-label">Zorluk</div>
+                                    <div class="detail-value">${ex.difficulty}</div>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-bottom: 15px; font-size: 0.9rem; line-height: 1.6; color: #ccc;">
+                                <strong style="color: var(--neon-orange);">Teknik:</strong> ${ex.description}
+                            </div>
+                            
+                            <div class="progression-path">
+                                <div class="progression-title">İlerleme Patikası</div>
+                                <div class="progression-steps">${ex.progression}</div>
+                            </div>
+                            
+                            <div class="tip-box">
+                                ${ex.tips}
+                            </div>
+                            
+                            <button class="complete-btn ${isCompleted ? 'completed' : ''}" onclick="toggleComplete('${ex.id}')" id="btn-${ex.id}">
+                                ${isCompleted ? '✓ TAMAMLANDI' : 'TERMINATÖR ONAYI - TAMAMLA'}
+                            </button>
+
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Add rest day recommendation
+            html += `
+                <div class="rest-day">
+                    <div class="rest-icon">🔋</div>
+                    <div class="rest-title">İYİLEŞME PROTOCOLÜ</div>
+                    <div style="font-size: 0.9rem; color: #999; margin-bottom: 15px;">
+                        Kaslar dinlenirken büyür. Her antrenman sonrası 48 saat dinlenme önerilir.
+                    </div>
+                    <div style="font-size: 0.8rem; color: var(--neon-orange);">
+                        Önerilen: 7-9 saat uyku | Yüksek protein | Bol su (3-4L/gün)
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function toggleExercise(id) {
+            const content = document.getElementById(`content-${id}`);
+            content.classList.toggle('active');
+        }
+
+        function toggleComplete(id) {
+            const index = completedExercises.indexOf(id);
+            const btn = document.getElementById(`btn-${id}`);
+            const card = document.getElementById(`card-${id}`);
+            
+            if (index > -1) {
+                completedExercises.splice(index, 1);
+                btn.classList.remove('completed');
+                btn.textContent = 'TERMINATÖR ONAYI - TAMAMLA';
+                card.style.opacity = '1';
+            } else {
+                completedExercises.push(id);
+                btn.classList.add('completed');
+                btn.textContent = '✓ TAMAMLANDI';
+                card.style.opacity = '0.7';
+                
+                // Celebration effect
+                btn.style.transform = 'scale(1.05)';
+                setTimeout(() => btn.style.transform = 'scale(1)', 200);
+            }
+            
+            localStorage.setItem('t800_completed', JSON.stringify(completedExercises));
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const totalExercises = Object.values(programData).reduce((acc, level) => acc + level.exercises.length, 0);
+            const percent = Math.round((completedExercises.length / totalExercises) * 100);
+            document.getElementById('progressFill').style.width = percent + '%';
+            document.getElementById('progressPercent').textContent = percent + '%';
+            
+            // Calculate level based on completed exercises
+            const level1Count = programData[1].exercises.length;
+            const level2Count = programData[2].exercises.length;
+            const level3Count = programData[3].exercises.length;
+            const level4Count = programData[4].exercises.length;
+            
+            let completed = completedExercises.length;
+            let currentLvl = 1;
+            
+            if (completed >= level1Count) {
+                completed -= level1Count;
+                currentLvl = 2;
+            }
+            if (completed >= level2Count) {
+                completed -= level2Count;
+                currentLvl = 3;
+            }
+            if (completed >= level3Count) {
+                completed -= level3Count;
+                currentLvl = 4;
+            }
+            if (completed >= level4Count) {
+                currentLvl = 5;
+            }
+            
+            document.getElementById('currentLevel').textContent = currentLvl;
+        }
+
+        function toggleTimer() {
+            if (isTimerRunning) {
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+                timerSeconds = 0;
+                document.getElementById('timerDisplay').textContent = '00:00';
+            } else {
+                isTimerRunning = true;
+                timerInterval = setInterval(() => {
+                    timerSeconds++;
+                    const mins = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
+                    const secs = (timerSeconds % 60).toString().padStart(2, '0');
+                    document.getElementById('timerDisplay').textContent = `${mins}:${secs}`;
+                }, 1000);
+            }
+        }
+
+        // Initialize app
+        init();
+        
+        // Service Worker for PWA
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('data:text/javascript,' + encodeURIComponent(`
                 self.addEventListener('install', e => self.skipWaiting());
@@ -4661,12 +2996,6 @@ System is currently busy. Please try again later.
                 self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => new Response('Offline'))));
             `)).catch(() => {});
         }
-
-        // Notifications
-        if ('Notification' in window && Notification.permission === 'default') {
-            Notification.requestPermission();
-        }
     </script>
 </body>
-</html>
-
+ </html>                                           
