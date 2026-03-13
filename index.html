@@ -1325,138 +1325,58 @@ const uvTroubleshootingLibrary = {
         }
     ],
     
-   search: function(query) {
-    const results = [];
-    const q = query.toLowerCase();
-    this.categories.forEach(cat => {
-        cat.issues.forEach(issue => {
-            let score = 0;
-            if (issue.title.toLowerCase().includes(q)) score += 10;
-            
-            // symptoms her zaman var
-            issue.symptoms.forEach(s => {
-                if (s.toLowerCase().includes(q)) score += 5;
-            });
-            
-            // quickChecks olmayabilir - kontrol ekle!
-            if (issue.quickChecks && Array.isArray(issue.quickChecks)) {
-                issue.quickChecks.forEach(c => {
-                    if (c.toLowerCase().includes(q)) score += 3;
-                });
-            }
-            
-            if (score > 0) {
-                results.push({
-                    ...issue,
-                    category: cat.name,
-                    categoryIcon: cat.icon,
-                    score: score
-                });
-            }
-        });
-    });
-    return results.sort((a, b) => b.score - a.score);
-}
-                `
-            },
-            {
-                title: "Endüstriyel Uygulamalar ve Karlılık",
-                subtitle: "Sektörler, kullanım alanları ve fiyatlandırma",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">🏭 Ana Sektörler</div>
-                        <div class="block-content">
-                            <p><strong>1. Reklam ve Dijital Baskı:</strong></p>
-                            <ul>
-                                <li>Tabela, billboard, araç giydirme</li>
-                                <li>Forex, alüminyum kompozit panel</li>
-                                <li>Roll-up, X-banner, fuar standları</li>
-                            </ul>
-                            <br>
-                            <p><strong>2. Mobilya ve Dekorasyon:</strong></p>
-                            <ul>
-                                <li>Dolap kapakları (MDF, lake)</li>
-                                <li>Cam dekorasyon (duşakabin, mutfak arası)</li>
-                                <li>3D duvar panelleri</li>
-                                <li>Laminat parke üzerine desen</li>
-                            </ul>
-                            <br>
-                            <p><strong>3. Elektronik ve Elektrik:</strong></p>
-                            <ul>
-                                <li>PCB üzerine barkod/seri numara</li>
-                                <li>Kablo ve kablo kanalı etiketleme</li>
-                                <li>Panel ve switch üzerine baskı</li>
-                            </ul>
-                            <br>
-                            <p><strong>4. Promosyon ve Hediyelik:</strong></p>
-                            <ul>
-                                <li>Kalem, çakmak, anahtarlık</li>
-                                <li>Kupa, bardak, şişe</li>
-                                <li>Telefon kılıfı, powerbank</li>
-                                <li>Plaket, ödül, kupa</li>
-                            </ul>
-                            <br>
-                            <p><strong>5. Otomotiv:</strong></p>
-                            <ul>
-                                <li>İç trim parçaları</li>
-                                <li>Gösterge paneli yüzeyleri</li>
-                                <li>Lastik üzerine barkod</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="content-block">
-                        <div class="block-title">💰 Karlılık Analizi</div>
-                        <div class="block-content">
-                            <table class="data-table">
-                                <tr><th>Uygulama</th><th>Maliyet (m²)</th><th>Satış Fiyatı</th><th>Kar Marjı</th></tr>
-                                <tr><td>Pleksi tabela (CMYK+White)</td><td>15-25₺</td><td>80-150₺</td><td>%400-800</td></tr>
-                                <tr><td>Cam dekorasyon</td><td>20-30₺</td><td>100-200₺</td><td>%400-900</td></tr>
-                                <tr><td>Promosyon kalem</td><td>0.5-1₺</td><td>5-15₺</td><td>%500-2000</td></tr>
-                                <tr><td>Mobilya paneli</td><td>30-50₺</td><td>150-300₺</td><td>%300-600</td></tr>
-                                <tr><td>Araç giydirme (parçalı)</td><td>40-60₺</td><td>200-400₺</td><td>%400-650</td></tr>
-                            </table>
-                        </div>
-                    </div>
-                `
-            }
-        ],
-        quiz: {
-            questions: [
-                {
-                    question: "Şeffaf pleksi üzerine renkli baskı yaparken beyaz katmanı nereye basmalısınız?",
-                    options: ["Sadece üste", "Sadece alta (altta)", "Hem alta hem üste", "Hiçbir yere"],
-                    correct: 1,
-                    explanation: "Renklerin canlı görünmesi için beyaz zemin şarttır. Bu yüzden önce beyaz (alta), üzerine CMYK basılır."
-                },
-                {
-                    question: "UV baskının geleneksel solvent baskıya göre en büyük avantajı nedir?",
-                    options: ["Daha ucuz malzeme maliyeti", "Anında kuruma ve üretime hazır olma", "Daha geniş renk gamı", "Daha yavaş üretim hızı"],
-                    correct: 1,
-                    explanation: "UV baskı 0.1-3 saniyede kurur, laminasyon veya bekleme gerektirmez. Bu üretim hızını katlar."
-                },
-                {
-                    question: "Beyaz mürekkep neden her gün çalkalanmalıdır?",
-                    options: ["Hava kabarcığı için", "Titanyum dioksit pigment çökelmesini önlemek", "Kokusunu gidermek", "Rengini açmak"],
-                    correct: 1,
-                    explanation: "Beyaz mürekkep %35-50 TiO₂ içerir. Ağır pigment çöker ve tıkanıklık yapar. Çalkalamak homojen dağılımı sağlar."
-                },
-                {
-                    question: "LED-UV lambaların geleneksel gel-UV lambalara göre hangi avantajı YANLIŞTIR?",
-                    options: ["Daha uzun ömür (20,000+ saat)", "Daha düşük ısı yayılımı", "Daha yüksek enerji tüketimi", "Anında açılma (ısınma yok)"],
-                    correct: 2,
-                    explanation: "LED-UV'ler %80 daha az enerji tüketir. Düşük ısı, uzun ömür ve anında açılma avantajları vardır."
-                },
-                {
-                    question: "Fotopolimerizasyon sürecinde hangi dalga boyu aralığı kullanılır?",
-                    options: ["200-300nm (UV-C)", "365-405nm (UV-A / Mor ötesi)", "500-600nm (Görünür ışık)", "800-1000nm (Kızılötesi)"],
-                    correct: 1,
-                    explanation: "UV baskıda 365-405nm (UV-A) kullanılır. Bu aralık foto-başlatıcıları uyarmak için idealdir."
+    search: function(query) {
+        const results = [];
+        const q = query.toLowerCase().trim();
+        if (!q) return results;
+        
+        this.categories.forEach(cat => {
+            cat.issues.forEach(issue => {
+                let score = 0;
+                
+                // Başlık eşleşmesi (en yüksek puan)
+                if (issue.title.toLowerCase().includes(q)) score += 10;
+                
+                // Semptom eşleşmesi
+                if (issue.symptoms && Array.isArray(issue.symptoms)) {
+                    issue.symptoms.forEach(s => {
+                        if (s.toLowerCase().includes(q)) score += 5;
+                    });
                 }
-            ]
-        }
-    },
-    {
+                
+                // Hızlı kontrollerde eşleşme (varsa)
+                if (issue.quickChecks && Array.isArray(issue.quickChecks)) {
+                    issue.quickChecks.forEach(c => {
+                        if (c.toLowerCase().includes(q)) score += 3;
+                    });
+                }
+                
+                // Çözüm adımlarında eşleşme (varsa)
+                if (issue.solutions && Array.isArray(issue.solutions)) {
+                    issue.solutions.forEach(sol => {
+                        if (sol.title && sol.title.toLowerCase().includes(q)) score += 2;
+                        if (sol.steps && Array.isArray(sol.steps)) {
+                            sol.steps.forEach(step => {
+                                if (step.toLowerCase().includes(q)) score += 1;
+                            });
+                        }
+                    });
+                }
+                
+                if (score > 0) {
+                    results.push({
+                        ...issue,
+                        category: cat.name,
+                        categoryIcon: cat.icon,
+                        score: score
+                    });
+                }
+            });
+        });
+        
+        return results.sort((a, b) => b.score - a.score);
+    }
+};
         id: 2,
         title: "Yüzey Hazırlığı ve Adhezyon",
         desc: "Malzeme bilimi, temizlik protokolleri ve tutunma prensipleri",
