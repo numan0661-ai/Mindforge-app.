@@ -6,7 +6,11 @@
     <meta name="theme-color" content="#0a0a0a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="T-800 Vücut Ağırlığı Terminatör - Profesyonel fitness takip uygulaması">
     <title>Project T-800 | Vücut Ağırlığı Terminatör</title>
+    
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiVC04MDAgRml0bmVzcyIsInNob3J0X25hbWUiOiJUODAwIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwYTBhMGEiLCJ0aGVtZV9jb2xvciI6IiNmZjY2MDAiLCJpY29ucyI6W3sic3JjIjoiaWNvbi0xOTJ4MTkyLnBuZyIsInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9wbmcifSx7InNyYyI6Imljb24tNTEyeDUxMi5wbmciLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIn1dfQ==">
+    
     <style>
         * {
             margin: 0;
@@ -130,7 +134,7 @@
             border-radius: 4px;
         }
         
-        .nav-tab:hover {
+        .nav-tab:hover, .nav-tab.active {
             border-color: var(--neon-orange);
             color: var(--neon-orange);
         }
@@ -138,7 +142,6 @@
         .nav-tab.active {
             background: var(--neon-orange);
             color: #000;
-            border-color: var(--neon-orange);
             box-shadow: 0 0 15px rgba(255, 102, 0, 0.4);
             font-weight: bold;
         }
@@ -249,6 +252,17 @@
             font-size: 1.4rem;
             font-weight: bold;
             margin-bottom: 4px;
+        }
+        
+        .level-badge {
+            background: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
         }
         
         .level-tabs {
@@ -575,6 +589,146 @@
             color: #000;
             font-weight: bold;
             font-size: 1.2rem;
+        }
+        
+        .xp-gain {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
+            color: #000;
+            padding: 20px 40px;
+            border-radius: 12px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            z-index: 3000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.5s;
+            box-shadow: 0 0 50px rgba(255, 102, 0, 0.6);
+        }
+        
+        .xp-gain.show {
+            opacity: 1;
+            animation: xpPop 1.5s ease forwards;
+        }
+        
+        @keyframes xpPop {
+            0% { transform: translate(-50%, -50%) scale(0.5); }
+            20% { transform: translate(-50%, -50%) scale(1.2); }
+            80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -80%) scale(1); opacity: 0; }
+        }
+        
+        .ai-coach-panel {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 102, 0, 0.05));
+            border: 1px solid var(--neon-blue);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ai-coach-panel::before {
+            content: '🤖';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 2rem;
+            opacity: 0.3;
+        }
+        
+        .ai-header {
+            color: var(--neon-blue);
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .ai-status {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--neon-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        .ai-message {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+        
+        .ai-suggestion {
+            background: rgba(0,0,0,0.3);
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid var(--neon-blue);
+            font-size: 0.8rem;
+            color: #fff;
+        }
+        
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .achievement {
+            background: var(--metal-dark);
+            border: 1px solid var(--metal-light);
+            padding: 15px 10px;
+            text-align: center;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .achievement.unlocked {
+            border-color: var(--neon-green);
+            background: rgba(0, 255, 136, 0.1);
+        }
+        
+        .achievement-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        
+        .achievement-name {
+            font-size: 0.7rem;
+            color: #888;
+            text-transform: uppercase;
+        }
+        
+        .install-banner {
+            background: linear-gradient(90deg, var(--neon-orange), var(--neon-red));
+            color: #000;
+            padding: 15px;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .install-banner.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
         
         .anatomy-container {
@@ -913,24 +1067,44 @@
             .day-grid { gap: 4px; }
             .day-box { font-size: 0.6rem; }
             .details-grid { grid-template-columns: repeat(2, 1fr); }
+            .achievement-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="install-banner" id="installBanner" onclick="installApp()">
+            📲 T-800'ü Ana Ekrana Ekle - Offline Çalışır!
+        </div>
+
         <header class="header">
             <h1>PROJECT T-800</h1>
             <div class="subtitle">VÜCUT AĞIRLIĞI TERMINATÖR</div>
         </header>
 
+        <div class="ai-coach-panel" id="aiCoachPanel">
+            <div class="ai-header">
+                <span class="ai-status"></span>
+                T-800 AI KOÇ AKTİF
+            </div>
+            <div class="ai-message" id="aiMessage">
+                Sistem analizi yapılıyor... Son antrenman verileriniz inceleniyor.
+            </div>
+            <div class="ai-suggestion" id="aiSuggestion">
+                💡 Bugün göğüs ve triceps odaklı bir antrenman öneriyorum. Seviye 1 programına başlayabilirsiniz.
+            </div>
+        </div>
+
         <nav class="nav-tabs">
             <div class="nav-tab active" onclick="switchTab('dashboard')">DASHBOARD</div>
             <div class="nav-tab" onclick="switchTab('workout')">ANTRENMAN</div>
             <div class="nav-tab" onclick="switchTab('progress')">İLERLEME</div>
-            <div class="nav-tab" onclick="switchTab('settings')">AYARLAR</div>
+            <div class="nav-tab" onclick="switchTab('achievements')">ROZETLER</div>
         </nav>
 
         <section id="dashboard" class="tab-content">
+            <div class="level-badge" id="levelTitle">SEVIYE 1: INFILTRATOR</div>
+            
             <div class="stats-panel">
                 <div class="stat-box">
                     <div class="stat-label">Seviye</div>
@@ -971,6 +1145,13 @@
                         <div class="progress-stat-value" id="totalXP">0</div>
                         <div class="stat-label">Toplam XP</div>
                     </div>
+                </div>
+            </div>
+
+            <div class="workout-plan">
+                <div class="plan-header">SON ANTRONMANLAR</div>
+                <div id="recentWorkouts" style="font-size: 0.85rem; color: #888;">
+                    Henüz antrenman kaydı bulunmuyor. İlk antrenmanınızı yaparak başlayın!
                 </div>
             </div>
         </section>
@@ -1069,7 +1250,7 @@
             </div>
 
             <div id="exerciseList">
-                <div class="exercise-card" onclick="toggleExercise(this)">
+                <div class="exercise-card" data-exercise="pushup" data-difficulty="easy" onclick="toggleExercise(this)">
                     <div class="exercise-header">
                         <div class="exercise-name">
                             <div class="exercise-check"></div>
@@ -1092,24 +1273,24 @@
                             <div class="set-row">
                                 <div class="set-number">Set 1</div>
                                 <div class="set-inputs">
-                                    <input type="number" class="set-input" placeholder="Tekrar">
-                                    <input type="number" class="set-input" placeholder="KG">
+                                    <input type="number" class="set-input" placeholder="Tekrar" onchange="saveSetData(this)">
+                                    <input type="number" class="set-input" placeholder="KG" onchange="saveSetData(this)">
                                 </div>
                                 <div class="set-check" onclick="toggleSet(this, event)"></div>
                             </div>
                             <div class="set-row">
                                 <div class="set-number">Set 2</div>
                                 <div class="set-inputs">
-                                    <input type="number" class="set-input" placeholder="Tekrar">
-                                    <input type="number" class="set-input" placeholder="KG">
+                                    <input type="number" class="set-input" placeholder="Tekrar" onchange="saveSetData(this)">
+                                    <input type="number" class="set-input" placeholder="KG" onchange="saveSetData(this)">
                                 </div>
                                 <div class="set-check" onclick="toggleSet(this, event)"></div>
                             </div>
                             <div class="set-row">
                                 <div class="set-number">Set 3</div>
                                 <div class="set-inputs">
-                                    <input type="number" class="set-input" placeholder="Tekrar">
-                                    <input type="number" class="set-input" placeholder="KG">
+                                    <input type="number" class="set-input" placeholder="Tekrar" onchange="saveSetData(this)">
+                                    <input type="number" class="set-input" placeholder="KG" onchange="saveSetData(this)">
                                 </div>
                                 <div class="set-check" onclick="toggleSet(this, event)"></div>
                             </div>
@@ -1117,16 +1298,16 @@
                         <div class="progression-path">
                             <div class="progression-title">İlerleme Yolu</div>
                             <div class="progression-steps">
-                                Duvar Şınavı → Eğik Şınav → Diz Üstü Şınav → Klasik Şınav → Dar Şınav → Decline Şınav → Tek Kol Şınav
+                                Duvar Şınavı → Eğik Şınav → Klasik Şınav → Dar Şınav → Decline Şınav → Tek Kol Şınav
                             </div>
                         </div>
                         <div class="tip-box">
-                            Vücut düz bir hat olacak şekilde, dirsekler 45 derece açıyla gövdeye yakın tutulmalıdır. İnişte göğüs yere yaklaşmalı, kalkışta tam ekstansiyon sağlanmalıdır.
+                            Vücut düz bir hat olacak şekilde, dirsekler 45 derece açıyla gövdeye yakın tutulmalıdır.
                         </div>
                     </div>
                 </div>
 
-                <div class="exercise-card" onclick="toggleExercise(this)">
+                <div class="exercise-card" data-exercise="dips" data-difficulty="medium" onclick="toggleExercise(this)">
                     <div class="exercise-header">
                         <div class="exercise-name">
                             <div class="exercise-check"></div>
@@ -1143,24 +1324,21 @@
                             <div class="set-row">
                                 <div class="set-number">Set 1</div>
                                 <div class="set-inputs">
-                                    <input type="number" class="set-input" placeholder="Tekrar">
-                                    <input type="number" class="set-input" placeholder="KG">
+                                    <input type="number" class="set-input" placeholder="Tekrar" onchange="saveSetData(this)">
                                 </div>
                                 <div class="set-check" onclick="toggleSet(this, event)"></div>
                             </div>
                             <div class="set-row">
                                 <div class="set-number">Set 2</div>
                                 <div class="set-inputs">
-                                    <input type="number" class="set-input" placeholder="Tekrar">
-                                    <input type="number" class="set-input" placeholder="KG">
+                                    <input type="number" class="set-input" placeholder="Tekrar" onchange="saveSetData(this)">
                                 </div>
                                 <div class="set-check" onclick="toggleSet(this, event)"></div>
                             </div>
                             <div class="set-row">
                                 <div class="set-number">Set 3</div>
                                 <div class="set-inputs">
-                                    <input type="number" class="set-input" placeholder="Tekrar">
-                                    <input type="number" class="set-input" placeholder="KG">
+                                    <input type="number" class="set-input" placeholder="Tekrar" onchange="saveSetData(this)">
                                 </div>
                                 <div class="set-check" onclick="toggleSet(this, event)"></div>
                             </div>
@@ -1168,7 +1346,7 @@
                     </div>
                 </div>
 
-                <div class="exercise-card" onclick="toggleExercise(this)">
+                <div class="exercise-card" data-exercise="plank" data-difficulty="easy" onclick="toggleExercise(this)">
                     <div class="exercise-header">
                         <div class="exercise-name">
                             <div class="exercise-check"></div>
@@ -1185,21 +1363,21 @@
                             <div class="set-row">
                                 <div class="set-number">Set 1</div>
                                 <div class="set-inputs">
-                                    <input type="number" class="set-input" placeholder="Saniye">
+                                    <input type="number" class="set-input" placeholder="Saniye" onchange="saveSetData(this)">
                                 </div>
                                 <div class="set-check" onclick="toggleSet(this, event)"></div>
                             </div>
                             <div class="set-row">
                                 <div class="set-number">Set 2</div>
                                 <div class="set-inputs">
-                                    <input type="number" class="set-input" placeholder="Saniye">
+                                    <input type="number" class="set-input" placeholder="Saniye" onchange="saveSetData(this)">
                                 </div>
                                 <div class="set-check" onclick="toggleSet(this, event)"></div>
                             </div>
                             <div class="set-row">
                                 <div class="set-number">Set 3</div>
                                 <div class="set-inputs">
-                                    <input type="number" class="set-input" placeholder="Saniye">
+                                    <input type="number" class="set-input" placeholder="Saniye" onchange="saveSetData(this)">
                                 </div>
                                 <div class="set-check" onclick="toggleSet(this, event)"></div>
                             </div>
@@ -1207,6 +1385,10 @@
                     </div>
                 </div>
             </div>
+            
+            <button onclick="finishWorkout()" style="width: 100%; padding: 15px; background: var(--neon-green); color: #000; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 20px; text-transform: uppercase;">
+                ANTRENMANI BITIR & XP KAZAN
+            </button>
         </section>
 
         <section id="progress" class="tab-content hidden">
@@ -1214,30 +1396,62 @@
                 <div class="plan-header">İSTATİSTİKLER</div>
                 <div class="progress-stats">
                     <div class="progress-stat">
-                        <div class="progress-stat-value">12</div>
+                        <div class="progress-stat-value" id="statTotalWorkouts">0</div>
                         <div class="stat-label">Toplam Antrenman</div>
                     </div>
                     <div class="progress-stat">
-                        <div class="progress-stat-value">48</div>
+                        <div class="progress-stat-value" id="statTotalSets">0</div>
                         <div class="stat-label">Toplam Set</div>
                     </div>
                     <div class="progress-stat">
-                        <div class="progress-stat-value">1560</div>
+                        <div class="progress-stat-value" id="statTotalReps">0</div>
                         <div class="stat-label">Toplam Tekrar</div>
                     </div>
                 </div>
             </div>
+            
+            <div class="workout-plan">
+                <div class="plan-header">SEVIYE GECMİŞI</div>
+                <div id="levelHistory" style="font-size: 0.85rem; color: #888; line-height: 1.8;">
+                    Henüz seviye atlama geçmişi bulunmuyor.
+                </div>
+            </div>
         </section>
 
-        <section id="settings" class="tab-content hidden">
+        <section id="achievements" class="tab-content hidden">
             <div class="workout-plan">
-                <div class="plan-header">SİSTEM AYARLARI</div>
-                <p style="color: #888; font-size: 0.9rem; line-height: 1.6;">
-                    T-800 sistem ayarları burada yapılandırılacaktır.
-                </p>
+                <div class="plan-header">BAŞARILAR</div>
+                <div class="achievement-grid" id="achievementGrid">
+                    <div class="achievement" id="ach-first" data-unlock="1">
+                        <div class="achievement-icon">🎯</div>
+                        <div class="achievement-name">İlk Adım</div>
+                    </div>
+                    <div class="achievement" id="ach-streak-7" data-unlock="7">
+                        <div class="achievement-icon">🔥</div>
+                        <div class="achievement-name">7 Gün Ateşi</div>
+                    </div>
+                    <div class="achievement" id="ach-level-2" data-unlock="2">
+                        <div class="achievement-icon">⭐</div>
+                        <div class="achievement-name">Scout</div>
+                    </div>
+                    <div class="achievement" id="ach-100-reps" data-unlock="100">
+                        <div class="achievement-icon">💪</div>
+                        <div class="achievement-name">100 Tekrar</div>
+                    </div>
+                    <div class="achievement" id="ach-10-workouts" data-unlock="10">
+                        <div class="achievement-icon">🏆</div>
+                        <div class="achievement-name">10 Antrenman</div>
+                    </div>
+                    <div class="achievement" id="ach-master" data-unlock="5">
+                        <div class="achievement-icon">👑</div>
+                        <div class="achievement-name">Terminatör</div>
+                    </div>
+                </div>
             </div>
         </section>
     </div>
+
+    <div class="xp-gain" id="xpGain">+50 XP!</div>
 
     <div class="quick-timer" onclick="openTimer()">
         <div class="quick-timer-icon">⏱</div>
@@ -1260,53 +1474,374 @@
     </div>
 
     <script>
+        // ==================== T-800 DATA MANAGER ====================
+        const T800Data = {
+            data: {
+                level: 1,
+                xp: 0,
+                totalWorkouts: 0,
+                streakDays: 1,
+                lastWorkout: null,
+                completedExercises: {},
+                personalRecords: {},
+                totalReps: 0,
+                totalSets: 0,
+                achievements: [],
+                levelHistory: [],
+                workoutHistory: []
+            },
+            
+            init() {
+                this.load();
+                this.checkStreak();
+            },
+            
+            load() {
+                const saved = localStorage.getItem('t800_data');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    this.data = { ...this.data, ...parsed };
+                    this.updateUI();
+                }
+            },
+            
+            save() {
+                localStorage.setItem('t800_data', JSON.stringify(this.data));
+            },
+            
+            updateUI() {
+                document.getElementById('currentLevel').textContent = this.data.level;
+                document.getElementById('currentXP').textContent = this.data.xp;
+                document.getElementById('streakDays').textContent = this.data.streakDays;
+                document.getElementById('totalWorkouts').textContent = this.data.totalWorkouts;
+                document.getElementById('totalXP').textContent = this.data.xp;
+                document.getElementById('statTotalWorkouts').textContent = this.data.totalWorkouts;
+                document.getElementById('statTotalSets').textContent = this.data.totalSets;
+                document.getElementById('statTotalReps').textContent = this.data.totalReps;
+                
+                // Level title update
+                const titles = ['INFILTRATOR', 'SCOUT', 'SOLDIER', 'HUNTER', 'TERMINATOR'];
+                document.getElementById('levelTitle').textContent = `SEVIYE ${this.data.level}: ${titles[this.data.level - 1] || 'TERMINATOR'}`;
+                
+                // XP bar
+                const xpNeeded = this.getXpNeeded();
+                const progress = (this.data.xp / xpNeeded) * 100;
+                document.getElementById('xpBar').style.width = `${Math.min(progress, 100)}%`;
+                document.getElementById('xpText').textContent = `${this.data.xp} / ${xpNeeded} XP`;
+                
+                // Unlock levels
+                this.updateLevelLocks();
+                
+                // Update achievements
+                this.updateAchievements();
+                
+                // Update AI
+                AICoach.analyze();
+            },
+            
+            getXpNeeded() {
+                return this.data.level * 100 + ((this.data.level - 1) * 50);
+            },
+            
+            addXP(amount) {
+                this.data.xp += amount;
+                const xpNeeded = this.getXpNeeded();
+                
+                if (this.data.xp >= xpNeeded) {
+                    this.levelUp();
+                }
+                
+                this.save();
+                this.updateUI();
+                this.showXPGain(amount);
+            },
+            
+            levelUp() {
+                this.data.level++;
+                this.data.levelHistory.push({
+                    level: this.data.level,
+                    date: new Date().toISOString(),
+                    title: this.getLevelTitle()
+                });
+                
+                // Bildirim
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification('🎉 SEVIYE ATLADIN!', {
+                        body: `Tebrikler! Artık Seviye ${this.data.level} ${this.getLevelTitle()} oldun.`,
+                        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🏆</text></svg>'
+                    });
+                }
+            },
+            
+            getLevelTitle() {
+                const titles = ['INFILTRATOR', 'SCOUT', 'SOLDIER', 'HUNTER', 'TERMINATOR'];
+                return titles[this.data.level - 1] || 'TERMINATOR';
+            },
+            
+            updateLevelLocks() {
+                const tabs = document.querySelectorAll('.level-tab');
+                tabs.forEach((tab, index) => {
+                    if (index < this.data.level) {
+                        tab.classList.remove('locked');
+                    } else {
+                        tab.classList.add('locked');
+                    }
+                });
+            },
+            
+            showXPGain(amount) {
+                const el = document.getElementById('xpGain');
+                el.textContent = `+${amount} XP!`;
+                el.classList.add('show');
+                setTimeout(() => el.classList.remove('show'), 1500);
+            },
+            
+            recordWorkout(exercises) {
+                this.data.totalWorkouts++;
+                this.data.lastWorkout = new Date().toISOString();
+                
+                let workoutXP = 0;
+                let workoutSets = 0;
+                let workoutReps = 0;
+                
+                exercises.forEach(ex => {
+                    const difficulty = ex.dataset.difficulty;
+                    const multiplier = { easy: 1, medium: 1.5, hard: 2, elite: 3 }[difficulty] || 1;
+                    const sets = ex.querySelectorAll('.set-check.completed').length;
+                    const reps = Array.from(ex.querySelectorAll('.set-input')).reduce((sum, input) => sum + (parseInt(input.value) || 0), 0);
+                    
+                    workoutXP += Math.floor(10 * sets * multiplier);
+                    workoutSets += sets;
+                    workoutReps += reps;
+                    
+                    // PR kontrolü
+                    const exName = ex.dataset.exercise;
+                    if (!this.data.personalRecords[exName] || reps > this.data.personalRecords[exName]) {
+                        this.data.personalRecords[exName] = reps;
+                    }
+                });
+                
+                this.data.totalSets += workoutSets;
+                this.data.totalReps += workoutReps;
+                
+                this.data.workoutHistory.unshift({
+                    date: new Date().toISOString(),
+                    xp: workoutXP,
+                    sets: workoutSets,
+                    reps: workoutReps
+                });
+                
+                this.addXP(workoutXP);
+                this.save();
+                this.updateRecentWorkouts();
+            },
+            
+            updateRecentWorkouts() {
+                const container = document.getElementById('recentWorkouts');
+                if (this.data.workoutHistory.length === 0) return;
+                
+                container.innerHTML = this.data.workoutHistory.slice(0, 5).map(w => {
+                    const date = new Date(w.date);
+                    return `<div style="padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <strong>${date.toLocaleDateString('tr-TR')}</strong> - 
+                        ${w.sets} set, ${w.reps} tekrar, +${w.xp} XP
+                    </div>`;
+                }).join('');
+            },
+            
+            checkStreak() {
+                if (!this.data.lastWorkout) return;
+                
+                const last = new Date(this.data.lastWorkout);
+                const now = new Date();
+                const diffDays = Math.floor((now - last) / (1000 * 60 * 60 * 24));
+                
+                if (diffDays === 1) {
+                    this.data.streakDays++;
+                } else if (diffDays > 1) {
+                    this.data.streakDays = 0;
+                }
+                
+                this.save();
+            },
+            
+            updateAchievements() {
+                const achievements = [
+                    { id: 'ach-first', check: () => this.data.totalWorkouts >= 1 },
+                    { id: 'ach-streak-7', check: () => this.data.streakDays >= 7 },
+                    { id: 'ach-level-2', check: () => this.data.level >= 2 },
+                    { id: 'ach-100-reps', check: () => this.data.totalReps >= 100 },
+                    { id: 'ach-10-workouts', check: () => this.data.totalWorkouts >= 10 },
+                    { id: 'ach-master', check: () => this.data.level >= 5 }
+                ];
+                
+                achievements.forEach(ach => {
+                    const el = document.getElementById(ach.id);
+                    if (ach.check() && !el.classList.contains('unlocked')) {
+                        el.classList.add('unlocked');
+                        if (!this.data.achievements.includes(ach.id)) {
+                            this.data.achievements.push(ach.id);
+                            this.showAchievementUnlock(el);
+                        }
+                    }
+                });
+                
+                this.save();
+            },
+            
+            showAchievementUnlock(el) {
+                const name = el.querySelector('.achievement-name').textContent;
+                const icon = el.querySelector('.achievement-icon').textContent;
+                
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification(`🏆 BAŞARI KAZANILDI: ${name}`, {
+                        body: `${icon} Tebrikler! Yeni bir başarı rozeti açtın.`,
+                        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🏆</text></svg>'
+                    });
+                }
+            }
+        };
+
+        // ==================== AI COACH ====================
+        const AICoach = {
+            messages: [
+                "Son antrenmanında şınav performansın mükemmeldi! Bugün dips odaklı çalışalım.",
+                "7 gün streak yakındasın! Bugünü kaçırma.",
+                "Ön kol gücün artıyor. Yeni seviyeye geçmeye hazırsın.",
+                "Dinlenme süren kısa kalmış. 90 saniye dinlenmeyi dene.",
+                "Plank süren artıyor! 60 saniye hedefini zorlayabilirsin.",
+                "Bugün aktif dinlenme günü. Hafif cardio öneriyorum."
+            ],
+            
+            analyze() {
+                const data = T800Data.data;
+                const messageEl = document.getElementById('aiMessage');
+                const suggestionEl = document.getElementById('aiSuggestion');
+                
+                // Analiz mantığı
+                let message = this.messages[Math.floor(Math.random() * this.messages.length)];
+                let suggestion = "";
+                
+                if (!data.lastWorkout) {
+                    message = "Hoş geldin! İlk antrenmanına başlamak için hazırım.";
+                    suggestion = "💡 Başlangıç olarak Seviye 1 göğüs programını öneriyorum. 3 set x 8-12 tekrar ile başla.";
+                } else if (data.streakDays >= 6) {
+                    message = `🔥 ${data.streakDays} günlük streak'in var! Muhteşem disiplin.`;
+                    suggestion = "💡 Yarın 7 günü tamamlayacaksın. Bugün orta seviye bir antrenman yaparak formunu koru.";
+                } else if (this.detectWeakness(data) === 'chest') {
+                    message = "Göğüs gücünde potansiyel fark ettim.";
+                    suggestion = "💡 Şınav varyasyonlarını artır: Dar şınav ve decline şınav ekle.";
+                } else if (data.xp > data.level * 100 - 20) {
+                    message = "Seviye atlama yakın! Son bir itiş gerekiyor.";
+                    suggestion = `💡 Sadece ${data.level * 100 + ((data.level - 1) * 50) - data.xp} XP kaldı. Tam bir antrenman yaparak seviye atla!`;
+                }
+                
+                messageEl.textContent = message;
+                suggestionEl.textContent = suggestion;
+            },
+            
+            detectWeakness(data) {
+                // Basit analiz - gerçek uygulamada daha karmaşık olabilir
+                const lastWorkout = data.workoutHistory[0];
+                if (!lastWorkout) return null;
+                
+                if (lastWorkout.reps / lastWorkout.sets < 8) return 'endurance';
+                return null;
+            },
+            
+            suggestWorkout() {
+                const hour = new Date().getHours();
+                if (hour < 12) return "Sabah enerjisiyle ağır bir antrenman yapabilirsin.";
+                if (hour > 18) return "Akşam için hafif bir core antrenmanı öneriyorum.";
+                return "Öğleden sonra vücut ağırlığı antrenmanı için ideal zaman.";
+            }
+        };
+
+        // ==================== PWA & SERVICE WORKER ====================
+        let deferredPrompt;
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installBanner').classList.add('show');
+        });
+        
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        document.getElementById('installBanner').classList.remove('show');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }
+        
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('data:text/javascript;base64,' + btoa(`
+                self.addEventListener('install', e => {
+                    e.waitUntil(
+                        caches.open('t800-v1').then(cache => {
+                            return cache.addAll(['/']);
+                        })
+                    );
+                });
+                self.addEventListener('fetch', e => {
+                    e.respondWith(
+                        caches.match(e.request).then(response => {
+                            return response || fetch(e.request);
+                        })
+                    );
+                });
+            `)).then(() => {
+                console.log('T-800 Service Worker aktif');
+            }).catch(err => {
+                console.log('SW kayıt hatası:', err);
+            });
+        }
+        
+        // Bildirim izni
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+
+        // ==================== UI FUNCTIONS ====================
         let currentTab = 'dashboard';
         let timerInterval;
         let timeLeft = 0;
 
         function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.add('hidden');
-            });
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
             
             document.getElementById(tabName).classList.remove('hidden');
             event.target.classList.add('active');
             currentTab = tabName;
+            
+            if (tabName === 'dashboard') T800Data.updateRecentWorkouts();
         }
 
         function selectLevel(level) {
+            if (level > T800Data.data.level) return;
+            
             const tabs = document.querySelectorAll('.level-tab');
             tabs.forEach((tab, index) => {
-                if (index < level) {
-                    tab.classList.remove('locked');
-                }
-                if (index === level - 1) {
-                    tab.classList.add('active');
-                } else {
-                    tab.classList.remove('active');
-                }
+                tab.classList.toggle('active', index === level - 1);
             });
         }
 
         function selectWeek(week) {
             document.querySelectorAll('.week-btn').forEach((btn, index) => {
-                if (index === week - 1) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
+                btn.classList.toggle('active', index === week - 1);
             });
         }
 
         function selectDay(day) {
             document.querySelectorAll('.day-box').forEach((box, index) => {
                 box.classList.remove('active');
-                if (index === day - 1) {
-                    box.classList.add('active');
-                }
+                if (index === day - 1) box.classList.add('active');
             });
         }
 
@@ -1323,11 +1858,38 @@
             const allSets = card.querySelectorAll('.set-check');
             const completedSets = card.querySelectorAll('.set-check.completed');
             
-            if (allSets.length === completedSets.length) {
-                card.classList.add('completed');
-            } else {
-                card.classList.remove('completed');
+            card.classList.toggle('completed', allSets.length === completedSets.length);
+            
+            // Ses efekti
+            if (element.classList.contains('completed')) {
+                playBeep(800, 0.1);
             }
+        }
+
+        function saveSetData(input) {
+            // Input değişikliklerini kaydet (gelecekte kullanılabilir)
+            T800Data.save();
+        }
+
+        function finishWorkout() {
+            const exercises = document.querySelectorAll('.exercise-card');
+            const completedExercises = Array.from(exercises).filter(ex => {
+                const completedSets = ex.querySelectorAll('.set-check.completed').length;
+                return completedSets > 0;
+            });
+            
+            if (completedExercises.length === 0) {
+                alert('En az bir egzersiz tamamlamalısın!');
+                return;
+            }
+            
+            T800Data.recordWorkout(completedExercises);
+            
+            // Başarı mesajı
+            setTimeout(() => {
+                alert(`🏆 ANTRENMAN TAMAMLANDI!\n\n+${Math.floor(Math.random() * 20 + 30)} XP kazandın!\nToplam: ${T800Data.data.xp} XP`);
+                switchTab('dashboard');
+            }, 500);
         }
 
         function openTimer() {
@@ -1350,12 +1912,18 @@
                 
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
-                    playBeep();
+                    playBeep(600, 0.5);
+                    // Vibration API
+                    if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
                 }
             }, 1000);
         }
 
         function resetTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 0;
+            updateTimer
+                    function resetTimer() {
             clearInterval(timerInterval);
             timeLeft = 0;
             updateTimerDisplay();
@@ -1368,27 +1936,40 @@
                 `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
 
-        function playBeep() {
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            oscillator.frequency.value = 800;
-            oscillator.type = 'sine';
-            
-            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-            
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.5);
+        function playBeep(frequency = 800, duration = 0.5) {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = frequency;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + duration);
+            } catch(e) {
+                console.log('Audio error:', e);
+            }
         }
 
-        // Initialize
+        // ==================== INIT ====================
         document.addEventListener('DOMContentLoaded', () => {
+            T800Data.init();
             updateTimerDisplay();
+            
+            // Sayfa kapanırken kaydet
+            window.addEventListener('beforeunload', () => {
+                T800Data.save();
+            });
+            
+            // Periyodik kaydetme (her 30 saniye)
+            setInterval(() => T800Data.save(), 30000);
         });
     </script>
 </body>
