@@ -445,20 +445,6 @@
             50% { transform: translate(1px, -1px); }
             75% { transform: translate(-1px, -1px); }
         }
-        
-        /* Kategori butonları için aktif stil */
-        .filter-btn {
-            flex: 0; 
-            white-space: nowrap; 
-            font-size: 12px; 
-            padding: 8px 12px;
-            transition: all 0.2s;
-        }
-        .filter-btn.active {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
     </style>
 </head>
 <body>
@@ -538,24 +524,24 @@
         </div>
 
         <!-- YENİ HALİ - 3 sütunlu grid -->
-        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:15px;">
-            <!-- Mevcut kartlar -->
-            <div class="module-card" onclick="goToScreen('businessScreen')" style="text-align:center;">
-                <div style="font-size:30px;">📊</div>
-                <div class="module-title" style="font-size:16px;">Maliyet</div>
-            </div>
-            <div class="module-card" onclick="goToScreen('exerciseScreen')" style="text-align:center;">
-                <div style="font-size:30px;">🏋️</div>
-                <div class="module-title" style="font-size:16px;">Antrenman</div>
-            </div>
-            <!-- YENİ: CorelDRAW kartı -->
-            <div class="module-card" onclick="goToScreen('corelReferenceScreen')" style="text-align:center; border:2px solid var(--accent);">
-                <div style="font-size:30px;">⌨️</div>
-                <div class="module-title" style="font-size:16px; color:var(--accent);">Corel</div>
-                <div style="font-size:10px; color:var(--text-muted);">95 Kısayol</div>
-            </div>
-        </div>
+<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:15px;">
+    <!-- Mevcut kartlar -->
+    <div class="module-card" onclick="goToScreen('businessScreen')" style="text-align:center;">
+        <div style="font-size:30px;">📊</div>
+        <div class="module-title" style="font-size:16px;">Maliyet</div>
     </div>
+    <div class="module-card" onclick="goToScreen('exerciseScreen')" style="text-align:center;">
+        <div style="font-size:30px;">🏋️</div>
+        <div class="module-title" style="font-size:16px;">Antrenman</div>
+    </div>
+    <!-- YENİ: CorelDRAW kartı -->
+    <div class="module-card" onclick="goToScreen('corelReferenceScreen')" style="text-align:center; border:2px solid var(--accent);">
+        <div style="font-size:30px;">⌨️</div>
+        <div class="module-title" style="font-size:16px; color:var(--accent);">Corel</div>
+        <div style="font-size:10px; color:var(--text-muted);">95 Kısayol</div>
+    </div>
+</div>
+           
 
     <!-- MALİYET HESAPLAMA EKRANI -->
     <div class="screen" id="businessScreen">
@@ -671,38 +657,36 @@
             </p>
         </div>
     </div>
-
-    <!-- CORELDRAW REFERANS EKRANI - DÜZELTİLMİŞ -->
-    <div class="screen" id="corelReferenceScreen">
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
-            <button class="btn btn-secondary" style="flex:0; padding:12px 16px;" onclick="goToScreen('homeScreen')">←</button>
-            <h2 style="margin:0; color:var(--accent)">⌨️ CorelDRAW Kısayolları</h2>
-        </div>
-        
-        <div class="progress-header" style="border-color:var(--info);">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <span style="font-size:14px; font-weight:bold;">Hızlı Erişim</span>
-                <span style="color:var(--info); font-size:12px;">95 Kısayol</span>
-            </div>
-            <input type="text" id="shortcutSearch" placeholder="🔍 Kısayol ara..." onkeyup="searchShortcuts()" 
-                   style="width:100%; padding:12px; border-radius:8px; border:1px solid #2d2d44; background:var(--bg); color:white;">
-        </div>
-        
-        <!-- Kategori Filtreleri - DÜZELTİLMİŞ -->
-        <div style="display:flex; gap:8px; overflow-x:auto; padding-bottom:10px; margin-bottom:15px;" id="filterContainer">
-            <button class="btn btn-secondary filter-btn active" data-filter="all" style="flex:0; white-space:nowrap; font-size:12px; padding:8px 12px;">Tümü</button>
-            <button class="btn btn-secondary filter-btn" data-filter="file" style="flex:0; white-space:nowrap; font-size:12px; padding:8px 12px;">Dosya</button>
-            <button class="btn btn-secondary filter-btn" data-filter="edit" style="flex:0; white-space:nowrap; font-size:12px; padding:8px 12px;">Düzenle</button>
-            <button class="btn btn-secondary filter-btn" data-filter="color" style="flex:0; white-space:nowrap; font-size:12px; padding:8px 12px;">Renk</button>
-            <button class="btn btn-secondary filter-btn" data-filter="align" style="flex:0; white-space:nowrap; font-size:12px; padding:8px 12px;">Hizalama</button>
-            <button class="btn btn-secondary filter-btn" data-filter="uv" style="flex:0; white-space:nowrap; font-size:12px; padding:8px 12px; border-color:var(--uv); color:var(--uv);">UV Özel</button>
-        </div>
-        
-        <div id="shortcutsContainer" style="max-height:60vh; overflow-y:auto;">
-            <!-- Kısayollar JS ile doldurulacak -->
-        </div>
+<!-- CORELDRAW REFERANS EKRANI - ADIM 1: BURAYA EKLEYİN -->
+<div class="screen" id="corelReferenceScreen">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+        <button class="btn btn-secondary" style="flex:0; padding:12px 16px;" onclick="goToScreen('homeScreen')">←</button>
+        <h2 style="margin:0; color:var(--accent)">⌨️ CorelDRAW Kısayolları</h2>
     </div>
-
+    
+    <div class="progress-header" style="border-color:var(--info);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <span style="font-size:14px; font-weight:bold;">Hızlı Erişim</span>
+            <span style="color:var(--info); font-size:12px;">95 Kısayol</span>
+        </div>
+        <input type="text" id="shortcutSearch" placeholder="🔍 Kısayol ara..." onkeyup="searchShortcuts()" 
+               style="width:100%; padding:12px; border-radius:8px; border:1px solid #2d2d44; background:var(--bg); color:white;">
+    </div>
+    
+    <!-- Kategori Filtreleri -->
+    <div style="display:flex; gap:8px; overflow-x:auto; padding-bottom:10px; margin-bottom:15px;">
+        <button class="btn btn-secondary" onclick="filterShortcuts('all')" style="flex:0; white-space:nowrap; font-size:12px; padding:8px 12px;">Tümü</button>
+        <button class="btn btn-secondary" onclick="filterShortcuts('file')" style="flex:0; white-space:nowrap; font-size:12px; padding:8px 12px;">Dosya</button>
+        <button class="btn btn-secondary" onclick="filterShortcuts('edit')" style="flex:0; white-space:nowrap; font-size:12px; padding:8px 12px;">Düzenle</button>
+        <button class="btn btn-secondary" onclick="filterShortcuts('color')" style="flex:0; white-space:nowrap; font-size:12px; padding:8px 12px;">Renk</button>
+        <button class="btn btn-secondary" onclick="filterShortcuts('align')" style="flex:0; white-space:nowrap; font-size:12px; padding:8px 12px;">Hizalama</button>
+        <button class="btn btn-secondary" onclick="filterShortcuts('uv')" style="flex:0; white-space:nowrap; font-size:12px; padding:8px 12px; border-color:var(--uv); color:var(--uv);">UV Özel</button>
+    </div>
+    
+    <div id="shortcutsContainer" style="max-height:60vh; overflow-y:auto;">
+        <!-- Kısayollar JS ile doldurulacak -->
+    </div>
+</div>
     <!-- EGZERSİZ EKRANI -->
     <div class="screen" id="exerciseScreen">
         <button class="btn btn-secondary" onclick="goToScreen('homeScreen')" style="margin-bottom:20px;">← Ana Menü</button>
@@ -1172,8 +1156,7 @@ const uvCurriculum = [
                             <table class="data-table">
                                 <tr><th>Uygulama</th><th>Maliyet (m²)</th><th>Satış Fiyatı</th><th>Kar Marjı</th></tr>
                                 <tr><td>Pleksi tabela (CMYK+White)</td><td>15-25₺</td><td>80-150₺</td><td>%400-800</td></tr>
-                                <tr><td>Cam dekorasyon</td><td>20-30₺</td><td>100-200₺</td><td>%400-900
-                                </tr>
+                                <tr><td>Cam dekorasyon</td><td>20-30₺</td><td>100-200₺</td><td>%400-900</td></tr>
                                 <tr><td>Promosyon kalem</td><td>0.5-1₺</td><td>5-15₺</td><td>%500-2000</td></tr>
                                 <tr><td>Mobilya paneli</td><td>30-50₺</td><td>150-300₺</td><td>%300-600</td></tr>
                                 <tr><td>Araç giydirme (parçalı)</td><td>40-60₺</td><td>200-400₺</td><td>%400-650</td></tr>
@@ -1881,7 +1864,7 @@ Boya Yüzey Gerilimi < Malzeme Yüzey Enerjisi
                     question: "Beyaz mürekkep neden her sabah çalkalanmalıdır?",
                     options: ["Hava kabarcığı için", "Pigment çökelmesini önlemek", "Kokusunu gidermek", "Rengini açmak"],
                     correct: 1,
-                    explanation: "Beyaz mürekkep titanyum dioksit pigmenti içerir. Çöker ve tıkanıklık yapar. Çalkalamak homojen dağılımı sağlar."
+                    explanation: "Beyaz mürekkep titanyum dioksit pigmenti içerir. Çökelir ve tıkanıklık yapar. Çalkalamak homojen dağılımı sağlar."
                 },
                 {
                     question: "Kafa ile malzeme arası ideal mesafe nedir?",
@@ -2687,11 +2670,6 @@ function goToScreen(screenId) {
     if (screenId === 'exerciseScreen') {
         setTimeout(() => {
             if (typeof initExercise === 'function') initExercise();
-        }, 50);
-    }
-    if (screenId === 'corelReferenceScreen') {
-        setTimeout(() => {
-            if (typeof initCorelShortcuts === 'function') initCorelShortcuts();
         }, 50);
     }
     
@@ -3836,7 +3814,10 @@ function showConfetti() {
 }
 
 // ==========================================
-// CORELDRAW KISAYOLLARI SİSTEMİ - DÜZELTİLMİŞ
+// BAŞLANGIÇ
+// ==========================================
+// ==========================================
+// CORELDRAW KISAYOLLARI SİSTEMİ - ADIM 3
 // ==========================================
 
 const corelShortcuts = [
@@ -3847,7 +3828,7 @@ const corelShortcuts = [
     {key: "Ctrl + End", desc: "En Alta Gönder", category: "uv", uvContext: "Beyaz katmanı en alta yerleştirme", critical: true},
     {key: "Ctrl + Home", desc: "En Üste Getir", category: "uv", uvContext: "Varnish katmanını en üste alma", critical: true},
     {key: "Ctrl + PgDn", desc: "Bir Alta Gönder", category: "uv", uvContext: "Katman sırası ayarı (Beyaz > Renk)", critical: true},
-    {key: "Ctrl + PgUp", desc: "Bir Üste Getir", category: "uv , uvContext: "Katman sırası ayarı (Renk > Beyaz)", critical: true},
+    {key: "Ctrl + PgUp", desc: "Bir Üste Getir", category: "uv", uvContext: "Katman sırası ayarı (Renk > Beyaz)", critical: true},
     {key: "Ctrl + E", desc: "Dışa Aktar", category: "uv", uvContext: "PDF/X-4 formatında RIP'e gönderme", critical: true},
     {key: "Ctrl + Shift + A", desc: "Hizalama ve Dağıtım", category: "uv", uvContext: "Çoklu nesne düzeni (ganged printing)", critical: false},
     {key: "Ctrl + G", desc: "Grupla", category: "uv", uvContext: "Beyaz+renk katmanlarını birlikte taşıma", critical: true},
@@ -3974,7 +3955,7 @@ const corelShortcuts = [
     {key: "F1", desc: "Yardım", category: "advanced", uvContext: "Dokümantasyon"}
 ];
 
-// Kısayol render fonksiyonu - DÜZELTİLMİŞ
+// Kısayol render fonksiyonu
 function renderShortcuts(filter = 'all', searchTerm = '') {
     const container = document.getElementById('shortcutsContainer');
     if (!container) return;
@@ -4065,50 +4046,22 @@ function getCategoryName(cat) {
     return names[cat] || cat;
 }
 
-// DÜZELTİLMİŞ: filterShortcuts fonksiyonu - event parametresi kaldırıldı, buton referansı düzeltildi
-let currentFilter = 'all';
-
 function filterShortcuts(category) {
-    currentFilter = category;
     renderShortcuts(category, document.getElementById('shortcutSearch')?.value || '');
     
-    // Aktif buton stilini güncelle - DÜZELTİLMİŞ
-    document.querySelectorAll('#filterContainer .filter-btn').forEach(btn => {
-        const btnFilter = btn.getAttribute('data-filter');
-        if (btnFilter === category) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
+    // Aktif buton stilini güncelle
+    document.querySelectorAll('#corelReferenceScreen .btn-secondary').forEach(btn => {
+        btn.style.background = 'var(--surface-light)';
+        btn.style.color = 'white';
     });
+    event.target.style.background = 'var(--accent)';
+    event.target.style.color = 'white';
 }
 
 function searchShortcuts() {
     const searchTerm = document.getElementById('shortcutSearch')?.value || '';
-    renderShortcuts(currentFilter, searchTerm);
+    renderShortcuts('all', searchTerm);
 }
-
-// DÜZELTİLMİŞ: initCorelShortcuts fonksiyonu eklendi
-function initCorelShortcuts() {
-    // Filtre butonlarına event listener ekle
-    const filterContainer = document.getElementById('filterContainer');
-    if (filterContainer) {
-        filterContainer.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const filter = this.getAttribute('data-filter');
-                filterShortcuts(filter);
-            });
-        });
-    }
-    
-    // İlk render
-    renderShortcuts('all', '');
-}
-
-// ==========================================
-// BAŞLANGIÇ - DÜZELTİLMİŞ
-// ==========================================
-
 document.addEventListener('DOMContentLoaded', function() {
     console.log('MindForge UV Master yüklendi');
     
@@ -4139,13 +4092,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Başlangıç
     updateMasteryUI();
     loadPriceSettings();
-    
-    // Corel shortcuts init kontrolü
-    const corelScreen = document.getElementById('corelReferenceScreen');
-    if (corelScreen && corelScreen.classList.contains('active')) {
-        initCorelShortcuts();
-    }
-    
     goToScreen('homeScreen');
 });
 </script>
