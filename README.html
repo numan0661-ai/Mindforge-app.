@@ -6,11 +6,11 @@
     <meta name="theme-color" content="#0a0a0a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="description" content="T-800 Pro - Profesyonel Vücut Geliştirme ve Fitness Takip Sistemi">
-    <title>T-800 PRO | Vücut Geliştirme Terminatör</title>
+    <meta name="description" content="T-800 ELITE - Profesyonel Atlet Performans ve Dönüşüm Sistemi">
+    <title>T-800 ELITE | Atlet Performans Sistemi</title>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
         
         * {
             margin: 0;
@@ -20,759 +20,553 @@
         }
         
         :root {
-            --neon-red: #ff2a2a;
-            --neon-orange: #ff6600;
-            --neon-blue: #00d4ff;
-            --neon-green: #00ff88;
-            --neon-purple: #bf00ff;
-            --neon-yellow: #ffcc00;
-            --metal-dark: #050505;
-            --metal-mid: #0a0a0a;
-            --metal-light: #151515;
-            --metal-border: #2a2a2a;
-            --grid-color: rgba(255, 102, 0, 0.05);
-            --glass: rgba(255, 255, 255, 0.03);
+            /* Premium Color System */
+            --primary: #ff6b35;
+            --primary-dark: #e55a2b;
+            --primary-light: #ff8c5a;
+            --secondary: #00d4aa;
+            --secondary-dark: #00b894;
+            --accent: #6366f1;
+            --accent-light: #818cf8;
+            --warning: #fbbf24;
+            --danger: #ef4444;
+            --success: #22c55e;
+            
+            /* Neutral Scale */
+            --n-900: #0a0a0f;
+            --n-800: #12121a;
+            --n-700: #1a1a25;
+            --n-600: #252536;
+            --n-500: #36364a;
+            --n-400: #4a4a66;
+            --n-300: #6b6b8a;
+            --n-200: #9ca3af;
+            --n-100: #d1d5db;
+            --n-50: #f3f4f6;
+            
+            /* Functional */
+            --bg-primary: var(--n-900);
+            --bg-secondary: var(--n-800);
+            --bg-tertiary: var(--n-700);
+            --border: var(--n-600);
+            --text-primary: #ffffff;
+            --text-secondary: var(--n-200);
+            --text-muted: var(--n-300);
+            
+            /* Spacing Scale */
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.25rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            --space-10: 2.5rem;
+            --space-12: 3rem;
+            --space-16: 4rem;
+            
+            /* Typography */
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+            --shadow-glow: 0 0 20px rgba(255, 107, 53, 0.3);
+            --shadow-glow-green: 0 0 20px rgba(0, 212, 170, 0.3);
+            
+            /* Radius */
+            --radius-sm: 6px;
+            --radius: 10px;
+            --radius-lg: 14px;
+            --radius-xl: 20px;
+            --radius-full: 9999px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
         body {
-            font-family: 'Rajdhani', sans-serif;
-            background: var(--metal-dark);
-            color: #fff;
-            overflow-x: hidden;
+            font-family: var(--font-sans);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
             min-height: 100vh;
-            background-image: 
-                linear-gradient(var(--grid-color) 1px, transparent 1px),
-                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px),
-                radial-gradient(ellipse at top, rgba(255, 102, 0, 0.1) 0%, transparent 50%),
-                radial-gradient(ellipse at bottom, rgba(0, 212, 255, 0.05) 0%, transparent 50%);
-            background-size: 50px 50px, 50px 50px, 100% 100%, 100% 100%;
+            overflow-x: hidden;
         }
         
+        /* Premium Background Pattern */
         body::before {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(
-                0deg,
-                rgba(0,0,0,0.15),
-                rgba(0,0,0,0.15) 1px,
-                transparent 1px,
-                transparent 4px
-            );
+            inset: 0;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(255, 107, 53, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 212, 170, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(99, 102, 241, 0.02) 0%, transparent 50%);
             pointer-events: none;
-            z-index: 1000;
+            z-index: 0;
         }
         
-        .container {
-            max-width: 600px;
+        /* Grid Pattern Overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* App Container */
+        #app {
+            position: relative;
+            z-index: 1;
+            max-width: 480px;
             margin: 0 auto;
-            padding: 20px;
-            padding-bottom: 120px;
+            min-height: 100vh;
+            padding-bottom: 100px;
         }
         
-        /* HEADER */
-        .header {
-            text-align: center;
-            padding: 30px 0;
-            border-bottom: 2px solid var(--neon-orange);
-            margin-bottom: 25px;
-            position: relative;
-            background: linear-gradient(180deg, transparent 0%, rgba(255,102,0,0.05) 100%);
-        }
-        
-        .header::after {
-            content: '● SYSTEM ONLINE';
-            position: absolute;
-            bottom: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--metal-dark);
-            padding: 0 20px;
-            color: var(--neon-orange);
-            font-size: 0.75rem;
-            letter-spacing: 3px;
-            font-family: 'Orbitron', monospace;
-            animation: blink 2s infinite;
-        }
-        
-        @keyframes blink {
-            0%, 50% { opacity: 1; text-shadow: 0 0 10px var(--neon-orange); }
-            51%, 100% { opacity: 0.3; text-shadow: none; }
-        }
-        
-        h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
-            color: var(--neon-orange);
-            text-transform: uppercase;
-            letter-spacing: 6px;
-            text-shadow: 0 0 30px rgba(255, 102, 0, 0.6);
-            font-weight: 900;
-            margin-bottom: 5px;
-        }
-        
-        .subtitle {
-            font-size: 0.9rem;
-            color: #666;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-        }
-        
-        .version-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: var(--neon-orange);
-            color: #000;
-            padding: 4px 12px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            border-radius: 4px;
-            font-family: 'Orbitron', sans-serif;
-        }
-        
-        /* NAVIGATION */
-        .nav-tabs {
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-primary);
             display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-            overflow-x: auto;
-            padding: 5px;
-            background: var(--glass);
-            border-radius: 12px;
-            border: 1px solid var(--metal-border);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 0.5s, visibility 0.5s;
         }
         
-        .nav-tab {
-            flex: 1;
-            min-width: 90px;
-            padding: 15px 10px;
-            background: transparent;
-            border: 1px solid transparent;
-            color: #666;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-radius: 8px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 500;
-            position: relative;
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .loading-logo {
+            width: 80px;
+            height: 80px;
+            border: 3px solid var(--n-600);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            margin-top: var(--space-6);
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+        }
+        
+        .loading-bar {
+            width: 200px;
+            height: 2px;
+            background: var(--n-700);
+            border-radius: var(--radius-full);
+            margin-top: var(--space-4);
             overflow: hidden;
         }
         
-        .nav-tab::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
+        .loading-bar-fill {
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,102,0,0.2), transparent);
-            transition: left 0.5s;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            animation: loading 2s ease-out forwards;
         }
         
-        .nav-tab:hover::before {
-            left: 100%;
+        @keyframes loading {
+            to { width: 100%; }
         }
         
-        .nav-tab:hover {
-            border-color: var(--neon-orange);
-            color: var(--neon-orange);
-            background: rgba(255,102,0,0.05);
-        }
-        
-        .nav-tab.active {
-            background: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
-            color: #000;
-            border-color: var(--neon-orange);
-            box-shadow: 0 0 20px rgba(255, 102, 0, 0.4);
-            font-weight: 700;
-        }
-        
-        /* PANELS */
-        .panel {
-            background: var(--glass);
-            border: 1px solid var(--metal-border);
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 20px;
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
-        }
-        
-        .panel::before {
-            content: '';
-            position: absolute;
+        /* Header */
+        .app-header {
+            position: sticky;
             top: 0;
+            z-index: 100;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: var(--space-4) var(--space-5);
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+        
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            box-shadow: var(--shadow-glow);
+        }
+        
+        .brand-text h1 {
+            font-size: 1.125rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+        
+        .brand-text span {
+            display: block;
+            font-size: 0.625rem;
+            font-weight: 600;
+            color: var(--primary);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1.125rem;
+        }
+        
+        .icon-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(255, 107, 53, 0.1);
+        }
+        
+        .icon-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #000;
+        }
+        
+        /* Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
             left: 0;
             right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--neon-orange), transparent);
+            z-index: 100;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            padding: var(--space-2) var(--space-4) calc(var(--space-2) + env(safe-area-inset-bottom));
         }
         
-        .panel-header {
+        .nav-items {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--metal-border);
+            max-width: 480px;
+            margin: 0 auto;
         }
         
-        .panel-title {
-            font-family: 'Orbitron', sans-serif;
-            color: var(--neon-orange);
-            font-size: 1rem;
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-1);
+            padding: var(--space-2) var(--space-1);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-muted);
+            font-size: 0.625rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
         
-        .panel-icon {
+        .nav-item:hover {
+            color: var(--text-secondary);
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+        }
+        
+        .nav-item.active .nav-icon {
+            background: rgba(255, 107, 53, 0.15);
+        }
+        
+        .nav-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.125rem;
+            transition: all 0.2s;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: var(--space-5);
+        }
+        
+        /* Cards */
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: var(--space-5);
+        }
+        
+        .card-header {
+            padding: var(--space-5);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .card-title {
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .card-title-icon {
             width: 32px;
             height: 32px;
-            background: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
-            border-radius: 8px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: var(--radius);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
-        }
-        
-        /* USER PROFILE SETUP */
-        .setup-wizard {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 5000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            backdrop-filter: blur(20px);
-        }
-        
-        .setup-wizard.hidden {
-            display: none;
-        }
-        
-        .setup-container {
-            max-width: 500px;
-            width: 100%;
-            background: var(--metal-mid);
-            border: 2px solid var(--neon-orange);
-            border-radius: 20px;
-            padding: 40px;
-            position: relative;
-            box-shadow: 0 0 60px rgba(255,102,0,0.2);
-        }
-        
-        .setup-step {
-            display: none;
-        }
-        
-        .setup-step.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .setup-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            color: var(--neon-orange);
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        
-        .setup-subtitle {
-            color: #888;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 0.9rem;
-        }
-        
-        .input-group {
-            margin-bottom: 20px;
-        }
-        
-        .input-label {
-            display: block;
-            color: var(--neon-orange);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            font-family: 'Orbitron', sans-serif;
-        }
-        
-        .input-field {
-            width: 100%;
-            padding: 15px;
-            background: var(--metal-dark);
-            border: 2px solid var(--metal-border);
-            color: #fff;
-            font-size: 1.1rem;
-            border-radius: 10px;
-            font-family: 'Rajdhani', sans-serif;
-            transition: all 0.3s;
-        }
-        
-        .input-field:focus {
-            outline: none;
-            border-color: var(--neon-orange);
-            box-shadow: 0 0 15px rgba(255,102,0,0.2);
-        }
-        
-        .gender-selector {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .gender-option {
-            flex: 1;
-            padding: 20px;
-            background: var(--metal-dark);
-            border: 2px solid var(--metal-border);
-            border-radius: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .gender-option:hover {
-            border-color: var(--neon-orange);
-            background: rgba(255,102,0,0.05);
-        }
-        
-        .gender-option.selected {
-            border-color: var(--neon-orange);
-            background: linear-gradient(135deg, rgba(255,102,0,0.2), rgba(255,42,42,0.1));
-            box-shadow: 0 0 20px rgba(255,102,0,0.2);
-        }
-        
-        .gender-icon {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-        
-        .gender-label {
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            color: #888;
-        }
-        
-        .goal-selector {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .goal-option {
-            padding: 20px;
-            background: var(--metal-dark);
-            border: 2px solid var(--metal-border);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-        }
-        
-        .goal-option:hover {
-            border-color: var(--neon-blue);
-        }
-        
-        .goal-option.selected {
-            border-color: var(--neon-blue);
-            background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(0,212,255,0.05));
-            box-shadow: 0 0 20px rgba(0,212,255,0.2);
-        }
-        
-        .goal-icon {
-            font-size: 2rem;
-            margin-bottom: 8px;
-        }
-        
-        .goal-title {
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: #fff;
-            margin-bottom: 4px;
-        }
-        
-        .goal-desc {
-            font-size: 0.75rem;
-            color: #666;
-        }
-        
-        .btn-primary {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
-            color: #000;
-            border: none;
-            border-radius: 12px;
             font-size: 1rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-            font-family: 'Orbitron', sans-serif;
-            transition: all 0.3s;
-            margin-top: 10px;
         }
         
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(255, 102, 0, 0.4);
+        .card-body {
+            padding: var(--space-5);
         }
         
-        .btn-secondary {
-            width: 100%;
-            padding: 15px;
-            background: transparent;
-            color: var(--neon-orange);
-            border: 2px solid var(--neon-orange);
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            cursor: pointer;
-            font-family: 'Orbitron', sans-serif;
-            transition: all 0.3s;
-            margin-top: 10px;
-        }
-        
-        .btn-secondary:hover {
-            background: rgba(255,102,0,0.1);
-        }
-        
-        /* BMI ANALYZER */
-        .bmi-display {
-            text-align: center;
-            padding: 30px;
-            background: linear-gradient(135deg, rgba(255,102,0,0.1), transparent);
-            border-radius: 16px;
-            border: 1px solid var(--neon-orange);
-            margin-bottom: 20px;
-        }
-        
-        .bmi-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 4rem;
-            font-weight: 900;
-            color: var(--neon-orange);
-            text-shadow: 0 0 30px rgba(255,102,0,0.5);
-            line-height: 1;
-        }
-        
-        .bmi-label {
-            font-size: 1rem;
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-top: 10px;
-        }
-        
-        .bmi-status {
-            display: inline-block;
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            margin-top: 15px;
-            text-transform: uppercase;
-        }
-        
-        .bmi-status.underweight { background: var(--neon-blue); color: #000; }
-        .bmi-status.normal { background: var(--neon-green); color: #000; }
-        .bmi-status.overweight { background: var(--neon-yellow); color: #000; }
-        .bmi-status.obese { background: var(--neon-red); color: #fff; }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .stat-card {
-            background: var(--metal-dark);
-            border: 1px solid var(--metal-border);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            transition: all 0.3s;
-        }
-        
-        .stat-card:hover {
-            border-color: var(--neon-orange);
-            transform: translateY(-3px);
-        }
-        
-        .stat-icon {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-        }
-        
-        .stat-value-large {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.8rem;
-            color: var(--neon-orange);
-            font-weight: 700;
-        }
-        
-        .stat-label-large {
-            font-size: 0.75rem;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 5px;
-        }
-        
-        /* PROGRESS RING */
-        .progress-ring-container {
+        /* Score Circle */
+        .score-container {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            margin: 30px 0;
+            padding: var(--space-8) var(--space-5);
         }
         
-        .progress-ring {
+        .score-circle {
             position: relative;
             width: 200px;
             height: 200px;
         }
         
-        .progress-ring svg {
+        .score-circle svg {
             transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
         }
         
-        .progress-ring-circle {
+        .score-bg {
             fill: none;
-            stroke: var(--metal-border);
+            stroke: var(--n-700);
             stroke-width: 8;
         }
         
-        .progress-ring-progress {
+        .score-progress {
             fill: none;
-            stroke: url(#gradient);
+            stroke: url(#scoreGradient);
             stroke-width: 8;
             stroke-linecap: round;
-            transition: stroke-dashoffset 1s ease;
+            stroke-dasharray: 565.48;
+            stroke-dashoffset: 565.48;
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        .progress-content {
+        .score-content {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-        }
-        
-        .progress-level {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3rem;
-            font-weight: 900;
-            color: var(--neon-orange);
-        }
-        
-        .progress-title {
-            font-size: 0.8rem;
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        
-        /* WORKOUT GENERATOR */
-        .workout-preview {
-            background: var(--metal-dark);
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid var(--metal-border);
-        }
-        
-        .workout-header {
-            background: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
-            padding: 25px;
-            color: #000;
-        }
-        
-        .workout-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.3rem;
-            font-weight: 900;
-            margin-bottom: 5px;
-        }
-        
-        .workout-subtitle {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-        
-        .workout-stats {
-            display: flex;
-            gap: 30px;
-            margin-top: 20px;
-        }
-        
-        .workout-stat {
-            text-align: center;
-        }
-        
-        .workout-stat-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-        
-        .workout-stat-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            opacity: 0.8;
-        }
-        
-        .exercise-list {
-            padding: 20px;
-        }
-        
-        .exercise-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 15px;
-            background: var(--glass);
-            border: 1px solid var(--metal-border);
-            border-radius: 12px;
-            margin-bottom: 10px;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-        
-        .exercise-item:hover {
-            border-color: var(--neon-orange);
-            transform: translateX(5px);
-        }
-        
-        .exercise-number {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            color: #000;
-            font-size: 1.1rem;
-        }
-        
-        .exercise-info {
-            flex: 1;
-        }
-        
-        .exercise-name {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 3px;
-        }
-        
-        .exercise-target {
-            font-size: 0.8rem;
-            color: var(--neon-orange);
-        }
-        
-        .exercise-sets {
-            text-align: right;
-        }
-        
-        .exercise-sets-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem;
-            color: var(--neon-green);
-        }
-        
-        .exercise-sets-label {
-            font-size: 0.7rem;
-            color: #666;
-            text-transform: uppercase;
-        }
-        
-        /* CHARTS */
-        .chart-container {
-            height: 200px;
-            margin: 20px 0;
-            position: relative;
-        }
-        
-        .chart-bar {
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-around;
-            height: 100%;
-            padding: 0 10px;
-        }
-        
-        .bar-item {
+            inset: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            flex: 1;
-            max-width: 40px;
+            justify-content: center;
         }
         
-        .bar {
-            width: 100%;
-            background: linear-gradient(to top, var(--neon-orange), var(--neon-red));
-            border-radius: 4px 4px 0 0;
-            transition: height 1s ease;
-            position: relative;
+        .score-value {
+            font-family: var(--font-mono);
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
         }
         
-        .bar::after {
-            content: attr(data-value);
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.7rem;
-            color: var(--neon-orange);
-            font-family: 'Orbitron', sans-serif;
-        }
-        
-        .bar-label {
-            font-size: 0.7rem;
-            color: #666;
-            margin-top: 8px;
+        .score-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
             text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: var(--space-2);
         }
         
-        /* AI COACH */
+        .score-rank {
+            margin-top: var(--space-1);
+            padding: var(--space-1) var(--space-3);
+            background: rgba(255, 107, 53, 0.15);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: var(--radius-full);
+            font-size: 0.625rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-4);
+        }
+        
+        .stat-item {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: var(--space-4);
+            transition: all 0.2s;
+        }
+        
+        .stat-item:hover {
+            border-color: var(--n-500);
+            transform: translateY(-2px);
+        }
+        
+        .stat-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-3);
+        }
+        
+        .stat-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+        
+        .stat-icon.primary {
+            background: rgba(255, 107, 53, 0.15);
+        }
+        
+        .stat-icon.secondary {
+            background: rgba(0, 212, 170, 0.15);
+        }
+        
+        .stat-icon.accent {
+            background: rgba(99, 102, 241, 0.15);
+        }
+        
+        .stat-icon.warning {
+            background: rgba(251, 191, 36, 0.15);
+        }
+        
+        .stat-name {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .stat-value {
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .stat-unit {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-left: var(--space-1);
+        }
+        
+        .stat-change {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+            font-size: 0.75rem;
+            margin-top: var(--space-2);
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+        }
+        
+        .stat-change.positive {
+            color: var(--secondary);
+            background: rgba(0, 212, 170, 0.1);
+        }
+        
+        .stat-change.negative {
+            color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+        
+        /* AI Coach Panel */
         .ai-panel {
-            background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(191,0,255,0.05));
-            border: 1px solid var(--neon-blue);
-            border-radius: 16px;
-            padding: 25px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(0, 212, 170, 0.05));
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
             position: relative;
             overflow: hidden;
         }
@@ -782,1337 +576,2173 @@
             position: absolute;
             top: -50%;
             right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(0,212,255,0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-        }
-        
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
         }
         
         .ai-header {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: var(--space-3);
+            margin-bottom: var(--space-4);
             position: relative;
-            z-index: 1;
         }
         
         .ai-avatar {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: var(--radius);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            box-shadow: 0 0 30px rgba(0,212,255,0.3);
-            animation: pulse 2s infinite;
+            font-size: 1.5rem;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
         }
         
-        .ai-info h3 {
-            font-family: 'Orbitron', sans-serif;
-            color: var(--neon-blue);
-            font-size: 1.2rem;
-            margin-bottom: 5px;
+        .ai-title h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent-light);
         }
         
-        .ai-status {
+        .ai-title span {
+            font-size: 0.75rem;
+            color: var(--secondary);
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.8rem;
-            color: var(--neon-green);
+            gap: var(--space-1);
         }
         
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--neon-green);
+        .ai-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--secondary);
             border-radius: 50%;
-            animation: blink 1s infinite;
+            animation: blink 2s infinite;
         }
         
         .ai-message {
-            background: rgba(0,0,0,0.3);
-            padding: 20px;
-            border-radius: 12px;
-            border-left: 4px solid var(--neon-blue);
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #ccc;
+            font-size: 0.9375rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
             position: relative;
-            z-index: 1;
         }
         
-        .ai-recommendation {
-            margin-top: 15px;
-            padding: 15px;
-            background: rgba(255,102,0,0.1);
-            border: 1px solid var(--neon-orange);
-            border-radius: 10px;
+        .ai-action {
+            margin-top: var(--space-4);
             display: flex;
-            align-items: center;
-            gap: 15px;
-            position: relative;
-            z-index: 1;
+            gap: var(--space-3);
         }
         
-        .rec-icon {
-            font-size: 2rem;
-        }
-        
-        .rec-content h4 {
-            color: var(--neon-orange);
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-        }
-        
-        .rec-content p {
-            font-size: 0.85rem;
-            color: #888;
-        }
-        
-        /* TIMER */
-        .timer-float {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
+        /* Buttons */
+        .btn {
+            display: inline-flex;
             align-items: center;
             justify-content: center;
+            gap: var(--space-2);
+            padding: var(--space-3) var(--space-5);
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 10px 30px rgba(255,102,0,0.4);
-            z-index: 100;
-            transition: all 0.3s;
-            border: 3px solid transparent;
+            transition: all 0.2s;
+            border: none;
+            font-family: inherit;
         }
         
-        .timer-float:hover {
-            transform: scale(1.1);
-            border-color: #fff;
-        }
-        
-        .timer-float.active {
-            animation: timerPulse 1s infinite;
-        }
-        
-        @keyframes timerPulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(255,102,0,0.4); }
-            50% { box-shadow: 0 0 0 20px rgba(255,102,0,0); }
-        }
-        
-        .timer-icon {
-            font-size: 1.8rem;
-        }
-        
-        .timer-label {
-            font-size: 0.6rem;
-            font-weight: bold;
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: #000;
+            box-shadow: var(--shadow-glow);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+        
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--n-500);
+            background: var(--n-600);
+        }
+        
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+        }
+        
+        .btn-ghost:hover {
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+        }
+        
+        .btn-sm {
+            padding: var(--space-2) var(--space-3);
+            font-size: 0.75rem;
+        }
+        
+        .btn-lg {
+            padding: var(--space-4) var(--space-6);
+            font-size: 1rem;
+        }
+        
+        .btn-block {
+            width: 100%;
+        }
+        
+        /* Workout Card */
+        .workout-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+        
+        .workout-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: var(--space-6);
+            color: #000;
+        }
+        
+        .workout-type {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.9;
+            margin-bottom: var(--space-2);
+        }
+        
+        .workout-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: var(--space-1);
+        }
+        
+        .workout-subtitle {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+        
+        .workout-meta {
+            display: flex;
+            gap: var(--space-6);
+            margin-top: var(--space-5);
+        }
+        
+        .workout-meta-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .workout-meta-value {
+            font-family: var(--font-mono);
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        
+        .workout-meta-label {
+            font-size: 0.625rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.8;
+        }
+        
+        .exercise-list {
+            padding: var(--space-4);
+        }
+        
+        .exercise-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            padding: var(--space-4);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: var(--space-3);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .exercise-item:hover {
+            border-color: var(--primary);
+            transform: translateX(4px);
+        }
+        
+        .exercise-item.completed {
+            border-color: var(--secondary);
+            opacity: 0.7;
+        }
+        
+        .exercise-number {
+            width: 36px;
+            height: 36px;
+            background: var(--bg-primary);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+        
+        .exercise-item:hover .exercise-number {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .exercise-info {
+            flex: 1;
+        }
+        
+        .exercise-name {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: var(--space-1);
+        }
+        
+        .exercise-target {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        .exercise-sets {
+            text-align: right;
+        }
+        
+        .exercise-sets-value {
+            font-family: var(--font-mono);
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+        
+        .exercise-sets-label {
+            font-size: 0.625rem;
+            color: var(--text-muted);
             text-transform: uppercase;
         }
         
-        /* MODAL */
-        .modal {
+        /* Exercise Detail */
+        .exercise-detail {
+            padding: 0 var(--space-4) var(--space-4);
             display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            backdrop-filter: blur(10px);
         }
         
-        .modal.active {
+        .exercise-detail.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .set-tracker {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: var(--space-4);
+        }
+        
+        .set-row {
             display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            margin-bottom: var(--space-3);
         }
         
-        .modal-content {
-            max-width: 400px;
-            width: 100%;
-            background: var(--metal-mid);
-            border: 2px solid var(--neon-orange);
-            border-radius: 20px;
-            padding: 40px;
+        .set-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .set-label {
+            width: 50px;
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+        
+        .set-inputs {
+            flex: 1;
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .input {
+            flex: 1;
+            padding: var(--space-3);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 0.9375rem;
             text-align: center;
         }
         
+        .input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .set-check {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1.25rem;
+        }
+        
+        .set-check:hover {
+            border-color: var(--secondary);
+        }
+        
+        .set-check.completed {
+            background: var(--secondary);
+            border-color: var(--secondary);
+            color: #000;
+        }
+        
+        /* Floating Timer */
+        .fab {
+            position: fixed;
+            bottom: calc(80px + env(safe-area-inset-bottom));
+            right: var(--space-5);
+            z-index: 90;
+        }
+        
+        .fab-btn {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-glow);
+            transition: all 0.3s;
+        }
+        
+        .fab-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .fab-btn.active {
+            animation: fabPulse 1s infinite;
+        }
+        
+        @keyframes fabPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.4); }
+            50% { box-shadow: 0 0 0 15px rgba(255, 107, 53, 0); }
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-5);
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            width: 100%;
+            max-width: 400px;
+            overflow: hidden;
+        }
+        
+        .modal-header {
+            padding: var(--space-5);
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+        
+        .modal-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+        }
+        
+        .modal-body {
+            padding: var(--space-6);
+        }
+        
         .timer-display {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 5rem;
-            color: var(--neon-orange);
-            text-shadow: 0 0 30px rgba(255,102,0,0.5);
-            margin: 30px 0;
+            font-family: var(--font-mono);
+            font-size: 4rem;
+            font-weight: 700;
+            text-align: center;
+            color: var(--primary);
+            text-shadow: 0 0 30px rgba(255, 107, 53, 0.3);
+            margin: var(--space-6) 0;
         }
         
         .timer-presets {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: var(--space-3);
+            margin-bottom: var(--space-5);
         }
         
         .preset-btn {
-            padding: 15px;
-            background: var(--metal-dark);
-            border: 1px solid var(--metal-border);
-            color: #fff;
-            border-radius: 10px;
+            padding: var(--space-3);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
             cursor: pointer;
-            font-family: 'Orbitron', sans-serif;
-            transition: all 0.3s;
+            transition: all 0.2s;
         }
         
         .preset-btn:hover {
-            border-color: var(--neon-orange);
-            background: rgba(255,102,0,0.1);
+            border-color: var(--primary);
+            background: rgba(255, 107, 53, 0.1);
         }
         
-        .hidden { display: none !important; }
+        /* Setup Wizard */
+        .wizard {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-primary);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
         
+        .wizard.hidden {
+            display: none;
+        }
+        
+        .wizard-header {
+            padding: var(--space-6);
+            text-align: center;
+        }
+        
+        .wizard-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto var(--space-4);
+            box-shadow: var(--shadow-glow);
+        }
+        
+        .wizard-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: var(--space-2);
+        }
+        
+        .wizard-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+        
+        .wizard-progress {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-6);
+        }
+        
+        .wizard-step-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--n-600);
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+        
+        .wizard-step-dot.active {
+            background: var(--primary);
+            width: 24px;
+            border-radius: var(--radius-full);
+        }
+        
+        .wizard-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 var(--space-6);
+        }
+        
+        .wizard-step {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        .wizard-step.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: var(--space-5);
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: var(--space-2);
+            color: var(--text-secondary);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: var(--space-4);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+        
+        .gender-select {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-3);
+        }
+        
+        .gender-option {
+            padding: var(--space-6);
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .gender-option:hover {
+            border-color: var(--n-500);
+        }
+        
+        .gender-option.selected {
+            border-color: var(--primary);
+            background: rgba(255, 107, 53, 0.05);
+        }
+        
+        .gender-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-3);
+        }
+        
+        .gender-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        
+        .goal-select {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-3);
+        }
+        
+        .goal-option {
+            padding: var(--space-5);
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .goal-option:hover {
+            border-color: var(--n-500);
+        }
+        
+        .goal-option.selected {
+            border-color: var(--secondary);
+            background: rgba(0, 212, 170, 0.05);
+        }
+        
+        .goal-icon {
+            font-size: 1.5rem;
+            margin-bottom: var(--space-2);
+        }
+        
+        .goal-title {
+            font-size: 0.875rem;
+            font-weight: 700;
+            margin-bottom: var(--space-1);
+        }
+        
+        .goal-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        .bmi-result {
+            text-align: center;
+            padding: var(--space-8);
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-6);
+        }
+        
+        .bmi-value {
+            font-family: var(--font-mono);
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+        }
+        
+        .bmi-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: var(--space-2);
+        }
+        
+        .bmi-status {
+            display: inline-block;
+            margin-top: var(--space-4);
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .bmi-status.normal {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+        
+        .wizard-footer {
+            padding: var(--space-6);
+            display: flex;
+            gap: var(--space-3);
+        }
+        
+        /* Utility Classes */
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .text-primary { color: var(--primary); }
+        .text-secondary { color: var(--secondary); }
+        .text-muted { color: var(--text-muted); }
+        .mb-4 { margin-bottom: var(--space-4); }
+        .mt-4 { margin-top: var(--space-4); }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Responsive */
         @media (max-width: 480px) {
-            h1 { font-size: 1.8rem; letter-spacing: 3px; }
-            .container { padding: 15px; }
-            .setup-container { padding: 25px; }
-            .stats-grid { grid-template-columns: 1fr; }
-            .goal-selector { grid-template-columns: 1fr; }
+            :root {
+                font-size: 14px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .score-circle {
+                width: 160px;
+                height: 160px;
+            }
+            
+            .score-value {
+                font-size: 2.5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- SVG Gradients -->
+    <!-- SVG Definitions -->
     <svg width="0" height="0">
         <defs>
-            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" style="stop-color:#ff6600;stop-opacity:1" />
-                <stop offset="100%" style="stop-color:#ff2a2a;stop-opacity:1" />
+            <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#ff6b35"/>
+                <stop offset="100%" stop-color="#00d4aa"/>
             </linearGradient>
         </defs>
     </svg>
 
-    <!-- SETUP WIZARD -->
-    <div class="setup-wizard" id="setupWizard">
-        <div class="setup-container">
-            <!-- Step 1: Basic Info -->
-            <div class="setup-step active" data-step="1">
-                <div class="setup-title">T-800 PRO AKTIVASYON</div>
-                <div class="setup-subtitle">Vücut profilinizi oluşturmak için bilgilerinizi girin</div>
-                
-                <div class="input-group">
-                    <label class="input-label">İsim</label>
-                    <input type="text" class="input-field" id="userName" placeholder="Adınızı girin">
-                </div>
-                
-                <div class="gender-selector">
-                    <div class="gender-option" data-gender="male">
-                        <div class="gender-icon">♂</div>
-                        <div class="gender-label">Erkek</div>
-                    </div>
-                    <div class="gender-option" data-gender="female">
-                        <div class="gender-icon">♀</div>
-                        <div class="gender-label">Kadın</div>
-                    </div>
-                </div>
-                
-                <button class="btn-primary" onclick="nextStep(2)">DEVAM ET →</button>
-            </div>
-            
-            <!-- Step 2: Body Metrics -->
-            <div class="setup-step" data-step="2">
-                <div class="setup-title">VÜCUT ANALIZI</div>
-                <div class="setup-subtitle">Boy ve kilonuzu girin, BMI'nizi hesaplayalım</div>
-                
-                <div class="stats-grid">
-                    <div class="input-group">
-                        <label class="input-label">Boy (cm)</label>
-                        <input type="number" class="input-field" id="userHeight" placeholder="175">
-                    </div>
-                    <div class="input-group">
-                        <label class="input-label">Kilo (kg)</label>
-                        <input type="number" class="input-field" id="userWeight" placeholder="70">
-                    </div>
-                </div>
-                
-                <div class="input-group">
-                    <label class="input-label">Yaş</label>
-                    <input type="number" class="input-field" id="userAge" placeholder="25">
-                </div>
-                
-                <button class="btn-secondary" onclick="prevStep(1)">← GERI</button>
-                <button class="btn-primary" onclick="calculateBMI()">ANALIZ ET →</button>
-            </div>
-            
-            <!-- Step 3: BMI Results -->
-            <div class="setup-step" data-step="3">
-                <div class="setup-title">VÜCUT ANALIZ SONUÇLARI</div>
-                
-                <div class="bmi-display">
-                    <div class="bmi-value" id="bmiValue">22.5</div>
-                    <div class="bmi-label">BMI INDEKSI</div>
-                    <div class="bmi-status normal" id="bmiStatus">NORMAL KILO</div>
-                </div>
-                
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon">⚖️</div>
-                        <div class="stat-value-large" id="idealWeight">68-75</div>
-                        <div class="stat-label-large">İdeal Kilo (kg)</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">🔥</div>
-                        <div class="stat-value-large" id="dailyCalories">2,450</div>
-                        <div class="stat-label-large">Günlük Kalori</div>
-                    </div>
-                </div>
-                
-                <button class="btn-secondary" onclick="prevStep(2)">← GERI</button>
-                <button class="btn-primary" onclick="nextStep(4)">HEDEF BELIRLE →</button>
-            </div>
-            
-            <!-- Step 4: Goals -->
-            <div class="setup-step" data-step="4">
-                <div class="setup-title">FITNESS HEDEFINIZ</div>
-                <div class="setup-subtitle">Hedefinize göre kişiselleştirilmiş program oluşturacağız</div>
-                
-                <div class="goal-selector">
-                    <div class="goal-option" data-goal="lose">
-                        <div class="goal-icon">📉</div>
-                        <div class="goal-title">Kilo Ver</div>
-                        <div class="goal-desc">Yağ yakımı odaklı</div>
-                    </div>
-                    <div class="goal-option" data-goal="maintain">
-                        <div class="goal-icon">⚖️</div>
-                        <div class="goal-title">Koru</div>
-                        <div class="goal-desc">Mevcut formu koru</div>
-                    </div>
-                    <div class="goal-option" data-goal="build">
-                        <div class="goal-icon">💪</div>
-                        <div class="goal-title">Kas Yap</div>
-                        <div class="goal-desc">Hacim kazanımı</div>
-                    </div>
-                    <div class="goal-option" data-goal="strength">
-                        <div class="goal-icon">🏋️</div>
-                        <div class="goal-title">Güçlen</div>
-                        <div class="goal-desc">Maksimum güç</div>
-                    </div>
-                </div>
-                
-                <button class="btn-secondary" onclick="prevStep(3)">← GERI</button>
-                <button class="btn-primary" onclick="completeSetup()">PROGRAM OLUŞTUR 🚀</button>
-            </div>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-logo"></div>
+        <div class="loading-text">T-800 ELITE v3.0</div>
+        <div class="loading-bar">
+            <div class="loading-bar-fill"></div>
         </div>
     </div>
 
-    <!-- MAIN APP -->
-    <div class="container" id="mainApp" style="display: none;">
-        <div class="version-badge">PRO v2.0</div>
+    <!-- Setup Wizard -->
+    <div class="wizard hidden" id="wizard">
+        <div class="wizard-header">
+            <div class="wizard-logo">💪</div>
+            <div class="wizard-title">T-800 ELITE</div>
+            <div class="wizard-subtitle">Profesyonel Atlet Sistemi</div>
+        </div>
         
-        <header class="header">
-            <h1>T-800 PRO</h1>
-            <div class="subtitle" id="userGreeting">TERMINATOR AKTIF</div>
-        </header>
-
-        <!-- AI COACH PANEL -->
-        <div class="ai-panel" id="aiPanel">
-            <div class="ai-header">
-                <div class="ai-avatar">🤖</div>
-                <div class="ai-info">
-                    <h3>T-800 AI KOÇ</h3>
-                    <div class="ai-status">
-                        <span class="status-dot"></span>
-                        <span>ANALIZ MODU AKTIF</span>
+        <div class="wizard-progress" id="wizardProgress">
+            <div class="wizard-step-dot active"></div>
+            <div class="wizard-step-dot"></div>
+            <div class="wizard-step-dot"></div>
+            <div class="wizard-step-dot"></div>
+        </div>
+        
+        <div class="wizard-content">
+            <!-- Step 1: Profile -->
+            <div class="wizard-step active" data-step="1">
+                <div class="form-group">
+                    <label class="form-label">Ad Soyad</label>
+                    <input type="text" class="form-input" id="inputName" placeholder="Adınızı girin">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Cinsiyet</label>
+                    <div class="gender-select">
+                        <div class="gender-option" data-gender="male">
+                            <div class="gender-icon">♂</div>
+                            <div class="gender-label">Erkek</div>
+                        </div>
+                        <div class="gender-option" data-gender="female">
+                            <div class="gender-icon">♀</div>
+                            <div class="gender-label">Kadın</div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="ai-message" id="aiMessage">
-                Vücut profiliniz analiz ediliyor... Kişiselleştirilmiş antrenman programınız hazırlanıyor.
+            
+            <!-- Step 2: Body Metrics -->
+            <div class="wizard-step" data-step="2">
+                <div class="stats-grid">
+                    <div class="form-group">
+                        <label class="form-label">Boy (cm)</label>
+                        <input type="number" class="form-input" id="inputHeight" placeholder="175">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Kilo (kg)</label>
+                        <input type="number" class="form-input" id="inputWeight" placeholder="70">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Yaş</label>
+                    <input type="number" class="form-input" id="inputAge" placeholder="25">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Vücut Yağ Oranı (%) - Opsiyonel</label>
+                    <input type="number" class="form-input" id="inputBodyFat" placeholder="15">
+                </div>
             </div>
-            <div class="ai-recommendation" id="aiRecommendation">
-                <div class="rec-icon">💡</div>
-                <div class="rec-content">
-                    <h4>ÖNERI</h4>
-                    <p id="recText">Bugün göğüs ve triceps odaklı bir antrenman yapmalısınız.</p>
+            
+            <!-- Step 3: BMI Analysis -->
+            <div class="wizard-step" data-step="3">
+                <div class="bmi-result">
+                    <div class="bmi-value" id="bmiValue">--</div>
+                    <div class="bmi-label">Vücut Kitle İndeksi</div>
+                    <div class="bmi-status normal" id="bmiStatus">Hesaplanıyor...</div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-header">
+                            <div class="stat-icon primary">⚖️</div>
+                            <span class="stat-name">İdeal Kilo</span>
+                        </div>
+                        <div class="stat-value" id="idealWeight">-- <span class="stat-unit">kg</span></div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-header">
+                            <div class="stat-icon secondary">🔥</div>
+                            <span class="stat-name">Günlük Kalori</span>
+                        </div>
+                        <div class="stat-value" id="dailyCalories">-- <span class="stat-unit">kcal</span></div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-header">
+                            <div class="stat-icon accent">💧</div>
+                            <span class="stat-name">Su İhtiyacı</span>
+                        </div>
+                        <div class="stat-value" id="waterNeed">-- <span class="stat-unit">L</span></div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-header">
+                            <div class="stat-icon warning">🥩</div>
+                            <span class="stat-name">Protein</span>
+                        </div>
+                        <div class="stat-value" id="proteinNeed">-- <span class="stat-unit">g</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 4: Goal -->
+            <div class="wizard-step" data-step="4">
+                <div class="form-group">
+                    <label class="form-label">Fitness Hedefiniz</label>
+                    <div class="goal-select">
+                        <div class="goal-option" data-goal="cut">
+                            <div class="goal-icon">📉</div>
+                            <div class="goal-title">Definasyon</div>
+                            <div class="goal-desc">Yağ yakımı & kas koruma</div>
+                        </div>
+                        <div class="goal-option" data-goal="maintain">
+                            <div class="goal-icon">⚖️</div>
+                            <div class="goal-title">Koruma</div>
+                            <div class="goal-desc">Mevcut formu koru</div>
+                        </div>
+                        <div class="goal-option" data-goal="bulk">
+                            <div class="goal-icon">📈</div>
+                            <div class="goal-title">Bulk</div>
+                            <div class="goal-desc">Kas kazanımı</div>
+                        </div>
+                        <div class="goal-option" data-goal="recomp">
+                            <div class="goal-icon">🔄</div>
+                            <div class="goal-title">Recomp</div>
+                            <div class="goal-desc">Yağ/kas oranı değişimi</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Deneyim Seviyesi</label>
+                    <select class="form-input" id="experienceLevel">
+                        <option value="beginner">Başlangıç (0-1 yıl)</option>
+                        <option value="intermediate">Orta Seviye (1-3 yıl)</option>
+                        <option value="advanced">İleri Seviye (3+ yıl)</option>
+                    </select>
                 </div>
             </div>
         </div>
+        
+        <div class="wizard-footer">
+            <button class="btn btn-secondary btn-block hidden" id="btnBack">Geri</button>
+            <button class="btn btn-primary btn-block" id="btnNext">Devam Et</button>
+        </div>
+    </div>
 
-        <!-- NAVIGATION -->
-        <nav class="nav-tabs" id="mainNav">
-            <div class="nav-tab active" data-tab="dashboard">
-                <div style="font-size: 1.2rem; margin-bottom: 4px;">📊</div>
-                DASHBOARD
+    <!-- Main App -->
+    <div id="app" class="hidden">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="brand">
+                    <div class="brand-icon">💪</div>
+                    <div class="brand-text">
+                        <h1>T-800 ELITE</h1>
+                        <span>PRO ATHLETE SYSTEM</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="icon-btn" id="btnNotifications">🔔</button>
+                    <button class="icon-btn" id="btnProfile">👤</button>
+                </div>
             </div>
-            <div class="nav-tab" data-tab="workout">
-                <div style="font-size: 1.2rem; margin-bottom: 4px;">💪</div>
-                ANTRENMAN
-            </div>
-            <div class="nav-tab" data-tab="nutrition">
-                <div style="font-size: 1.2rem; margin-bottom: 4px;">🥗</div>
-                BESLENME
-            </div>
-            <div class="nav-tab" data-tab="progress">
-                <div style="font-size: 1.2rem; margin-bottom: 4px;">📈</div>
-                ISTATISTIK
-            </div>
-        </nav>
+        </header>
 
-        <!-- DASHBOARD TAB -->
-        <section id="dashboard" class="tab-content">
-            <!-- Progress Ring -->
-            <div class="panel">
-                <div class="panel-header">
-                    <div class="panel-title">
-                        <div class="panel-icon">🏆</div>
-                        SEVIYE ILERLEMESI
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <!-- Dashboard View -->
+            <div id="viewDashboard">
+                <!-- AI Coach -->
+                <div class="ai-panel mb-4">
+                    <div class="ai-header">
+                        <div class="ai-avatar">🤖</div>
+                        <div class="ai-title">
+                            <h3>T-800 AI KOÇ</h3>
+                            <span><span class="ai-dot"></span> Gerçek Zamanlı Analiz</span>
+                        </div>
+                    </div>
+                    <div class="ai-message" id="aiMessage">
+                        Vücut profiliniz analiz ediliyor. Kişiselleştirilmiş antrenman protokolü hazırlanıyor...
+                    </div>
+                    <div class="ai-action">
+                        <button class="btn btn-primary btn-sm" onclick="generateWorkout()">Yeni Program Oluştur</button>
+                        <button class="btn btn-ghost btn-sm">Detaylı Analiz</button>
                     </div>
                 </div>
-                <div class="progress-ring-container">
-                    <div class="progress-ring">
-                        <svg width="200" height="200">
-                            <circle class="progress-ring-circle" cx="100" cy="100" r="90"></circle>
-                            <circle class="progress-ring-progress" cx="100" cy="100" r="90" 
-                                    stroke-dasharray="565.48" stroke-dashoffset="400" id="levelProgress"></circle>
-                        </svg>
-                        <div class="progress-content">
-                            <div class="progress-level" id="currentLevelDisplay">1</div>
-                            <div class="progress-title" id="currentRank">RECRUIT</div>
+
+                <!-- Performance Score -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-title-icon">🏆</div>
+                            Performans Skoru
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="score-container">
+                            <div class="score-circle">
+                                <svg>
+                                    <circle class="score-bg" cx="100" cy="100" r="90"></circle>
+                                    <circle class="score-progress" id="scoreCircle" cx="100" cy="100" r="90"></circle>
+                                </svg>
+                                <div class="score-content">
+                                    <div class="score-value" id="scoreValue">0</div>
+                                    <div class="score-label">ELITE SCORE</div>
+                                    <div class="score-rank" id="scoreRank">RECRUIT</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-header">
+                                    <div class="stat-icon primary">💪</div>
+                                    <span class="stat-name">Güç Endeksi</span>
+                                </div>
+                                <div class="stat-value" id="strengthScore">0</div>
+                                <div class="stat-change positive">↑ 12% bu ay</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-header">
+                                    <div class="stat-icon secondary">🏃</div>
+                                    <span class="stat-name">Dayanıklılık</span>
+                                </div>
+                                <div class="stat-value" id="enduranceScore">0</div>
+                                <div class="stat-change positive">↑ 8% bu ay</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-header">
+                                    <div class="stat-icon accent">⚡</div>
+                                    <span class="stat-name">Hız/Güç</span>
+                                </div>
+                                <div class="stat-value" id="powerScore">0</div>
+                                <div class="stat-change positive">↑ 15% bu ay</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-header">
+                                    <div class="stat-icon warning">🎯</div>
+                                    <span class="stat-name">Teknik</span>
+                                </div>
+                                <div class="stat-value" id="techniqueScore">0</div>
+                                <div class="stat-change positive">↑ 5% bu ay</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon">⭐</div>
-                        <div class="stat-value-large" id="currentXP">0</div>
-                        <div class="stat-label-large">Toplam XP</div>
+
+                <!-- Body Composition -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-title-icon">📊</div>
+                            Vücut Kompozisyonu
+                        </div>
+                        <button class="btn btn-ghost btn-sm">Güncelle</button>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">🔥</div>
-                        <div class="stat-value-large" id="streakDays">1</div>
-                        <div class="stat-label-large">Gün Streak</div>
+                    <div class="card-body">
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-header">
+                                    <div class="stat-icon primary">📏</div>
+                                    <span class="stat-name">Boy</span>
+                                </div>
+                                <div class="stat-value" id="displayHeight">-- <span class="stat-unit">cm</span></div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-header">
+                                    <div class="stat-icon secondary">⚖️</div>
+                                    <span class="stat-name">Kilo</span>
+                                </div>
+                                <div class="stat-value" id="displayWeight">-- <span class="stat-unit">kg</span></div>
+                                <div class="stat-change negative" id="weightChange">↓ 0.0 kg</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-header">
+                                    <div class="stat-icon accent">🎯</div>
+                                    <span class="stat-name">BMI</span>
+                                </div>
+                                <div class="stat-value" id="displayBMI">--</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-header">
+                                    <div class="stat-icon warning">🔥</div>
+                                    <span class="stat-name">BMR</span>
+                                </div>
+                                <div class="stat-value" id="displayBMR">-- <span class="stat-unit">kcal</span></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Body Stats -->
-            <div class="panel">
-                <div class="panel-header">
-                    <div class="panel-title">
-                        <div class="panel-icon">⚡</div>
-                        VÜCUT METRIKLERI
-                    </div>
-                </div>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon">📏</div>
-                        <div class="stat-value-large" id="displayHeight">175</div>
-                        <div class="stat-label-large">Boy (cm)</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">⚖️</div>
-                        <div class="stat-value-large" id="displayWeight">70</div>
-                        <div class="stat-label-large">Kilo (kg)</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">🎯</div>
-                        <div class="stat-value-large" id="displayBMI">22.9</div>
-                        <div class="stat-label-large">BMI</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">🔥</div>
-                        <div class="stat-value-large" id="displayBMR">1,680</div>
-                        <div class="stat-label-large">BMR (kcal)</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Weekly Activity Chart -->
-            <div class="panel">
-                <div class="panel-header">
-                    <div class="panel-title">
-                        <div class="panel-icon">📈</div>
-                        HAFTALIK AKTIVITE
-                    </div>
-                </div>
-                <div class="chart-container">
-                    <div class="chart-bar" id="weeklyChart">
-                        <div class="bar-item">
-                            <div class="bar" style="height: 60%" data-value="45"></div>
-                            <div class="bar-label">PZT</div>
-                        </div>
-                        <div class="bar-item">
-                            <div class="bar" style="height: 80%" data-value="60"></div>
-                            <div class="bar-label">SAL</div>
-                        </div>
-                        <div class="bar-item">
-                            <div class="bar" style="height: 0%" data-value="0"></div>
-                            <div class="bar-label">CAR</div>
-                        </div>
-                        <div class="bar-item">
-                            <div class="bar" style="height: 90%" data-value="75"></div>
-                            <div class="bar-label">PER</div>
-                        </div>
-                        <div class="bar-item">
-                            <div class="bar" style="height: 70%" data-value="55"></div>
-                            <div class="bar-label">CUM</div>
-                        </div>
-                        <div class="bar-item">
-                            <div class="bar" style="height: 40%" data-value="30"></div>
-                            <div class="bar-label">CMT</div>
-                        </div>
-                        <div class="bar-item">
-                            <div class="bar" style="height: 0%" data-value="0"></div>
-                            <div class="bar-label">PAZ</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- WORKOUT TAB -->
-        <section id="workout" class="tab-content hidden">
-            <div class="panel">
-                <div class="panel-header">
-                    <div class="panel-title">
-                        <div class="panel-icon">🎯</div>
-                        GÜNLÜK PROGRAM
-                    </div>
-                    <button class="btn-primary" style="width: auto; padding: 10px 20px; font-size: 0.8rem;" onclick="generateNewWorkout()">
-                        YENI PROGRAM
-                    </button>
-                </div>
-                
-                <div class="workout-preview" id="workoutPreview">
+            <!-- Workout View -->
+            <div id="viewWorkout" class="hidden">
+                <div class="workout-card" id="workoutCard">
                     <div class="workout-header">
-                        <div class="workout-title">GÖĞÜS & TRICEPS</div>
-                        <div class="workout-subtitle">Hacim Odaklı • Seviye 1</div>
-                        <div class="workout-stats">
-                            <div class="workout-stat">
-                                <div class="workout-stat-value">45</div>
-                                <div class="workout-stat-label">Dakika</div>
+                        <div class="workout-type" id="workoutType">GÜÇ ANTRENMANI</div>
+                        <div class="workout-title" id="workoutTitle">GÖĞÜS & TRICEPS</div>
+                        <div class="workout-subtitle" id="workoutSubtitle">Hacim Odaklı • 4 Hafta Program</div>
+                        
+                        <div class="workout-meta">
+                            <div class="workout-meta-item">
+                                <div class="workout-meta-value" id="workoutDuration">45</div>
+                                <div class="workout-meta-label">Dakika</div>
                             </div>
-                            <div class="workout-stat">
-                                <div class="workout-stat-value">6</div>
-                                <div class="workout-stat-label">Egzersiz</div>
+                            <div class="workout-meta-item">
+                                <div class="workout-meta-value" id="workoutExercises">6</div>
+                                <div class="workout-meta-label">Egzersiz</div>
                             </div>
-                            <div class="workout-stat">
-                                <div class="workout-stat-value">18</div>
-                                <div class="workout-stat-label">Set</div>
+                            <div class="workout-meta-item">
+                                <div class="workout-meta-value" id="workoutSets">18</div>
+                                <div class="workout-meta-label">Toplam Set</div>
+                            </div>
+                            <div class="workout-meta-item">
+                                <div class="workout-meta-value" id="workoutVolume">2.4k</div>
+                                <div class="workout-meta-label">Hacim (kg)</div>
                             </div>
                         </div>
                     </div>
                     
                     <div class="exercise-list" id="exerciseList">
-                        <!-- Exercises will be generated dynamically -->
+                        <!-- Generated dynamically -->
                     </div>
                 </div>
                 
-                <button class="btn-primary" onclick="startWorkout()" style="margin-top: 20px;">
-                    ANTRENMANA BAŞLA 🚀
+                <button class="btn btn-primary btn-lg btn-block mt-4" onclick="completeWorkout()">
+                    Antrenmanı Tamamla ✓
                 </button>
             </div>
-        </section>
 
-        <!-- NUTRITION TAB -->
-        <section id="nutrition" class="tab-content hidden">
-            <div class="panel">
-                <div class="panel-header">
-                    <div class="panel-title">
-                        <div class="panel-icon">🥗</div>
-                        BESLENME PLANI
+            <!-- Nutrition View -->
+            <div id="viewNutrition" class="hidden">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-title-icon">🥗</div>
+                            Günlük Beslenme Hedefleri
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-header">
+                                    <div class="stat-icon primary">🍽️</div>
+                                    <span class="stat-name">Kalori</span>
+                                </div>
+                                <div class="stat-value" id="targetCalories">--</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-header">
+                                    <div class="stat-icon secondary">🥩</div>
+                                    <span class="stat-name">Protein</span>
+                                </div>
+                                <div class="stat-value" id="targetProtein">--</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-header">
+                                    <div class="stat-icon accent">🍚</div>
+                                    <span class="stat-name">Karbonhidrat</span>
+                                </div>
+                                <div class="stat-value" id="targetCarbs">--</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-header">
+                                    <div class="stat-icon warning">🥑</div>
+                                    <span class="stat-name">Yağ</span>
+                                </div>
+                                <div class="stat-value" id="targetFats">--</div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: var(--space-6);">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-2); font-size: 0.875rem;">
+                                <span>Protein</span>
+                                <span style="color: var(--primary);" id="proteinProgress">0 / 0g</span>
+                            </div>
+                            <div style="height: 8px; background: var(--n-700); border-radius: var(--radius-full); overflow: hidden; margin-bottom: var(--space-4);">
+                                <div id="proteinBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-light)); border-radius: var(--radius-full); transition: width 0.5s;"></div>
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-2); font-size: 0.875rem;">
+                                <span>Karbonhidrat</span>
+                                <span style="color: var(--secondary);" id="carbProgress">0 / 0g</span>
+                            </div>
+                            <div style="height: 8px; background: var(--n-700); border-radius: var(--radius-full); overflow: hidden; margin-bottom: var(--space-4);">
+                                <div id="carbBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--secondary), var(--secondary-dark)); border-radius: var(--radius-full); transition: width 0.5s;"></div>
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-2); font-size: 0.875rem;">
+                                <span>Yağ</span>
+                                <span style="color: var(--warning);" id="fatProgress">0 / 0g</span>
+                            </div>
+                            <div style="height: 8px; background: var(--n-700); border-radius: var(--radius-full); overflow: hidden;">
+                                <div id="fatBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--warning), #f59e0b); border-radius: var(--radius-full); transition: width 0.5s;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats View -->
+            <div id="viewStats" class="hidden">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-title-icon">📈</div>
+                            Gelişim Grafiği
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="progressChart" style="width: 100%; height: 250px;"></canvas>
                     </div>
                 </div>
                 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon">🍽️</div>
-                        <div class="stat-value-large" id="targetCalories">2,200</div>
-                        <div class="stat-label-large">Hedef Kalori</div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-title-icon">🏆</div>
+                            Kişisel Rekorlar
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">💧</div>
-                        <div class="stat-value-large" id="waterTarget">3.2</div>
-                        <div class="stat-label-large">Su (Litre)</div>
+                    <div class="card-body" id="personalRecords">
+                        <!-- Generated dynamically -->
                     </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Floating Action Button -->
+        <div class="fab">
+            <button class="fab-btn" id="fabTimer" onclick="openTimer()">⏱️</button>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <div class="nav-items">
+                <div class="nav-item active" data-view="dashboard">
+                    <div class="nav-icon">📊</div>
+                    <span>Panel</span>
+                </div>
+                <div class="nav-item" data-view="workout">
+                    <div class="nav-icon">💪</div>
+                    <span>Antrenman</span>
+                </div>
+                <div class="nav-item" data-view="nutrition">
+                    <div class="nav-icon">🥗</div>
+                    <span>Beslenme</span>
+                </div>
+                <div class="nav-item" data-view="stats">
+                    <div class="nav-icon">📈</div>
+                    <span>İstatistik</span>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Timer Modal -->
+    <div class="modal-overlay" id="timerModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Dinlenme Zamanlayıcısı</div>
+            </div>
+            <div class="modal-body">
+                <div class="timer-display" id="timerDisplay">00:00</div>
+                
+                <div class="timer-presets">
+                    <button class="preset-btn" onclick="startTimer(30)">30s</button>
+                    <button class="preset-btn" onclick="startTimer(60)">60s</button>
+                    <button class="preset-btn" onclick="startTimer(90)">90s</button>
+                    <button class="preset-btn" onclick="startTimer(120)">2dk</button>
+                    <button class="preset-btn" onclick="startTimer(180)">3dk</button>
+                    <button class="preset-btn" onclick="startTimer(300)">5dk</button>
                 </div>
                 
-                <div style="margin-top: 20px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem;">
-                        <span>Protein</span>
-                        <span style="color: var(--neon-orange);" id="proteinTarget">140g</span>
-                    </div>
-                    <div style="height: 8px; background: var(--metal-dark); border-radius: 4px; margin-bottom: 15px;">
-                        <div style="width: 30%; height: 100%; background: var(--neon-orange); border-radius: 4px;"></div>
-                    </div>
-                    
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem;">
-                        <span>Karbonhidrat</span>
-                        <span style="color: var(--neon-blue);" id="carbTarget">220g</span>
-                    </div>
-                    <div style="height: 8px; background: var(--metal-dark); border-radius: 4px; margin-bottom: 15px;">
-                        <div style="width: 45%; height: 100%; background: var(--neon-blue); border-radius: 4px;"></div>
-                    </div>
-                    
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem;">
-                        <span>Yağ</span>
-                        <span style="color: var(--neon-yellow);" id="fatTarget">65g</span>
-                    </div>
-                    <div style="height: 8px; background: var(--metal-dark); border-radius: 4px;">
-                        <div style="width: 25%; height: 100%; background: var(--neon-yellow); border-radius: 4px;"></div>
-                    </div>
-                </div>
+                <button class="btn btn-secondary btn-block" onclick="closeTimer()">Kapat</button>
             </div>
-        </section>
-
-        <!-- PROGRESS TAB -->
-        <section id="progress" class="tab-content hidden">
-            <div class="panel">
-                <div class="panel-header">
-                    <div class="panel-title">
-                        <div class="panel-icon">📊</div>
-                        GELIŞIM GRAFIĞI
-                    </div>
-                </div>
-                <div class="chart-container" style="height: 250px;">
-                    <canvas id="progressCanvas" style="width: 100%; height: 100%;"></canvas>
-                </div>
-            </div>
-            
-            <div class="panel">
-                <div class="panel-header">
-                    <div class="panel-title">
-                        <div class="panel-icon">🏆</div>
-                        KIŞISEL REKORLAR
-                    </div>
-                </div>
-                <div id="personalRecords">
-                    <!-- PRs will be loaded here -->
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <!-- FLOATING TIMER -->
-    <div class="timer-float" id="timerFloat" onclick="openTimer()">
-        <div class="timer-icon">⏱️</div>
-        <div class="timer-label">TIMER</div>
-    </div>
-
-    <!-- TIMER MODAL -->
-    <div class="modal" id="timerModal">
-        <div class="modal-content">
-            <div class="setup-title">DINLENME TIMER</div>
-            <div class="timer-display" id="timerDisplay">00:00</div>
-            
-            <div class="timer-presets">
-                <button class="preset-btn" onclick="startTimer(30)">30s</button>
-                <button class="preset-btn" onclick="startTimer(60)">60s</button>
-                <button class="preset-btn" onclick="startTimer(90)">90s</button>
-                <button class="preset-btn" onclick="startTimer(120)">2m</button>
-                <button class="preset-btn" onclick="startTimer(180)">3m</button>
-                <button class="preset-btn" onclick="startTimer(300)">5m</button>
-            </div>
-            
-            <button class="btn-secondary" onclick="closeTimer()">KAPAT</button>
         </div>
     </div>
 
     <script>
-        // ==================== GLOBAL STATE ====================
-        const AppState = {
-            user: {
-                name: '',
-                gender: '',
-                age: 0,
-                height: 0,
-                weight: 0,
-                bmi: 0,
-                bmr: 0,
-                tdee: 0,
-                goal: '',
-                level: 1,
-                xp: 0,
-                streakDays: 1,
-                lastWorkout: null
+        // ==================== APPLICATION STATE ====================
+        const App = {
+            user: null,
+            currentView: 'dashboard',
+            timer: {
+                interval: null,
+                time: 0,
+                running: false
             },
-            currentWorkout: null,
-            timerInterval: null,
-            timerTime: 0
+            workout: {
+                active: false,
+                exercises: [],
+                startTime: null
+            }
         };
 
-        // ==================== SETUP WIZARD ====================
-        function initSetup() {
+        // ==================== DATA MODELS ====================
+        const ExerciseDatabase = {
+            push: {
+                chest: [
+                    { name: 'Barbell Bench Press', variants: ['Flat', 'Incline', 'Decline'], muscles: ['Pectoralis Major', 'Anterior Deltoid', 'Triceps'] },
+                    { name: 'Dumbbell Press', variants: ['Flat', 'Incline', 'Decline'], muscles: ['Pectoralis Major', 'Anterior Deltoid'] },
+                    { name: 'Cable Fly', variants: ['High to Low', 'Low to High', 'Midline'], muscles: ['Pectoralis Major'] },
+                    { name: 'Push-Up', variants: ['Standard', 'Diamond', 'Wide', 'Decline'], muscles: ['Pectoralis Major', 'Triceps', 'Core'] }
+                ],
+                shoulders: [
+                    { name: 'Overhead Press', variants: ['Barbell', 'Dumbbell', 'Machine'], muscles: ['Deltoids', 'Triceps'] },
+                    { name: 'Lateral Raise', variants: ['Cable', 'Dumbbell', 'Machine'], muscles: ['Lateral Deltoid'] },
+                    { name: 'Face Pull', variants: ['Cable', 'Band'], muscles: ['Rear Deltoid', 'Rotator Cuff'] }
+                ],
+                triceps: [
+                    { name: 'Close-Grip Bench', variants: ['Barbell', 'EZ Bar'], muscles: ['Triceps', 'Chest'] },
+                    { name: 'Tricep Pushdown', variants: ['Rope', 'Bar', 'V-Bar'], muscles: ['Triceps'] },
+                    { name: 'Overhead Extension', variants: ['Dumbbell', 'Cable', 'EZ Bar'], muscles: ['Triceps Long Head'] },
+                    { name: 'Dip', variants: ['Bodyweight', 'Weighted', 'Assisted'], muscles: ['Triceps', 'Chest', 'Front Deltoid'] }
+                ]
+            },
+            pull: {
+                back: [
+                    { name: 'Deadlift', variants: ['Conventional', 'Sumo', 'Romanian'], muscles: ['Posterior Chain', 'Lats', 'Traps'] },
+                    { name: 'Pull-Up', variants: ['Wide', 'Close', 'Neutral', 'Weighted'], muscles: ['Lats', 'Biceps', 'Core'] },
+                    { name: 'Barbell Row', variants: ['Pendlay', 'Yates', 'Standard'], muscles: ['Lats', 'Rhomboids', 'Erector Spinae'] },
+                    { name: 'Lat Pulldown', variants: ['Wide', 'Close', 'Reverse'], muscles: ['Lats', 'Teres Major'] },
+                    { name: 'Cable Row', variants: ['Seated', 'Standing', 'Single-Arm'], muscles: ['Lats', 'Rhomboids', 'Middle Trapezius'] }
+                ],
+                biceps: [
+                    { name: 'Barbell Curl', variants: ['Standard', 'EZ Bar', 'Drag'], muscles: ['Biceps Brachii'] },
+                    { name: 'Dumbbell Curl', variants: ['Standing', 'Incline', 'Concentration'], muscles: ['Biceps Brachii', 'Brachialis'] },
+                    { name: 'Hammer Curl', variants: ['Standard', 'Cross-Body', 'Rope'], muscles: ['Brachialis', 'Brachioradialis'] },
+                    { name: 'Preacher Curl', variants: ['EZ Bar', 'Dumbbell', 'Machine'], muscles: ['Biceps Short Head'] }
+                ],
+                rearDelts: [
+                    { name: 'Reverse Pec Deck', variants: ['Standard', 'Single-Arm'], muscles: ['Rear Deltoid'] },
+                    { name: 'Bent-Over Fly', variants: ['Dumbbell', 'Cable'], muscles: ['Rear Deltoid', 'Rhomboids'] }
+                ]
+            },
+            legs: {
+                quads: [
+                    { name: 'Squat', variants: ['High Bar', 'Low Bar', 'Front', 'Pause'], muscles: ['Quadriceps', 'Glutes', 'Core'] },
+                    { name: 'Leg Press', variants: ['Standard', 'Close', 'Wide', 'Single-Leg'], muscles: ['Quadriceps', 'Glutes'] },
+                    { name: 'Lunge', variants: ['Walking', 'Reverse', 'Bulgarian', 'Step-Up'], muscles: ['Quadriceps', 'Glutes', 'Adductors'] },
+                    { name: 'Leg Extension', variants: ['Standard', 'Single-Leg', 'Drop Set'], muscles: ['Quadriceps'] }
+                ],
+                hamstrings: [
+                    { name: 'Romanian Deadlift', variants: ['Barbell', 'Dumbbell', 'Snatch Grip'], muscles: ['Hamstrings', 'Glutes', 'Erector Spinae'] },
+                    { name: 'Leg Curl', variants: ['Lying', 'Seated', 'Standing'], muscles: ['Hamstrings'] },
+                    { name: 'Good Morning', variants: ['Barbell', 'Band', 'Seated'], muscles: ['Hamstrings', 'Lower Back'] }
+                ],
+                calves: [
+                    { name: 'Standing Calf Raise', variants: ['Machine', 'Smith', 'Free Weight'], muscles: ['Gastrocnemius'] },
+                    { name: 'Seated Calf Raise', variants: ['Machine', 'Plate Loaded'], muscles: ['Soleus'] }
+                ],
+                glutes: [
+                    { name: 'Hip Thrust', variants: ['Barbell', 'Machine', 'Single-Leg'], muscles: ['Gluteus Maximus'] },
+                    { name: 'Cable Pull-Through', variants: ['Standard', 'Wide Stance'], muscles: ['Glutes', 'Hamstrings'] }
+                ]
+            },
+            core: [
+                { name: 'Plank', variants: ['Standard', 'Side', 'Reverse', 'Weighted'], muscles: ['Rectus Abdominis', 'Obliques', 'Transverse Abdominis'] },
+                { name: 'Hanging Leg Raise', variants: ['Straight', 'Bent Knee', 'Weighted'], muscles: ['Lower Abs', 'Hip Flexors'] },
+                { name: 'Cable Crunch', variants: ['Kneeling', 'Standing'], muscles: ['Upper Abs'] },
+                { name: 'Ab Wheel', variants: ['Kneeling', 'Standing'], muscles: ['Core', 'Lats'] },
+                { name: 'Dead Bug', variants: ['Standard', 'Weighted'], muscles: ['Core', 'Stability'] },
+                { name: 'Pallof Press', variants: ['Standing', 'Half-Kneeling'], muscles: ['Anti-Rotation', 'Obliques'] }
+            ]
+        };
+
+                const WorkoutProtocols = {
+            strength: {
+                name: 'Maksimum Güç',
+                description: 'Düşük tekrar, yüksek ağırlık, uzun dinlenme',
+                rest: 180,
+                tempo: '2-1-X-0',
+                progression: 'Linear Periodization',
+                splits: [
+                    { name: 'Push A', focus: 'Chest Heavy', exercises: ['Bench Press', 'Overhead Press', 'Incline Press', 'Tricep Dip'] },
+                    { name: 'Pull A', focus: 'Back Width', exercises: ['Pull-Up', 'Barbell Row', 'Face Pull', 'Barbell Curl'] },
+                    { name: 'Legs A', focus: 'Squat Pattern', exercises: ['Squat', 'Romanian Deadlift', 'Leg Press', 'Calf Raise'] },
+                    { name: 'Push B', focus: 'Shoulder Heavy', exercises: ['Overhead Press', 'Bench Press', 'Lateral Raise', 'Tricep Pushdown'] },
+                    { name: 'Pull B', focus: 'Back Thickness', exercises: ['Barbell Row', 'Weighted Pull-Up', 'Reverse Fly', 'Hammer Curl'] },
+                    { name: 'Legs B', focus: 'Hinge Pattern', exercises: ['Romanian Deadlift', 'Front Squat', 'Leg Curl', 'Hip Thrust'] }
+                ]
+            },
+            hypertrophy: {
+                name: 'Kas Hacmi',
+                description: 'Orta tekrar, progressive overload, metabolik stres',
+                rest: 90,
+                tempo: '3-1-2-0',
+                progression: 'Double Progression',
+                splits: [
+                    { name: 'Chest & Back', exercises: ['Incline Dumbbell Press', 'Cable Fly', 'Lat Pulldown', 'Cable Row', 'Push-Up', 'Face Pull'] },
+                    { name: 'Shoulders & Arms', exercises: ['Overhead Press', 'Lateral Raise', 'Barbell Curl', 'Tricep Pushdown', 'Reverse Fly', 'Hammer Curl'] },
+                    { name: 'Legs & Core', exercises: ['Leg Press', 'Leg Extension', 'Leg Curl', 'Calf Raise', 'Plank', 'Hanging Leg Raise'] }
+                ]
+            },
+            endurance: {
+                name: 'Müsküler Dayanıklılık',
+                description: 'Yüksek tekrar, kısa dinlenme, metabolik kondisyon',
+                rest: 45,
+                tempo: '2-0-2-0',
+                progression: 'Linear + Density',
+                splits: [
+                    { name: 'Full Body A', exercises: ['Circuit: Squat', 'Push-Up', 'Inverted Row', 'Lunge', 'Plank'] },
+                    { name: 'Full Body B', exercises: ['Circuit: Deadlift', 'Overhead Press', 'Pull-Up', 'Step-Up', 'Russian Twist'] }
+                ]
+            },
+            power: {
+                name: 'Güç & Patlayıcılık',
+                description: 'Plyometrik, Olympic lift varyasyonları, maksimal hız',
+                rest: 120,
+                tempo: 'X-X-X-0',
+                progression: 'Undulating Periodization',
+                splits: [
+                    { name: 'Lower Power', exercises: ['Box Jump', 'Power Clean', 'Broad Jump', 'Speed Squat', 'Kettlebell Swing'] },
+                    { name: 'Upper Power', exercises: ['Medicine Ball Throw', 'Push Press', 'Clap Push-Up', 'Speed Pull-Up', 'Landmine Rotation'] }
+                ]
+            }
+        };
+
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Loading screen
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+                
+                // Check if user exists in localStorage
+                const savedUser = localStorage.getItem('t800_user');
+                if (savedUser) {
+                    App.user = JSON.parse(savedUser);
+                    showApp();
+                    updateDashboard();
+                } else {
+                    document.getElementById('wizard').classList.remove('hidden');
+                }
+            }, 2000);
+
+            // Setup Wizard Navigation
+            let currentStep = 1;
+            const totalSteps = 4;
+
+            document.getElementById('btnNext').addEventListener('click', () => {
+                if (validateStep(currentStep)) {
+                    if (currentStep < totalSteps) {
+                        currentStep++;
+                        updateWizardStep(currentStep);
+                    } else {
+                        completeSetup();
+                    }
+                }
+            });
+
+            document.getElementById('btnBack').addEventListener('click', () => {
+                if (currentStep > 1) {
+                    currentStep--;
+                    updateWizardStep(currentStep);
+                }
+            });
+
             // Gender selection
-            document.querySelectorAll('.gender-option').forEach(opt => {
-                opt.addEventListener('click', () => {
+            document.querySelectorAll('.gender-option').forEach(option => {
+                option.addEventListener('click', () => {
                     document.querySelectorAll('.gender-option').forEach(o => o.classList.remove('selected'));
-                    opt.classList.add('selected');
-                    AppState.user.gender = opt.dataset.gender;
+                    option.classList.add('selected');
                 });
             });
 
             // Goal selection
-            document.querySelectorAll('.goal-option').forEach(opt => {
-                opt.addEventListener('click', () => {
+            document.querySelectorAll('.goal-option').forEach(option => {
+                option.addEventListener('click', () => {
                     document.querySelectorAll('.goal-option').forEach(o => o.classList.remove('selected'));
-                    opt.classList.add('selected');
-                    AppState.user.goal = opt.dataset.goal;
+                    option.classList.add('selected');
                 });
             });
+
+            // BMI calculation on step 3
+            const bmiInputs = ['inputHeight', 'inputWeight'];
+            bmiInputs.forEach(id => {
+                document.getElementById(id).addEventListener('input', calculateBMI);
+            });
+
+            // Bottom navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const view = item.dataset.view;
+                    switchView(view);
+                });
+            });
+
+            // Exercise detail toggle
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('.exercise-item')) {
+                    const item = e.target.closest('.exercise-item');
+                    const detail = item.nextElementSibling;
+                    if (detail && detail.classList.contains('exercise-detail')) {
+                        detail.classList.toggle('active');
+                    }
+                }
+            });
+        });
+
+        // ==================== WIZARD FUNCTIONS ====================
+        function updateWizardStep(step) {
+            // Update dots
+            document.querySelectorAll('.wizard-step-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === step);
+            });
+
+            // Update steps visibility
+            document.querySelectorAll('.wizard-step').forEach(s => {
+                s.classList.remove('active');
+                if (parseInt(s.dataset.step) === step) {
+                    s.classList.add('active');
+                }
+            });
+
+            // Update buttons
+            document.getElementById('btnBack').classList.toggle('hidden', step === 1);
+            document.getElementById('btnNext').textContent = step === 4 ? 'Başlat' : 'Devam Et';
+
+            // Calculate BMI when reaching step 3
+            if (step === 3) calculateBMI();
         }
 
-        function nextStep(step) {
-            document.querySelectorAll('.setup-step').forEach(s => s.classList.remove('active'));
-            document.querySelector(`.setup-step[data-step="${step}"]`).classList.add('active');
-        }
-
-        function prevStep(step) {
-            nextStep(step);
+        function validateStep(step) {
+            switch(step) {
+                case 1:
+                    const name = document.getElementById('inputName').value;
+                    const gender = document.querySelector('.gender-option.selected');
+                    if (!name || !gender) {
+                        alert('Lütfen adınızı ve cinsiyetinizi girin');
+                        return false;
+                    }
+                    return true;
+                case 2:
+                    const height = document.getElementById('inputHeight').value;
+                    const weight = document.getElementById('inputWeight').value;
+                    const age = document.getElementById('inputAge').value;
+                    if (!height || !weight || !age) {
+                        alert('Lütfen tüm boyut bilgilerini girin');
+                        return false;
+                    }
+                    return true;
+                case 4:
+                    const goal = document.querySelector('.goal-option.selected');
+                    if (!goal) {
+                        alert('Lütfen bir fitness hedefi seçin');
+                        return false;
+                    }
+                    return true;
+                default:
+                    return true;
+            }
         }
 
         function calculateBMI() {
-            const height = parseFloat(document.getElementById('userHeight').value);
-            const weight = parseFloat(document.getElementById('userWeight').value);
-            const age = parseInt(document.getElementById('userAge').value);
+            const height = parseFloat(document.getElementById('inputHeight').value);
+            const weight = parseFloat(document.getElementById('inputWeight').value);
+            const age = parseFloat(document.getElementById('inputAge').value);
+            const gender = document.querySelector('.gender-option.selected')?.dataset.gender;
 
-            if (!height || !weight || !age) {
-                alert('Lütfen tüm alanları doldurun!');
-                return;
-            }
+            if (!height || !weight || !age) return;
 
-            AppState.user.height = height;
-            AppState.user.weight = weight;
-            AppState.user.age = age;
+            const heightM = height / 100;
+            const bmi = weight / (heightM * heightM);
+            const bmiValue = bmi.toFixed(1);
 
-            // BMI Calculation
-            const bmi = weight / Math.pow(height / 100, 2);
-            AppState.user.bmi = bmi.toFixed(1);
+            // Display BMI
+            document.getElementById('bmiValue').textContent = bmiValue;
 
-            // BMR Calculation (Mifflin-St Jeor)
+            // BMI Status
+            let status = '';
+            let statusClass = '';
+            if (bmi < 18.5) { status = 'Zayıf'; statusClass = 'warning'; }
+            else if (bmi < 25) { status = 'Normal'; statusClass = 'normal'; }
+            else if (bmi < 30) { status = 'Fazla Kilolu'; statusClass = 'warning'; }
+            else { status = 'Obez'; statusClass = 'negative'; }
+
+            const statusEl = document.getElementById('bmiStatus');
+            statusEl.textContent = status;
+            statusEl.className = 'bmi-status ' + statusClass;
+
+            // Calculate ideal weight (using BMI 22 as target)
+            const idealWeight = (22 * heightM * heightM).toFixed(1);
+            document.getElementById('idealWeight').textContent = idealWeight + ' kg';
+
+            // Calculate BMR (Mifflin-St Jeor)
             let bmr;
-            if (AppState.user.gender === 'male') {
+            if (gender === 'male') {
                 bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
             } else {
                 bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
             }
-            AppState.user.bmr = Math.round(bmr);
 
-            // TDEE (Moderate activity)
-            AppState.user.tdee = Math.round(bmr * 1.55);
+            // Daily calories (moderately active multiplier: 1.55)
+            const tdee = Math.round(bmr * 1.55);
+            document.getElementById('dailyCalories').textContent = tdee + ' kcal';
 
-            // Ideal weight range
-            const minIdeal = 18.5 * Math.pow(height / 100, 2);
-            const maxIdeal = 24.9 * Math.pow(height / 100, 2);
+            // Water need (35ml per kg)
+            const water = (weight * 0.035).toFixed(1);
+            document.getElementById('waterNeed').textContent = water + ' L';
 
-            // Update display
-            document.getElementById('bmiValue').textContent = AppState.user.bmi;
-            document.getElementById('idealWeight').textContent = `${Math.round(minIdeal)}-${Math.round(maxIdeal)}`;
-            document.getElementById('dailyCalories').textContent = AppState.user.tdee.toLocaleString();
+            // Protein need (2g per kg for athletes)
+            const protein = Math.round(weight * 2);
+            document.getElementById('proteinNeed').textContent = protein + ' g';
 
-            // BMI Status
-            const statusEl = document.getElementById('bmiStatus');
-            let status = '';
-            let statusClass = '';
-            
-            if (bmi < 18.5) {
-                status = 'ZAYIF';
-                statusClass = 'underweight';
-            } else if (bmi < 25) {
-                status = 'NORMAL KILO';
-                statusClass = 'normal';
-            } else if (bmi < 30) {
-                status = 'FAZLA KILOLU';
-                statusClass = 'overweight';
-            } else {
-                status = 'OBEZ';
-                statusClass = 'obese';
-            }
-            
-            statusEl.textContent = status;
-            statusEl.className = 'bmi-status ' + statusClass;
-
-            nextStep(3);
+            return { bmi: bmiValue, bmr: Math.round(bmr), tdee, idealWeight, water, protein };
         }
 
         function completeSetup() {
-            AppState.user.name = document.getElementById('userName').value;
+            const gender = document.querySelector('.gender-option.selected').dataset.gender;
+            const goal = document.querySelector('.goal-option.selected').dataset.goal;
+            const experience = document.getElementById('experienceLevel').value;
             
-            if (!AppState.user.goal) {
-                alert('Lütfen bir hedef seçin!');
-                return;
-            }
-
-            // Save to localStorage
-            localStorage.setItem('t800_user', JSON.stringify(AppState.user));
-            localStorage.setItem('t800_setup_complete', 'true');
-
-            // Hide wizard, show app
-            document.getElementById('setupWizard').classList.add('hidden');
-            document.getElementById('mainApp').style.display = 'block';
+            const metrics = calculateBMI();
             
-            // Initialize app
-            initApp();
+            App.user = {
+                name: document.getElementById('inputName').value,
+                gender: gender,
+                height: parseFloat(document.getElementById('inputHeight').value),
+                weight: parseFloat(document.getElementById('inputWeight').value),
+                age: parseFloat(document.getElementById('inputAge').value),
+                bodyFat: parseFloat(document.getElementById('inputBodyFat').value) || null,
+                goal: goal,
+                experience: experience,
+                metrics: metrics,
+                joinDate: new Date().toISOString(),
+                workouts: [],
+                personalRecords: {}
+            };
+
+            localStorage.setItem('t800_user', JSON.stringify(App.user));
+            
+            document.getElementById('wizard').classList.add('hidden');
+            showApp();
+            updateDashboard();
+        }
+
+        // ==================== APP FUNCTIONS ====================
+        function showApp() {
+            document.getElementById('app').classList.remove('hidden');
+        }
+
+        function switchView(view) {
+            App.currentView = view;
+            
+            // Update nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.toggle('active', item.dataset.view === view);
+            });
+
+            // Hide all views
+            ['viewDashboard', 'viewWorkout', 'viewNutrition', 'viewStats'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+
+            // Show selected view
+            document.getElementById('view' + view.charAt(0).toUpperCase() + view.slice(1)).classList.remove('hidden');
+
+            // View specific updates
+            if (view === 'nutrition') updateNutritionView();
+            if (view === 'stats') updateStatsView();
+        }
+
+        function updateDashboard() {
+            const user = App.user;
+            
+            // Update display values
+            document.getElementById('displayHeight').textContent = user.height + ' cm';
+            document.getElementById('displayWeight').textContent = user.weight + ' kg';
+            document.getElementById('displayBMI').textContent = user.metrics.bmi;
+            document.getElementById('displayBMR').textContent = user.metrics.bmr + ' kcal';
+
+            // Calculate performance score based on metrics and experience
+            const baseScore = 65;
+            const experienceBonus = { beginner: 0, intermediate: 10, advanced: 20 }[user.experience] || 0;
+            const bmiBonus = user.metrics.bmi >= 18.5 && user.metrics.bmi <= 25 ? 10 : 5;
+            const totalScore = Math.min(100, baseScore + experienceBonus + bmiBonus);
+
+            // Animate score
+            animateScore(totalScore);
+            
+            // Update AI message
+            updateAIMessage(user);
+        }
+
+        function animateScore(targetScore) {
+            const circle = document.getElementById('scoreCircle');
+            const value = document.getElementById('scoreValue');
+            const rank = document.getElementById('scoreRank');
+            
+            // Calculate stroke offset (565.48 is circumference)
+            const offset = 565.48 - (565.48 * targetScore / 100);
+            
+            setTimeout(() => {
+                circle.style.strokeDashoffset = offset;
+            }, 500);
+
+            // Animate number
+            let current = 0;
+            const interval = setInterval(() => {
+                current += 2;
+                if (current >= targetScore) {
+                    current = targetScore;
+                    clearInterval(interval);
+                }
+                value.textContent = current;
+                
+                // Update rank based on score
+                if (current < 40) rank.textContent = 'RECRUIT';
+                else if (current < 60) rank.textContent = 'SOLDIER';
+                else if (current < 80) rank.textContent = 'VETERAN';
+                else if (current < 95) rank.textContent = 'ELITE';
+                else rank.textContent = 'LEGEND';
+            }, 30);
+
+            // Update sub-scores
+            document.getElementById('strengthScore').textContent = Math.floor(targetScore * 0.9);
+            document.getElementById('enduranceScore').textContent = Math.floor(targetScore * 0.85);
+            document.getElementById('powerScore').textContent = Math.floor(targetScore * 0.88);
+            document.getElementById('techniqueScore').textContent = Math.floor(targetScore * 0.92);
+        }
+
+        function updateAIMessage(user) {
+            const messages = {
+                cut: `Merhaba ${user.name}! Definasyon hedefiniz için optimal kalori açığı hesaplandı. Günlük ${user.metrics.tdee - 500} kcal hedefiyle haftada 0.5-0.7kg yağ kaybı öngörülüyor.`,
+                maintain: `Merhaba ${user.name}! Mevcut kompozisyonunuzu korumak için ${user.metrics.tdee} kcal günlük hedef belirlendi. Vücut ağırlığınızı ±0.5kg tolerans içinde tutmaya odaklanın.`,
+                bulk: `Merhaba ${user.name}! Kas kazanımı için ${user.metrics.tdee + 300} kcal günlük hedef hesaplandı. Haftada 0.3-0.5kg kontrollü kilo alımı önerilir.`,
+                recomp: `Merhaba ${user.name}! Vücut rekomposizyonu için ${user.metrics.tdee} kcal hedefiyle birlikte güç antrenmanlarına öncelik verilmeli. Yağ/kas oranı optimizasyonu protokolü aktif.`
+            };
+
+            document.getElementById('aiMessage').textContent = messages[user.goal] || messages.maintain;
         }
 
         // ==================== WORKOUT GENERATOR ====================
-        const WorkoutEngine = {
-            programs: {
-                lose: {
-                    name: 'Yağ Yakımı',
-                    focus: 'Yüksek tekrar, kısa dinlenme',
-                    split: ['Full Body', 'HIIT', 'Cardio + Güç']
-                },
-                maintain: {
-                    name: 'Form Koruma',
-                    focus: 'Dengeli antrenman',
-                    split: ['Üst Vücut', 'Alt Vücut', 'Core']
-                },
-                build: {
-                    name: 'Kas Hacmi',
-                    focus: 'Orta tekrar, progressive overload',
-                    split: ['Göğüs-Triceps', 'Sırt-Biceps', 'Bacak-Omuz']
-                },
-                strength: {
-                    name: 'Maksimum Güç',
-                    focus: 'Düşük tekrar, uzun dinlenme',
-                    split: ['Itiş Hareketleri', 'Çekiş Hareketleri', 'Bacak & Core']
-                }
-            },
-
-            exercises: {
-                chest: [
-                    { name: 'Klasik Şınav', difficulty: 'easy', sets: '3-4', reps: '12-15' },
-                    { name: 'Dar Şınav', difficulty: 'medium', sets: '3-4', reps: '10-12' },
-                    { name: 'Decline Şınav', difficulty: 'hard', sets: '3-4', reps: '8-10' },
-                    { name: 'Dips', difficulty: 'medium', sets: '3', reps: '8-12' }
-                ],
-                back: [
-                    { name: 'Pull-up', difficulty: 'hard', sets: '3-4', reps: '5-10' },
-                    { name: 'Chin-up', difficulty: 'medium', sets: '3-4', reps: '6-10' },
-                    { name: 'Inverted Row', difficulty: 'easy', sets: '3-4', reps: '10-15' },
-                    { name: 'Superman', difficulty: 'easy', sets: '3', reps: '15-20' }
-                ],
-                legs: [
-                    { name: 'Squat', difficulty: 'easy', sets: '4', reps: '15-20' },
-                    { name: 'Lunge', difficulty: 'medium', sets: '3', reps: '12 each' },
-                    { name: 'Pistol Squat', difficulty: 'elite', sets: '3', reps: '5-8' },
-                    { name: 'Calf Raise', difficulty: 'easy', sets: '4', reps: '20-25' }
-                ],
-                shoulders: [
-                    { name: 'Pike Push-up', difficulty: 'medium', sets: '3-4', reps: '8-12' },
-                    { name: 'Handstand Push-up', difficulty: 'elite', sets: '3-4', reps: '3-8' },
-                    { name: 'Lateral Raise (Bodyweight)', difficulty: 'easy', sets: '3', reps: '15-20' }
-                ],
-                core: [
-                    { name: 'Plank', difficulty: 'easy', sets: '3', reps: '45-60s' },
-                    { name: 'Hollow Body Hold', difficulty: 'medium', sets: '3', reps: '30-45s' },
-                    { name: 'L-sit', difficulty: 'hard', sets: '3', reps: '10-20s' },
-                    { name: 'Dragon Flag', difficulty: 'elite', sets: '3', reps: '5-10' }
-                ]
-            },
-
-            generate(user) {
-                const program = this.programs[user.goal];
-                const dayOfWeek = new Date().getDay();
-                const splitIndex = dayOfWeek % program.split.length;
-                const focus = program.split[splitIndex];
-
-                let exercises = [];
-                
-                // Select exercises based on focus
-                if (focus.includes('Göğüs') || focus.includes('Itiş')) {
-                    exercises = [...this.exercises.chest, ...this.exercises.shoulders.slice(0, 2)];
-                } else if (focus.includes('Sırt') || focus.includes('Çekiş')) {
-                    exercises = [...this.exercises.back, this.exercises.core[1]];
-                } else if (focus.includes('Bacak')) {
-                    exercises = [...this.exercises.legs, this.exercises.core[0]];
-                } else {
-                    // Full body or other
-                    exercises = [
-                        this.exercises.chest[0],
-                        this.exercises.back[2],
-                        this.exercises.legs[0],
-                        this.exercises.shoulders[0],
-                        this.exercises.core[0]
-                    ];
-                }
-
-                // Adjust based on BMI and goal
-                if (user.goal === 'lose') {
-                    exercises.forEach(ex => {
-                        if (ex.reps.includes('-')) {
-                            const [min, max] = ex.reps.split('-').map(x => parseInt(x));
-                            ex.reps = `${min + 3}-${max + 5}`;
-                        }
-                    });
-                }
-
-                return {
-                    name: focus,
-                    subtitle: `${program.name} • ${program.focus}`,
-                    duration: user.goal === 'lose' ? '35-40' : '45-60',
-                    exercises: exercises
-                };
-            }
-        };
-
-        // ==================== APP INITIALIZATION ====================
-        function initApp() {
-            // Load user data
-            const saved = localStorage.getItem('t800_user');
-            if (saved) {
-                AppState.user = { ...AppState.user, ...JSON.parse(saved) };
-            }
-
-            // Update UI
-            document.getElementById('userGreeting').textContent = `HOŞ GELDIN, ${AppState.user.name.toUpperCase()}`;
-            document.getElementById('displayHeight').textContent = AppState.user.height;
-            document.getElementById('displayWeight').textContent = AppState.user.weight;
-            document.getElementById('displayBMI').textContent = AppState.user.bmi;
-            document.getElementById('displayBMR').textContent = AppState.user.bmr.toLocaleString();
-            document.getElementById('currentLevelDisplay').textContent = AppState.user.level;
-            document.getElementById('currentXP').textContent = AppState.user.xp;
-            document.getElementById('streakDays').textContent = AppState.user.streakDays;
-
-            // Calculate nutrition targets
-            calculateNutrition();
-
-            // Generate workout
-            generateNewWorkout();
-
-            // Initialize tabs
-            initTabs();
-
-            // AI message
-            updateAIMessage();
-        }
-
-        function calculateNutrition() {
-            const user = AppState.user;
-            let calories = user.tdee;
-            let protein, carbs, fats;
-
+        function generateWorkout() {
+            const user = App.user;
+            const protocols = WorkoutProtocols;
+            
+            // Select protocol based on goal
+            let protocol;
             switch(user.goal) {
-                case 'lose':
-                    calories -= 500;
-                    protein = user.weight * 2.2;
-                    carbs = (calories * 0.35) / 4;
-                    fats = (calories * 0.25) / 9;
-                    break;
-                case 'build':
-                    calories += 300;
-                    protein = user.weight * 2.0;
-                    carbs = (calories * 0.45) / 4;
-                    fats = (calories * 0.25) / 9;
-                    break;
-                case 'strength':
-                    calories += 200;
-                    protein = user.weight * 2.0;
-                    carbs = (calories * 0.40) / 4;
-                    fats = (calories * 0.30) / 9;
-                    break;
-                default: // maintain
-                    protein = user.weight * 1.8;
-                    carbs = (calories * 0.40) / 4;
-                    fats = (calories * 0.30) / 9;
+                case 'cut': protocol = protocols.endurance; break;
+                case 'bulk': protocol = protocols.hypertrophy; break;
+                case 'power': protocol = protocols.power; break;
+                default: protocol = protocols.strength;
             }
 
-            document.getElementById('targetCalories').textContent = calories.toLocaleString();
-            document.getElementById('proteinTarget').textContent = Math.round(protein) + 'g';
-            document.getElementById('carbTarget').textContent = Math.round(carbs) + 'g';
-            document.getElementById('fatTarget').textContent = Math.round(fats) + 'g';
-            document.getElementById('waterTarget').textContent = (user.weight * 0.045).toFixed(1);
-        }
-
-        function generateNewWorkout() {
-            const workout = WorkoutEngine.generate(AppState.user);
-            AppState.currentWorkout = workout;
-
-            // Update header
-            document.querySelector('.workout-title').textContent = workout.name;
-            document.querySelector('.workout-subtitle').textContent = workout.subtitle;
-            document.querySelectorAll('.workout-stat-value')[0].textContent = workout.duration;
-            document.querySelectorAll('.workout-stat-value')[1].textContent = workout.exercises.length;
-            document.querySelectorAll('.workout-stat-value')[2].textContent = workout.exercises.length * 3;
-
-            // Generate exercise list
-            const list = document.getElementById('exerciseList');
-            list.innerHTML = workout.exercises.map((ex, i) => `
-                <div class="exercise-item" onclick="toggleExercise(${i})">
-                    <div class="exercise-number">${i + 1}</div>
-                    <div class="exercise-info">
-                        <div class="exercise-name">${ex.name}</div>
-                        <div class="exercise-target">Zorluk: ${ex.difficulty.toUpperCase()}</div>
-                    </div>
-                    <div class="exercise-sets">
-                        <div class="exercise-sets-value">${ex.sets}</div>
-                        <div class="exercise-sets-label">${ex.reps}</div>
-                    </div>
-                </div>
-                <div class="exercise-detail hidden" id="exercise-${i}" style="padding: 0 20px 20px;">
-                    <div style="background: var(--metal-dark); padding: 20px; border-radius: 12px; border: 1px solid var(--metal-border);">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                            <span style="color: var(--neon-orange); font-size: 0.9rem;">Set Takibi</span>
-                            <span style="color: #666; font-size: 0.8rem;">${ex.sets} Set × ${ex.reps}</span>
-                        </div>
-                        ${Array.from({length: parseInt(ex.sets)}, (_, j) => `
-                            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
-                                <span style="color: var(--neon-orange); width: 50px; font-weight: bold;">Set ${j + 1}</span>
-                                <input type="number" class="input-field" style="flex: 1; padding: 10px;" placeholder="Tekrar" id="rep-${i}-${j}">
-                                <div class="set-check" onclick="event.stopPropagation(); toggleSet(this)" style="width: 40px; height: 40px; border: 2px solid var(--metal-border); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer;">✓</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function toggleExercise(index) {
-            const detail = document.getElementById(`exercise-${index}`);
-            detail.classList.toggle('hidden');
-        }
-
-        function toggleSet(el) {
-            el.classList.toggle('completed');
-            if (el.classList.contains('completed')) {
-                el.style.background = 'var(--neon-green)';
-                el.style.borderColor = 'var(--neon-green)';
-                el.style.color = '#000';
-            } else {
-                el.style.background = 'transparent';
-                el.style.borderColor = 'var(--metal-border)';
-                el.style.color = '#fff';
-            }
-        }
-
-        function startWorkout() {
-            // Calculate XP
-            const completedSets = document.querySelectorAll('.set-check.completed').length;
-            const totalSets = AppState.currentWorkout.exercises.length * 3;
-            const xp = Math.floor((completedSets / totalSets) * 100);
+            // Select random split from protocol
+            const split = protocol.splits[Math.floor(Math.random() * protocol.splits.length)];
             
-            AppState.user.xp += xp;
-            AppState.user.lastWorkout = new Date().toISOString();
-            
-            // Check level up
-            const xpNeeded = AppState.user.level * 100;
-            if (AppState.user.xp >= xpNeeded) {
-                AppState.user.level++;
-                AppState.user.xp -= xpNeeded;
-                alert(`🎉 TEBRIKLER! SEVIYE ${AppState.user.level} OLDUNUZ!`);
-            }
-            
-            localStorage.setItem('t800_user', JSON.stringify(AppState.user));
-            
-            // Update UI
-            document.getElementById('currentLevelDisplay').textContent = AppState.user.level;
-            document.getElementById('currentXP').textContent = AppState.user.xp;
-            
-            alert(`💪 ANTRENMAN TAMAMLANDI! +${xp} XP`);
-        }
+            // Generate exercises
+            const exercises = [];
+            let totalSets = 0;
+            let totalVolume = 0;
 
-        function updateAIMessage() {
-            const messages = [
-                `Vücut kitle indeksiniz ${AppState.user.bmi}, ideal aralıkta. Bugün güç antrenmanı öneriyorum.`,
-                `Son antrenmanınızdan bu yana 24 saat geçti. Kaslarınız toparlandı, yeni antrenmana hazırsınız.`,
-                `Hedefiniz ${AppState.user.goal === 'build' ? 'kas kazanmak' : 'yağ yakmak'}. Bugün programınız buna göre optimize edildi.`,
-                `${AppState.user.name}, bugün ${AppState.user.streakDays} günlük streak'inizi koruyabilirsiniz!`
-            ];
-            
-            const recs = [
-                'Protein alımınızı artırın. Hedef: ' + Math.round(AppState.user.weight * 2) + 'g',
-                'Su tüketiminizi kontrol edin. Günde en az ' + (AppState.user.weight * 0.04).toFixed(1) + ' litre.',
-                'Uyku düzeninizi koruyun. 7-8 saat uyku kas gelişimi için kritik.',
-                'Bugün 30 dakika kardiyo ekleyerek yağ yakımını hızlandırabilirsiniz.'
-            ];
-            
-            document.getElementById('aiMessage').textContent = messages[Math.floor(Math.random() * messages.length)];
-            document.getElementById('recText').textContent = recs[Math.floor(Math.random() * recs.length)];
-        }
+            split.exercises.forEach((exName, index) => {
+                // Find exercise in database
+                let exercise = null;
+                for (const category in ExerciseDatabase) {
+                    for (const subcategory in ExerciseDatabase[category]) {
+                        const found = ExerciseDatabase[category][subcategory].find(e => 
+                            e.name.toLowerCase().includes(exName.toLowerCase()) || 
+                            exName.toLowerCase().includes(e.name.toLowerCase())
+                        );
+                        if (found) {
+                            exercise = found;
+                            break;
+                        }
+                    }
+                    if (exercise) break;
+                }
 
-        // ==================== TABS ====================
-        function initTabs() {
-            const tabs = document.querySelectorAll('.nav-tab');
-            const contents = document.querySelectorAll('.tab-content');
-            
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const target = tab.dataset.tab;
-                    
-                    tabs.forEach(t => t.classList.remove('active'));
-                    contents.forEach(c => c.classList.add('hidden'));
-                    
-                    tab.classList.add('active');
-                    document.getElementById(target).classList.remove('hidden');
+                if (!exercise) {
+                    exercise = { name: exName, variants: ['Standard'], muscles: ['Multiple'] };
+                }
+
+                const sets = user.experience === 'beginner' ? 3 : (user.experience === 'intermediate' ? 4 : 5);
+                const reps = protocol === protocols.strength ? '3-5' : (protocol === protocols.hypertrophy ? '8-12' : '12-20');
+                const weight = Math.floor(user.weight * (0.5 + (index * 0.1))); // Estimated working weight
+                
+                totalSets += sets;
+                totalVolume += sets * weight * parseInt(reps);
+
+                exercises.push({
+                    id: index,
+                    name: exercise.name,
+                    variant: exercise.variants[0],
+                    sets: sets,
+                    reps: reps,
+                    weight: weight,
+                    rest: protocol.rest,
+                    completed: false
                 });
             });
+
+            // Update UI
+            document.getElementById('workoutType').textContent = protocol.name.toUpperCase();
+            document.getElementById('workoutTitle').textContent = split.name.toUpperCase();
+            document.getElementById('workoutSubtitle').textContent = `${split.focus || 'Genel Gelişim'} • ${protocol.description}`;
+            document.getElementById('workoutDuration').textContent = Math.round(totalSets * (protocol.rest / 60 + 2));
+            document.getElementById('workoutExercises').textContent = exercises.length;
+            document.getElementById('workoutSets').textContent = totalSets;
+            document.getElementById('workoutVolume').textContent = (totalVolume / 1000).toFixed(1) + 'k';
+
+            // Render exercises
+            const listEl = document.getElementById('exerciseList');
+            listEl.innerHTML = '';
+
+            exercises.forEach((ex, index) => {
+                const exEl = document.createElement('div');
+                exEl.className = 'exercise-item';
+                exEl.innerHTML = `
+                    <div class="exercise-number">${index + 1}</div>
+                    <div class="exercise-info">
+                        <div class="exercise-name">${ex.name}</div>
+                        <div class="exercise-target">${ex.variant} • ${ex.muscles?.join(', ') || 'Compound'}</div>
+                    </div>
+                    <div class="exercise-sets">
+                        <div class="exercise-sets-value">${ex.sets}x${ex.reps}</div>
+                        <div class="exercise-sets-label">${ex.weight}kg</div>
+                    </div>
+                `;
+
+                // Create detail panel
+                const detailEl = document.createElement('div');
+                detailEl.className = 'exercise-detail';
+                
+                let setsHtml = '';
+                for (let i = 1; i <= ex.sets; i++) {
+                    setsHtml += `
+                        <div class="set-row">
+                            <div class="set-label">Set ${i}</div>
+                            <div class="set-inputs">
+                                <input type="number" class="input" placeholder="kg" id="weight_${index}_${i}">
+                                <input type="number" class="input" placeholder="tekrar" id="reps_${index}_${i}">
+                            </div>
+                            <div class="set-check" onclick="toggleSet(this, ${index}, ${i})">✓</div>
+                        </div>
+                    `;
+                }
+
+                detailEl.innerHTML = `
+                    <div class="set-tracker">
+                        ${setsHtml}
+                        <div style="margin-top: var(--space-3); display: flex; gap: var(--space-2);">
+                            <button class="btn btn-primary btn-sm" onclick="startTimer(${ex.rest})">${ex.rest}s Dinlenme</button>
+                            <button class="btn btn-ghost btn-sm">Not Ekle</button>
+                        </div>
+                    </div>
+                `;
+
+                listEl.appendChild(exEl);
+                listEl.appendChild(detailEl);
+            });
+
+            App.workout.exercises = exercises;
+            App.workout.active = true;
+            App.workout.startTime = new Date();
+
+            switchView('workout');
         }
 
-        // ==================== TIMER ====================
+        function toggleSet(element, exerciseIndex, setIndex) {
+            element.classList.toggle('completed');
+            
+            // Check if all sets completed
+            const allSets = document.querySelectorAll('.set-check');
+            const completedSets = document.querySelectorAll('.set-check.completed');
+            
+            if (completedSets.length === allSets.length) {
+                // Workout complete
+                setTimeout(() => {
+                    alert('Tüm setleri tamamladınız! Antrenmanı bitirmek için aşağıdaki butona tıklayın.');
+                }, 500);
+            }
+        }
+
+        function completeWorkout() {
+            if (!App.workout.active) return;
+
+            const duration = Math.round((new Date() - App.workout.startTime) / 60000);
+            const volume = document.getElementById('workoutVolume').textContent;
+            
+            // Save workout
+            const workoutLog = {
+                date: new Date().toISOString(),
+                type: document.getElementById('workoutTitle').textContent,
+                duration: duration,
+                volume: volume,
+                exercises: App.workout.exercises.length
+            };
+
+            App.user.workouts.push(workoutLog);
+            localStorage.setItem('t800_user', JSON.stringify(App.user));
+
+            // Reset
+            App.workout.active = false;
+            
+            // Show success message
+            document.getElementById('aiMessage').textContent = `Antrenman tamamlandı! ${duration} dakika süren çalışmanda ${volume} hacim oluşturdun. Recovery protokolü aktif: 25g protein + 50g karbohidrat önerilir.`;
+            
+            switchView('dashboard');
+        }
+
+        // ==================== NUTRITION VIEW ====================
+        function updateNutritionView() {
+            const user = App.user;
+            let calories, protein, carbs, fats;
+
+            switch(user.goal) {
+                case 'cut':
+                    calories = user.metrics.tdee - 500;
+                    protein = Math.round(user.weight * 2.2);
+                    carbs = Math.round((calories * 0.35) / 4);
+                    fats = Math.round((calories * 0.25) / 9);
+                    break;
+                case 'bulk':
+                    calories = user.metrics.tdee + 300;
+                    protein = Math.round(user.weight * 2.0);
+                    carbs = Math.round((calories * 0.45) / 4);
+                    fats = Math.round((calories * 0.25) / 9);
+                    break;
+                default:
+                    calories = user.metrics.tdee;
+                    protein = Math.round(user.weight * 2.0);
+                    carbs = Math.round((calories * 0.40) / 4);
+                    fats = Math.round((calories * 0.30) / 9);
+            }
+
+            document.getElementById('targetCalories').textContent = calories + ' kcal';
+            document.getElementById('targetProtein').textContent = protein + 'g';
+            document.getElementById('targetCarbs').textContent = carbs + 'g';
+            document.getElementById('targetFats').textContent = fats + 'g';
+
+            // Update progress bars (simulated)
+            const proteinPct = Math.min(100, Math.round((protein * 0.6) / protein * 100));
+            const carbPct = Math.min(100, Math.round((carbs * 0.4) / carbs * 100));
+            const fatPct = Math.min(100, Math.round((fats * 0.5) / fats * 100));
+
+            document.getElementById('proteinBar').style.width = proteinPct + '%';
+            document.getElementById('proteinProgress').textContent = `${Math.round(protein * 0.6)} / ${protein}g`;
+            
+            document.getElementById('carbBar').style.width = carbPct + '%';
+            document.getElementById('carbProgress').textContent = `${Math.round(carbs * 0.4)} / ${carbs}g`;
+            
+            document.getElementById('fatBar').style.width = fatPct + '%';
+            document.getElementById('fatProgress').textContent = `${Math.round(fats * 0.5)} / ${fats}g`;
+        }
+
+        // ==================== STATS VIEW ====================
+        function updateStatsView() {
+            const user = App.user;
+            const recordsEl = document.getElementById('personalRecords');
+            
+            // Sample PR data (would be tracked in real app)
+            const prs = [
+                { lift: 'Bench Press', value: Math.round(user.weight * 1.2), unit: 'kg' },
+                { lift: 'Squat', value: Math.round(user.weight * 1.6), unit: 'kg' },
+                { lift: 'Deadlift', value: Math.round(user.weight * 2.0), unit: 'kg' },
+                { lift: 'Pull-Ups', value: Math.round(user.weight * 0.1) + 10, unit: 'reps' }
+            ];
+
+            recordsEl.innerHTML = prs.map(pr => `
+                <div class="stat-item" style="margin-bottom: var(--space-3);">
+                    <div class="stat-header">
+                        <div class="stat-icon primary">🏋️</div>
+                        <span class="stat-name">${pr.lift}</span>
+                    </div>
+                    <div class="stat-value">${pr.value} <span class="stat-unit">${pr.unit}</span></div>
+                </div>
+            `).join('');
+
+            // Draw progress chart (simple canvas implementation)
+            const canvas = document.getElementById('progressChart');
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+
+            // Clear
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw grid
+            ctx.strokeStyle = '#252536';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 5; i++) {
+                const y = (canvas.height / 4) * i;
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+
+            // Draw sample progress line (weight over time)
+            ctx.strokeStyle = '#ff6b35';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            
+            const points = user.workouts.length > 0 ? user.workouts.length : 7;
+            for (let i = 0; i < points; i++) {
+                const x = (canvas.width / (points - 1)) * i;
+                const y = canvas.height - ((canvas.height / 2) + Math.sin(i * 0.5) * 50) - 50;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Add gradient fill
+            ctx.lineTo(canvas.width, canvas.height);
+            ctx.lineTo(0, canvas.height);
+            ctx.closePath();
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, 'rgba(255, 107, 53, 0.3)');
+            gradient.addColorStop(1, 'rgba(255, 107, 53, 0)');
+            ctx.fillStyle = gradient;
+            ctx.fill();
+        }
+
+        // ==================== TIMER FUNCTIONS ====================
         function openTimer() {
             document.getElementById('timerModal').classList.add('active');
+            updateTimerDisplay(0);
         }
 
         function closeTimer() {
             document.getElementById('timerModal').classList.remove('active');
-            clearInterval(AppState.timerInterval);
-            AppState.timerTime = 0;
-            updateTimerDisplay();
+            stopTimer();
         }
 
         function startTimer(seconds) {
-            clearInterval(AppState.timerInterval);
-            AppState.timerTime = seconds;
-            updateTimerDisplay();
+            stopTimer();
+            App.timer.time = seconds;
+            App.timer.running = true;
             
-            document.getElementById('timerFloat').classList.add('active');
+            updateTimerDisplay(App.timer.time);
             
-            AppState.timerInterval = setInterval(() => {
-                AppState.timerTime--;
-                update
-                              TimerDisplay();
+            App.timer.interval = setInterval(() => {
+                App.timer.time--;
+                updateTimerDisplay(App.timer.time);
                 
-                if (AppState.timerTime <= 0) {
-                    clearInterval(AppState.timerInterval);
-                    document.getElementById('timerFloat').classList.remove('active');
-                    playAlarm();
-                    if (navigator.vibrate) navigator.vibrate([500, 200, 500, 200, 500]);
+                if (App.timer.time <= 0) {
+                    stopTimer();
+                                // Play notification sound and vibrate
+                    try {
+                        // Simple beep using Web Audio API
+                        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        const oscillator = audioContext.createOscillator();
+                        const gainNode = audioContext.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+                        
+                        oscillator.frequency.value = 800;
+                        oscillator.type = 'sine';
+                        
+                        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                        
+                        oscillator.start(audioContext.currentTime);
+                        oscillator.stop(audioContext.currentTime + 0.5);
+                        
+                        // Vibrate if supported
+                        if (navigator.vibrate) {
+                            navigator.vibrate([200, 100, 200]);
+                        }
+                    } catch (e) {
+                        console.log('Audio notification failed:', e);
+                    }
+                    
+                    // Flash effect on timer display
+                    const display = document.getElementById('timerDisplay');
+                    display.style.color = '#00d4aa';
+                    display.style.textShadow = '0 0 30px rgba(0, 212, 170, 0.8)';
+                    
+                    setTimeout(() => {
+                        display.style.color = '';
+                        display.style.textShadow = '';
+                    }, 2000);
                 }
             }, 1000);
+            
+            // Update FAB button state
+            document.getElementById('fabTimer').classList.add('active');
         }
 
-        function updateTimerDisplay() {
-            const mins = Math.floor(AppState.timerTime / 60);
-            const secs = AppState.timerTime % 60;
+        function stopTimer() {
+            if (App.timer.interval) {
+                clearInterval(App.timer.interval);
+                App.timer.interval = null;
+            }
+            App.timer.running = false;
+            document.getElementById('fabTimer').classList.remove('active');
+        }
+
+        function updateTimerDisplay(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
             document.getElementById('timerDisplay').textContent = 
                 `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-            
-            // Update floating timer label
-            const floatLabel = document.querySelector('.timer-label');
-            if (AppState.timerTime > 0) {
-                floatLabel.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
-            } else {
-                floatLabel.textContent = 'TIMER';
-            }
         }
 
-        function playAlarm() {
-            try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                
-                // Create oscillator for beep sound
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                
-                osc.frequency.value = 800;
-                osc.type = 'square';
-                
-                // Beep pattern: 3 beeps
-                const now = ctx.currentTime;
-                gain.gain.setValueAtTime(0.3, now);
-                gain.gain.setValueAtTime(0, now + 0.1);
-                gain.gain.setValueAtTime(0.3, now + 0.2);
-                gain.gain.setValueAtTime(0, now + 0.3);
-                gain.gain.setValueAtTime(0.3, now + 0.4);
-                gain.gain.setValueAtTime(0, now + 0.5);
-                
-                osc.start(now);
-                osc.stop(now + 0.6);
-            } catch(e) {
-                console.log('Audio play failed:', e);
-            }
+        // ==================== UTILITY FUNCTIONS ====================
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('tr-TR', { 
+                day: 'numeric', 
+                month: 'short', 
+                year: 'numeric' 
+            });
         }
 
-        // ==================== PROGRESS CHART ====================
-        function initChart() {
-            const canvas = document.getElementById('progressCanvas');
-            if (!canvas) return;
+        function calculateOneRepMax(weight, reps) {
+            // Epley formula
+            return Math.round(weight * (1 + reps / 30));
+        }
+
+        function calculateWilksScore(bodyWeight, totalLifted, gender) {
+            // Simplified Wilks coefficient
+            const coefficients = gender === 'male' 
+                ? [-216.0475144, 16.2606339, -0.002388645, -0.00113732, 7.01863e-06, -1.291e-08]
+                : [594.31747775582, -27.23842536447, 0.82112226871, -0.00930733913, 4.731582e-05, -9.054e-08];
             
-            const ctx = canvas.getContext('2d');
-            const dpr = window.devicePixelRatio || 1;
-            const rect = canvas.getBoundingClientRect();
-            
-            canvas.width = rect.width * dpr;
-            canvas.height = rect.height * dpr;
-            ctx.scale(dpr, dpr);
-            
-            // Sample data - in real app, load from storage
-            const data = [65, 68, 67, 70, 72, 71, 74, 73, 75, 78];
-            const labels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-            
-            const padding = 40;
-            const chartWidth = rect.width - padding * 2;
-            const chartHeight = rect.height - padding * 2;
-            
-            const maxVal = Math.max(...data) * 1.1;
-            const minVal = Math.min(...data) * 0.9;
-            
-            // Clear
-            ctx.clearRect(0, 0, rect.width, rect.height);
-            
-            // Draw grid
-            ctx.strokeStyle = 'rgba(255, 102, 0, 0.1)';
-            ctx.lineWidth = 1;
-            
-            for (let i = 0; i <= 5; i++) {
-                const y = padding + (chartHeight / 5) * i;
-                ctx.beginPath();
-                ctx.moveTo(padding, y);
-                ctx.lineTo(padding + chartWidth, y);
-                ctx.stroke();
+            const x = bodyWeight;
+            let denominator = 0;
+            for (let i = 0; i < coefficients.length; i++) {
+                denominator += coefficients[i] * Math.pow(x, i);
             }
             
-            // Draw line
-            ctx.strokeStyle = '#ff6600';
-            ctx.lineWidth = 3;
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
+            return (totalLifted * 500 / denominator).toFixed(2);
+        }
+
+        // ==================== EXPORT/IMPORT DATA ====================
+        function exportData() {
+            const dataStr = JSON.stringify(App.user, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
             
-            ctx.beginPath();
-            data.forEach((val, i) => {
-                const x = padding + (chartWidth / (data.length - 1)) * i;
-                const y = padding + chartHeight - ((val - minVal) / (maxVal - minVal)) * chartHeight;
-                
-                if (i === 0) {
-                    ctx.moveTo(x, y);
-                } else {
-                    ctx.lineTo(x, y);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `t800_backup_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function importData(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    App.user = data;
+                    localStorage.setItem('t800_user', JSON.stringify(App.user));
+                    updateDashboard();
+                    alert('Veriler başarıyla yüklendi!');
+                } catch (err) {
+                    alert('Dosya okunurken hata oluştu!');
                 }
-            });
-            ctx.stroke();
-            
-            // Draw gradient fill
-            const gradient = ctx.createLinearGradient(0, padding, 0, padding + chartHeight);
-            gradient.addColorStop(0, 'rgba(255, 102, 0, 0.3)');
-            gradient.addColorStop(1, 'rgba(255, 102, 0, 0)');
-            
-            ctx.fillStyle = gradient;
-            ctx.beginPath();
-            ctx.moveTo(padding, padding + chartHeight);
-            data.forEach((val, i) => {
-                const x = padding + (chartWidth / (data.length - 1)) * i;
-                const y = padding + chartHeight - ((val - minVal) / (maxVal - minVal)) * chartHeight;
-                ctx.lineTo(x, y);
-            });
-            ctx.lineTo(padding + chartWidth, padding + chartHeight);
-            ctx.closePath();
-            ctx.fill();
-            
-            // Draw points
-            data.forEach((val, i) => {
-                const x = padding + (chartWidth / (data.length - 1)) * i;
-                const y = padding + chartHeight - ((val - minVal) / (maxVal - minVal)) * chartHeight;
-                
-                ctx.fillStyle = '#050505';
-                ctx.strokeStyle = '#ff6600';
-                ctx.lineWidth = 2;
-                
-                ctx.beginPath();
-                ctx.arc(x, y, 6, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.stroke();
-                
-                // Inner dot
-                ctx.fillStyle = '#ff6600';
-                ctx.beginPath();
-                ctx.arc(x, y, 3, 0, Math.PI * 2);
-                ctx.fill();
-            });
-            
-            // Labels
-            ctx.fillStyle = '#666';
-            ctx.font = '12px Rajdhani';
-            ctx.textAlign = 'center';
-            
-            labels.forEach((label, i) => {
-                const x = padding + (chartWidth / (data.length - 1)) * i;
-                ctx.fillText(label, x, rect.height - 10);
-            });
+            };
+            reader.readAsText(file);
         }
 
-        // ==================== INITIALIZATION ====================
-        document.addEventListener('DOMContentLoaded', () => {
-            initSetup();
-            
-            // Check if setup complete
-            const setupComplete = localStorage.getItem('t800_setup_complete');
-            if (setupComplete) {
-                document.getElementById('setupWizard').classList.add('hidden');
-                document.getElementById('mainApp').style.display = 'block';
-                initApp();
-            }
-            
-            // Initialize chart when progress tab shown
-            const observer = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    if (mutation.target.id === 'progress' && !mutation.target.classList.contains('hidden')) {
-                        setTimeout(initChart, 100);
-                    }
-                });
-            });
-            
-            const progressSection = document.getElementById('progress');
-            if (progressSection) {
-                observer.observe(progressSection, { attributes: true, attributeFilter: ['class'] });
-            }
-            
-            // Auto-save every 30 seconds
-            setInterval(() => {
-                if (setupComplete) {
-                    localStorage.setItem('t800_user', JSON.stringify(AppState.user));
-                }
-            }, 30000);
-        });
-
-        // Handle visibility change (save when user leaves)
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                localStorage.setItem('t800_user', JSON.stringify(AppState.user));
-            }
-        });
-
-        // Service Worker for PWA
+        // ==================== SERVICE WORKER (PWA Support) ====================
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('data:text/javascript;base64,' + btoa(`
-                const CACHE_NAME = 't800-pro-v1';
-                const urlsToCache = ['/'];
-                
-                self.addEventListener('install', event => {
-                    event.waitUntil(
-                        caches.open(CACHE_NAME)
-                            .then(cache => cache.addAll(urlsToCache))
-                    );
-                });
-                
-                self.addEventListener('fetch', event => {
-                    event.respondWith(
-                        caches.match(event.request)
-                            .then(response => {
-                                if (response) return response;
-                                return fetch(event.request);
-                            })
-                    );
-                });
-            `)).catch(() => {});
+                self.addEventListener('install', e => self.skipWaiting());
+                self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
+            `)).catch(() => console.log('SW registration skipped'));
         }
+
+        // ==================== KEYBOARD SHORTCUTS ====================
+        document.addEventListener('keydown', (e) => {
+            // Space to start/stop timer if modal is open
+            if (e.code === 'Space' && document.getElementById('timerModal').classList.contains('active')) {
+                e.preventDefault();
+                if (App.timer.running) {
+                    stopTimer();
+                } else {
+                    startTimer(60);
+                }
+            }
+            
+            // ESC to close modal
+            if (e.code === 'Escape') {
+                closeTimer();
+            }
+            
+            // Number keys for timer presets
+            if (document.getElementById('timerModal').classList.contains('active')) {
+                const presets = { Digit1: 30, Digit2: 60, Digit3: 90, Digit4: 120, Digit5: 180, Digit6: 300 };
+                if (presets[e.code]) {
+                    startTimer(presets[e.code]);
+                }
+            }
+        });
+
+        // ==================== NOTIFICATIONS ====================
+        function requestNotificationPermission() {
+            if ('Notification' in window) {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        console.log('Bildirim izni verildi');
+                    }
+                });
+            }
+        }
+
+        function sendNotification(title, body) {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification(title, {
+                    body: body,
+                    icon: '💪',
+                    badge: '💪',
+                    tag: 't800-timer'
+                });
+            }
+        }
+
+        // Initialize notifications on first user interaction
+        document.addEventListener('click', () => {
+            requestNotificationPermission();
+        }, { once: true });
+
+        console.log('T-800 ELITE v3.0 - System Ready');
     </script>
 </body>
 </html>
