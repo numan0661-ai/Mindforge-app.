@@ -9,8 +9,6 @@
     <meta name="description" content="T-800 Vücut Ağırlığı Terminatör - Profesyonel fitness takip uygulaması">
     <title>Project T-800 | Vücut Ağırlığı Terminatör</title>
     
-    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiVC04MDAgRml0bmVzcyIsInNob3J0X25hbWUiOiJUODAwIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwYTBhMGEiLCJ0aGVtZV9jb2xvciI6IiNmZjY2MDAiLCJpY29ucyI6W3sic3JjIjoiaWNvbi0xOTJ4MTkyLnBuZyIsInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9wbmcifSx7InNyYyI6Imljb24tNTEyeDUxMi5wbmciLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIn1dfQ==">
-    
     <style>
         * {
             margin: 0;
@@ -132,6 +130,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             border-radius: 4px;
+            user-select: none;
         }
         
         .nav-tab:hover, .nav-tab.active {
@@ -287,6 +286,7 @@
             position: relative;
             overflow: hidden;
             border-radius: 6px;
+            user-select: none;
         }
         
         .level-tab.active {
@@ -346,6 +346,7 @@
             transition: all 0.3s;
             border-radius: 4px;
             font-family: inherit;
+            user-select: none;
         }
         
         .week-btn.active {
@@ -375,6 +376,7 @@
             font-size: 0.65rem;
             border-radius: 6px;
             position: relative;
+            user-select: none;
         }
         
         .day-box:hover {
@@ -440,6 +442,7 @@
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
+            user-select: none;
         }
         
         .exercise-name {
@@ -577,6 +580,7 @@
             transition: all 0.3s;
             border-radius: 6px;
             flex-shrink: 0;
+            user-select: none;
         }
         
         .set-check.completed {
@@ -661,6 +665,11 @@
             animation: pulse 2s infinite;
         }
         
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
         .ai-message {
             font-size: 0.85rem;
             line-height: 1.6;
@@ -719,6 +728,7 @@
             display: none;
             cursor: pointer;
             font-weight: bold;
+            user-select: none;
         }
         
         .install-banner.show {
@@ -765,11 +775,6 @@
             stroke: var(--neon-red);
             filter: drop-shadow(0 0 8px var(--neon-orange));
             animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
         }
         
         .muscle-info {
@@ -1040,6 +1045,7 @@
             z-index: 100;
             transition: all 0.3s;
             box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            user-select: none;
         }
         
         .quick-timer:hover {
@@ -1073,7 +1079,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="install-banner" id="installBanner" onclick="installApp()">
+        <div class="install-banner" id="installBanner">
             📲 T-800'ü Ana Ekrana Ekle - Offline Çalışır!
         </div>
 
@@ -1095,11 +1101,11 @@
             </div>
         </div>
 
-        <nav class="nav-tabs">
-            <div class="nav-tab active" onclick="switchTab('dashboard')">DASHBOARD</div>
-            <div class="nav-tab" onclick="switchTab('workout')">ANTRENMAN</div>
-            <div class="nav-tab" onclick="switchTab('progress')">İLERLEME</div>
-            <div class="nav-tab" onclick="switchTab('achievements')">ROZETLER</div>
+        <nav class="nav-tabs" id="mainNav">
+            <div class="nav-tab active" data-tab="dashboard">DASHBOARD</div>
+            <div class="nav-tab" data-tab="workout">ANTRENMAN</div>
+            <div class="nav-tab" data-tab="progress">İLERLEME</div>
+            <div class="nav-tab" data-tab="achievements">ROZETLER</div>
         </nav>
 
         <section id="dashboard" class="tab-content">
@@ -1158,49 +1164,49 @@
 
         <section id="workout" class="tab-content hidden">
             <div class="level-tabs" id="levelTabs">
-                <div class="level-tab active" onclick="selectLevel(1)">SEVIYE 1</div>
-                <div class="level-tab locked" onclick="selectLevel(2)">SEVIYE 2</div>
-                <div class="level-tab locked" onclick="selectLevel(3)">SEVIYE 3</div>
-                <div class="level-tab locked" onclick="selectLevel(4)">SEVIYE 4</div>
+                <div class="level-tab active" data-level="1">SEVIYE 1</div>
+                <div class="level-tab locked" data-level="2">SEVIYE 2</div>
+                <div class="level-tab locked" data-level="3">SEVIYE 3</div>
+                <div class="level-tab locked" data-level="4">SEVIYE 4</div>
             </div>
 
             <div class="workout-plan">
                 <div class="plan-header">
                     <span>HAFTALIK PROGRAM</span>
                     <div class="week-selector">
-                        <button class="week-btn active" onclick="selectWeek(1)">H1</button>
-                        <button class="week-btn" onclick="selectWeek(2)">H2</button>
-                        <button class="week-btn" onclick="selectWeek(3)">H3</button>
-                        <button class="week-btn" onclick="selectWeek(4)">H4</button>
+                        <button class="week-btn active" data-week="1">H1</button>
+                        <button class="week-btn" data-week="2">H2</button>
+                        <button class="week-btn" data-week="3">H3</button>
+                        <button class="week-btn" data-week="4">H4</button>
                     </div>
                 </div>
                 
                 <div class="day-grid" id="dayGrid">
-                    <div class="day-box active" onclick="selectDay(1)">
+                    <div class="day-box active" data-day="1">
                         <div class="day-number">1</div>
                         <div class="day-label">PZT</div>
                     </div>
-                    <div class="day-box" onclick="selectDay(2)">
+                    <div class="day-box" data-day="2">
                         <div class="day-number">2</div>
                         <div class="day-label">SAL</div>
                     </div>
-                    <div class="day-box rest" onclick="selectDay(3)">
+                    <div class="day-box rest" data-day="3">
                         <div class="day-number">3</div>
                         <div class="day-label">DIN</div>
                     </div>
-                    <div class="day-box" onclick="selectDay(4)">
+                    <div class="day-box" data-day="4">
                         <div class="day-number">4</div>
                         <div class="day-label">PER</div>
                     </div>
-                    <div class="day-box" onclick="selectDay(5)">
+                    <div class="day-box" data-day="5">
                         <div class="day-number">5</div>
                         <div class="day-label">CUM</div>
                     </div>
-                    <div class="day-box rest" onclick="selectDay(6)">
+                    <div class="day-box rest" data-day="6">
                         <div class="day-number">6</div>
                         <div class="day-label">DIN</div>
                     </div>
-                    <div class="day-box" onclick="selectDay(7)">
+                    <div class="day-box" data-day="7">
                         <div class="day-number">7</div>
                         <div class="day-label">PAZ</div>
                     </div>
@@ -1250,7 +1256,7 @@
             </div>
 
             <div id="exerciseList">
-                <div class="exercise-card" data-exercise="pushup" data-difficulty="easy" onclick="toggleExercise(this)">
+                <div class="exercise-card" data-exercise="pushup" data-difficulty="easy">
                     <div class="exercise-header">
                         <div class="exercise-name">
                             <div class="exercise-check"></div>
@@ -1273,26 +1279,26 @@
                             <div class="set-row">
                                 <div class="set-number">Set 1</div>
                                 <div class="set-inputs">
-                                    <input type="number" class="set-input" placeholder="Tekrar" onchange="saveSetData(this)">
-                                    <input type="number" class="set-input" placeholder="KG" onchange="saveSetData(this)">
+                                    <input type="number" class="set-input" placeholder="Tekrar">
+                                    <input type="number" class="set-input" placeholder="KG">
                                 </div>
-                                <div class="set-check" onclick="toggleSet(this, event)"></div>
+                                <div class="set-check"></div>
                             </div>
                             <div class="set-row">
                                 <div class="set-number">Set 2</div>
                                 <div class="set-inputs">
-                                    <input type="number" class="set-input" placeholder="Tekrar" onchange="saveSetData(this)">
-                                    <input type="number" class="set-input" placeholder="KG" onchange="saveSetData(this)">
+                                    <input type="number" class="set-input" placeholder="Tekrar">
+                                    <input type="number" class="set-input" placeholder="KG">
                                 </div>
-                                <div class="set-check" onclick="toggleSet(this, event)"></div>
+                                <div class="set-check"></div>
                             </div>
                             <div class="set-row">
                                 <div class="set-number">Set 3</div>
                                 <div class="set-inputs">
-                                    <input type="number" class="set-input" placeholder="Tekrar" onchange="saveSetData(this)">
-                                    <input type="number" class="set-input" placeholder="KG" onchange="saveSetData(this)">
+                                    <input type="number" class="set-input" placeholder="Tekrar">
+                                    <input type="number" class="set-input" placeholder="KG">
                                 </div>
-                                <div class="set-check" onclick="toggleSet(this, event)"></div>
+                                <div class="set-check"></div>
                             </div>
                         </div>
                         <div class="progression-path">
@@ -1307,7 +1313,7 @@
                     </div>
                 </div>
 
-                <div class="exercise-card" data-exercise="dips" data-difficulty="medium" onclick="toggleExercise(this)">
+                <div class="exercise-card" data-exercise="dips" data-difficulty="medium">
                     <div class="exercise-header">
                         <div class="exercise-name">
                             <div class="exercise-check"></div>
@@ -1324,29 +1330,29 @@
                             <div class="set-row">
                                 <div class="set-number">Set 1</div>
                                 <div class="set-inputs">
-                                    <input type="number" class="set-input" placeholder="Tekrar" onchange="saveSetData(this)">
+                                    <input type="number" class="set-input" placeholder="Tekrar">
                                 </div>
-                                <div class="set-check" onclick="toggleSet(this, event)"></div>
+                                <div class="set-check"></div>
                             </div>
                             <div class="set-row">
                                 <div class="set-number">Set 2</div>
                                 <div class="set-inputs">
-                                    <input type="number" class="set-input" placeholder="Tekrar" onchange="saveSetData(this)">
+                                    <input type="number" class="set-input" placeholder="Tekrar">
                                 </div>
-                                <div class="set-check" onclick="toggleSet(this, event)"></div>
+                                <div class="set-check"></div>
                             </div>
                             <div class="set-row">
                                 <div class="set-number">Set 3</div>
                                 <div class="set-inputs">
-                                    <input type="number" class="set-input" placeholder="Tekrar" onchange="saveSetData(this)">
+                                    <input type="number" class="set-input" placeholder="Tekrar">
                                 </div>
-                                <div class="set-check" onclick="toggleSet(this, event)"></div>
+                                <div class="set-check"></div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="exercise-card" data-exercise="plank" data-difficulty="easy" onclick="toggleExercise(this)">
+                <div class="exercise-card" data-exercise="plank" data-difficulty="easy">
                     <div class="exercise-header">
                         <div class="exercise-name">
                             <div class="exercise-check"></div>
@@ -1363,30 +1369,30 @@
                             <div class="set-row">
                                 <div class="set-number">Set 1</div>
                                 <div class="set-inputs">
-                                    <input type="number" class="set-input" placeholder="Saniye" onchange="saveSetData(this)">
+                                    <input type="number" class="set-input" placeholder="Saniye">
                                 </div>
-                                <div class="set-check" onclick="toggleSet(this, event)"></div>
+                                <div class="set-check"></div>
                             </div>
                             <div class="set-row">
                                 <div class="set-number">Set 2</div>
                                 <div class="set-inputs">
-                                    <input type="number" class="set-input" placeholder="Saniye" onchange="saveSetData(this)">
+                                    <input type="number" class="set-input" placeholder="Saniye">
                                 </div>
-                                <div class="set-check" onclick="toggleSet(this, event)"></div>
+                                <div class="set-check"></div>
                             </div>
                             <div class="set-row">
                                 <div class="set-number">Set 3</div>
                                 <div class="set-inputs">
-                                    <input type="number" class="set-input" placeholder="Saniye" onchange="saveSetData(this)">
+                                    <input type="number" class="set-input" placeholder="Saniye">
                                 </div>
-                                <div class="set-check" onclick="toggleSet(this, event)"></div>
+                                <div class="set-check"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <button onclick="finishWorkout()" style="width: 100%; padding: 15px; background: var(--neon-green); color: #000; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 20px; text-transform: uppercase;">
+            <button id="finishWorkoutBtn" style="width: 100%; padding: 15px; background: var(--neon-green); color: #000; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 20px; text-transform: uppercase;">
                 ANTRENMANI BITIR & XP KAZAN
             </button>
         </section>
@@ -1453,7 +1459,7 @@
 
     <div class="xp-gain" id="xpGain">+50 XP!</div>
 
-    <div class="quick-timer" onclick="openTimer()">
+    <div class="quick-timer" id="quickTimer">
         <div class="quick-timer-icon">⏱</div>
         <div class="quick-timer-label">Timer</div>
     </div>
@@ -1464,12 +1470,12 @@
             <div class="timer-label-large">DINLENME</div>
         </div>
         <div class="timer-controls">
-            <button class="timer-btn" onclick="startTimer(60)">1 DK</button>
-            <button class="timer-btn" onclick="startTimer(90)">1.5 DK</button>
-            <button class="timer-btn" onclick="startTimer(120)">2 DK</button>
-            <button class="timer-btn" onclick="startTimer(180)">3 DK</button>
-            <button class="timer-btn secondary" onclick="resetTimer()">SIFIRLA</button>
-            <button class="timer-btn secondary" onclick="closeTimer()">KAPAT</button>
+            <button class="timer-btn" data-time="60">1 DK</button>
+            <button class="timer-btn" data-time="90">1.5 DK</button>
+            <button class="timer-btn" data-time="120">2 DK</button>
+            <button class="timer-btn" data-time="180">3 DK</button>
+            <button class="timer-btn secondary" id="resetTimerBtn">SIFIRLA</button>
+            <button class="timer-btn secondary" id="closeTimerBtn">KAPAT</button>
         </div>
     </div>
 
@@ -1519,23 +1525,16 @@
                 document.getElementById('statTotalSets').textContent = this.data.totalSets;
                 document.getElementById('statTotalReps').textContent = this.data.totalReps;
                 
-                // Level title update
                 const titles = ['INFILTRATOR', 'SCOUT', 'SOLDIER', 'HUNTER', 'TERMINATOR'];
                 document.getElementById('levelTitle').textContent = `SEVIYE ${this.data.level}: ${titles[this.data.level - 1] || 'TERMINATOR'}`;
                 
-                // XP bar
                 const xpNeeded = this.getXpNeeded();
                 const progress = (this.data.xp / xpNeeded) * 100;
                 document.getElementById('xpBar').style.width = `${Math.min(progress, 100)}%`;
                 document.getElementById('xpText').textContent = `${this.data.xp} / ${xpNeeded} XP`;
                 
-                // Unlock levels
                 this.updateLevelLocks();
-                
-                // Update achievements
                 this.updateAchievements();
-                
-                // Update AI
                 AICoach.analyze();
             },
             
@@ -1564,7 +1563,6 @@
                     title: this.getLevelTitle()
                 });
                 
-                // Bildirim
                 if ('Notification' in window && Notification.permission === 'granted') {
                     new Notification('🎉 SEVIYE ATLADIN!', {
                         body: `Tebrikler! Artık Seviye ${this.data.level} ${this.getLevelTitle()} oldun.`,
@@ -1614,7 +1612,6 @@
                     workoutSets += sets;
                     workoutReps += reps;
                     
-                    // PR kontrolü
                     const exName = ex.dataset.exercise;
                     if (!this.data.personalRecords[exName] || reps > this.data.personalRecords[exName]) {
                         this.data.personalRecords[exName] = reps;
@@ -1718,7 +1715,6 @@
                 const messageEl = document.getElementById('aiMessage');
                 const suggestionEl = document.getElementById('aiSuggestion');
                 
-                // Analiz mantığı
                 let message = this.messages[Math.floor(Math.random() * this.messages.length)];
                 let suggestion = "";
                 
@@ -1731,9 +1727,9 @@
                 } else if (this.detectWeakness(data) === 'chest') {
                     message = "Göğüs gücünde potansiyel fark ettim.";
                     suggestion = "💡 Şınav varyasyonlarını artır: Dar şınav ve decline şınav ekle.";
-                } else if (data.xp > data.level * 100 - 20) {
+                } else if (data.xp > data.getXpNeeded() - 20) {
                     message = "Seviye atlama yakın! Son bir itiş gerekiyor.";
-                    suggestion = `💡 Sadece ${data.level * 100 + ((data.level - 1) * 50) - data.xp} XP kaldı. Tam bir antrenman yaparak seviye atla!`;
+                    suggestion = `💡 Sadece ${data.getXpNeeded() - data.xp} XP kaldı. Tam bir antrenman yaparak seviye atla!`;
                 }
                 
                 messageEl.textContent = message;
@@ -1741,23 +1737,11 @@
             },
             
             detectWeakness(data) {
-                // Basit analiz - gerçek uygulamada daha karmaşık olabilir
-                const lastWorkout = data.workoutHistory[0];
-                if (!lastWorkout) return null;
-                
-                if (lastWorkout.reps / lastWorkout.sets < 8) return 'endurance';
                 return null;
-            },
-            
-            suggestWorkout() {
-                const hour = new Date().getHours();
-                if (hour < 12) return "Sabah enerjisiyle ağır bir antrenman yapabilirsin.";
-                if (hour > 18) return "Akşam için hafif bir core antrenmanı öneriyorum.";
-                return "Öğleden sonra vücut ağırlığı antrenmanı için ideal zaman.";
             }
         };
 
-        // ==================== PWA & SERVICE WORKER ====================
+        // ==================== PWA ====================
         let deferredPrompt;
         
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -1766,7 +1750,7 @@
             document.getElementById('installBanner').classList.add('show');
         });
         
-        function installApp() {
+        document.getElementById('installBanner').addEventListener('click', () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice.then((choiceResult) => {
@@ -1776,9 +1760,8 @@
                     deferredPrompt = null;
                 });
             }
-        }
+        });
         
-        // Service Worker Registration
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('data:text/javascript;base64,' + btoa(`
                 self.addEventListener('install', e => {
@@ -1795,101 +1778,125 @@
                         })
                     );
                 });
-            `)).then(() => {
-                console.log('T-800 Service Worker aktif');
-            }).catch(err => {
-                console.log('SW kayıt hatası:', err);
-            });
+            `)).catch(() => {});
         }
         
-        // Bildirim izni
         if ('Notification' in window && Notification.permission === 'default') {
             Notification.requestPermission();
         }
 
-        // ==================== UI FUNCTIONS ====================
+        // ==================== UI CONTROLLERS ====================
         let currentTab = 'dashboard';
         let timerInterval;
         let timeLeft = 0;
 
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
-            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
-            
-            document.getElementById(tabName).classList.remove('hidden');
-            event.target.classList.add('active');
-            currentTab = tabName;
-            
-            if (tabName === 'dashboard') T800Data.updateRecentWorkouts();
-        }
-
-        function selectLevel(level) {
-            if (level > T800Data.data.level) return;
-            
-            const tabs = document.querySelectorAll('.level-tab');
-            tabs.forEach((tab, index) => {
-                tab.classList.toggle('active', index === level - 1);
+        // SEKME DEĞİŞTİRME - DÜZELTİLMİŞ
+        function initTabs() {
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.dataset.tab;
+                    
+                    // Tüm sekmeleri gizle
+                    document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+                    // Tüm tab butonlarını pasif yap
+                    tabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Seçili sekmeyi göster
+                    document.getElementById(tabName).classList.remove('hidden');
+                    // Seçili tab butonunu aktif yap
+                    this.classList.add('active');
+                    
+                    currentTab = tabName;
+                    
+                    if (tabName === 'dashboard') {
+                        T800Data.updateRecentWorkouts();
+                    }
+                });
             });
         }
 
-        function selectWeek(week) {
-            document.querySelectorAll('.week-btn').forEach((btn, index) => {
-                btn.classList.toggle('active', index === week - 1);
+        // SEVİYE SEÇİMİ - DÜZELTİLMİŞ
+        function initLevelTabs() {
+            const levelTabs = document.querySelectorAll('.level-tab');
+            levelTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const level = parseInt(this.dataset.level);
+                    if (this.classList.contains('locked')) return;
+                    
+                    levelTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
             });
         }
 
-        function selectDay(day) {
-            document.querySelectorAll('.day-box').forEach((box, index) => {
-                box.classList.remove('active');
-                if (index === day - 1) box.classList.add('active');
+        // HAFTA SEÇİMİ - DÜZELTİLMİŞ
+        function initWeekButtons() {
+            const weekBtns = document.querySelectorAll('.week-btn');
+            weekBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    weekBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
             });
         }
 
-        function toggleExercise(card) {
-            const content = card.querySelector('.exercise-content');
-            content.classList.toggle('active');
-        }
-
-        function toggleSet(element, event) {
-            event.stopPropagation();
-            element.classList.toggle('completed');
-            
-            const card = element.closest('.exercise-card');
-            const allSets = card.querySelectorAll('.set-check');
-            const completedSets = card.querySelectorAll('.set-check.completed');
-            
-            card.classList.toggle('completed', allSets.length === completedSets.length);
-            
-            // Ses efekti
-            if (element.classList.contains('completed')) {
-                playBeep(800, 0.1);
-            }
-        }
-
-        function saveSetData(input) {
-            // Input değişikliklerini kaydet (gelecekte kullanılabilir)
-            T800Data.save();
-        }
-
-        function finishWorkout() {
-            const exercises = document.querySelectorAll('.exercise-card');
-            const completedExercises = Array.from(exercises).filter(ex => {
-                const completedSets = ex.querySelectorAll('.set-check.completed').length;
-                return completedSets > 0;
+        // GÜN SEÇİMİ - DÜZELTİLMİŞ
+        function initDayBoxes() {
+            const dayBoxes = document.querySelectorAll('.day-box');
+            dayBoxes.forEach(box => {
+                box.addEventListener('click', function() {
+                    dayBoxes.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
             });
+        }
+
+        // EGZERSİZ KARTLARI - DÜZELTİLMİŞ
+        function initExerciseCards() {
+            const cards = document.querySelectorAll('.exercise-card');
+            cards.forEach(card => {
+                const header = card.querySelector('.exercise-header');
+                header.addEventListener('click', function(e) {
+                    // Set check tıklamasını engelle
+                    if (e.target.closest('.set-check')) return;
+                    
+                    const content = card.querySelector('.exercise-content');
+                    content.classList.toggle('active');
+                });
+                
+                // Set check olayları
+                const setChecks = card.querySelectorAll('.set-check');
+                setChecks.forEach(check => {
+                    check.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        this.classList.toggle('completed');
+                        
+                        const allSets = card.querySelectorAll('.set-check');
+                        const completedSets = card.querySelectorAll('.set-check.completed');
+                        card.classList.toggle('completed', allSets.length === completedSets.length);
+                        
+                        if (this.classList.contains('completed')) {
+                            playBeep(800, 0.1);
+                        }
+                    });
+                });
+            });
+        }
+
+        // TIMER FONKSİYONLARI - DÜZELTİLMİŞ
+        function initTimer() {
+            document.getElementById('quickTimer').addEventListener('click', openTimer);
+            document.getElementById('closeTimerBtn').addEventListener('click', closeTimer);
+            document.getElementById('resetTimerBtn').addEventListener('click', resetTimer);
             
-            if (completedExercises.length === 0) {
-                alert('En az bir egzersiz tamamlamalısın!');
-                return;
-            }
-            
-            T800Data.recordWorkout(completedExercises);
-            
-            // Başarı mesajı
-            setTimeout(() => {
-                alert(`🏆 ANTRENMAN TAMAMLANDI!\n\n+${Math.floor(Math.random() * 20 + 30)} XP kazandın!\nToplam: ${T800Data.data.xp} XP`);
-                switchTab('dashboard');
-            }, 500);
+            const timerBtns = document.querySelectorAll('.timer-btn[data-time]');
+            timerBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const seconds = parseInt(this.dataset.time);
+                    startTimer(seconds);
+                });
+            });
         }
 
         function openTimer() {
@@ -1913,17 +1920,12 @@
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
                     playBeep(600, 0.5);
-                    // Vibration API
                     if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
                 }
             }, 1000);
         }
 
         function resetTimer() {
-            clearInterval(timerInterval);
-            timeLeft = 0;
-            updateTimer
-                    function resetTimer() {
             clearInterval(timerInterval);
             timeLeft = 0;
             updateTimerDisplay();
@@ -1958,10 +1960,50 @@
             }
         }
 
+        // ANTRENMAN BİTİRME - DÜZELTİLMİŞ
+        function initFinishButton() {
+            document.getElementById('finishWorkoutBtn').addEventListener('click', function() {
+                const exercises = document.querySelectorAll('.exercise-card');
+                const completedExercises = Array.from(exercises).filter(ex => {
+                    const completedSets = ex.querySelectorAll('.set-check.completed').length;
+                    return completedSets > 0;
+                });
+                
+                if (completedExercises.length === 0) {
+                    alert('En az bir egzersiz tamamlamalısın!');
+                    return;
+                }
+                
+                T800Data.recordWorkout(completedExercises);
+                
+                setTimeout(() => {
+                    alert(`🏆 ANTRENMAN TAMAMLANDI!\n\n+${Math.floor(Math.random() * 20 + 30)} XP kazandın!\nToplam: ${T800Data.data.xp} XP`);
+                    
+                    // Dashboard'a dön
+                    document.querySelectorAll('.tab-content').forEach(t =>
+                                            t.classList.add('hidden'));
+                    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                    
+                    document.getElementById('dashboard').classList.remove('hidden');
+                    document.querySelector('[data-tab="dashboard"]').classList.add('active');
+                    currentTab = 'dashboard';
+                    T800Data.updateRecentWorkouts();
+                }, 500);
+            });
+        }
+
         // ==================== INIT ====================
         document.addEventListener('DOMContentLoaded', () => {
             T800Data.init();
-            updateTimerDisplay();
+            
+            // Tüm olay dinleyicilerini başlat
+            initTabs();
+            initLevelTabs();
+            initWeekButtons();
+            initDayBoxes();
+            initExerciseCards();
+            initTimer();
+            initFinishButton();
             
             // Sayfa kapanırken kaydet
             window.addEventListener('beforeunload', () => {
@@ -1970,6 +2012,9 @@
             
             // Periyodik kaydetme (her 30 saniye)
             setInterval(() => T800Data.save(), 30000);
+            
+            // Başlangıçta timer display'i güncelle
+            updateTimerDisplay();
         });
     </script>
 </body>
