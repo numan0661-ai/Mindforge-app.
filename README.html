@@ -6,8 +6,8 @@
     <meta name="theme-color" content="#0a0a0a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="description" content="T-800 ELITE - Profesyonel Atlet Performans ve Dönüşüm Sistemi">
-    <title>T-800 ELITE | Atlet Performans Sistemi</title>
+    <meta name="description" content="T-800 ELITE BW - Profesyonel Vücut Ağırlığı Antrenman Sistemi">
+    <title>T-800 ELITE BW | Profesyonel Calisthenics</title>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
@@ -20,7 +20,6 @@
         }
         
         :root {
-            /* Premium Color System */
             --primary: #ff6b35;
             --primary-dark: #e55a2b;
             --primary-light: #ff8c5a;
@@ -31,8 +30,8 @@
             --warning: #fbbf24;
             --danger: #ef4444;
             --success: #22c55e;
+            --calisthenics: #f59e0b;
             
-            /* Neutral Scale */
             --n-900: #0a0a0f;
             --n-800: #12121a;
             --n-700: #1a1a25;
@@ -44,7 +43,6 @@
             --n-100: #d1d5db;
             --n-50: #f3f4f6;
             
-            /* Functional */
             --bg-primary: var(--n-900);
             --bg-secondary: var(--n-800);
             --bg-tertiary: var(--n-700);
@@ -53,7 +51,6 @@
             --text-secondary: var(--n-200);
             --text-muted: var(--n-300);
             
-            /* Spacing Scale */
             --space-1: 0.25rem;
             --space-2: 0.5rem;
             --space-3: 0.75rem;
@@ -65,29 +62,21 @@
             --space-12: 3rem;
             --space-16: 4rem;
             
-            /* Typography */
             --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
             
-            /* Shadows */
             --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
             --shadow-glow: 0 0 20px rgba(255, 107, 53, 0.3);
             --shadow-glow-green: 0 0 20px rgba(0, 212, 170, 0.3);
+            --shadow-glow-calisthenics: 0 0 20px rgba(245, 158, 11, 0.3);
             
-            /* Radius */
             --radius-sm: 6px;
             --radius: 10px;
             --radius-lg: 14px;
             --radius-xl: 20px;
             --radius-full: 9999px;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
         }
         
         html {
@@ -105,20 +94,18 @@
             overflow-x: hidden;
         }
         
-        /* Premium Background Pattern */
         body::before {
             content: '';
             position: fixed;
             inset: 0;
             background-image: 
-                radial-gradient(circle at 20% 50%, rgba(255, 107, 53, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 20% 50%, rgba(245, 158, 11, 0.03) 0%, transparent 50%),
                 radial-gradient(circle at 80% 80%, rgba(0, 212, 170, 0.03) 0%, transparent 50%),
                 radial-gradient(circle at 40% 20%, rgba(99, 102, 241, 0.02) 0%, transparent 50%);
             pointer-events: none;
             z-index: 0;
         }
         
-        /* Grid Pattern Overlay */
         body::after {
             content: '';
             position: fixed;
@@ -131,7 +118,6 @@
             z-index: 0;
         }
         
-        /* App Container */
         #app {
             position: relative;
             z-index: 1;
@@ -141,7 +127,6 @@
             padding-bottom: 100px;
         }
         
-        /* Loading Screen */
         .loading-screen {
             position: fixed;
             inset: 0;
@@ -163,7 +148,7 @@
             width: 80px;
             height: 80px;
             border: 3px solid var(--n-600);
-            border-top-color: var(--primary);
+            border-top-color: var(--calisthenics);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -192,7 +177,7 @@
         .loading-bar-fill {
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            background: linear-gradient(90deg, var(--calisthenics), var(--secondary));
             animation: loading 2s ease-out forwards;
         }
         
@@ -200,7 +185,6 @@
             to { width: 100%; }
         }
         
-        /* Header */
         .app-header {
             position: sticky;
             top: 0;
@@ -226,13 +210,13 @@
         .brand-icon {
             width: 40px;
             height: 40px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background: linear-gradient(135deg, var(--calisthenics), #d97706);
             border-radius: var(--radius);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.25rem;
-            box-shadow: var(--shadow-glow);
+            box-shadow: var(--shadow-glow-calisthenics);
         }
         
         .brand-text h1 {
@@ -246,7 +230,7 @@
             display: block;
             font-size: 0.625rem;
             font-weight: 600;
-            color: var(--primary);
+            color: var(--calisthenics);
             letter-spacing: 0.15em;
             text-transform: uppercase;
         }
@@ -272,18 +256,17 @@
         }
         
         .icon-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            background: rgba(255, 107, 53, 0.1);
+            border-color: var(--calisthenics);
+            color: var(--calisthenics);
+            background: rgba(245, 158, 11, 0.1);
         }
         
         .icon-btn.active {
-            background: var(--primary);
-            border-color: var(--primary);
+            background: var(--calisthenics);
+            border-color: var(--calisthenics);
             color: #000;
         }
         
-        /* Navigation */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -326,11 +309,11 @@
         }
         
         .nav-item.active {
-            color: var(--primary);
+            color: var(--calisthenics);
         }
         
         .nav-item.active .nav-icon {
-            background: rgba(255, 107, 53, 0.15);
+            background: rgba(245, 158, 11, 0.15);
         }
         
         .nav-icon {
@@ -344,12 +327,10 @@
             transition: all 0.2s;
         }
         
-        /* Main Content */
         .main-content {
             padding: var(--space-5);
         }
         
-        /* Cards */
         .card {
             background: var(--bg-secondary);
             border: 1px solid var(--border);
@@ -380,7 +361,7 @@
         .card-title-icon {
             width: 32px;
             height: 32px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background: linear-gradient(135deg, var(--calisthenics), #d97706);
             border-radius: var(--radius);
             display: flex;
             align-items: center;
@@ -392,7 +373,6 @@
             padding: var(--space-5);
         }
         
-        /* Score Circle */
         .score-container {
             display: flex;
             flex-direction: column;
@@ -441,7 +421,7 @@
             font-family: var(--font-mono);
             font-size: 3.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            background: linear-gradient(135deg, var(--calisthenics), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             line-height: 1;
@@ -458,17 +438,16 @@
         .score-rank {
             margin-top: var(--space-1);
             padding: var(--space-1) var(--space-3);
-            background: rgba(255, 107, 53, 0.15);
-            border: 1px solid rgba(255, 107, 53, 0.3);
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.3);
             border-radius: var(--radius-full);
             font-size: 0.625rem;
             font-weight: 700;
-            color: var(--primary);
+            color: var(--calisthenics);
             text-transform: uppercase;
             letter-spacing: 0.1em;
         }
         
-        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -506,7 +485,7 @@
         }
         
         .stat-icon.primary {
-            background: rgba(255, 107, 53, 0.15);
+            background: rgba(245, 158, 11, 0.15);
         }
         
         .stat-icon.secondary {
@@ -556,15 +535,9 @@
             background: rgba(0, 212, 170, 0.1);
         }
         
-        .stat-change.negative {
-            color: var(--danger);
-            background: rgba(239, 68, 68, 0.1);
-        }
-        
-        /* AI Coach Panel */
         .ai-panel {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(0, 212, 170, 0.05));
-            border: 1px solid rgba(99, 102, 241, 0.3);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(0, 212, 170, 0.05));
+            border: 1px solid rgba(245, 158, 11, 0.3);
             border-radius: var(--radius-lg);
             padding: var(--space-5);
             position: relative;
@@ -578,7 +551,7 @@
             right: -50%;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, transparent 70%);
             animation: pulse 4s ease-in-out infinite;
         }
         
@@ -593,19 +566,19 @@
         .ai-avatar {
             width: 48px;
             height: 48px;
-            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            background: linear-gradient(135deg, var(--calisthenics), #d97706);
             border-radius: var(--radius);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
         }
         
         .ai-title h3 {
             font-size: 1rem;
             font-weight: 700;
-            color: var(--accent-light);
+            color: var(--calisthenics);
         }
         
         .ai-title span {
@@ -624,6 +597,16 @@
             animation: blink 2s infinite;
         }
         
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        
         .ai-message {
             font-size: 0.9375rem;
             line-height: 1.7;
@@ -637,7 +620,6 @@
             gap: var(--space-3);
         }
         
-        /* Buttons */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -654,14 +636,14 @@
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background: linear-gradient(135deg, var(--calisthenics), #d97706);
             color: #000;
-            box-shadow: var(--shadow-glow);
+            box-shadow: var(--shadow-glow-calisthenics);
         }
         
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
         }
         
         .btn-secondary {
@@ -699,7 +681,6 @@
             width: 100%;
         }
         
-        /* Workout Card */
         .workout-card {
             background: var(--bg-secondary);
             border: 1px solid var(--border);
@@ -708,7 +689,7 @@
         }
         
         .workout-header {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background: linear-gradient(135deg, var(--calisthenics), #d97706);
             padding: var(--space-6);
             color: #000;
         }
@@ -775,7 +756,7 @@
         }
         
         .exercise-item:hover {
-            border-color: var(--primary);
+            border-color: var(--calisthenics);
             transform: translateX(4px);
         }
         
@@ -800,8 +781,8 @@
         }
         
         .exercise-item:hover .exercise-number {
-            border-color: var(--primary);
-            color: var(--primary);
+            border-color: var(--calisthenics);
+            color: var(--calisthenics);
         }
         
         .exercise-info {
@@ -836,7 +817,6 @@
             text-transform: uppercase;
         }
         
-        /* Exercise Detail */
         .exercise-detail {
             padding: 0 var(--space-4) var(--space-4);
             display: none;
@@ -897,7 +877,7 @@
         
         .input:focus {
             outline: none;
-            border-color: var(--primary);
+            border-color: var(--calisthenics);
         }
         
         .set-check {
@@ -923,7 +903,38 @@
             color: #000;
         }
         
-        /* Floating Timer */
+        .progression-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+            padding: var(--space-1) var(--space-2);
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: var(--radius-sm);
+            font-size: 0.625rem;
+            color: var(--accent-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-left: var(--space-2);
+        }
+        
+        .difficulty-indicator {
+            display: flex;
+            gap: var(--space-1);
+            margin-top: var(--space-2);
+        }
+        
+        .difficulty-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--n-600);
+        }
+        
+        .difficulty-dot.active {
+            background: var(--calisthenics);
+        }
+        
         .fab {
             position: fixed;
             bottom: calc(80px + env(safe-area-inset-bottom));
@@ -934,7 +945,7 @@
         .fab-btn {
             width: 56px;
             height: 56px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background: linear-gradient(135deg, var(--calisthenics), #d97706);
             border: none;
             border-radius: 50%;
             display: flex;
@@ -942,7 +953,7 @@
             justify-content: center;
             font-size: 1.5rem;
             cursor: pointer;
-            box-shadow: var(--shadow-glow);
+            box-shadow: var(--shadow-glow-calisthenics);
             transition: all 0.3s;
         }
         
@@ -955,11 +966,10 @@
         }
         
         @keyframes fabPulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.4); }
-            50% { box-shadow: 0 0 0 15px rgba(255, 107, 53, 0); }
+            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 0 0 15px rgba(245, 158, 11, 0); }
         }
         
-        /* Modal */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -1005,8 +1015,8 @@
             font-size: 4rem;
             font-weight: 700;
             text-align: center;
-            color: var(--primary);
-            text-shadow: 0 0 30px rgba(255, 107, 53, 0.3);
+            color: var(--calisthenics);
+            text-shadow: 0 0 30px rgba(245, 158, 11, 0.3);
             margin: var(--space-6) 0;
         }
         
@@ -1030,11 +1040,10 @@
         }
         
         .preset-btn:hover {
-            border-color: var(--primary);
-            background: rgba(255, 107, 53, 0.1);
+            border-color: var(--calisthenics);
+            background: rgba(245, 158, 11, 0.1);
         }
         
-        /* Setup Wizard */
         .wizard {
             position: fixed;
             inset: 0;
@@ -1057,14 +1066,14 @@
         .wizard-logo {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background: linear-gradient(135deg, var(--calisthenics), #d97706);
             border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2.5rem;
             margin: 0 auto var(--space-4);
-            box-shadow: var(--shadow-glow);
+            box-shadow: var(--shadow-glow-calisthenics);
         }
         
         .wizard-title {
@@ -1094,7 +1103,7 @@
         }
         
         .wizard-step-dot.active {
-            background: var(--primary);
+            background: var(--calisthenics);
             width: 24px;
             border-radius: var(--radius-full);
         }
@@ -1139,8 +1148,8 @@
         
         .form-input:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+            border-color: var(--calisthenics);
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
         }
         
         .gender-select {
@@ -1164,8 +1173,8 @@
         }
         
         .gender-option.selected {
-            border-color: var(--primary);
-            background: rgba(255, 107, 53, 0.05);
+            border-color: var(--calisthenics);
+            background: rgba(245, 158, 11, 0.05);
         }
         
         .gender-icon {
@@ -1231,7 +1240,7 @@
             font-family: var(--font-mono);
             font-size: 4rem;
             font-weight: 700;
-            color: var(--primary);
+            color: var(--calisthenics);
             line-height: 1;
         }
         
@@ -1263,22 +1272,90 @@
             gap: var(--space-3);
         }
         
-        /* Utility Classes */
+        .skill-tree {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+            margin-bottom: var(--space-5);
+        }
+        
+        .skill-category {
+            margin-bottom: var(--space-5);
+        }
+        
+        .skill-category:last-child {
+            margin-bottom: 0;
+        }
+        
+        .skill-category-title {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--calisthenics);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: var(--space-3);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .skill-levels {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+        
+        .skill-level {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .skill-level:hover {
+            border-color: var(--calisthenics);
+        }
+        
+        .skill-level.unlocked {
+            border-color: var(--calisthenics);
+            background: rgba(245, 158, 11, 0.1);
+        }
+        
+        .skill-level.current {
+            border-color: var(--calisthenics);
+            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+        }
+        
+        .skill-level-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        
+        .skill-level-reps {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-left: auto;
+        }
+        
         .hidden { display: none !important; }
         .text-center { text-align: center; }
-        .text-primary { color: var(--primary); }
+        .text-primary { color: var(--calisthenics); }
         .text-secondary { color: var(--secondary); }
         .text-muted { color: var(--text-muted); }
         .mb-4 { margin-bottom: var(--space-4); }
         .mt-4 { margin-top: var(--space-4); }
         
-        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* Responsive */
         @media (max-width: 480px) {
             :root {
                 font-size: 14px;
@@ -1300,31 +1377,28 @@
     </style>
 </head>
 <body>
-    <!-- SVG Definitions -->
     <svg width="0" height="0">
         <defs>
             <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#ff6b35"/>
+                <stop offset="0%" stop-color="#f59e0b"/>
                 <stop offset="100%" stop-color="#00d4aa"/>
             </linearGradient>
         </defs>
     </svg>
 
-    <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-logo"></div>
-        <div class="loading-text">T-800 ELITE v3.0</div>
+        <div class="loading-text">T-800 ELITE BW v3.1</div>
         <div class="loading-bar">
             <div class="loading-bar-fill"></div>
         </div>
     </div>
 
-    <!-- Setup Wizard -->
     <div class="wizard hidden" id="wizard">
         <div class="wizard-header">
-            <div class="wizard-logo">💪</div>
-            <div class="wizard-title">T-800 ELITE</div>
-            <div class="wizard-subtitle">Profesyonel Atlet Sistemi</div>
+            <div class="wizard-logo">🤸</div>
+            <div class="wizard-title">T-800 ELITE BW</div>
+            <div class="wizard-subtitle">Profesyonel Vücut Ağırlığı Sistemi</div>
         </div>
         
         <div class="wizard-progress" id="wizardProgress">
@@ -1335,7 +1409,6 @@
         </div>
         
         <div class="wizard-content">
-            <!-- Step 1: Profile -->
             <div class="wizard-step active" data-step="1">
                 <div class="form-group">
                     <label class="form-label">Ad Soyad</label>
@@ -1357,7 +1430,6 @@
                 </div>
             </div>
             
-            <!-- Step 2: Body Metrics -->
             <div class="wizard-step" data-step="2">
                 <div class="stats-grid">
                     <div class="form-group">
@@ -1376,12 +1448,15 @@
                 </div>
                 
                 <div class="form-group">
-                    <label class="form-label">Vücut Yağ Oranı (%) - Opsiyonel</label>
-                    <input type="number" class="form-input" id="inputBodyFat" placeholder="15">
+                    <label class="form-label">Mevcut Seviye</label>
+                    <select class="form-input" id="inputLevel">
+                        <option value="beginner">Başlangıç (0-6 ay)</option>
+                        <option value="intermediate">Orta (6 ay-2 yıl)</option>
+                        <option value="advanced">İleri (2+ yıl)</option>
+                    </select>
                 </div>
             </div>
             
-            <!-- Step 3: BMI Analysis -->
             <div class="wizard-step" data-step="3">
                 <div class="bmi-result">
                     <div class="bmi-value" id="bmiValue">--</div>
@@ -1421,40 +1496,40 @@
                 </div>
             </div>
             
-            <!-- Step 4: Goal -->
             <div class="wizard-step" data-step="4">
                 <div class="form-group">
-                    <label class="form-label">Fitness Hedefiniz</label>
+                    <label class="form-label">Temel Hedef</label>
                     <div class="goal-select">
-                        <div class="goal-option" data-goal="cut">
-                            <div class="goal-icon">📉</div>
-                            <div class="goal-title">Definasyon</div>
-                            <div class="goal-desc">Yağ yakımı & kas koruma</div>
+                        <div class="goal-option selected" data-goal="strength">
+                            <div class="goal-icon">💪</div>
+                            <div class="goal-title">Maksimum Güç</div>
+                            <div class="goal-desc">One Arm Pull-Up, Planche, Front Lever</div>
                         </div>
-                        <div class="goal-option" data-goal="maintain">
-                            <div class="goal-icon">⚖️</div>
-                            <div class="goal-title">Koruma</div>
-                            <div class="goal-desc">Mevcut formu koru</div>
-                        </div>
-                        <div class="goal-option" data-goal="bulk">
+                        <div class="goal-option" data-goal="hypertrophy">
                             <div class="goal-icon">📈</div>
-                            <div class="goal-title">Bulk</div>
-                            <div class="goal-desc">Kas kazanımı</div>
+                            <div class="goal-title">Kas Hacmi</div>
+                            <div class="goal-desc">Yüksek hacim, metabolik stres</div>
                         </div>
-                        <div class="goal-option" data-goal="recomp">
-                            <div class="goal-icon">🔄</div>
-                            <div class="goal-title">Recomp</div>
-                            <div class="goal-desc">Yağ/kas oranı değişimi</div>
+                        <div class="goal-option" data-goal="endurance">
+                            <div class="goal-icon">🔥</div>
+                            <div class="goal-title">Dayanıklılık</div>
+                            <div class="goal-desc">Yüksek tekrar, circuit training</div>
+                        </div>
+                        <div class="goal-option" data-goal="skills">
+                            <div class="goal-icon">🎯</div>
+                            <div class="goal-title">Skill Focus</div>
+                            <div class="goal-desc">Teknik beceriler, statik tutuşlar</div>
                         </div>
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <label class="form-label">Deneyim Seviyesi</label>
-                    <select class="form-input" id="experienceLevel">
-                        <option value="beginner">Başlangıç (0-1 yıl)</option>
-                        <option value="intermediate">Orta Seviye (1-3 yıl)</option>
-                        <option value="advanced">İleri Seviye (3+ yıl)</option>
+                    <label class="form-label">Antrenman Sıklığı</label>
+                    <select class="form-input" id="inputFrequency">
+                        <option value="3">Haftada 3 gün (Full Body)</option>
+                        <option value="4">Haftada 4 gün (Upper/Lower)</option>
+                        <option value="5">Haftada 5 gün (Push/Pull/Legs)</option>
+                        <option value="6">Haftada 6 gün (PPL x2)</option>
                     </select>
                 </div>
             </div>
@@ -1466,53 +1541,47 @@
         </div>
     </div>
 
-    <!-- Main App -->
     <div id="app" class="hidden">
-        <!-- Header -->
         <header class="app-header">
             <div class="header-content">
                 <div class="brand">
-                    <div class="brand-icon">💪</div>
+                    <div class="brand-icon">🤸</div>
                     <div class="brand-text">
-                        <h1>T-800 ELITE</h1>
-                        <span>PRO ATHLETE SYSTEM</span>
+                        <h1>T-800 ELITE BW</h1>
+                        <span>PRO CALISTHENICS</span>
                     </div>
                 </div>
                 <div class="header-actions">
-                    <button class="icon-btn" id="btnNotifications">🔔</button>
+                    <button class="icon-btn" id="btnSkillTree" title="Skill Tree">🎯</button>
                     <button class="icon-btn" id="btnProfile">👤</button>
                 </div>
             </div>
         </header>
 
-        <!-- Main Content -->
         <main class="main-content" id="mainContent">
-            <!-- Dashboard View -->
             <div id="viewDashboard">
-                <!-- AI Coach -->
                 <div class="ai-panel mb-4">
                     <div class="ai-header">
                         <div class="ai-avatar">🤖</div>
                         <div class="ai-title">
-                            <h3>T-800 AI KOÇ</h3>
-                            <span><span class="ai-dot"></span> Gerçek Zamanlı Analiz</span>
+                            <h3>T-800 BW KOÇ</h3>
+                            <span><span class="ai-dot"></span> Progressive Overload Aktif</span>
                         </div>
                     </div>
                     <div class="ai-message" id="aiMessage">
-                        Vücut profiliniz analiz ediliyor. Kişiselleştirilmiş antrenman protokolü hazırlanıyor...
+                        Vücut ağırlığı profiliniz analiz ediliyor. Calisthenics progression sistemi hazırlanıyor...
                     </div>
                     <div class="ai-action">
-                        <button class="btn btn-primary btn-sm" onclick="generateWorkout()">Yeni Program Oluştur</button>
-                        <button class="btn btn-ghost btn-sm">Detaylı Analiz</button>
+                        <button class="btn btn-primary btn-sm" onclick="generateWorkout()">Program Oluştur</button>
+                        <button class="btn btn-ghost btn-sm" onclick="showSkillTree()">Skill Tree</button>
                     </div>
                 </div>
 
-                <!-- Performance Score -->
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">
                             <div class="card-title-icon">🏆</div>
-                            Performans Skoru
+                            BW Güç Skoru
                         </div>
                     </div>
                     <div class="card-body">
@@ -1524,8 +1593,8 @@
                                 </svg>
                                 <div class="score-content">
                                     <div class="score-value" id="scoreValue">0</div>
-                                    <div class="score-label">ELITE SCORE</div>
-                                    <div class="score-rank" id="scoreRank">RECRUIT</div>
+                                    <div class="score-label">BW STRENGTH</div>
+                                    <div class="score-rank" id="scoreRank">ROOKIE</div>
                                 </div>
                             </div>
                         </div>
@@ -1534,95 +1603,92 @@
                             <div class="stat-item">
                                 <div class="stat-header">
                                     <div class="stat-icon primary">💪</div>
-                                    <span class="stat-name">Güç Endeksi</span>
+                                    <span class="stat-name">Üst Vücut</span>
                                 </div>
-                                <div class="stat-value" id="strengthScore">0</div>
-                                <div class="stat-change positive">↑ 12% bu ay</div>
+                                <div class="stat-value" id="upperBodyScore">0</div>
+                                <div class="stat-change positive">↑ Pull-Up strength</div>
                             </div>
                             <div class="stat-item">
                                 <div class="stat-header">
-                                    <div class="stat-icon secondary">🏃</div>
-                                    <span class="stat-name">Dayanıklılık</span>
+                                    <div class="stat-icon secondary">🦵</div>
+                                    <span class="stat-name">Alt Vücut</span>
                                 </div>
-                                <div class="stat-value" id="enduranceScore">0</div>
-                                <div class="stat-change positive">↑ 8% bu ay</div>
+                                <div class="stat-value" id="lowerBodyScore">0</div>
+                                <div class="stat-change positive">↑ Pistol Squat</div>
                             </div>
                             <div class="stat-item">
                                 <div class="stat-header">
                                     <div class="stat-icon accent">⚡</div>
-                                    <span class="stat-name">Hız/Güç</span>
+                                    <span class="stat-name">Core</span>
                                 </div>
-                                <div class="stat-value" id="powerScore">0</div>
-                                <div class="stat-change positive">↑ 15% bu ay</div>
+                                <div class="stat-value" id="coreScore">0</div>
+                                <div class="stat-change positive">↑ Front Lever</div>
                             </div>
                             <div class="stat-item">
                                 <div class="stat-header">
-                                    <div class="stat-icon warning">🎯</div>
-                                    <span class="stat-name">Teknik</span>
+                                    <div class="stat-icon warning">🤸</div>
+                                    <span class="stat-name">Skill</span>
                                 </div>
-                                <div class="stat-value" id="techniqueScore">0</div>
-                                <div class="stat-change positive">↑ 5% bu ay</div>
+                                <div class="stat-value" id="skillScore">0</div>
+                                <div class="stat-change positive">↑ Handstand</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Body Composition -->
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">
                             <div class="card-title-icon">📊</div>
-                            Vücut Kompozisyonu
+                            Vücut Analizi
                         </div>
-                        <button class="btn btn-ghost btn-sm">Güncelle</button>
                     </div>
                     <div class="card-body">
                         <div class="stats-grid">
                             <div class="stat-item">
                                 <div class="stat-header">
-                                    <div class="stat-icon primary">📏</div>
-                                    <span class="stat-name">Boy</span>
+                                    <div class="stat-icon primary">⚖️</div>
+                                    <span class="stat-name">Göreli Güç</span>
                                 </div>
-                                <div class="stat-value" id="displayHeight">-- <span class="stat-unit">cm</span></div>
+                                <div class="stat-value" id="relativeStrength">--</div>
+                                <div class="stat-change positive">Pull-up / BW ratio</div>
                             </div>
                             <div class="stat-item">
                                 <div class="stat-header">
-                                    <div class="stat-icon secondary">⚖️</div>
-                                    <span class="stat-name">Kilo</span>
-                                </div>
-                                <div class="stat-value" id="displayWeight">-- <span class="stat-unit">kg</span></div>
-                                <div class="stat-change negative" id="weightChange">↓ 0.0 kg</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-header">
-                                    <div class="stat-icon accent">🎯</div>
+                                    <div class="stat-icon secondary">📏</div>
                                     <span class="stat-name">BMI</span>
                                 </div>
                                 <div class="stat-value" id="displayBMI">--</div>
                             </div>
                             <div class="stat-item">
                                 <div class="stat-header">
-                                    <div class="stat-icon warning">🔥</div>
-                                    <span class="stat-name">BMR</span>
+                                    <div class="stat-icon accent">🎯</div>
+                                    <span class="stat-name">Hedef</span>
                                 </div>
-                                <div class="stat-value" id="displayBMR">-- <span class="stat-unit">kcal</span></div>
+                                <div class="stat-value" id="displayGoal">--</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-header">
+                                    <div class="stat-icon warning">🔥</div>
+                                    <span class="stat-name">Haftalık Vol</span>
+                                </div>
+                                <div class="stat-value" id="weeklyVolume">--</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Workout View -->
             <div id="viewWorkout" class="hidden">
                 <div class="workout-card" id="workoutCard">
                     <div class="workout-header">
                         <div class="workout-type" id="workoutType">GÜÇ ANTRENMANI</div>
-                        <div class="workout-title" id="workoutTitle">GÖĞÜS & TRICEPS</div>
-                        <div class="workout-subtitle" id="workoutSubtitle">Hacim Odaklı • 4 Hafta Program</div>
+                        <div class="workout-title" id="workoutTitle">PUSH FOCUS</div>
+                        <div class="workout-subtitle" id="workoutSubtitle">Planche & Dip Progression</div>
                         
                         <div class="workout-meta">
                             <div class="workout-meta-item">
-                                <div class="workout-meta-value" id="workoutDuration">45</div>
+                                <div class="workout-meta-value" id="workoutDuration">60</div>
                                 <div class="workout-meta-label">Dakika</div>
                             </div>
                             <div class="workout-meta-item">
@@ -1630,18 +1696,17 @@
                                 <div class="workout-meta-label">Egzersiz</div>
                             </div>
                             <div class="workout-meta-item">
-                                <div class="workout-meta-value" id="workoutSets">18</div>
+                                <div class="workout-meta-value" id="workoutSets">24</div>
                                 <div class="workout-meta-label">Toplam Set</div>
                             </div>
                             <div class="workout-meta-item">
-                                <div class="workout-meta-value" id="workoutVolume">2.4k</div>
-                                <div class="workout-meta-label">Hacim (kg)</div>
+                                <div class="workout-meta-value" id="workoutIntensity">85%</div>
+                                <div class="workout-meta-label">Yoğunluk</div>
                             </div>
                         </div>
                     </div>
                     
                     <div class="exercise-list" id="exerciseList">
-                        <!-- Generated dynamically -->
                     </div>
                 </div>
                 
@@ -1650,83 +1715,40 @@
                 </button>
             </div>
 
-            <!-- Nutrition View -->
-            <div id="viewNutrition" class="hidden">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <div class="card-title-icon">🥗</div>
-                            Günlük Beslenme Hedefleri
+            <div id="viewSkillTree" class="hidden">
+                <div class="skill-tree">
+                    <div class="skill-category">
+                        <div class="skill-category-title">🎯 Planche Progression</div>
+                        <div class="skill-levels" id="plancheTree">
                         </div>
                     </div>
-                    <div class="card-body">
-                        <div class="stats-grid">
-                            <div class="stat-item">
-                                <div class="stat-header">
-                                    <div class="stat-icon primary">🍽️</div>
-                                    <span class="stat-name">Kalori</span>
-                                </div>
-                                <div class="stat-value" id="targetCalories">--</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-header">
-                                    <div class="stat-icon secondary">🥩</div>
-                                    <span class="stat-name">Protein</span>
-                                </div>
-                                <div class="stat-value" id="targetProtein">--</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-header">
-                                    <div class="stat-icon accent">🍚</div>
-                                    <span class="stat-name">Karbonhidrat</span>
-                                </div>
-                                <div class="stat-value" id="targetCarbs">--</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-header">
-                                    <div class="stat-icon warning">🥑</div>
-                                    <span class="stat-name">Yağ</span>
-                                </div>
-                                <div class="stat-value" id="targetFats">--</div>
-                            </div>
+                    
+                    <div class="skill-category">
+                        <div class="skill-category-title">💪 Front Lever</div>
+                        <div class="skill-levels" id="frontLeverTree">
                         </div>
-                        
-                        <div style="margin-top: var(--space-6);">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-2); font-size: 0.875rem;">
-                                <span>Protein</span>
-                                <span style="color: var(--primary);" id="proteinProgress">0 / 0g</span>
-                            </div>
-                            <div style="height: 8px; background: var(--n-700); border-radius: var(--radius-full); overflow: hidden; margin-bottom: var(--space-4);">
-                                <div id="proteinBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-light)); border-radius: var(--radius-full); transition: width 0.5s;"></div>
-                            </div>
-                            
-                            <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-2); font-size: 0.875rem;">
-                                <span>Karbonhidrat</span>
-                                <span style="color: var(--secondary);" id="carbProgress">0 / 0g</span>
-                            </div>
-                            <div style="height: 8px; background: var(--n-700); border-radius: var(--radius-full); overflow: hidden; margin-bottom: var(--space-4);">
-                                <div id="carbBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--secondary), var(--secondary-dark)); border-radius: var(--radius-full); transition: width 0.5s;"></div>
-                            </div>
-                            
-                            <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-2); font-size: 0.875rem;">
-                                <span>Yağ</span>
-                                <span style="color: var(--warning);" id="fatProgress">0 / 0g</span>
-                            </div>
-                            <div style="height: 8px; background: var(--n-700); border-radius: var(--radius-full); overflow: hidden;">
-                                <div id="fatBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--warning), #f59e0b); border-radius: var(--radius-full); transition: width 0.5s;"></div>
-                            </div>
+                    </div>
+                    
+                    <div class="skill-category">
+                        <div class="skill-category-title">🤸 Handstand</div>
+                        <div class="skill-levels" id="handstandTree">
+                        </div>
+                    </div>
+                    
+                    <div class="skill-category">
+                        <div class="skill-category-title">🔥 One Arm Pull-Up</div>
+                        <div class="skill-levels" id="oapTree">
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Stats View -->
             <div id="viewStats" class="hidden">
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">
                             <div class="card-title-icon">📈</div>
-                            Gelişim Grafiği
+                            Güç Gelişimi
                         </div>
                     </div>
                     <div class="card-body">
@@ -1738,22 +1760,19 @@
                     <div class="card-header">
                         <div class="card-title">
                             <div class="card-title-icon">🏆</div>
-                            Kişisel Rekorlar
+                            PR'lar (Vücut Ağırlığına Göre)
                         </div>
                     </div>
                     <div class="card-body" id="personalRecords">
-                        <!-- Generated dynamically -->
                     </div>
                 </div>
             </div>
         </main>
 
-        <!-- Floating Action Button -->
         <div class="fab">
             <button class="fab-btn" id="fabTimer" onclick="openTimer()">⏱️</button>
         </div>
 
-        <!-- Bottom Navigation -->
         <nav class="bottom-nav">
             <div class="nav-items">
                 <div class="nav-item active" data-view="dashboard">
@@ -1764,19 +1783,18 @@
                     <div class="nav-icon">💪</div>
                     <span>Antrenman</span>
                 </div>
-                <div class="nav-item" data-view="nutrition">
-                    <div class="nav-icon">🥗</div>
-                    <span>Beslenme</span>
+                <div class="nav-item" data-view="skillTree">
+                    <div class="nav-icon">🎯</div>
+                    <span>Skills</span>
                 </div>
                 <div class="nav-item" data-view="stats">
                     <div class="nav-icon">📈</div>
-                    <span>İstatistik</span>
+                    <span>Stats</span>
                 </div>
             </div>
         </nav>
     </div>
 
-    <!-- Timer Modal -->
     <div class="modal-overlay" id="timerModal">
         <div class="modal">
             <div class="modal-header">
@@ -1800,6 +1818,255 @@
     </div>
 
     <script>
+        // ==================== PROFESSIONAL BODYWEIGHT DATABASE ====================
+        const BWExerciseDB = {
+            push: {
+                horizontal: {
+                    name: 'Planche Push-Up Progression',
+                    levels: [
+                        { name: 'Pseudo Planche Lean', sets: 4, reps: '30-45s', rest: 90, difficulty: 1 },
+                        { name: 'Tuck Planche', sets: 4, reps: '10-20s', rest: 120, difficulty: 2 },
+                        { name: 'Advanced Tuck Planche', sets: 4, reps: '10-20s', rest: 120, difficulty: 3 },
+                        { name: 'Straddle Planche', sets: 4, reps: '5-15s', rest: 180, difficulty: 4 },
+                        { name: 'Full Planche', sets: 4, reps: '3-10s', rest: 180, difficulty: 5 }
+                    ]
+                },
+                vertical: {
+                    name: 'Dip & Push-Up',
+                    levels: [
+                        { name: 'Push-Up', sets: 4, reps: '15-25', rest: 60, difficulty: 1 },
+                        { name: 'Diamond Push-Up', sets: 4, reps: '12-20', rest: 60, difficulty: 2 },
+                        { name: 'Pseudo Planche Push-Up', sets: 4, reps: '8-15', rest: 90, difficulty: 3 },
+                        { name: '90° Push-Up', sets: 4, reps: '5-10', rest: 120, difficulty: 4 },
+                        { name: 'Planche Push-Up', sets: 4, reps: '3-8', rest: 120, difficulty: 5 }
+                    ]
+                },
+                dip: {
+                    name: 'Dip Progression',
+                    levels: [
+                        { name: 'Bench Dip', sets: 4, reps: '15-20', rest: 60, difficulty: 1 },
+                        { name: 'Parallel Bar Dip', sets: 4, reps: '12-20', rest: 60, difficulty: 2 },
+                        { name: 'Weighted Dip', sets: 4, reps: '8-12', rest: 90, difficulty: 3 },
+                        { name: 'Korean Dip', sets: 4, reps: '6-10', rest: 90, difficulty: 4 },
+                        { name: 'Maltese Dip', sets: 4, reps: '3-6', rest: 120, difficulty: 5 }
+                    ]
+                }
+            },
+            pull: {
+                vertical: {
+                    name: 'Pull-Up Progression',
+                    levels: [
+                        { name: 'Dead Hang', sets: 3, reps: '20-30s', rest: 60, difficulty: 1 },
+                        { name: 'Scapular Pull-Up', sets: 3, reps: '10-15', rest: 60, difficulty: 1 },
+                        { name: 'Chin-Up', sets: 4, reps: '8-12', rest: 90, difficulty: 2 },
+                        { name: 'Pull-Up', sets: 4, reps: '8-12', rest: 90, difficulty: 2 },
+                        { name: 'Chest to Bar', sets: 4, reps: '6-10', rest: 90, difficulty: 3 },
+                        { name: 'Weighted Pull-Up', sets: 4, reps: '5-8', rest: 120, difficulty: 3 },
+                        { name: 'Muscle-Up', sets: 4, reps: '3-6', rest: 120, difficulty: 4 },
+                        { name: 'One Arm Chin-Up', sets: 4, reps: '2-4', rest: 180, difficulty: 5 }
+                    ]
+                },
+                horizontal: {
+                    name: 'Front Lever & Row',
+                    levels: [
+                        { name: 'Australian Pull-Up', sets: 4, reps: '12-15', rest: 60, difficulty: 1 },
+                        { name: 'Front Lever Tuck', sets: 4, reps: '10-20s', rest: 90, difficulty: 2 },
+                        { name: 'Advanced Tuck FL', sets: 4, reps: '10-20s', rest: 90, difficulty: 3 },
+                        { name: 'Straddle Front Lever', sets: 4, reps: '5-15s', rest: 120, difficulty: 4 },
+                        { name: 'Full Front Lever', sets: 4, reps: '5-10s', rest: 120, difficulty: 5 }
+                    ]
+                }
+            },
+            legs: {
+                squat: {
+                    name: 'Pistol Squat Progression',
+                    levels: [
+                        { name: 'Deep Squat', sets: 4, reps: '15-20', rest: 60, difficulty: 1 },
+                        { name: 'Assisted Pistol', sets: 4, reps: '8-10', rest: 60, difficulty: 2 },
+                        { name: 'Pistol Squat', sets: 4, reps: '5-8', rest: 90, difficulty: 3 },
+                        { name: 'Weighted Pistol', sets: 4, reps: '5-8', rest: 90, difficulty: 4 },
+                        { name: 'Shrimp Squat', sets: 4, reps: '5-8', rest: 90, difficulty: 4 }
+                    ]
+                },
+                hinge: {
+                    name: 'Nordic Curl & Posterior',
+                    levels: [
+                        { name: 'Glute Bridge', sets: 4, reps: '15-20', rest: 60, difficulty: 1 },
+                        { name: 'Single Leg Glute Bridge', sets: 4, reps: '12-15', rest: 60, difficulty: 2 },
+                        { name: 'Nordic Curl Negatives', sets: 4, reps: '5-8', rest: 90, difficulty: 3 },
+                        { name: 'Assisted Nordic Curl', sets: 4, reps: '5-8', rest: 90, difficulty: 4 },
+                        { name: 'Nordic Curl', sets: 4, reps: '3-6', rest: 120, difficulty: 5 }
+                    ]
+                }
+            },
+            core: {
+                anterior: {
+                    name: 'Front Core & L-sit',
+                    levels: [
+                        { name: 'Hollow Body Hold', sets: 4, reps: '20-30s', rest: 60, difficulty: 1 },
+                        { name: 'L-Sit Tuck', sets: 4, reps: '10-20s', rest: 60, difficulty: 2 },
+                        { name: 'L-Sit One Leg', sets: 4, reps: '10-15s', rest: 90, difficulty: 3 },
+                        { name: 'L-Sit', sets: 4, reps: '10-20s', rest: 90, difficulty: 4 },
+                        { name: 'V-Sit', sets: 4, reps: '5-10s', rest: 120, difficulty: 5 }
+                    ]
+                },
+                lateral: {
+                    name: 'Side Core & Human Flag',
+                    levels: [
+                        { name: 'Side Plank', sets: 3, reps: '30-45s', rest: 60, difficulty: 1 },
+                        { name: 'Side Plank Raise', sets: 3, reps: '10-12', rest: 60, difficulty: 2 },
+                        { name: 'Human Flag Lower', sets: 3, reps: '3-5', rest: 90, difficulty: 3 },
+                        { name: 'Straddle Human Flag', sets: 3, reps: '5-10s', rest: 120, difficulty: 4 },
+                        { name: 'Human Flag', sets: 3, reps: '5-10s', rest: 120, difficulty: 5 }
+                    ]
+                }
+            },
+            skills: {
+                handstand: {
+                    name: 'Handstand Progression',
+                    levels: [
+                        { name: 'Wrist Conditioning', sets: 3, reps: '60s', rest: 30, difficulty: 1 },
+                        { name: 'Wall Handstand', sets: 4, reps: '30-60s', rest: 60, difficulty: 2 },
+                        { name: 'Wall Heel Pulls', sets: 4, reps: '5-8', rest: 60, difficulty: 3 },
+                        { name: 'Freestanding HS', sets: 4, reps: '10-30s', rest: 90, difficulty: 4 },
+                        { name: 'Handstand Push-Up', sets: 4, reps: '3-8', rest: 120, difficulty: 5 }
+                    ]
+                }
+            }
+        };
+
+        // ==================== PROFESSIONAL PROGRAM TEMPLATES ====================
+        const Programs = {
+            strength: {
+                name: 'Maximum Strength (Güç)',
+                description: 'Düşük tekrar, maksimal güç, skill acquisition',
+                frequency: {
+                    3: [
+                        { day: 'Push', focus: 'Planche & Dip', exercises: ['push.horizontal', 'push.vertical', 'push.dip', 'core.anterior'] },
+                        { day: 'Pull', focus: 'Front Lever & Pull-Up', exercises: ['pull.vertical', 'pull.horizontal', 'core.lateral', 'skills.handstand'] },
+                        { day: 'Legs & Core', focus: 'Pistol & Nordic', exercises: ['legs.squat', 'legs.hinge', 'core.anterior', 'core.lateral'] }
+                    ],
+                    4: [
+                                                { day: 'Upper Push', focus: 'Planche Focus', exercises: ['push.horizontal', 'push.vertical', 'core.anterior'] },
+                        { day: 'Upper Pull', focus: 'Front Lever Focus', exercises: ['pull.vertical', 'pull.horizontal', 'core.lateral'] },
+                        { day: 'Legs', focus: 'Pistol & Nordic', exercises: ['legs.squat', 'legs.hinge', 'core.anterior'] },
+                        { day: 'Skills', focus: 'Handstand & Technique', exercises: ['skills.handstand', 'push.vertical', 'pull.vertical', 'core.lateral'] }
+                    ],
+                    5: [
+                        { day: 'Push', focus: 'Planche & Dip', exercises: ['push.horizontal', 'push.vertical', 'push.dip', 'core.anterior'] },
+                        { day: 'Pull', focus: 'Front Lever & Rows', exercises: ['pull.horizontal', 'pull.vertical', 'core.lateral'] },
+                        { day: 'Legs', focus: 'Pistol Squat', exercises: ['legs.squat', 'legs.hinge', 'core.anterior'] },
+                        { day: 'Push', focus: 'Dip & HSPU', exercises: ['push.dip', 'push.vertical', 'skills.handstand', 'core.anterior'] },
+                        { day: 'Pull', focus: 'Pull-Up Power', exercises: ['pull.vertical', 'pull.horizontal', 'core.lateral'] }
+                    ],
+                    6: [
+                        { day: 'Push A', focus: 'Planche', exercises: ['push.horizontal', 'push.vertical', 'core.anterior'] },
+                        { day: 'Pull A', focus: 'Front Lever', exercises: ['pull.horizontal', 'pull.vertical', 'core.lateral'] },
+                        { day: 'Legs A', focus: 'Pistol', exercises: ['legs.squat', 'core.anterior'] },
+                        { day: 'Push B', focus: 'Dip & HSPU', exercises: ['push.dip', 'skills.handstand', 'push.vertical'] },
+                        { day: 'Pull B', focus: 'Pull-Up & OAC', exercises: ['pull.vertical', 'pull.horizontal', 'core.lateral'] },
+                        { day: 'Legs B', focus: 'Nordic', exercises: ['legs.hinge', 'core.lateral'] }
+                    ]
+                }
+            },
+            hypertrophy: {
+                name: 'Hypertrophy (Hacim)',
+                description: 'Orta tekrar, metabolik stres, kas büyümesi',
+                frequency: {
+                    3: [
+                        { day: 'Full Body A', focus: 'Push Emphasis', exercises: ['push.vertical', 'pull.vertical', 'legs.squat', 'core.anterior'] },
+                        { day: 'Full Body B', focus: 'Pull Emphasis', exercises: ['pull.horizontal', 'push.dip', 'legs.hinge', 'core.lateral'] },
+                        { day: 'Full Body C', focus: 'Legs & Skills', exercises: ['legs.squat', 'legs.hinge', 'push.vertical', 'pull.vertical'] }
+                    ],
+                    4: [
+                        { day: 'Upper A', focus: 'Push Volume', exercises: ['push.vertical', 'push.dip', 'pull.vertical', 'core.anterior'] },
+                        { day: 'Lower A', focus: 'Legs Volume', exercises: ['legs.squat', 'legs.hinge', 'core.anterior', 'core.lateral'] },
+                        { day: 'Upper B', focus: 'Pull Volume', exercises: ['pull.vertical', 'pull.horizontal', 'push.vertical', 'core.lateral'] },
+                        { day: 'Lower B', focus: 'Legs & Core', exercises: ['legs.squat', 'legs.hinge', 'core.anterior', 'skills.handstand'] }
+                    ],
+                    5: [
+                        { day: 'Chest & Triceps', focus: 'Dip & Push-Up', exercises: ['push.dip', 'push.vertical', 'push.horizontal', 'core.anterior'] },
+                        { day: 'Back & Biceps', focus: 'Pull-Up & Row', exercises: ['pull.vertical', 'pull.horizontal', 'core.lateral'] },
+                        { day: 'Legs', focus: 'Squat & Hinge', exercises: ['legs.squat', 'legs.hinge', 'core.anterior'] },
+                        { day: 'Shoulders & Core', focus: 'Handstand & L-sit', exercises: ['skills.handstand', 'push.vertical', 'core.anterior', 'core.lateral'] },
+                        { day: 'Arms & Weak Points', focus: 'Isolation', exercises: ['pull.vertical', 'push.dip', 'pull.horizontal', 'push.vertical'] }
+                    ],
+                    6: [
+                        { day: 'Push A', focus: 'Chest Focus', exercises: ['push.vertical', 'push.dip', 'core.anterior'] },
+                        { day: 'Pull A', focus: 'Back Width', exercises: ['pull.vertical', 'core.lateral'] },
+                        { day: 'Legs A', focus: 'Squat Pattern', exercises: ['legs.squat', 'core.anterior'] },
+                        { day: 'Push B', focus: 'Shoulder Focus', exercises: ['skills.handstand', 'push.vertical', 'core.anterior'] },
+                        { day: 'Pull B', focus: 'Back Thickness', exercises: ['pull.horizontal', 'core.lateral'] },
+                        { day: 'Legs B', focus: 'Hinge Pattern', exercises: ['legs.hinge', 'core.lateral'] }
+                    ]
+                }
+            },
+            endurance: {
+                name: 'Endurance (Dayanıklılık)',
+                description: 'Yüksek tekrar, circuit training, kondisyon',
+                frequency: {
+                    3: [
+                        { day: 'Circuit A', focus: 'Upper Body', exercises: ['push.vertical', 'pull.vertical', 'push.dip', 'pull.horizontal'] },
+                        { day: 'Circuit B', focus: 'Lower Body', exercises: ['legs.squat', 'legs.hinge', 'core.anterior', 'core.lateral'] },
+                        { day: 'Circuit C', focus: 'Full Body', exercises: ['push.vertical', 'pull.vertical', 'legs.squat', 'core.anterior'] }
+                    ],
+                    4: [
+                        { day: 'AMRAP Upper', focus: 'Push/Pull', exercises: ['push.vertical', 'pull.vertical', 'push.dip', 'pull.horizontal'] },
+                        { day: 'AMRAP Lower', focus: 'Legs', exercises: ['legs.squat', 'legs.hinge', 'core.anterior'] },
+                        { day: 'EMOM Skills', focus: 'Technique', exercises: ['skills.handstand', 'push.vertical', 'pull.vertical'] },
+                        { day: 'LSD Cardio', focus: 'Long Slow Distance', exercises: ['legs.squat', 'core.anterior', 'core.lateral'] }
+                    ],
+                    5: [
+                        { day: '100 Rep Challenge', focus: 'Push', exercises: ['push.vertical', 'push.dip'] },
+                        { day: '100 Rep Challenge', focus: 'Pull', exercises: ['pull.vertical', 'pull.horizontal'] },
+                        { day: 'Leg Volume', focus: 'Pistol & Nordic', exercises: ['legs.squat', 'legs.hinge'] },
+                        { day: 'Core Crusher', focus: 'L-sit & Flag', exercises: ['core.anterior', 'core.lateral'] },
+                        { day: 'Skill Work', focus: 'Handstand', exercises: ['skills.handstand', 'push.vertical'] }
+                    ],
+                    6: [
+                        { day: 'Density Push', focus: 'Max Reps 20min', exercises: ['push.vertical', 'push.dip'] },
+                        { day: 'Density Pull', focus: 'Max Reps 20min', exercises: ['pull.vertical', 'pull.horizontal'] },
+                        { day: 'Legs Circuit', focus: 'Non-Stop', exercises: ['legs.squat', 'legs.hinge'] },
+                        { day: 'Core Circuit', focus: 'Rotations', exercises: ['core.anterior', 'core.lateral'] },
+                        { day: 'Skill EMOM', focus: 'Every Minute', exercises: ['skills.handstand', 'push.vertical'] },
+                        { day: 'Active Recovery', focus: 'Mobility', exercises: ['skills.handstand', 'core.anterior'] }
+                    ]
+                }
+            },
+            skills: {
+                name: 'Skill Focus (Beceri)',
+                description: 'Statik tutuşlar, teknik, motor kontrol',
+                frequency: {
+                    3: [
+                        { day: 'Planche & FL', focus: 'Statics', exercises: ['push.horizontal', 'pull.horizontal', 'core.anterior', 'core.lateral'] },
+                        { day: 'Handstand & Pull', focus: 'Vertical', exercises: ['skills.handstand', 'pull.vertical', 'push.vertical', 'core.anterior'] },
+                        { day: 'Legs & Recovery', focus: 'Active Recovery', exercises: ['legs.squat', 'legs.hinge', 'core.anterior'] }
+                    ],
+                    4: [
+                        { day: 'Planche Focus', focus: 'Push Static', exercises: ['push.horizontal', 'push.vertical', 'core.anterior'] },
+                        { day: 'Front Lever Focus', focus: 'Pull Static', exercises: ['pull.horizontal', 'pull.vertical', 'core.lateral'] },
+                        { day: 'Handstand Focus', focus: 'Balance', exercises: ['skills.handstand', 'push.vertical', 'core.anterior'] },
+                        { day: 'Legs & Prehab', focus: 'Injury Prevention', exercises: ['legs.squat', 'legs.hinge', 'core.anterior', 'core.lateral'] }
+                    ],
+                    5: [
+                        { day: 'Planche', focus: 'Tuck to Straddle', exercises: ['push.horizontal', 'push.vertical', 'core.anterior'] },
+                        { day: 'Front Lever', focus: 'Tuck to Full', exercises: ['pull.horizontal', 'pull.vertical', 'core.lateral'] },
+                        { day: 'Handstand', focus: 'Balance & Press', exercises: ['skills.handstand', 'push.vertical', 'core.anterior'] },
+                        { day: 'Dynamic Skills', focus: 'Muscle-Up & 90°', exercises: ['pull.vertical', 'push.vertical', 'core.lateral'] },
+                        { day: 'Legs & Mobility', focus: 'Flexibility', exercises: ['legs.squat', 'legs.hinge', 'core.anterior'] }
+                    ],
+                    6: [
+                        { day: 'Planche A', focus: 'Tuck Hold', exercises: ['push.horizontal', 'core.anterior'] },
+                        { day: 'Front Lever A', focus: 'Tuck Hold', exercises: ['pull.horizontal', 'core.lateral'] },
+                        { day: 'Handstand A', focus: 'Wall Work', exercises: ['skills.handstand', 'core.anterior'] },
+                        { day: 'Planche B', focus: 'Straddle Attempts', exercises: ['push.horizontal', 'push.vertical'] },
+                        { day: 'Front Lever B', focus: 'Straddle Attempts', exercises: ['pull.horizontal', 'pull.vertical'] },
+                        { day: 'Free Practice', focus: 'Freestyle', exercises: ['skills.handstand', 'push.horizontal', 'pull.horizontal'] }
+                    ]
+                }
+            }
+        };
+
         // ==================== APPLICATION STATE ====================
         const App = {
             user: null,
@@ -1816,137 +2083,12 @@
             }
         };
 
-        // ==================== DATA MODELS ====================
-        const ExerciseDatabase = {
-            push: {
-                chest: [
-                    { name: 'Barbell Bench Press', variants: ['Flat', 'Incline', 'Decline'], muscles: ['Pectoralis Major', 'Anterior Deltoid', 'Triceps'] },
-                    { name: 'Dumbbell Press', variants: ['Flat', 'Incline', 'Decline'], muscles: ['Pectoralis Major', 'Anterior Deltoid'] },
-                    { name: 'Cable Fly', variants: ['High to Low', 'Low to High', 'Midline'], muscles: ['Pectoralis Major'] },
-                    { name: 'Push-Up', variants: ['Standard', 'Diamond', 'Wide', 'Decline'], muscles: ['Pectoralis Major', 'Triceps', 'Core'] }
-                ],
-                shoulders: [
-                    { name: 'Overhead Press', variants: ['Barbell', 'Dumbbell', 'Machine'], muscles: ['Deltoids', 'Triceps'] },
-                    { name: 'Lateral Raise', variants: ['Cable', 'Dumbbell', 'Machine'], muscles: ['Lateral Deltoid'] },
-                    { name: 'Face Pull', variants: ['Cable', 'Band'], muscles: ['Rear Deltoid', 'Rotator Cuff'] }
-                ],
-                triceps: [
-                    { name: 'Close-Grip Bench', variants: ['Barbell', 'EZ Bar'], muscles: ['Triceps', 'Chest'] },
-                    { name: 'Tricep Pushdown', variants: ['Rope', 'Bar', 'V-Bar'], muscles: ['Triceps'] },
-                    { name: 'Overhead Extension', variants: ['Dumbbell', 'Cable', 'EZ Bar'], muscles: ['Triceps Long Head'] },
-                    { name: 'Dip', variants: ['Bodyweight', 'Weighted', 'Assisted'], muscles: ['Triceps', 'Chest', 'Front Deltoid'] }
-                ]
-            },
-            pull: {
-                back: [
-                    { name: 'Deadlift', variants: ['Conventional', 'Sumo', 'Romanian'], muscles: ['Posterior Chain', 'Lats', 'Traps'] },
-                    { name: 'Pull-Up', variants: ['Wide', 'Close', 'Neutral', 'Weighted'], muscles: ['Lats', 'Biceps', 'Core'] },
-                    { name: 'Barbell Row', variants: ['Pendlay', 'Yates', 'Standard'], muscles: ['Lats', 'Rhomboids', 'Erector Spinae'] },
-                    { name: 'Lat Pulldown', variants: ['Wide', 'Close', 'Reverse'], muscles: ['Lats', 'Teres Major'] },
-                    { name: 'Cable Row', variants: ['Seated', 'Standing', 'Single-Arm'], muscles: ['Lats', 'Rhomboids', 'Middle Trapezius'] }
-                ],
-                biceps: [
-                    { name: 'Barbell Curl', variants: ['Standard', 'EZ Bar', 'Drag'], muscles: ['Biceps Brachii'] },
-                    { name: 'Dumbbell Curl', variants: ['Standing', 'Incline', 'Concentration'], muscles: ['Biceps Brachii', 'Brachialis'] },
-                    { name: 'Hammer Curl', variants: ['Standard', 'Cross-Body', 'Rope'], muscles: ['Brachialis', 'Brachioradialis'] },
-                    { name: 'Preacher Curl', variants: ['EZ Bar', 'Dumbbell', 'Machine'], muscles: ['Biceps Short Head'] }
-                ],
-                rearDelts: [
-                    { name: 'Reverse Pec Deck', variants: ['Standard', 'Single-Arm'], muscles: ['Rear Deltoid'] },
-                    { name: 'Bent-Over Fly', variants: ['Dumbbell', 'Cable'], muscles: ['Rear Deltoid', 'Rhomboids'] }
-                ]
-            },
-            legs: {
-                quads: [
-                    { name: 'Squat', variants: ['High Bar', 'Low Bar', 'Front', 'Pause'], muscles: ['Quadriceps', 'Glutes', 'Core'] },
-                    { name: 'Leg Press', variants: ['Standard', 'Close', 'Wide', 'Single-Leg'], muscles: ['Quadriceps', 'Glutes'] },
-                    { name: 'Lunge', variants: ['Walking', 'Reverse', 'Bulgarian', 'Step-Up'], muscles: ['Quadriceps', 'Glutes', 'Adductors'] },
-                    { name: 'Leg Extension', variants: ['Standard', 'Single-Leg', 'Drop Set'], muscles: ['Quadriceps'] }
-                ],
-                hamstrings: [
-                    { name: 'Romanian Deadlift', variants: ['Barbell', 'Dumbbell', 'Snatch Grip'], muscles: ['Hamstrings', 'Glutes', 'Erector Spinae'] },
-                    { name: 'Leg Curl', variants: ['Lying', 'Seated', 'Standing'], muscles: ['Hamstrings'] },
-                    { name: 'Good Morning', variants: ['Barbell', 'Band', 'Seated'], muscles: ['Hamstrings', 'Lower Back'] }
-                ],
-                calves: [
-                    { name: 'Standing Calf Raise', variants: ['Machine', 'Smith', 'Free Weight'], muscles: ['Gastrocnemius'] },
-                    { name: 'Seated Calf Raise', variants: ['Machine', 'Plate Loaded'], muscles: ['Soleus'] }
-                ],
-                glutes: [
-                    { name: 'Hip Thrust', variants: ['Barbell', 'Machine', 'Single-Leg'], muscles: ['Gluteus Maximus'] },
-                    { name: 'Cable Pull-Through', variants: ['Standard', 'Wide Stance'], muscles: ['Glutes', 'Hamstrings'] }
-                ]
-            },
-            core: [
-                { name: 'Plank', variants: ['Standard', 'Side', 'Reverse', 'Weighted'], muscles: ['Rectus Abdominis', 'Obliques', 'Transverse Abdominis'] },
-                { name: 'Hanging Leg Raise', variants: ['Straight', 'Bent Knee', 'Weighted'], muscles: ['Lower Abs', 'Hip Flexors'] },
-                { name: 'Cable Crunch', variants: ['Kneeling', 'Standing'], muscles: ['Upper Abs'] },
-                { name: 'Ab Wheel', variants: ['Kneeling', 'Standing'], muscles: ['Core', 'Lats'] },
-                { name: 'Dead Bug', variants: ['Standard', 'Weighted'], muscles: ['Core', 'Stability'] },
-                { name: 'Pallof Press', variants: ['Standing', 'Half-Kneeling'], muscles: ['Anti-Rotation', 'Obliques'] }
-            ]
-        };
-
-                const WorkoutProtocols = {
-            strength: {
-                name: 'Maksimum Güç',
-                description: 'Düşük tekrar, yüksek ağırlık, uzun dinlenme',
-                rest: 180,
-                tempo: '2-1-X-0',
-                progression: 'Linear Periodization',
-                splits: [
-                    { name: 'Push A', focus: 'Chest Heavy', exercises: ['Bench Press', 'Overhead Press', 'Incline Press', 'Tricep Dip'] },
-                    { name: 'Pull A', focus: 'Back Width', exercises: ['Pull-Up', 'Barbell Row', 'Face Pull', 'Barbell Curl'] },
-                    { name: 'Legs A', focus: 'Squat Pattern', exercises: ['Squat', 'Romanian Deadlift', 'Leg Press', 'Calf Raise'] },
-                    { name: 'Push B', focus: 'Shoulder Heavy', exercises: ['Overhead Press', 'Bench Press', 'Lateral Raise', 'Tricep Pushdown'] },
-                    { name: 'Pull B', focus: 'Back Thickness', exercises: ['Barbell Row', 'Weighted Pull-Up', 'Reverse Fly', 'Hammer Curl'] },
-                    { name: 'Legs B', focus: 'Hinge Pattern', exercises: ['Romanian Deadlift', 'Front Squat', 'Leg Curl', 'Hip Thrust'] }
-                ]
-            },
-            hypertrophy: {
-                name: 'Kas Hacmi',
-                description: 'Orta tekrar, progressive overload, metabolik stres',
-                rest: 90,
-                tempo: '3-1-2-0',
-                progression: 'Double Progression',
-                splits: [
-                    { name: 'Chest & Back', exercises: ['Incline Dumbbell Press', 'Cable Fly', 'Lat Pulldown', 'Cable Row', 'Push-Up', 'Face Pull'] },
-                    { name: 'Shoulders & Arms', exercises: ['Overhead Press', 'Lateral Raise', 'Barbell Curl', 'Tricep Pushdown', 'Reverse Fly', 'Hammer Curl'] },
-                    { name: 'Legs & Core', exercises: ['Leg Press', 'Leg Extension', 'Leg Curl', 'Calf Raise', 'Plank', 'Hanging Leg Raise'] }
-                ]
-            },
-            endurance: {
-                name: 'Müsküler Dayanıklılık',
-                description: 'Yüksek tekrar, kısa dinlenme, metabolik kondisyon',
-                rest: 45,
-                tempo: '2-0-2-0',
-                progression: 'Linear + Density',
-                splits: [
-                    { name: 'Full Body A', exercises: ['Circuit: Squat', 'Push-Up', 'Inverted Row', 'Lunge', 'Plank'] },
-                    { name: 'Full Body B', exercises: ['Circuit: Deadlift', 'Overhead Press', 'Pull-Up', 'Step-Up', 'Russian Twist'] }
-                ]
-            },
-            power: {
-                name: 'Güç & Patlayıcılık',
-                description: 'Plyometrik, Olympic lift varyasyonları, maksimal hız',
-                rest: 120,
-                tempo: 'X-X-X-0',
-                progression: 'Undulating Periodization',
-                splits: [
-                    { name: 'Lower Power', exercises: ['Box Jump', 'Power Clean', 'Broad Jump', 'Speed Squat', 'Kettlebell Swing'] },
-                    { name: 'Upper Power', exercises: ['Medicine Ball Throw', 'Push Press', 'Clap Push-Up', 'Speed Pull-Up', 'Landmine Rotation'] }
-                ]
-            }
-        };
-
         // ==================== INITIALIZATION ====================
         document.addEventListener('DOMContentLoaded', () => {
-            // Loading screen
             setTimeout(() => {
                 document.getElementById('loadingScreen').classList.add('hidden');
                 
-                // Check if user exists in localStorage
-                const savedUser = localStorage.getItem('t800_user');
+                const savedUser = localStorage.getItem('t800_bw_user');
                 if (savedUser) {
                     App.user = JSON.parse(savedUser);
                     showApp();
@@ -1956,7 +2098,6 @@
                 }
             }, 2000);
 
-            // Setup Wizard Navigation
             let currentStep = 1;
             const totalSteps = 4;
 
@@ -1978,7 +2119,6 @@
                 }
             });
 
-            // Gender selection
             document.querySelectorAll('.gender-option').forEach(option => {
                 option.addEventListener('click', () => {
                     document.querySelectorAll('.gender-option').forEach(o => o.classList.remove('selected'));
@@ -1986,7 +2126,6 @@
                 });
             });
 
-            // Goal selection
             document.querySelectorAll('.goal-option').forEach(option => {
                 option.addEventListener('click', () => {
                     document.querySelectorAll('.goal-option').forEach(o => o.classList.remove('selected'));
@@ -1994,13 +2133,10 @@
                 });
             });
 
-            // BMI calculation on step 3
-            const bmiInputs = ['inputHeight', 'inputWeight'];
-            bmiInputs.forEach(id => {
+            ['inputHeight', 'inputWeight'].forEach(id => {
                 document.getElementById(id).addEventListener('input', calculateBMI);
             });
 
-            // Bottom navigation
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.addEventListener('click', () => {
                     const view = item.dataset.view;
@@ -2008,7 +2144,6 @@
                 });
             });
 
-            // Exercise detail toggle
             document.addEventListener('click', (e) => {
                 if (e.target.closest('.exercise-item')) {
                     const item = e.target.closest('.exercise-item');
@@ -2018,16 +2153,16 @@
                     }
                 }
             });
+
+            document.getElementById('btnSkillTree').addEventListener('click', showSkillTree);
         });
 
         // ==================== WIZARD FUNCTIONS ====================
         function updateWizardStep(step) {
-            // Update dots
             document.querySelectorAll('.wizard-step-dot').forEach((dot, index) => {
                 dot.classList.toggle('active', index + 1 === step);
             });
 
-            // Update steps visibility
             document.querySelectorAll('.wizard-step').forEach(s => {
                 s.classList.remove('active');
                 if (parseInt(s.dataset.step) === step) {
@@ -2035,11 +2170,9 @@
                 }
             });
 
-            // Update buttons
             document.getElementById('btnBack').classList.toggle('hidden', step === 1);
-            document.getElementById('btnNext').textContent = step === 4 ? 'Başlat' : 'Devam Et';
+            document.getElementById('btnNext').textContent = step === 4 ? 'Programı Başlat' : 'Devam Et';
 
-            // Calculate BMI when reaching step 3
             if (step === 3) calculateBMI();
         }
 
@@ -2065,7 +2198,7 @@
                 case 4:
                     const goal = document.querySelector('.goal-option.selected');
                     if (!goal) {
-                        alert('Lütfen bir fitness hedefi seçin');
+                        alert('Lütfen bir hedef seçin');
                         return false;
                     }
                     return true;
@@ -2086,10 +2219,8 @@
             const bmi = weight / (heightM * heightM);
             const bmiValue = bmi.toFixed(1);
 
-            // Display BMI
             document.getElementById('bmiValue').textContent = bmiValue;
 
-            // BMI Status
             let status = '';
             let statusClass = '';
             if (bmi < 18.5) { status = 'Zayıf'; statusClass = 'warning'; }
@@ -2101,11 +2232,9 @@
             statusEl.textContent = status;
             statusEl.className = 'bmi-status ' + statusClass;
 
-            // Calculate ideal weight (using BMI 22 as target)
             const idealWeight = (22 * heightM * heightM).toFixed(1);
             document.getElementById('idealWeight').textContent = idealWeight + ' kg';
 
-            // Calculate BMR (Mifflin-St Jeor)
             let bmr;
             if (gender === 'male') {
                 bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
@@ -2113,15 +2242,12 @@
                 bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
             }
 
-            // Daily calories (moderately active multiplier: 1.55)
             const tdee = Math.round(bmr * 1.55);
             document.getElementById('dailyCalories').textContent = tdee + ' kcal';
 
-            // Water need (35ml per kg)
             const water = (weight * 0.035).toFixed(1);
             document.getElementById('waterNeed').textContent = water + ' L';
 
-            // Protein need (2g per kg for athletes)
             const protein = Math.round(weight * 2);
             document.getElementById('proteinNeed').textContent = protein + ' g';
 
@@ -2131,7 +2257,8 @@
         function completeSetup() {
             const gender = document.querySelector('.gender-option.selected').dataset.gender;
             const goal = document.querySelector('.goal-option.selected').dataset.goal;
-            const experience = document.getElementById('experienceLevel').value;
+            const level = document.getElementById('inputLevel').value;
+            const frequency = parseInt(document.getElementById('inputFrequency').value);
             
             const metrics = calculateBMI();
             
@@ -2141,23 +2268,28 @@
                 height: parseFloat(document.getElementById('inputHeight').value),
                 weight: parseFloat(document.getElementById('inputWeight').value),
                 age: parseFloat(document.getElementById('inputAge').value),
-                bodyFat: parseFloat(document.getElementById('inputBodyFat').value) || null,
+                level: level,
                 goal: goal,
-                experience: experience,
+                frequency: frequency,
                 metrics: metrics,
                 joinDate: new Date().toISOString(),
                 workouts: [],
+                skills: {
+                    planche: 0,
+                    frontLever: 0,
+                    handstand: 0,
+                    oap: 0
+                },
                 personalRecords: {}
             };
 
-            localStorage.setItem('t800_user', JSON.stringify(App.user));
+            localStorage.setItem('t800_bw_user', JSON.stringify(App.user));
             
             document.getElementById('wizard').classList.add('hidden');
             showApp();
             updateDashboard();
         }
 
-        // ==================== APP FUNCTIONS ====================
         function showApp() {
             document.getElementById('app').classList.remove('hidden');
         }
@@ -2165,43 +2297,33 @@
         function switchView(view) {
             App.currentView = view;
             
-            // Update nav items
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.toggle('active', item.dataset.view === view);
             });
 
-            // Hide all views
-            ['viewDashboard', 'viewWorkout', 'viewNutrition', 'viewStats'].forEach(id => {
+            ['viewDashboard', 'viewWorkout', 'viewSkillTree', 'viewStats'].forEach(id => {
                 document.getElementById(id).classList.add('hidden');
             });
 
-            // Show selected view
             document.getElementById('view' + view.charAt(0).toUpperCase() + view.slice(1)).classList.remove('hidden');
 
-            // View specific updates
-            if (view === 'nutrition') updateNutritionView();
             if (view === 'stats') updateStatsView();
         }
 
+        // ==================== DASHBOARD FUNCTIONS ====================
         function updateDashboard() {
             const user = App.user;
             
-            // Update display values
-            document.getElementById('displayHeight').textContent = user.height + ' cm';
-            document.getElementById('displayWeight').textContent = user.weight + ' kg';
             document.getElementById('displayBMI').textContent = user.metrics.bmi;
-            document.getElementById('displayBMR').textContent = user.metrics.bmr + ' kcal';
+            document.getElementById('displayGoal').textContent = Programs[user.goal].name.split(' ')[0];
+            document.getElementById('weeklyVolume').textContent = user.frequency + 'x';
 
-            // Calculate performance score based on metrics and experience
-            const baseScore = 65;
-            const experienceBonus = { beginner: 0, intermediate: 10, advanced: 20 }[user.experience] || 0;
-            const bmiBonus = user.metrics.bmi >= 18.5 && user.metrics.bmi <= 25 ? 10 : 5;
-            const totalScore = Math.min(100, baseScore + experienceBonus + bmiBonus);
+            // Calculate BW Strength Score
+            const baseScore = user.level === 'beginner' ? 40 : (user.level === 'intermediate' ? 60 : 75);
+            const goalBonus = { strength: 10, hypertrophy: 5, endurance: 5, skills: 15 }[user.goal];
+            const totalScore = Math.min(100, baseScore + goalBonus);
 
-            // Animate score
             animateScore(totalScore);
-            
-            // Update AI message
             updateAIMessage(user);
         }
 
@@ -2210,14 +2332,12 @@
             const value = document.getElementById('scoreValue');
             const rank = document.getElementById('scoreRank');
             
-            // Calculate stroke offset (565.48 is circumference)
             const offset = 565.48 - (565.48 * targetScore / 100);
             
             setTimeout(() => {
                 circle.style.strokeDashoffset = offset;
             }, 500);
 
-            // Animate number
             let current = 0;
             const interval = setInterval(() => {
                 current += 2;
@@ -2227,134 +2347,110 @@
                 }
                 value.textContent = current;
                 
-                // Update rank based on score
-                if (current < 40) rank.textContent = 'RECRUIT';
-                else if (current < 60) rank.textContent = 'SOLDIER';
-                else if (current < 80) rank.textContent = 'VETERAN';
+                if (current < 40) rank.textContent = 'ROOKIE';
+                else if (current < 60) rank.textContent = 'TRAINEE';
+                else if (current < 80) rank.textContent = 'ATHLETE';
                 else if (current < 95) rank.textContent = 'ELITE';
-                else rank.textContent = 'LEGEND';
+                else rank.textContent = 'MASTER';
             }, 30);
 
-            // Update sub-scores
-            document.getElementById('strengthScore').textContent = Math.floor(targetScore * 0.9);
-            document.getElementById('enduranceScore').textContent = Math.floor(targetScore * 0.85);
-            document.getElementById('powerScore').textContent = Math.floor(targetScore * 0.88);
-            document.getElementById('techniqueScore').textContent = Math.floor(targetScore * 0.92);
+            document.getElementById('upperBodyScore').textContent = Math.floor(targetScore * 0.9);
+            document.getElementById('lowerBodyScore').textContent = Math.floor(targetScore * 0.85);
+            document.getElementById('coreScore').textContent = Math.floor(targetScore * 0.88);
+            document.getElementById('skillScore').textContent = Math.floor(targetScore * 0.75);
         }
 
         function updateAIMessage(user) {
             const messages = {
-                cut: `Merhaba ${user.name}! Definasyon hedefiniz için optimal kalori açığı hesaplandı. Günlük ${user.metrics.tdee - 500} kcal hedefiyle haftada 0.5-0.7kg yağ kaybı öngörülüyor.`,
-                maintain: `Merhaba ${user.name}! Mevcut kompozisyonunuzu korumak için ${user.metrics.tdee} kcal günlük hedef belirlendi. Vücut ağırlığınızı ±0.5kg tolerans içinde tutmaya odaklanın.`,
-                bulk: `Merhaba ${user.name}! Kas kazanımı için ${user.metrics.tdee + 300} kcal günlük hedef hesaplandı. Haftada 0.3-0.5kg kontrollü kilo alımı önerilir.`,
-                recomp: `Merhaba ${user.name}! Vücut rekomposizyonu için ${user.metrics.tdee} kcal hedefiyle birlikte güç antrenmanlarına öncelik verilmeli. Yağ/kas oranı optimizasyonu protokolü aktif.`
+                strength: `${user.name}, maksimum güç protokolü aktif. Planche ve Front Lever için progressive overload sistemi hazır. Haftada ${user.frequency} antrenman ile skill acquisition başlıyor.`,
+                hypertrophy: `${user.name}, hacim protokolü seçildi. Metabolik stres ve time under tension prensipleriyle kas hipertrofisi hedefleniyor. Yüksek tekrarlı setler hazır.`,
+                endurance: `${user.name}, dayanıklılık protokolü aktif. Circuit training ve AMRAP metodlarıyla müsküler dayanıklılık artırılacak. Kondisyon odaklı program başlıyor.`,
+                skills: `${user.name}, skill focus protokolü seçildi. Statik tutuşlar ve motor kontrol egzersizleriyle teknik mastery hedefleniyor. Patience and consistency!`
             };
 
-            document.getElementById('aiMessage').textContent = messages[user.goal] || messages.maintain;
+            document.getElementById('aiMessage').textContent = messages[user.goal] || messages.strength;
         }
 
         // ==================== WORKOUT GENERATOR ====================
         function generateWorkout() {
             const user = App.user;
-            const protocols = WorkoutProtocols;
+            const program = Programs[user.goal];
+            const schedule = program.frequency[user.frequency];
             
-            // Select protocol based on goal
-            let protocol;
-            switch(user.goal) {
-                case 'cut': protocol = protocols.endurance; break;
-                case 'bulk': protocol = protocols.hypertrophy; break;
-                case 'power': protocol = protocols.power; break;
-                default: protocol = protocols.strength;
-            }
-
-            // Select random split from protocol
-            const split = protocol.splits[Math.floor(Math.random() * protocol.splits.length)];
-            
-            // Generate exercises
-            const exercises = [];
-            let totalSets = 0;
-            let totalVolume = 0;
-
-            split.exercises.forEach((exName, index) => {
-                // Find exercise in database
-                let exercise = null;
-                for (const category in ExerciseDatabase) {
-                    for (const subcategory in ExerciseDatabase[category]) {
-                        const found = ExerciseDatabase[category][subcategory].find(e => 
-                            e.name.toLowerCase().includes(exName.toLowerCase()) || 
-                            exName.toLowerCase().includes(e.name.toLowerCase())
-                        );
-                        if (found) {
-                            exercise = found;
-                            break;
-                        }
-                    }
-                    if (exercise) break;
-                }
-
-                if (!exercise) {
-                    exercise = { name: exName, variants: ['Standard'], muscles: ['Multiple'] };
-                }
-
-                const sets = user.experience === 'beginner' ? 3 : (user.experience === 'intermediate' ? 4 : 5);
-                const reps = protocol === protocols.strength ? '3-5' : (protocol === protocols.hypertrophy ? '8-12' : '12-20');
-                const weight = Math.floor(user.weight * (0.5 + (index * 0.1))); // Estimated working weight
-                
-                totalSets += sets;
-                totalVolume += sets * weight * parseInt(reps);
-
-                exercises.push({
-                    id: index,
-                    name: exercise.name,
-                    variant: exercise.variants[0],
-                    sets: sets,
-                    reps: reps,
-                    weight: weight,
-                    rest: protocol.rest,
-                    completed: false
-                });
-            });
+            // Get current day of week (0-6)
+            const dayOfWeek = new Date().getDay();
+            const workoutIndex = dayOfWeek % schedule.length;
+            const workout = schedule[workoutIndex];
 
             // Update UI
-            document.getElementById('workoutType').textContent = protocol.name.toUpperCase();
-            document.getElementById('workoutTitle').textContent = split.name.toUpperCase();
-            document.getElementById('workoutSubtitle').textContent = `${split.focus || 'Genel Gelişim'} • ${protocol.description}`;
-            document.getElementById('workoutDuration').textContent = Math.round(totalSets * (protocol.rest / 60 + 2));
-            document.getElementById('workoutExercises').textContent = exercises.length;
-            document.getElementById('workoutSets').textContent = totalSets;
-            document.getElementById('workoutVolume').textContent = (totalVolume / 1000).toFixed(1) + 'k';
+            document.getElementById('workoutType').textContent = user.goal.toUpperCase() + ' PROTOCOL';
+            document.getElementById('workoutTitle').textContent = workout.day.toUpperCase();
+            document.getElementById('workoutSubtitle').textContent = workout.focus;
 
-            // Render exercises
+            // Calculate meta
+            const duration = user.frequency >= 5 ? 45 : 60;
+            const totalSets = workout.exercises.length * 4;
+            const intensity = user.goal === 'strength' ? '85%' : (user.goal === 'hypertrophy' ? '75%' : '65%');
+
+            document.getElementById('workoutDuration').textContent = duration;
+            document.getElementById('workoutExercises').textContent = workout.exercises.length;
+            document.getElementById('workoutSets').textContent = totalSets;
+            document.getElementById('workoutIntensity').textContent = intensity;
+
+            // Generate exercises
             const listEl = document.getElementById('exerciseList');
             listEl.innerHTML = '';
 
-            exercises.forEach((ex, index) => {
+            workout.exercises.forEach((exKey, index) => {
+                const [category, subcategory] = exKey.split('.');
+                const exerciseData = BWExerciseDB[category][subcategory];
+                
+                // Select level based on user level
+                let levelIndex = 0;
+                if (user.level === 'intermediate') levelIndex = 2;
+                if (user.level === 'advanced') levelIndex = 4;
+                
+                // Adjust based on skill progress
+                if (category === 'push' && subcategory === 'horizontal') levelIndex = Math.min(levelIndex, user.skills.planche);
+                if (category === 'pull' && subcategory === 'horizontal') levelIndex = Math.min(levelIndex, user.skills.frontLever);
+                if (category === 'skills' && subcategory === 'handstand') levelIndex = Math.min(levelIndex, user.skills.handstand);
+                
+                levelIndex = Math.max(0, Math.min(levelIndex, exerciseData.levels.length - 1));
+                const level = exerciseData.levels[levelIndex];
+
                 const exEl = document.createElement('div');
                 exEl.className = 'exercise-item';
                 exEl.innerHTML = `
                     <div class="exercise-number">${index + 1}</div>
                     <div class="exercise-info">
-                        <div class="exercise-name">${ex.name}</div>
-                        <div class="exercise-target">${ex.variant} • ${ex.muscles?.join(', ') || 'Compound'}</div>
+                        <div class="exercise-name">
+                            ${level.name}
+                            <span class="progression-badge">Lv.${levelIndex + 1}</span>
+                        </div>
+                        <div class="exercise-target">${exerciseData.name}</div>
+                        <div class="difficulty-indicator">
+                            ${Array(5).fill(0).map((_, i) => 
+                                `<div class="difficulty-dot ${i < level.difficulty ? 'active' : ''}"></div>`
+                            ).join('')}
+                        </div>
                     </div>
                     <div class="exercise-sets">
-                        <div class="exercise-sets-value">${ex.sets}x${ex.reps}</div>
-                        <div class="exercise-sets-label">${ex.weight}kg</div>
+                        <div class="exercise-sets-value">${level.sets}x</div>
+                        <div class="exercise-sets-label">${level.reps}</div>
                     </div>
                 `;
 
-                // Create detail panel
                 const detailEl = document.createElement('div');
                 detailEl.className = 'exercise-detail';
                 
                 let setsHtml = '';
-                for (let i = 1; i <= ex.sets; i++) {
+                for (let i = 1; i <= level.sets; i++) {
                     setsHtml += `
                         <div class="set-row">
                             <div class="set-label">Set ${i}</div>
                             <div class="set-inputs">
-                                <input type="number" class="input" placeholder="kg" id="weight_${index}_${i}">
-                                <input type="number" class="input" placeholder="tekrar" id="reps_${index}_${i}">
+                                <input type="number" class="input" placeholder="tekrar/saniye" id="reps_${index}_${i}">
+                                <input type="text" class="input" placeholder="not" id="note_${index}_${i}" style="flex: 0.5;">
                             </div>
                             <div class="set-check" onclick="toggleSet(this, ${index}, ${i})">✓</div>
                         </div>
@@ -2365,8 +2461,9 @@
                     <div class="set-tracker">
                         ${setsHtml}
                         <div style="margin-top: var(--space-3); display: flex; gap: var(--space-2);">
-                            <button class="btn btn-primary btn-sm" onclick="startTimer(${ex.rest})">${ex.rest}s Dinlenme</button>
-                            <button class="btn btn-ghost btn-sm">Not Ekle</button>
+                            <button class="btn btn-primary btn-sm" onclick="startTimer(${level.rest})">${level.rest}s Dinlenme</button>
+                            <button class="btn btn-secondary btn-sm" onclick="regressExercise('${exKey}', ${index})">Kolaylaştır</button>
+                            <button class="btn btn-secondary btn-sm" onclick="progressExercise('${exKey}', ${index})">Zorlaştır</button>
                         </div>
                     </div>
                 `;
@@ -2375,7 +2472,7 @@
                 listEl.appendChild(detailEl);
             });
 
-            App.workout.exercises = exercises;
+            App.workout.exercises = workout.exercises;
             App.workout.active = true;
             App.workout.startTime = new Date();
 
@@ -2385,123 +2482,91 @@
         function toggleSet(element, exerciseIndex, setIndex) {
             element.classList.toggle('completed');
             
-            // Check if all sets completed
             const allSets = document.querySelectorAll('.set-check');
             const completedSets = document.querySelectorAll('.set-check.completed');
             
             if (completedSets.length === allSets.length) {
-                // Workout complete
                 setTimeout(() => {
-                    alert('Tüm setleri tamamladınız! Antrenmanı bitirmek için aşağıdaki butona tıklayın.');
+                    alert('Tüm setler tamamlandı! Antrenmanı bitirmek için butona tıklayın.');
                 }, 500);
             }
+        }
+
+        function progressExercise(exKey, index) {
+            alert('Tebrikler! Bir sonraki seviyeye geçtiniz. Bir sonraki antrenmanda daha zor varyasyon uygulanacak.');
+            // Update user skill level
+            const [category, subcategory] = exKey.split('.');
+            if (category === 'push' && subcategory === 'horizontal' && App.user.skills.planche < 5) {
+                App.user.skills.planche++;
+            }
+            if (category === 'pull' && subcategory === 'horizontal' && App.user.skills.frontLever < 5) {
+                App.user.skills.frontLever++;
+            }
+            localStorage.setItem('t800_bw_user', JSON.stringify(App.user));
+        }
+
+        function regressExercise(exKey, index) {
+            alert('Bir önceki seviyeye dönülüyor. Form öncelikli!');
         }
 
         function completeWorkout() {
             if (!App.workout.active) return;
 
             const duration = Math.round((new Date() - App.workout.startTime) / 60000);
-            const volume = document.getElementById('workoutVolume').textContent;
             
-            // Save workout
             const workoutLog = {
                 date: new Date().toISOString(),
                 type: document.getElementById('workoutTitle').textContent,
                 duration: duration,
-                volume: volume,
+                goal: App.user.goal,
                 exercises: App.workout.exercises.length
             };
 
             App.user.workouts.push(workoutLog);
-            localStorage.setItem('t800_user', JSON.stringify(App.user));
+            localStorage.setItem('t800_bw_user', JSON.stringify(App.user));
 
-            // Reset
             App.workout.active = false;
             
-            // Show success message
-            document.getElementById('aiMessage').textContent = `Antrenman tamamlandı! ${duration} dakika süren çalışmanda ${volume} hacim oluşturdun. Recovery protokolü aktif: 25g protein + 50g karbohidrat önerilir.`;
+            document.getElementById('aiMessage').textContent = `Antrenman tamamlandı! ${duration} dakika süren çalışmanda ${App.workout.exercises.length} egzersiz tamamladın. Recovery: 25g protein + karbohidrat.`;
             
             switchView('dashboard');
         }
 
-        // ==================== NUTRITION VIEW ====================
-        function updateNutritionView() {
-            const user = App.user;
-            let calories, protein, carbs, fats;
-
-            switch(user.goal) {
-                case 'cut':
-                    calories = user.metrics.tdee - 500;
-                    protein = Math.round(user.weight * 2.2);
-                    carbs = Math.round((calories * 0.35) / 4);
-                    fats = Math.round((calories * 0.25) / 9);
-                    break;
-                case 'bulk':
-                    calories = user.metrics.tdee + 300;
-                    protein = Math.round(user.weight * 2.0);
-                    carbs = Math.round((calories * 0.45) / 4);
-                    fats = Math.round((calories * 0.25) / 9);
-                    break;
-                default:
-                    calories = user.metrics.tdee;
-                    protein = Math.round(user.weight * 2.0);
-                    carbs = Math.round((calories * 0.40) / 4);
-                    fats = Math.round((calories * 0.30) / 9);
-            }
-
-            document.getElementById('targetCalories').textContent = calories + ' kcal';
-            document.getElementById('targetProtein').textContent = protein + 'g';
-            document.getElementById('targetCarbs').textContent = carbs + 'g';
-            document.getElementById('targetFats').textContent = fats + 'g';
-
-            // Update progress bars (simulated)
-            const proteinPct = Math.min(100, Math.round((protein * 0.6) / protein * 100));
-            const carbPct = Math.min(100, Math.round((carbs * 0.4) / carbs * 100));
-            const fatPct = Math.min(100, Math.round((fats * 0.5) / fats * 100));
-
-            document.getElementById('proteinBar').style.width = proteinPct + '%';
-            document.getElementById('proteinProgress').textContent = `${Math.round(protein * 0.6)} / ${protein}g`;
+        // ==================== SKILL TREE ====================
+        function showSkillTree() {
+            switchView('skillTree');
             
-            document.getElementById('carbBar').style.width = carbPct + '%';
-            document.getElementById('carbProgress').textContent = `${Math.round(carbs * 0.4)} / ${carbs}g`;
-            
-            document.getElementById('fatBar').style.width = fatPct + '%';
-            document.getElementById('fatProgress').textContent = `${Math.round(fats * 0.5)} / ${fats}g`;
-        }
-
-        // ==================== STATS VIEW ====================
-        function updateStatsView() {
-            const user = App.user;
-            const recordsEl = document.getElementById('personalRecords');
-            
-            // Sample PR data (would be tracked in real app)
-            const prs = [
-                { lift: 'Bench Press', value: Math.round(user.weight * 1.2), unit: 'kg' },
-                { lift: 'Squat', value: Math.round(user.weight * 1.6), unit: 'kg' },
-                { lift: 'Deadlift', value: Math.round(user.weight * 2.0), unit: 'kg' },
-                { lift: 'Pull-Ups', value: Math.round(user.weight * 0.1) + 10, unit: 'reps' }
+            const skills = [
+                { id: 'plancheTree', name: 'Planche', levels: ['Pseudo Planche Lean', 'Tuck Planche', 'Advanced Tuck', 'Straddle Planche', 'Full Planche'], current: App.user.skills.planche },
+                { id: 'frontLeverTree', name: 'Front Lever', levels: ['Australian Row', 'Tuck FL', 'Advanced Tuck FL', 'Straddle FL', 'Full FL'], current: App.user.skills.frontLever },
+                { id: 'handstandTree', name: 'Handstand', levels: ['Wall HS', 'Heel Pulls', 'Freestanding', 'HS Walking', 'HS Push-Up'], current: App.user.skills.handstand },
+                { id: 'oapTree', name: 'One Arm Pull', levels: ['Weighted Pull', 'Archer Pull', 'Typewriter', 'One Arm Neg', 'Full OAP'], current: App.user.skills.oap }
             ];
 
-            recordsEl.innerHTML = prs.map(pr => `
-                <div class="stat-item" style="margin-bottom: var(--space-3);">
-                    <div class="stat-header">
-                        <div class="stat-icon primary">🏋️</div>
-                        <span class="stat-name">${pr.lift}</span>
+            skills.forEach(skill => {
+                const container = document.getElementById(skill.id);
+                container.innerHTML = skill.levels.map((level, index) => `
+                    <div class="skill-level ${index <= skill.current ? 'unlocked' : ''} ${index === skill.current ? 'current' : ''}">
+                        <span class="skill-level-name">${level}</span>
+                        <span class="skill-level-reps">${index <= skill.current ? '✓' : '🔒'}</span>
                     </div>
-                    <div class="stat-value">${pr.value} <span class="stat-unit">${pr.unit}</span></div>
-                </div>
-            `).join('');
+                `).join('');
+            });
+        }
 
-            // Draw progress chart (simple canvas implementation)
+        // ==================== STATS ====================
+        function updateStatsView() {
+            const user = App.user;
+            
+            // Draw chart
             const canvas = document.getElementById('progressChart');
             const ctx = canvas.getContext('2d');
             canvas.width = canvas.offsetWidth;
             canvas.height = canvas.offsetHeight;
 
-            // Clear
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Draw grid
+            // Grid
             ctx.strokeStyle = '#252536';
             ctx.lineWidth = 1;
             for (let i = 0; i < 5; i++) {
@@ -2512,32 +2577,45 @@
                 ctx.stroke();
             }
 
-            // Draw sample progress line (weight over time)
-            ctx.strokeStyle = '#ff6b35';
+            // Progress line
+            ctx.strokeStyle = '#f59e0b';
             ctx.lineWidth = 3;
             ctx.beginPath();
             
-            const points = user.workouts.length > 0 ? user.workouts.length : 7;
-            for (let i = 0; i < points; i++) {
-                const x = (canvas.width / (points - 1)) * i;
+            const workouts = user.workouts.length > 0 ? user.workouts.length : 7;
+            for (let i = 0; i < workouts; i++) {
+                const x = (canvas.width / (workouts - 1 || 1)) * i;
                 const y = canvas.height - ((canvas.height / 2) + Math.sin(i * 0.5) * 50) - 50;
                 if (i === 0) ctx.moveTo(x, y);
                 else ctx.lineTo(x, y);
             }
             ctx.stroke();
 
-            // Add gradient fill
-            ctx.lineTo(canvas.width, canvas.height);
-            ctx.lineTo(0, canvas.height);
-            ctx.closePath();
-            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-            gradient.addColorStop(0, 'rgba(255, 107, 53, 0.3)');
-            gradient.addColorStop(1, 'rgba(255, 107, 53, 0)');
-            ctx.fillStyle = gradient;
-            ctx.fill();
+            // PRs
+            const prsEl = document.getElementById('personalRecords');
+            const bw = user.weight;
+            
+            const prs = [
+                { lift: 'Pull-Up (BW %)', value: Math.round(bw * 1.1) + '%', sub: Math.round(bw * 1.1) + 'kg ekle' },
+                { lift: 'Dip (BW %)', value: Math.round(bw * 1.2) + '%', sub: Math.round(bw * 1.2) + 'kg ekle' },
+                { lift: 'Pistol Squat', value: user.level !== 'beginner' ? '✓' : 'Çalışılıyor', sub: 'Tek bacak squat' },
+                { lift: 'Front Lever', value: ['Tuck', 'Adv Tuck', 'Straddle', 'Full'][user.skills.frontLever] || 'Tuck', sub: 'Static hold' },
+                { lift: 'Planche', value: ['Lean', 'Tuck', 'Adv Tuck', 'Straddle', 'Full'][user.skills.planche] || 'Lean', sub: 'Static hold' }
+            ];
+
+            prsEl.innerHTML = prs.map(pr => `
+                <div class="stat-item" style="margin-bottom: var(--space-3);">
+                    <div class="stat-header">
+                        <div class="stat-icon primary">🏆</div>
+                        <span class="stat-name">${pr.lift}</span>
+                    </div>
+                    <div class="stat-value">${pr.value}</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">${pr.sub}</div>
+                </div>
+            `).join('');
         }
 
-        // ==================== TIMER FUNCTIONS ====================
+        // ==================== TIMER ====================
         function openTimer() {
             document.getElementById('timerModal').classList.add('active');
             updateTimerDisplay(0);
@@ -2561,9 +2639,9 @@
                 
                 if (App.timer.time <= 0) {
                     stopTimer();
-                                // Play notification sound and vibrate
+                    
+                    // Audio notification
                     try {
-                        // Simple beep using Web Audio API
                         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                         const oscillator = audioContext.createOscillator();
                         const gainNode = audioContext.createGain();
@@ -2580,27 +2658,15 @@
                         oscillator.start(audioContext.currentTime);
                         oscillator.stop(audioContext.currentTime + 0.5);
                         
-                        // Vibrate if supported
-                        if (navigator.vibrate) {
-                            navigator.vibrate([200, 100, 200]);
-                        }
-                    } catch (e) {
-                        console.log('Audio notification failed:', e);
-                    }
+                        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+                    } catch (e) {}
                     
-                    // Flash effect on timer display
                     const display = document.getElementById('timerDisplay');
                     display.style.color = '#00d4aa';
-                    display.style.textShadow = '0 0 30px rgba(0, 212, 170, 0.8)';
-                    
-                    setTimeout(() => {
-                        display.style.color = '';
-                        display.style.textShadow = '';
-                    }, 2000);
+                    setTimeout(() => display.style.color = '', 2000);
                 }
             }, 1000);
             
-            // Update FAB button state
             document.getElementById('fabTimer').classList.add('active');
         }
 
@@ -2620,129 +2686,16 @@
                 `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
-        // ==================== UTILITY FUNCTIONS ====================
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('tr-TR', { 
-                day: 'numeric', 
-                month: 'short', 
-                year: 'numeric' 
-            });
-        }
-
-        function calculateOneRepMax(weight, reps) {
-            // Epley formula
-            return Math.round(weight * (1 + reps / 30));
-        }
-
-        function calculateWilksScore(bodyWeight, totalLifted, gender) {
-            // Simplified Wilks coefficient
-            const coefficients = gender === 'male' 
-                ? [-216.0475144, 16.2606339, -0.002388645, -0.00113732, 7.01863e-06, -1.291e-08]
-                : [594.31747775582, -27.23842536447, 0.82112226871, -0.00930733913, 4.731582e-05, -9.054e-08];
-            
-            const x = bodyWeight;
-            let denominator = 0;
-            for (let i = 0; i < coefficients.length; i++) {
-                denominator += coefficients[i] * Math.pow(x, i);
-            }
-            
-            return (totalLifted * 500 / denominator).toFixed(2);
-        }
-
-        // ==================== EXPORT/IMPORT DATA ====================
-        function exportData() {
-            const dataStr = JSON.stringify(App.user, null, 2);
-            const dataBlob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(dataBlob);
-            
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `t800_backup_${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-        }
-
-        function importData(file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    App.user = data;
-                    localStorage.setItem('t800_user', JSON.stringify(App.user));
-                    updateDashboard();
-                    alert('Veriler başarıyla yüklendi!');
-                } catch (err) {
-                    alert('Dosya okunurken hata oluştu!');
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        // ==================== SERVICE WORKER (PWA Support) ====================
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('data:text/javascript;base64,' + btoa(`
-                self.addEventListener('install', e => self.skipWaiting());
-                self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
-            `)).catch(() => console.log('SW registration skipped'));
-        }
-
         // ==================== KEYBOARD SHORTCUTS ====================
         document.addEventListener('keydown', (e) => {
-            // Space to start/stop timer if modal is open
             if (e.code === 'Space' && document.getElementById('timerModal').classList.contains('active')) {
                 e.preventDefault();
-                if (App.timer.running) {
-                    stopTimer();
-                } else {
-                    startTimer(60);
-                }
+                App.timer.running ? stopTimer() : startTimer(60);
             }
-            
-            // ESC to close modal
-            if (e.code === 'Escape') {
-                closeTimer();
-            }
-            
-            // Number keys for timer presets
-            if (document.getElementById('timerModal').classList.contains('active')) {
-                const presets = { Digit1: 30, Digit2: 60, Digit3: 90, Digit4: 120, Digit5: 180, Digit6: 300 };
-                if (presets[e.code]) {
-                    startTimer(presets[e.code]);
-                }
-            }
+            if (e.code === 'Escape') closeTimer();
         });
 
-        // ==================== NOTIFICATIONS ====================
-        function requestNotificationPermission() {
-            if ('Notification' in window) {
-                Notification.requestPermission().then(permission => {
-                    if (permission === 'granted') {
-                        console.log('Bildirim izni verildi');
-                    }
-                });
-            }
-        }
-
-        function sendNotification(title, body) {
-            if ('Notification' in window && Notification.permission === 'granted') {
-                new Notification(title, {
-                    body: body,
-                    icon: '💪',
-                    badge: '💪',
-                    tag: 't800-timer'
-                });
-            }
-        }
-
-        // Initialize notifications on first user interaction
-        document.addEventListener('click', () => {
-            requestNotificationPermission();
-        }, { once: true });
-
-        console.log('T-800 ELITE v3.0 - System Ready');
+        console.log('T-800 ELITE BW v3.1 - Profesyonel Calisthenics Sistemi Aktif');
     </script>
 </body>
 </html>
