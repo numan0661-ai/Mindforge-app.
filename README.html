@@ -1,4 +1,1891 @@
-                TimerDisplay();
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="T-800 Pro - Profesyonel Vücut Geliştirme ve Fitness Takip Sistemi">
+    <title>T-800 PRO | Vücut Geliştirme Terminatör</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        :root {
+            --neon-red: #ff2a2a;
+            --neon-orange: #ff6600;
+            --neon-blue: #00d4ff;
+            --neon-green: #00ff88;
+            --neon-purple: #bf00ff;
+            --neon-yellow: #ffcc00;
+            --metal-dark: #050505;
+            --metal-mid: #0a0a0a;
+            --metal-light: #151515;
+            --metal-border: #2a2a2a;
+            --grid-color: rgba(255, 102, 0, 0.05);
+            --glass: rgba(255, 255, 255, 0.03);
+        }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--metal-dark);
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px),
+                radial-gradient(ellipse at top, rgba(255, 102, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom, rgba(0, 212, 255, 0.05) 0%, transparent 50%);
+            background-size: 50px 50px, 50px 50px, 100% 100%, 100% 100%;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0,0,0,0.15),
+                rgba(0,0,0,0.15) 1px,
+                transparent 1px,
+                transparent 4px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-bottom: 120px;
+        }
+        
+        /* HEADER */
+        .header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 2px solid var(--neon-orange);
+            margin-bottom: 25px;
+            position: relative;
+            background: linear-gradient(180deg, transparent 0%, rgba(255,102,0,0.05) 100%);
+        }
+        
+        .header::after {
+            content: '● SYSTEM ONLINE';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--metal-dark);
+            padding: 0 20px;
+            color: var(--neon-orange);
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            font-family: 'Orbitron', monospace;
+            animation: blink 2s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; text-shadow: 0 0 10px var(--neon-orange); }
+            51%, 100% { opacity: 0.3; text-shadow: none; }
+        }
+        
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            color: var(--neon-orange);
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            text-shadow: 0 0 30px rgba(255, 102, 0, 0.6);
+            font-weight: 900;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 0.9rem;
+            color: #666;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+        
+        .version-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--neon-orange);
+            color: #000;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            border-radius: 4px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        /* NAVIGATION */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            overflow-x: auto;
+            padding: 5px;
+            background: var(--glass);
+            border-radius: 12px;
+            border: 1px solid var(--metal-border);
+        }
+        
+        .nav-tab {
+            flex: 1;
+            min-width: 90px;
+            padding: 15px 10px;
+            background: transparent;
+            border: 1px solid transparent;
+            color: #666;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,102,0,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .nav-tab:hover::before {
+            left: 100%;
+        }
+        
+        .nav-tab:hover {
+            border-color: var(--neon-orange);
+            color: var(--neon-orange);
+            background: rgba(255,102,0,0.05);
+        }
+        
+        .nav-tab.active {
+            background: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
+            color: #000;
+            border-color: var(--neon-orange);
+            box-shadow: 0 0 20px rgba(255, 102, 0, 0.4);
+            font-weight: 700;
+        }
+        
+        /* PANELS */
+        .panel {
+            background: var(--glass);
+            border: 1px solid var(--metal-border);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-orange), transparent);
+        }
+        
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--metal-border);
+        }
+        
+        .panel-title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-orange);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .panel-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        /* USER PROFILE SETUP */
+        .setup-wizard {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 5000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(20px);
+        }
+        
+        .setup-wizard.hidden {
+            display: none;
+        }
+        
+        .setup-container {
+            max-width: 500px;
+            width: 100%;
+            background: var(--metal-mid);
+            border: 2px solid var(--neon-orange);
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+            box-shadow: 0 0 60px rgba(255,102,0,0.2);
+        }
+        
+        .setup-step {
+            display: none;
+        }
+        
+        .setup-step.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .setup-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--neon-orange);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .setup-subtitle {
+            color: #888;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-label {
+            display: block;
+            color: var(--neon-orange);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 15px;
+            background: var(--metal-dark);
+            border: 2px solid var(--metal-border);
+            color: #fff;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            font-family: 'Rajdhani', sans-serif;
+            transition: all 0.3s;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: var(--neon-orange);
+            box-shadow: 0 0 15px rgba(255,102,0,0.2);
+        }
+        
+        .gender-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .gender-option {
+            flex: 1;
+            padding: 20px;
+            background: var(--metal-dark);
+            border: 2px solid var(--metal-border);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .gender-option:hover {
+            border-color: var(--neon-orange);
+            background: rgba(255,102,0,0.05);
+        }
+        
+        .gender-option.selected {
+            border-color: var(--neon-orange);
+            background: linear-gradient(135deg, rgba(255,102,0,0.2), rgba(255,42,42,0.1));
+            box-shadow: 0 0 20px rgba(255,102,0,0.2);
+        }
+        
+        .gender-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .gender-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: #888;
+        }
+        
+        .goal-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .goal-option {
+            padding: 20px;
+            background: var(--metal-dark);
+            border: 2px solid var(--metal-border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .goal-option:hover {
+            border-color: var(--neon-blue);
+        }
+        
+        .goal-option.selected {
+            border-color: var(--neon-blue);
+            background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(0,212,255,0.05));
+            box-shadow: 0 0 20px rgba(0,212,255,0.2);
+        }
+        
+        .goal-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        
+        .goal-title {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        
+        .goal-desc {
+            font-size: 0.75rem;
+            color: #666;
+        }
+        
+        .btn-primary {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 102, 0, 0.4);
+        }
+        
+        .btn-secondary {
+            width: 100%;
+            padding: 15px;
+            background: transparent;
+            color: var(--neon-orange);
+            border: 2px solid var(--neon-orange);
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,102,0,0.1);
+        }
+        
+        /* BMI ANALYZER */
+        .bmi-display {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(255,102,0,0.1), transparent);
+            border-radius: 16px;
+            border: 1px solid var(--neon-orange);
+            margin-bottom: 20px;
+        }
+        
+        .bmi-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--neon-orange);
+            text-shadow: 0 0 30px rgba(255,102,0,0.5);
+            line-height: 1;
+        }
+        
+        .bmi-label {
+            font-size: 1rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 10px;
+        }
+        
+        .bmi-status {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-top: 15px;
+            text-transform: uppercase;
+        }
+        
+        .bmi-status.underweight { background: var(--neon-blue); color: #000; }
+        .bmi-status.normal { background: var(--neon-green); color: #000; }
+        .bmi-status.overweight { background: var(--neon-yellow); color: #000; }
+        .bmi-status.obese { background: var(--neon-red); color: #fff; }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: var(--metal-dark);
+            border: 1px solid var(--metal-border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            border-color: var(--neon-orange);
+            transform: translateY(-3px);
+        }
+        
+        .stat-icon {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+        
+        .stat-value-large {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--neon-orange);
+            font-weight: 700;
+        }
+        
+        .stat-label-large {
+            font-size: 0.75rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+        
+        /* PROGRESS RING */
+        .progress-ring-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+        }
+        
+        .progress-ring {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+        
+        .progress-ring svg {
+            transform: rotate(-90deg);
+        }
+        
+        .progress-ring-circle {
+            fill: none;
+            stroke: var(--metal-border);
+            stroke-width: 8;
+        }
+        
+        .progress-ring-progress {
+            fill: none;
+            stroke: url(#gradient);
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease;
+        }
+        
+        .progress-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        
+        .progress-level {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--neon-orange);
+        }
+        
+        .progress-title {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        /* WORKOUT GENERATOR */
+        .workout-preview {
+            background: var(--metal-dark);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--metal-border);
+        }
+        
+        .workout-header {
+            background: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
+            padding: 25px;
+            color: #000;
+        }
+        
+        .workout-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 900;
+            margin-bottom: 5px;
+        }
+        
+        .workout-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .workout-stats {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .workout-stat {
+            text-align: center;
+        }
+        
+        .workout-stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .workout-stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+        
+        .exercise-list {
+            padding: 20px;
+        }
+        
+        .exercise-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: var(--glass);
+            border: 1px solid var(--metal-border);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .exercise-item:hover {
+            border-color: var(--neon-orange);
+            transform: translateX(5px);
+        }
+        
+        .exercise-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: #000;
+            font-size: 1.1rem;
+        }
+        
+        .exercise-info {
+            flex: 1;
+        }
+        
+        .exercise-name {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 3px;
+        }
+        
+        .exercise-target {
+            font-size: 0.8rem;
+            color: var(--neon-orange);
+        }
+        
+        .exercise-sets {
+            text-align: right;
+        }
+        
+        .exercise-sets-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--neon-green);
+        }
+        
+        .exercise-sets-label {
+            font-size: 0.7rem;
+            color: #666;
+            text-transform: uppercase;
+        }
+        
+        /* CHARTS */
+        .chart-container {
+            height: 200px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .chart-bar {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 100%;
+            padding: 0 10px;
+        }
+        
+        .bar-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            max-width: 40px;
+        }
+        
+        .bar {
+            width: 100%;
+            background: linear-gradient(to top, var(--neon-orange), var(--neon-red));
+            border-radius: 4px 4px 0 0;
+            transition: height 1s ease;
+            position: relative;
+        }
+        
+        .bar::after {
+            content: attr(data-value);
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            color: var(--neon-orange);
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .bar-label {
+            font-size: 0.7rem;
+            color: #666;
+            margin-top: 8px;
+            text-transform: uppercase;
+        }
+        
+        /* AI COACH */
+        .ai-panel {
+            background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(191,0,255,0.05));
+            border: 1px solid var(--neon-blue);
+            border-radius: 16px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ai-panel::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0,212,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .ai-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 0 30px rgba(0,212,255,0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        .ai-info h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-blue);
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .ai-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--neon-green);
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--neon-green);
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+        
+        .ai-message {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid var(--neon-blue);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #ccc;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .ai-recommendation {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(255,102,0,0.1);
+            border: 1px solid var(--neon-orange);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .rec-icon {
+            font-size: 2rem;
+        }
+        
+        .rec-content h4 {
+            color: var(--neon-orange);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        
+        .rec-content p {
+            font-size: 0.85rem;
+            color: #888;
+        }
+        
+        /* TIMER */
+        .timer-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255,102,0,0.4);
+            z-index: 100;
+            transition: all 0.3s;
+            border: 3px solid transparent;
+        }
+        
+        .timer-float:hover {
+            transform: scale(1.1);
+            border-color: #fff;
+        }
+        
+        .timer-float.active {
+            animation: timerPulse 1s infinite;
+        }
+        
+        @keyframes timerPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255,102,0,0.4); }
+            50% { box-shadow: 0 0 0 20px rgba(255,102,0,0); }
+        }
+        
+        .timer-icon {
+            font-size: 1.8rem;
+        }
+        
+        .timer-label {
+            font-size: 0.6rem;
+            font-weight: bold;
+            color: #000;
+            text-transform: uppercase;
+        }
+        
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            max-width: 400px;
+            width: 100%;
+            background: var(--metal-mid);
+            border: 2px solid var(--neon-orange);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .timer-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5rem;
+            color: var(--neon-orange);
+            text-shadow: 0 0 30px rgba(255,102,0,0.5);
+            margin: 30px 0;
+        }
+        
+        .timer-presets {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .preset-btn {
+            padding: 15px;
+            background: var(--metal-dark);
+            border: 1px solid var(--metal-border);
+            color: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s;
+        }
+        
+        .preset-btn:hover {
+            border-color: var(--neon-orange);
+            background: rgba(255,102,0,0.1);
+        }
+        
+        .hidden { display: none !important; }
+        
+        @media (max-width: 480px) {
+            h1 { font-size: 1.8rem; letter-spacing: 3px; }
+            .container { padding: 15px; }
+            .setup-container { padding: 25px; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .goal-selector { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- SVG Gradients -->
+    <svg width="0" height="0">
+        <defs>
+            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#ff6600;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#ff2a2a;stop-opacity:1" />
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <!-- SETUP WIZARD -->
+    <div class="setup-wizard" id="setupWizard">
+        <div class="setup-container">
+            <!-- Step 1: Basic Info -->
+            <div class="setup-step active" data-step="1">
+                <div class="setup-title">T-800 PRO AKTIVASYON</div>
+                <div class="setup-subtitle">Vücut profilinizi oluşturmak için bilgilerinizi girin</div>
+                
+                <div class="input-group">
+                    <label class="input-label">İsim</label>
+                    <input type="text" class="input-field" id="userName" placeholder="Adınızı girin">
+                </div>
+                
+                <div class="gender-selector">
+                    <div class="gender-option" data-gender="male">
+                        <div class="gender-icon">♂</div>
+                        <div class="gender-label">Erkek</div>
+                    </div>
+                    <div class="gender-option" data-gender="female">
+                        <div class="gender-icon">♀</div>
+                        <div class="gender-label">Kadın</div>
+                    </div>
+                </div>
+                
+                <button class="btn-primary" onclick="nextStep(2)">DEVAM ET →</button>
+            </div>
+            
+            <!-- Step 2: Body Metrics -->
+            <div class="setup-step" data-step="2">
+                <div class="setup-title">VÜCUT ANALIZI</div>
+                <div class="setup-subtitle">Boy ve kilonuzu girin, BMI'nizi hesaplayalım</div>
+                
+                <div class="stats-grid">
+                    <div class="input-group">
+                        <label class="input-label">Boy (cm)</label>
+                        <input type="number" class="input-field" id="userHeight" placeholder="175">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Kilo (kg)</label>
+                        <input type="number" class="input-field" id="userWeight" placeholder="70">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Yaş</label>
+                    <input type="number" class="input-field" id="userAge" placeholder="25">
+                </div>
+                
+                <button class="btn-secondary" onclick="prevStep(1)">← GERI</button>
+                <button class="btn-primary" onclick="calculateBMI()">ANALIZ ET →</button>
+            </div>
+            
+            <!-- Step 3: BMI Results -->
+            <div class="setup-step" data-step="3">
+                <div class="setup-title">VÜCUT ANALIZ SONUÇLARI</div>
+                
+                <div class="bmi-display">
+                    <div class="bmi-value" id="bmiValue">22.5</div>
+                    <div class="bmi-label">BMI INDEKSI</div>
+                    <div class="bmi-status normal" id="bmiStatus">NORMAL KILO</div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">⚖️</div>
+                        <div class="stat-value-large" id="idealWeight">68-75</div>
+                        <div class="stat-label-large">İdeal Kilo (kg)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-value-large" id="dailyCalories">2,450</div>
+                        <div class="stat-label-large">Günlük Kalori</div>
+                    </div>
+                </div>
+                
+                <button class="btn-secondary" onclick="prevStep(2)">← GERI</button>
+                <button class="btn-primary" onclick="nextStep(4)">HEDEF BELIRLE →</button>
+            </div>
+            
+            <!-- Step 4: Goals -->
+            <div class="setup-step" data-step="4">
+                <div class="setup-title">FITNESS HEDEFINIZ</div>
+                <div class="setup-subtitle">Hedefinize göre kişiselleştirilmiş program oluşturacağız</div>
+                
+                <div class="goal-selector">
+                    <div class="goal-option" data-goal="lose">
+                        <div class="goal-icon">📉</div>
+                        <div class="goal-title">Kilo Ver</div>
+                        <div class="goal-desc">Yağ yakımı odaklı</div>
+                    </div>
+                    <div class="goal-option" data-goal="maintain">
+                        <div class="goal-icon">⚖️</div>
+                        <div class="goal-title">Koru</div>
+                        <div class="goal-desc">Mevcut formu koru</div>
+                    </div>
+                    <div class="goal-option" data-goal="build">
+                        <div class="goal-icon">💪</div>
+                        <div class="goal-title">Kas Yap</div>
+                        <div class="goal-desc">Hacim kazanımı</div>
+                    </div>
+                    <div class="goal-option" data-goal="strength">
+                        <div class="goal-icon">🏋️</div>
+                        <div class="goal-title">Güçlen</div>
+                        <div class="goal-desc">Maksimum güç</div>
+                    </div>
+                </div>
+                
+                <button class="btn-secondary" onclick="prevStep(3)">← GERI</button>
+                <button class="btn-primary" onclick="completeSetup()">PROGRAM OLUŞTUR 🚀</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div class="container" id="mainApp" style="display: none;">
+        <div class="version-badge">PRO v2.0</div>
+        
+        <header class="header">
+            <h1>T-800 PRO</h1>
+            <div class="subtitle" id="userGreeting">TERMINATOR AKTIF</div>
+        </header>
+
+        <!-- AI COACH PANEL -->
+        <div class="ai-panel" id="aiPanel">
+            <div class="ai-header">
+                <div class="ai-avatar">🤖</div>
+                <div class="ai-info">
+                    <h3>T-800 AI KOÇ</h3>
+                    <div class="ai-status">
+                        <span class="status-dot"></span>
+                        <span>ANALIZ MODU AKTIF</span>
+                    </div>
+                </div>
+            </div>
+            <div class="ai-message" id="aiMessage">
+                Vücut profiliniz analiz ediliyor... Kişiselleştirilmiş antrenman programınız hazırlanıyor.
+            </div>
+            <div class="ai-recommendation" id="aiRecommendation">
+                <div class="rec-icon">💡</div>
+                <div class="rec-content">
+                    <h4>ÖNERI</h4>
+                    <p id="recText">Bugün göğüs ve triceps odaklı bir antrenman yapmalısınız.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- NAVIGATION -->
+        <nav class="nav-tabs" id="mainNav">
+            <div class="nav-tab active" data-tab="dashboard">
+                <div style="font-size: 1.2rem; margin-bottom: 4px;">📊</div>
+                DASHBOARD
+            </div>
+            <div class="nav-tab" data-tab="workout">
+                <div style="font-size: 1.2rem; margin-bottom: 4px;">💪</div>
+                ANTRENMAN
+            </div>
+            <div class="nav-tab" data-tab="nutrition">
+                <div style="font-size: 1.2rem; margin-bottom: 4px;">🥗</div>
+                BESLENME
+            </div>
+            <div class="nav-tab" data-tab="progress">
+                <div style="font-size: 1.2rem; margin-bottom: 4px;">📈</div>
+                ISTATISTIK
+            </div>
+        </nav>
+
+        <!-- DASHBOARD TAB -->
+        <section id="dashboard" class="tab-content">
+            <!-- Progress Ring -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <div class="panel-icon">🏆</div>
+                        SEVIYE ILERLEMESI
+                    </div>
+                </div>
+                <div class="progress-ring-container">
+                    <div class="progress-ring">
+                        <svg width="200" height="200">
+                            <circle class="progress-ring-circle" cx="100" cy="100" r="90"></circle>
+                            <circle class="progress-ring-progress" cx="100" cy="100" r="90" 
+                                    stroke-dasharray="565.48" stroke-dashoffset="400" id="levelProgress"></circle>
+                        </svg>
+                        <div class="progress-content">
+                            <div class="progress-level" id="currentLevelDisplay">1</div>
+                            <div class="progress-title" id="currentRank">RECRUIT</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-value-large" id="currentXP">0</div>
+                        <div class="stat-label-large">Toplam XP</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-value-large" id="streakDays">1</div>
+                        <div class="stat-label-large">Gün Streak</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Body Stats -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <div class="panel-icon">⚡</div>
+                        VÜCUT METRIKLERI
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📏</div>
+                        <div class="stat-value-large" id="displayHeight">175</div>
+                        <div class="stat-label-large">Boy (cm)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⚖️</div>
+                        <div class="stat-value-large" id="displayWeight">70</div>
+                        <div class="stat-label-large">Kilo (kg)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-value-large" id="displayBMI">22.9</div>
+                        <div class="stat-label-large">BMI</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-value-large" id="displayBMR">1,680</div>
+                        <div class="stat-label-large">BMR (kcal)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weekly Activity Chart -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <div class="panel-icon">📈</div>
+                        HAFTALIK AKTIVITE
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-bar" id="weeklyChart">
+                        <div class="bar-item">
+                            <div class="bar" style="height: 60%" data-value="45"></div>
+                            <div class="bar-label">PZT</div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar" style="height: 80%" data-value="60"></div>
+                            <div class="bar-label">SAL</div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar" style="height: 0%" data-value="0"></div>
+                            <div class="bar-label">CAR</div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar" style="height: 90%" data-value="75"></div>
+                            <div class="bar-label">PER</div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar" style="height: 70%" data-value="55"></div>
+                            <div class="bar-label">CUM</div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar" style="height: 40%" data-value="30"></div>
+                            <div class="bar-label">CMT</div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar" style="height: 0%" data-value="0"></div>
+                            <div class="bar-label">PAZ</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WORKOUT TAB -->
+        <section id="workout" class="tab-content hidden">
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <div class="panel-icon">🎯</div>
+                        GÜNLÜK PROGRAM
+                    </div>
+                    <button class="btn-primary" style="width: auto; padding: 10px 20px; font-size: 0.8rem;" onclick="generateNewWorkout()">
+                        YENI PROGRAM
+                    </button>
+                </div>
+                
+                <div class="workout-preview" id="workoutPreview">
+                    <div class="workout-header">
+                        <div class="workout-title">GÖĞÜS & TRICEPS</div>
+                        <div class="workout-subtitle">Hacim Odaklı • Seviye 1</div>
+                        <div class="workout-stats">
+                            <div class="workout-stat">
+                                <div class="workout-stat-value">45</div>
+                                <div class="workout-stat-label">Dakika</div>
+                            </div>
+                            <div class="workout-stat">
+                                <div class="workout-stat-value">6</div>
+                                <div class="workout-stat-label">Egzersiz</div>
+                            </div>
+                            <div class="workout-stat">
+                                <div class="workout-stat-value">18</div>
+                                <div class="workout-stat-label">Set</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-list" id="exerciseList">
+                        <!-- Exercises will be generated dynamically -->
+                    </div>
+                </div>
+                
+                <button class="btn-primary" onclick="startWorkout()" style="margin-top: 20px;">
+                    ANTRENMANA BAŞLA 🚀
+                </button>
+            </div>
+        </section>
+
+        <!-- NUTRITION TAB -->
+        <section id="nutrition" class="tab-content hidden">
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <div class="panel-icon">🥗</div>
+                        BESLENME PLANI
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">🍽️</div>
+                        <div class="stat-value-large" id="targetCalories">2,200</div>
+                        <div class="stat-label-large">Hedef Kalori</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💧</div>
+                        <div class="stat-value-large" id="waterTarget">3.2</div>
+                        <div class="stat-label-large">Su (Litre)</div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem;">
+                        <span>Protein</span>
+                        <span style="color: var(--neon-orange);" id="proteinTarget">140g</span>
+                    </div>
+                    <div style="height: 8px; background: var(--metal-dark); border-radius: 4px; margin-bottom: 15px;">
+                        <div style="width: 30%; height: 100%; background: var(--neon-orange); border-radius: 4px;"></div>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem;">
+                        <span>Karbonhidrat</span>
+                        <span style="color: var(--neon-blue);" id="carbTarget">220g</span>
+                    </div>
+                    <div style="height: 8px; background: var(--metal-dark); border-radius: 4px; margin-bottom: 15px;">
+                        <div style="width: 45%; height: 100%; background: var(--neon-blue); border-radius: 4px;"></div>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem;">
+                        <span>Yağ</span>
+                        <span style="color: var(--neon-yellow);" id="fatTarget">65g</span>
+                    </div>
+                    <div style="height: 8px; background: var(--metal-dark); border-radius: 4px;">
+                        <div style="width: 25%; height: 100%; background: var(--neon-yellow); border-radius: 4px;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROGRESS TAB -->
+        <section id="progress" class="tab-content hidden">
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <div class="panel-icon">📊</div>
+                        GELIŞIM GRAFIĞI
+                    </div>
+                </div>
+                <div class="chart-container" style="height: 250px;">
+                    <canvas id="progressCanvas" style="width: 100%; height: 100%;"></canvas>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <div class="panel-icon">🏆</div>
+                        KIŞISEL REKORLAR
+                    </div>
+                </div>
+                <div id="personalRecords">
+                    <!-- PRs will be loaded here -->
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- FLOATING TIMER -->
+    <div class="timer-float" id="timerFloat" onclick="openTimer()">
+        <div class="timer-icon">⏱️</div>
+        <div class="timer-label">TIMER</div>
+    </div>
+
+    <!-- TIMER MODAL -->
+    <div class="modal" id="timerModal">
+        <div class="modal-content">
+            <div class="setup-title">DINLENME TIMER</div>
+            <div class="timer-display" id="timerDisplay">00:00</div>
+            
+            <div class="timer-presets">
+                <button class="preset-btn" onclick="startTimer(30)">30s</button>
+                <button class="preset-btn" onclick="startTimer(60)">60s</button>
+                <button class="preset-btn" onclick="startTimer(90)">90s</button>
+                <button class="preset-btn" onclick="startTimer(120)">2m</button>
+                <button class="preset-btn" onclick="startTimer(180)">3m</button>
+                <button class="preset-btn" onclick="startTimer(300)">5m</button>
+            </div>
+            
+            <button class="btn-secondary" onclick="closeTimer()">KAPAT</button>
+        </div>
+    </div>
+
+    <script>
+        // ==================== GLOBAL STATE ====================
+        const AppState = {
+            user: {
+                name: '',
+                gender: '',
+                age: 0,
+                height: 0,
+                weight: 0,
+                bmi: 0,
+                bmr: 0,
+                tdee: 0,
+                goal: '',
+                level: 1,
+                xp: 0,
+                streakDays: 1,
+                lastWorkout: null
+            },
+            currentWorkout: null,
+            timerInterval: null,
+            timerTime: 0
+        };
+
+        // ==================== SETUP WIZARD ====================
+        function initSetup() {
+            // Gender selection
+            document.querySelectorAll('.gender-option').forEach(opt => {
+                opt.addEventListener('click', () => {
+                    document.querySelectorAll('.gender-option').forEach(o => o.classList.remove('selected'));
+                    opt.classList.add('selected');
+                    AppState.user.gender = opt.dataset.gender;
+                });
+            });
+
+            // Goal selection
+            document.querySelectorAll('.goal-option').forEach(opt => {
+                opt.addEventListener('click', () => {
+                    document.querySelectorAll('.goal-option').forEach(o => o.classList.remove('selected'));
+                    opt.classList.add('selected');
+                    AppState.user.goal = opt.dataset.goal;
+                });
+            });
+        }
+
+        function nextStep(step) {
+            document.querySelectorAll('.setup-step').forEach(s => s.classList.remove('active'));
+            document.querySelector(`.setup-step[data-step="${step}"]`).classList.add('active');
+        }
+
+        function prevStep(step) {
+            nextStep(step);
+        }
+
+        function calculateBMI() {
+            const height = parseFloat(document.getElementById('userHeight').value);
+            const weight = parseFloat(document.getElementById('userWeight').value);
+            const age = parseInt(document.getElementById('userAge').value);
+
+            if (!height || !weight || !age) {
+                alert('Lütfen tüm alanları doldurun!');
+                return;
+            }
+
+            AppState.user.height = height;
+            AppState.user.weight = weight;
+            AppState.user.age = age;
+
+            // BMI Calculation
+            const bmi = weight / Math.pow(height / 100, 2);
+            AppState.user.bmi = bmi.toFixed(1);
+
+            // BMR Calculation (Mifflin-St Jeor)
+            let bmr;
+            if (AppState.user.gender === 'male') {
+                bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+            } else {
+                bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+            }
+            AppState.user.bmr = Math.round(bmr);
+
+            // TDEE (Moderate activity)
+            AppState.user.tdee = Math.round(bmr * 1.55);
+
+            // Ideal weight range
+            const minIdeal = 18.5 * Math.pow(height / 100, 2);
+            const maxIdeal = 24.9 * Math.pow(height / 100, 2);
+
+            // Update display
+            document.getElementById('bmiValue').textContent = AppState.user.bmi;
+            document.getElementById('idealWeight').textContent = `${Math.round(minIdeal)}-${Math.round(maxIdeal)}`;
+            document.getElementById('dailyCalories').textContent = AppState.user.tdee.toLocaleString();
+
+            // BMI Status
+            const statusEl = document.getElementById('bmiStatus');
+            let status = '';
+            let statusClass = '';
+            
+            if (bmi < 18.5) {
+                status = 'ZAYIF';
+                statusClass = 'underweight';
+            } else if (bmi < 25) {
+                status = 'NORMAL KILO';
+                statusClass = 'normal';
+            } else if (bmi < 30) {
+                status = 'FAZLA KILOLU';
+                statusClass = 'overweight';
+            } else {
+                status = 'OBEZ';
+                statusClass = 'obese';
+            }
+            
+            statusEl.textContent = status;
+            statusEl.className = 'bmi-status ' + statusClass;
+
+            nextStep(3);
+        }
+
+        function completeSetup() {
+            AppState.user.name = document.getElementById('userName').value;
+            
+            if (!AppState.user.goal) {
+                alert('Lütfen bir hedef seçin!');
+                return;
+            }
+
+            // Save to localStorage
+            localStorage.setItem('t800_user', JSON.stringify(AppState.user));
+            localStorage.setItem('t800_setup_complete', 'true');
+
+            // Hide wizard, show app
+            document.getElementById('setupWizard').classList.add('hidden');
+            document.getElementById('mainApp').style.display = 'block';
+            
+            // Initialize app
+            initApp();
+        }
+
+        // ==================== WORKOUT GENERATOR ====================
+        const WorkoutEngine = {
+            programs: {
+                lose: {
+                    name: 'Yağ Yakımı',
+                    focus: 'Yüksek tekrar, kısa dinlenme',
+                    split: ['Full Body', 'HIIT', 'Cardio + Güç']
+                },
+                maintain: {
+                    name: 'Form Koruma',
+                    focus: 'Dengeli antrenman',
+                    split: ['Üst Vücut', 'Alt Vücut', 'Core']
+                },
+                build: {
+                    name: 'Kas Hacmi',
+                    focus: 'Orta tekrar, progressive overload',
+                    split: ['Göğüs-Triceps', 'Sırt-Biceps', 'Bacak-Omuz']
+                },
+                strength: {
+                    name: 'Maksimum Güç',
+                    focus: 'Düşük tekrar, uzun dinlenme',
+                    split: ['Itiş Hareketleri', 'Çekiş Hareketleri', 'Bacak & Core']
+                }
+            },
+
+            exercises: {
+                chest: [
+                    { name: 'Klasik Şınav', difficulty: 'easy', sets: '3-4', reps: '12-15' },
+                    { name: 'Dar Şınav', difficulty: 'medium', sets: '3-4', reps: '10-12' },
+                    { name: 'Decline Şınav', difficulty: 'hard', sets: '3-4', reps: '8-10' },
+                    { name: 'Dips', difficulty: 'medium', sets: '3', reps: '8-12' }
+                ],
+                back: [
+                    { name: 'Pull-up', difficulty: 'hard', sets: '3-4', reps: '5-10' },
+                    { name: 'Chin-up', difficulty: 'medium', sets: '3-4', reps: '6-10' },
+                    { name: 'Inverted Row', difficulty: 'easy', sets: '3-4', reps: '10-15' },
+                    { name: 'Superman', difficulty: 'easy', sets: '3', reps: '15-20' }
+                ],
+                legs: [
+                    { name: 'Squat', difficulty: 'easy', sets: '4', reps: '15-20' },
+                    { name: 'Lunge', difficulty: 'medium', sets: '3', reps: '12 each' },
+                    { name: 'Pistol Squat', difficulty: 'elite', sets: '3', reps: '5-8' },
+                    { name: 'Calf Raise', difficulty: 'easy', sets: '4', reps: '20-25' }
+                ],
+                shoulders: [
+                    { name: 'Pike Push-up', difficulty: 'medium', sets: '3-4', reps: '8-12' },
+                    { name: 'Handstand Push-up', difficulty: 'elite', sets: '3-4', reps: '3-8' },
+                    { name: 'Lateral Raise (Bodyweight)', difficulty: 'easy', sets: '3', reps: '15-20' }
+                ],
+                core: [
+                    { name: 'Plank', difficulty: 'easy', sets: '3', reps: '45-60s' },
+                    { name: 'Hollow Body Hold', difficulty: 'medium', sets: '3', reps: '30-45s' },
+                    { name: 'L-sit', difficulty: 'hard', sets: '3', reps: '10-20s' },
+                    { name: 'Dragon Flag', difficulty: 'elite', sets: '3', reps: '5-10' }
+                ]
+            },
+
+            generate(user) {
+                const program = this.programs[user.goal];
+                const dayOfWeek = new Date().getDay();
+                const splitIndex = dayOfWeek % program.split.length;
+                const focus = program.split[splitIndex];
+
+                let exercises = [];
+                
+                // Select exercises based on focus
+                if (focus.includes('Göğüs') || focus.includes('Itiş')) {
+                    exercises = [...this.exercises.chest, ...this.exercises.shoulders.slice(0, 2)];
+                } else if (focus.includes('Sırt') || focus.includes('Çekiş')) {
+                    exercises = [...this.exercises.back, this.exercises.core[1]];
+                } else if (focus.includes('Bacak')) {
+                    exercises = [...this.exercises.legs, this.exercises.core[0]];
+                } else {
+                    // Full body or other
+                    exercises = [
+                        this.exercises.chest[0],
+                        this.exercises.back[2],
+                        this.exercises.legs[0],
+                        this.exercises.shoulders[0],
+                        this.exercises.core[0]
+                    ];
+                }
+
+                // Adjust based on BMI and goal
+                if (user.goal === 'lose') {
+                    exercises.forEach(ex => {
+                        if (ex.reps.includes('-')) {
+                            const [min, max] = ex.reps.split('-').map(x => parseInt(x));
+                            ex.reps = `${min + 3}-${max + 5}`;
+                        }
+                    });
+                }
+
+                return {
+                    name: focus,
+                    subtitle: `${program.name} • ${program.focus}`,
+                    duration: user.goal === 'lose' ? '35-40' : '45-60',
+                    exercises: exercises
+                };
+            }
+        };
+
+        // ==================== APP INITIALIZATION ====================
+        function initApp() {
+            // Load user data
+            const saved = localStorage.getItem('t800_user');
+            if (saved) {
+                AppState.user = { ...AppState.user, ...JSON.parse(saved) };
+            }
+
+            // Update UI
+            document.getElementById('userGreeting').textContent = `HOŞ GELDIN, ${AppState.user.name.toUpperCase()}`;
+            document.getElementById('displayHeight').textContent = AppState.user.height;
+            document.getElementById('displayWeight').textContent = AppState.user.weight;
+            document.getElementById('displayBMI').textContent = AppState.user.bmi;
+            document.getElementById('displayBMR').textContent = AppState.user.bmr.toLocaleString();
+            document.getElementById('currentLevelDisplay').textContent = AppState.user.level;
+            document.getElementById('currentXP').textContent = AppState.user.xp;
+            document.getElementById('streakDays').textContent = AppState.user.streakDays;
+
+            // Calculate nutrition targets
+            calculateNutrition();
+
+            // Generate workout
+            generateNewWorkout();
+
+            // Initialize tabs
+            initTabs();
+
+            // AI message
+            updateAIMessage();
+        }
+
+        function calculateNutrition() {
+            const user = AppState.user;
+            let calories = user.tdee;
+            let protein, carbs, fats;
+
+            switch(user.goal) {
+                case 'lose':
+                    calories -= 500;
+                    protein = user.weight * 2.2;
+                    carbs = (calories * 0.35) / 4;
+                    fats = (calories * 0.25) / 9;
+                    break;
+                case 'build':
+                    calories += 300;
+                    protein = user.weight * 2.0;
+                    carbs = (calories * 0.45) / 4;
+                    fats = (calories * 0.25) / 9;
+                    break;
+                case 'strength':
+                    calories += 200;
+                    protein = user.weight * 2.0;
+                    carbs = (calories * 0.40) / 4;
+                    fats = (calories * 0.30) / 9;
+                    break;
+                default: // maintain
+                    protein = user.weight * 1.8;
+                    carbs = (calories * 0.40) / 4;
+                    fats = (calories * 0.30) / 9;
+            }
+
+            document.getElementById('targetCalories').textContent = calories.toLocaleString();
+            document.getElementById('proteinTarget').textContent = Math.round(protein) + 'g';
+            document.getElementById('carbTarget').textContent = Math.round(carbs) + 'g';
+            document.getElementById('fatTarget').textContent = Math.round(fats) + 'g';
+            document.getElementById('waterTarget').textContent = (user.weight * 0.045).toFixed(1);
+        }
+
+        function generateNewWorkout() {
+            const workout = WorkoutEngine.generate(AppState.user);
+            AppState.currentWorkout = workout;
+
+            // Update header
+            document.querySelector('.workout-title').textContent = workout.name;
+            document.querySelector('.workout-subtitle').textContent = workout.subtitle;
+            document.querySelectorAll('.workout-stat-value')[0].textContent = workout.duration;
+            document.querySelectorAll('.workout-stat-value')[1].textContent = workout.exercises.length;
+            document.querySelectorAll('.workout-stat-value')[2].textContent = workout.exercises.length * 3;
+
+            // Generate exercise list
+            const list = document.getElementById('exerciseList');
+            list.innerHTML = workout.exercises.map((ex, i) => `
+                <div class="exercise-item" onclick="toggleExercise(${i})">
+                    <div class="exercise-number">${i + 1}</div>
+                    <div class="exercise-info">
+                        <div class="exercise-name">${ex.name}</div>
+                        <div class="exercise-target">Zorluk: ${ex.difficulty.toUpperCase()}</div>
+                    </div>
+                    <div class="exercise-sets">
+                        <div class="exercise-sets-value">${ex.sets}</div>
+                        <div class="exercise-sets-label">${ex.reps}</div>
+                    </div>
+                </div>
+                <div class="exercise-detail hidden" id="exercise-${i}" style="padding: 0 20px 20px;">
+                    <div style="background: var(--metal-dark); padding: 20px; border-radius: 12px; border: 1px solid var(--metal-border);">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                            <span style="color: var(--neon-orange); font-size: 0.9rem;">Set Takibi</span>
+                            <span style="color: #666; font-size: 0.8rem;">${ex.sets} Set × ${ex.reps}</span>
+                        </div>
+                        ${Array.from({length: parseInt(ex.sets)}, (_, j) => `
+                            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
+                                <span style="color: var(--neon-orange); width: 50px; font-weight: bold;">Set ${j + 1}</span>
+                                <input type="number" class="input-field" style="flex: 1; padding: 10px;" placeholder="Tekrar" id="rep-${i}-${j}">
+                                <div class="set-check" onclick="event.stopPropagation(); toggleSet(this)" style="width: 40px; height: 40px; border: 2px solid var(--metal-border); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer;">✓</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleExercise(index) {
+            const detail = document.getElementById(`exercise-${index}`);
+            detail.classList.toggle('hidden');
+        }
+
+        function toggleSet(el) {
+            el.classList.toggle('completed');
+            if (el.classList.contains('completed')) {
+                el.style.background = 'var(--neon-green)';
+                el.style.borderColor = 'var(--neon-green)';
+                el.style.color = '#000';
+            } else {
+                el.style.background = 'transparent';
+                el.style.borderColor = 'var(--metal-border)';
+                el.style.color = '#fff';
+            }
+        }
+
+        function startWorkout() {
+            // Calculate XP
+            const completedSets = document.querySelectorAll('.set-check.completed').length;
+            const totalSets = AppState.currentWorkout.exercises.length * 3;
+            const xp = Math.floor((completedSets / totalSets) * 100);
+            
+            AppState.user.xp += xp;
+            AppState.user.lastWorkout = new Date().toISOString();
+            
+            // Check level up
+            const xpNeeded = AppState.user.level * 100;
+            if (AppState.user.xp >= xpNeeded) {
+                AppState.user.level++;
+                AppState.user.xp -= xpNeeded;
+                alert(`🎉 TEBRIKLER! SEVIYE ${AppState.user.level} OLDUNUZ!`);
+            }
+            
+            localStorage.setItem('t800_user', JSON.stringify(AppState.user));
+            
+            // Update UI
+            document.getElementById('currentLevelDisplay').textContent = AppState.user.level;
+            document.getElementById('currentXP').textContent = AppState.user.xp;
+            
+            alert(`💪 ANTRENMAN TAMAMLANDI! +${xp} XP`);
+        }
+
+        function updateAIMessage() {
+            const messages = [
+                `Vücut kitle indeksiniz ${AppState.user.bmi}, ideal aralıkta. Bugün güç antrenmanı öneriyorum.`,
+                `Son antrenmanınızdan bu yana 24 saat geçti. Kaslarınız toparlandı, yeni antrenmana hazırsınız.`,
+                `Hedefiniz ${AppState.user.goal === 'build' ? 'kas kazanmak' : 'yağ yakmak'}. Bugün programınız buna göre optimize edildi.`,
+                `${AppState.user.name}, bugün ${AppState.user.streakDays} günlük streak'inizi koruyabilirsiniz!`
+            ];
+            
+            const recs = [
+                'Protein alımınızı artırın. Hedef: ' + Math.round(AppState.user.weight * 2) + 'g',
+                'Su tüketiminizi kontrol edin. Günde en az ' + (AppState.user.weight * 0.04).toFixed(1) + ' litre.',
+                'Uyku düzeninizi koruyun. 7-8 saat uyku kas gelişimi için kritik.',
+                'Bugün 30 dakika kardiyo ekleyerek yağ yakımını hızlandırabilirsiniz.'
+            ];
+            
+            document.getElementById('aiMessage').textContent = messages[Math.floor(Math.random() * messages.length)];
+            document.getElementById('recText').textContent = recs[Math.floor(Math.random() * recs.length)];
+        }
+
+        // ==================== TABS ====================
+        function initTabs() {
+            const tabs = document.querySelectorAll('.nav-tab');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const target = tab.dataset.tab;
+                    
+                    tabs.forEach(t => t.classList.remove('active'));
+                    contents.forEach(c => c.classList.add('hidden'));
+                    
+                    tab.classList.add('active');
+                    document.getElementById(target).classList.remove('hidden');
+                });
+            });
+        }
+
+        // ==================== TIMER ====================
+        function openTimer() {
+            document.getElementById('timerModal').classList.add('active');
+        }
+
+        function closeTimer() {
+            document.getElementById('timerModal').classList.remove('active');
+            clearInterval(AppState.timerInterval);
+            AppState.timerTime = 0;
+            updateTimerDisplay();
+        }
+
+        function startTimer(seconds) {
+            clearInterval(AppState.timerInterval);
+            AppState.timerTime = seconds;
+            updateTimerDisplay();
+            
+            document.getElementById('timerFloat').classList.add('active');
+            
+            AppState.timerInterval = setInterval(() => {
+                AppState.timerTime--;
+                update
+                              TimerDisplay();
                 
                 if (AppState.timerTime <= 0) {
                     clearInterval(AppState.timerInterval);
