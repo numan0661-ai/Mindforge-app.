@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HeightAI Pro + Pelvik Sağlık</title>
+    <title>HeightAI Pro</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
@@ -20,137 +20,147 @@
             --danger: #ef4444;
             --kegel: #ec4899;
             --kegel-dark: #be185d;
+            --dark: #0f172a;
+            --card: #1e293b;
         }
 
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            background: linear-gradient(135deg, var(--dark) 0%, #1e293b 100%);
             min-height: 100vh;
             color: #e2e8f0;
+            padding: 20px;
         }
 
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
         }
 
         header {
             text-align: center;
-            padding: 40px 0;
+            padding: 30px 0;
         }
 
-        header h1 {
-            font-size: 3.5em;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        h1 {
+            font-size: 3em;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 10px;
         }
 
         .subtitle {
-            font-size: 1.3em;
             color: #94a3b8;
+            font-size: 1.2em;
         }
 
-        /* Navigation Tabs */
-        .nav-tabs {
+        /* SEKME SİSTEMİ - TEMEL */
+        .tabs {
             display: flex;
             gap: 15px;
             justify-content: center;
             margin: 30px 0;
-            flex-wrap: wrap;
         }
 
-        .nav-tab {
-            padding: 15px 30px;
-            background: rgba(255,255,255,0.05);
+        .tab-btn {
+            padding: 15px 40px;
             border: 2px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: #94a3b8;
             border-radius: 30px;
             cursor: pointer;
-            transition: all 0.3s;
-            color: #94a3b8;
-            font-weight: 600;
             font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
         }
 
-        .nav-tab:hover {
+        .tab-btn:hover {
             background: rgba(255,255,255,0.1);
             transform: translateY(-2px);
         }
 
-        .nav-tab.active {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             border-color: transparent;
         }
 
-        .nav-tab.kegel.active {
-            background: linear-gradient(135deg, var(--kegel) 0%, var(--kegel-dark) 100%);
+        .tab-btn.kegel.active {
+            background: linear-gradient(135deg, var(--kegel), var(--kegel-dark));
         }
 
-        /* Tab Content */
-        .tab-panel {
+        /* PANEL SİSTEMİ - TEMEL */
+        .panels {
+            position: relative;
+        }
+
+        .panel {
             display: none;
+            animation: fadeIn 0.3s;
         }
 
-        .tab-panel.active {
+        .panel.active {
             display: block;
         }
 
-        /* Dashboard Layout */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* DASHBOARD */
         .dashboard {
             display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 30px;
-            margin-top: 30px;
+            grid-template-columns: 280px 1fr;
+            gap: 25px;
+            margin-top: 20px;
         }
 
-        /* Sidebar */
+        /* SIDEBAR */
         .sidebar {
-            background: rgba(30, 41, 59, 0.6);
-            backdrop-filter: blur(10px);
+            background: var(--card);
             border-radius: 20px;
-            padding: 30px;
+            padding: 25px;
             border: 1px solid rgba(102,126,234,0.2);
+            height: fit-content;
             position: sticky;
             top: 20px;
-            height: fit-content;
         }
 
-        .profile-img {
-            width: 120px;
-            height: 120px;
+        .avatar {
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            margin: 0 auto 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3em;
+            font-size: 2.5em;
         }
 
-        .profile-name {
+        .user-name {
             text-align: center;
-            font-size: 1.5em;
+            font-size: 1.3em;
             font-weight: bold;
             margin-bottom: 5px;
         }
 
-        .profile-status {
+        .user-status {
             text-align: center;
             color: #94a3b8;
             font-size: 0.9em;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
-        .stats {
+        .stat-list {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
 
-        .stat-box {
+        .stat-item {
             background: rgba(255,255,255,0.05);
             padding: 15px;
             border-radius: 12px;
@@ -159,17 +169,16 @@
             border-left: 3px solid var(--primary);
         }
 
-        .stat-box.kegel {
+        .stat-item.kegel {
             border-left-color: var(--kegel);
         }
 
         .stat-label {
-            font-size: 0.9em;
-            opacity: 0.7;
+            font-size: 0.85em;
+            color: #94a3b8;
         }
 
         .stat-value {
-            font-size: 1.2em;
             font-weight: bold;
             color: var(--primary);
         }
@@ -182,31 +191,26 @@
             width: 100%;
             margin-top: 20px;
             padding: 15px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             border: none;
-            border-radius: 30px;
+            border-radius: 25px;
             cursor: pointer;
             font-size: 1em;
             font-weight: bold;
-            transition: transform 0.3s;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
-        }
-
-        /* Main Content Cards */
-        .main-content {
+        /* MAIN CONTENT */
+        .content {
             display: flex;
             flex-direction: column;
-            gap: 30px;
+            gap: 25px;
         }
 
         .card {
-            background: rgba(30, 41, 59, 0.6);
+            background: var(--card);
             border-radius: 20px;
-            padding: 30px;
+            padding: 25px;
             border: 1px solid rgba(102,126,234,0.2);
         }
 
@@ -222,19 +226,90 @@
         }
 
         .badge {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
             padding: 5px 15px;
             border-radius: 20px;
-            font-size: 0.8em;
+            font-size: 0.75em;
             font-weight: bold;
         }
 
         .badge.kegel {
-            background: linear-gradient(135deg, var(--kegel) 0%, var(--kegel-dark) 100%);
+            background: linear-gradient(135deg, var(--kegel), var(--kegel-dark));
         }
 
-        /* Timer Styles */
-        .timer-container {
+        /* EGZERSIZ KARTLARI */
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .ex-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .ex-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .ex-card.kegel:hover {
+            border-color: var(--kegel);
+        }
+
+        .ex-icon {
+            height: 160px;
+            background: linear-gradient(135deg, rgba(102,126,234,0.2), rgba(118,75,162,0.2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+        }
+
+        .ex-icon.kegel {
+            background: linear-gradient(135deg, rgba(236,72,153,0.2), rgba(190,24,93,0.2));
+        }
+
+        .ex-info {
+            padding: 20px;
+        }
+
+        .ex-tag {
+            display: inline-block;
+            background: rgba(102,126,234,0.2);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            margin-bottom: 10px;
+        }
+
+        .ex-tag.kegel {
+            background: rgba(236,72,153,0.2);
+            color: var(--kegel);
+        }
+
+        .ex-title {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .ex-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85em;
+            color: #94a3b8;
+        }
+
+        /* ZAMANLAYICI */
+        .timer-box {
             text-align: center;
             padding: 40px;
         }
@@ -248,235 +323,58 @@
             text-shadow: 0 0 30px rgba(236,72,153,0.5);
         }
 
-        .timer-controls {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin: 30px 0;
-        }
-
-        .timer-btn {
-            padding: 15px 30px;
-            border-radius: 30px;
-            border: none;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-
-        .timer-btn.start {
-            background: linear-gradient(135deg, var(--kegel) 0%, var(--kegel-dark) 100%);
-            color: white;
-        }
-
-        .timer-btn.secondary {
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
         .phases {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
             margin: 20px 0;
             flex-wrap: wrap;
         }
 
         .phase {
             padding: 10px 20px;
-            border-radius: 20px;
             background: rgba(255,255,255,0.05);
+            border-radius: 20px;
             opacity: 0.5;
             transition: all 0.3s;
         }
 
         .phase.active {
             background: rgba(236,72,153,0.3);
-            opacity: 1;
             color: var(--kegel);
+            opacity: 1;
             border: 1px solid var(--kegel);
         }
 
-        /* Exercise Grid */
-        .exercise-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin-top: 20px;
-        }
-
-        .exercise-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.1);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .exercise-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-        }
-
-        .exercise-card.kegel:hover {
-            border-color: var(--kegel);
-        }
-
-        .exercise-img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            background: linear-gradient(135deg, rgba(102,126,234,0.2) 0%, rgba(118,75,162,0.2) 100%);
-        }
-
-        .exercise-img.kegel {
-            background: linear-gradient(135deg, rgba(236,72,153,0.2) 0%, rgba(190,24,93,0.2) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4em;
-        }
-
-        .exercise-info {
-            padding: 25px;
-        }
-
-        .exercise-tag {
-            display: inline-block;
-            background: rgba(102,126,234,0.2);
-            color: var(--primary);
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 0.85em;
-            margin-bottom: 10px;
-        }
-
-        .exercise-tag.kegel {
-            background: rgba(236,72,153,0.2);
-            color: var(--kegel);
-        }
-
-        .exercise-title {
-            font-size: 1.3em;
-            margin-bottom: 10px;
-        }
-
-        .exercise-meta {
+        .timer-controls {
             display: flex;
             gap: 15px;
-            font-size: 0.9em;
-            color: #94a3b8;
-            margin-bottom: 10px;
-        }
-
-        /* Chart Container */
-        .chart-container {
-            height: 250px;
+            justify-content: center;
             margin-top: 20px;
         }
 
-        /* AI Chat */
-        .ai-orb {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 70px;
-            height: 70px;
-            background: radial-gradient(circle, rgba(102,126,234,0.8) 0%, rgba(118,75,162,0.6) 100%);
-            border-radius: 50%;
+        .timer-btn {
+            padding: 15px 30px;
+            border-radius: 25px;
+            border: none;
             cursor: pointer;
-            z-index: 1000;
-            box-shadow: 0 0 30px rgba(102,126,234,0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2em;
-            animation: pulse 2s infinite;
+            font-size: 1em;
+            font-weight: bold;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        .timer-btn.start {
+            background: linear-gradient(135deg, var(--kegel), var(--kegel-dark));
+            color: white;
         }
 
-        .ai-chat {
-            position: fixed;
-            bottom: 110px;
-            right: 30px;
-            width: 400px;
-            height: 500px;
-            background: rgba(30, 41, 59, 0.98);
-            border-radius: 20px;
-            border: 1px solid rgba(102,126,234,0.3);
-            z-index: 999;
-            display: none;
-            flex-direction: column;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-
-        .ai-chat.active {
-            display: flex;
-        }
-
-        .chat-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            padding: 20px;
-            border-radius: 20px 20px 0 0;
-        }
-
-        .chat-body {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .chat-input-area {
-            padding: 20px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            gap: 10px;
-        }
-
-        .chat-input-area input {
-            flex: 1;
+        .timer-btn.stop {
             background: rgba(255,255,255,0.1);
-            border: none;
-            padding: 12px 20px;
-            border-radius: 25px;
             color: white;
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
-        .chat-input-area button {
-            background: var(--primary);
-            border: none;
-            color: white;
-            padding: 12px 25px;
-            border-radius: 25px;
-            cursor: pointer;
-        }
-
-        .message {
-            max-width: 80%;
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 10px;
-        }
-
-        .message.ai {
-            background: rgba(102,126,234,0.2);
-            margin-right: auto;
-        }
-
-        .message.user {
-            background: rgba(16,185,129,0.2);
-            margin-left: auto;
-        }
-
-        /* Modal */
-        .modal-overlay {
+        /* MODAL */
+        .modal {
             display: none;
             position: fixed;
             top: 0;
@@ -484,20 +382,20 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.8);
-            z-index: 2000;
+            z-index: 1000;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
 
-        .modal-overlay.active {
+        .modal.show {
             display: flex;
         }
 
-        .modal {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border-radius: 25px;
-            max-width: 800px;
+        .modal-content {
+            background: var(--card);
+            border-radius: 20px;
+            max-width: 600px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
@@ -505,76 +403,174 @@
         }
 
         .modal-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            padding: 30px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 25px;
+            border-radius: 20px 20px 0 0;
             position: relative;
+        }
+
+        .modal-header.kegel {
+            background: linear-gradient(135deg, var(--kegel), var(--kegel-dark));
         }
 
         .modal-close {
             position: absolute;
-            top: 20px;
-            right: 25px;
+            top: 15px;
+            right: 20px;
             font-size: 2em;
-            cursor: pointer;
             color: white;
+            cursor: pointer;
         }
 
         .modal-body {
-            padding: 30px;
+            padding: 25px;
         }
 
-        .form-row {
+        .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
             margin-bottom: 20px;
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 5px;
         }
 
         .form-group label {
+            font-size: 0.85em;
             color: #94a3b8;
-            font-size: 0.9em;
         }
 
         .form-group input,
         .form-group select {
+            padding: 12px;
             background: rgba(255,255,255,0.1);
             border: 1px solid rgba(255,255,255,0.2);
-            padding: 12px;
             border-radius: 10px;
             color: white;
             font-size: 1em;
         }
 
-        /* Notification */
-        .notification {
+        /* CHAT */
+        .chat-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(102,126,234,0.4);
+            z-index: 999;
+        }
+
+        .chat-box {
+            display: none;
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            height: 450px;
+            background: var(--card);
+            border-radius: 20px;
+            border: 1px solid rgba(102,126,234,0.3);
+            flex-direction: column;
+            z-index: 998;
+            overflow: hidden;
+        }
+
+        .chat-box.show {
+            display: flex;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 20px;
+            color: white;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .msg {
+            max-width: 80%;
+            padding: 12px 15px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+
+        .msg.ai {
+            background: rgba(102,126,234,0.2);
+            align-self: flex-start;
+        }
+
+        .msg.user {
+            background: rgba(16,185,129,0.2);
+            align-self: flex-end;
+        }
+
+        .chat-input {
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 20px;
+            color: white;
+        }
+
+        .chat-input button {
+            padding: 12px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        /* NOTIFICATION */
+        .notif {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            background: linear-gradient(135deg, var(--success), #059669);
             color: white;
-            padding: 20px 30px;
-            border-radius: 15px;
+            padding: 15px 25px;
+            border-radius: 10px;
             display: none;
-            z-index: 3000;
-            animation: slideIn 0.3s ease-out;
+            z-index: 2000;
+            animation: slideIn 0.3s;
         }
 
-        .notification.kegel {
-            background: linear-gradient(135deg, var(--kegel) 0%, var(--kegel-dark) 100%);
+        .notif.kegel {
+            background: linear-gradient(135deg, var(--kegel), var(--kegel-dark));
         }
 
         @keyframes slideIn {
-            from { transform: translateX(400px); opacity: 0; }
+            from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
 
-        /* Responsive */
+        /* RESPONSIVE */
         @media (max-width: 1024px) {
             .dashboard {
                 grid-template-columns: 1fr;
@@ -582,16 +578,14 @@
             .sidebar {
                 position: static;
             }
-            .ai-chat {
-                width: 90%;
-                right: 5%;
-            }
         }
 
         @media (max-width: 768px) {
-            header h1 { font-size: 2em; }
+            h1 { font-size: 2em; }
+            .tabs { flex-direction: column; align-items: center; }
+            .tab-btn { width: 80%; }
+            .form-grid { grid-template-columns: 1fr; }
             .timer-display { font-size: 4em; }
-            .nav-tab { padding: 12px 20px; font-size: 0.9em; }
         }
 
         .hidden {
@@ -600,78 +594,77 @@
     </style>
 </head>
 <body>
-    <!-- AI Chat -->
-    <div class="ai-orb" onclick="toggleChat()">🤖</div>
-    <div class="ai-chat" id="aiChat">
-        <div class="chat-header">
-            <h3>🤖 HeightAI Asistan</h3>
+
+    <!-- Chat -->
+    <button class="chat-btn" onclick="toggleChat()">🤖</button>
+    <div class="chat-box" id="chatBox">
+        <div class="chat-header">HeightAI Asistan</div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="msg ai">Merhaba! Size nasıl yardımcı olabilirim?</div>
         </div>
-        <div class="chat-body" id="chatBody">
-            <div class="message ai">Merhaba! Size nasıl yardımcı olabilirim?</div>
-        </div>
-        <div class="chat-input-area">
-            <input type="text" id="chatInput" placeholder="Mesajınız..." onkeypress="if(event.key==='Enter')sendMessage()">
-            <button onclick="sendMessage()">Gönder</button>
+        <div class="chat-input">
+            <input type="text" id="chatInput" placeholder="Mesaj yaz..." onkeypress="if(event.key==='Enter')sendMsg()">
+            <button onclick="sendMsg()">Gönder</button>
         </div>
     </div>
 
     <!-- Notification -->
-    <div class="notification" id="notification"></div>
+    <div class="notif" id="notif"></div>
 
     <!-- Profile Modal -->
-    <div class="modal-overlay" id="profileModal">
-        <div class="modal">
+    <div class="modal" id="modalProfile">
+        <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-close" onclick="closeModal('profileModal')">&times;</span>
+                <span class="modal-close" onclick="closeModal('modalProfile')">&times;</span>
                 <h2>Profil Ayarları</h2>
             </div>
             <div class="modal-body">
-                <div class="form-row">
+                <div class="form-grid">
                     <div class="form-group">
                         <label>Ad Soyad</label>
-                        <input type="text" id="inputName">
+                        <input type="text" id="inpName">
                     </div>
                     <div class="form-group">
                         <label>Yaş</label>
-                        <input type="number" id="inputAge" onchange="calcPotential()">
+                        <input type="number" id="inpAge" onchange="calcPot()">
                     </div>
                     <div class="form-group">
                         <label>Cinsiyet</label>
-                        <select id="inputGender" onchange="calcPotential()">
+                        <select id="inpGender" onchange="calcPot()">
                             <option value="male">Erkek</option>
                             <option value="female">Kadın</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Mevcut Boy (cm)</label>
-                        <input type="number" id="inputHeight" step="0.1" onchange="calcPotential()">
+                        <label>Boy (cm)</label>
+                        <input type="number" id="inpHeight" step="0.1" onchange="calcPot()">
                     </div>
                     <div class="form-group">
-                        <label>Annenin Boyu</label>
-                        <input type="number" id="inputMother" onchange="calcPotential()">
+                        <label>Anne Boyu</label>
+                        <input type="number" id="inpMother" onchange="calcPot()">
                     </div>
                     <div class="form-group">
-                        <label>Babanın Boyu</label>
-                        <input type="number" id="inputFather" onchange="calcPotential()">
+                        <label>Baba Boyu</label>
+                        <input type="number" id="inpFather" onchange="calcPot()">
                     </div>
                 </div>
-                <div id="potentialResult" style="background: rgba(102,126,234,0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px solid var(--primary);">
+                <div id="potResult" style="background: rgba(102,126,234,0.1); padding: 15px; border-radius: 10px; margin-bottom: 20px; color: #94a3b8;">
                     Bilgilerinizi girin...
                 </div>
-                <button class="btn" onclick="saveProfile()">Kaydet ve Program Oluştur</button>
+                <button class="btn" onclick="saveUser()">Kaydet</button>
             </div>
         </div>
     </div>
 
     <!-- Exercise Modal -->
-    <div class="modal-overlay" id="exerciseModal">
-        <div class="modal" id="exerciseModalInner">
-            <div class="modal-header">
-                <span class="modal-close" onclick="closeModal('exerciseModal')">&times;</span>
-                <h2 id="modalTitle">Egzersiz</h2>
+    <div class="modal" id="modalEx">
+        <div class="modal-content" id="modalExContent">
+            <div class="modal-header" id="modalExHeader">
+                <span class="modal-close" onclick="closeModal('modalEx')">&times;</span>
+                <h2 id="modalExTitle">Egzersiz</h2>
             </div>
-            <div class="modal-body" id="modalBody">
-                <!-- Content loaded dynamically -->
+            <div class="modal-body" id="modalExBody">
+                <!-- Dynamic content -->
             </div>
         </div>
     </div>
@@ -682,423 +675,239 @@
             <p class="subtitle">Boy Uzatma & Pelvik Sağlık Platformu</p>
         </header>
 
-        <!-- Tabs -->
-        <div class="nav-tabs">
-            <button class="nav-tab active" onclick="showTab('height')" id="tab-btn-height">📏 Boy Uzatma</button>
-            <button class="nav-tab kegel" onclick="showTab('kegel')" id="tab-btn-kegel">🎯 Pelvik Sağlık</button>
+        <!-- SEKMELER -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="setTab('height')">📏 Boy Uzatma</button>
+            <button class="tab-btn kegel" onclick="setTab('kegel')">🎯 Pelvik Sağlık</button>
         </div>
 
-        <div class="dashboard">
-            <!-- Sidebar -->
-            <aside class="sidebar">
-                <div class="profile-img">👤</div>
-                <div class="profile-name" id="userName">Misafir</div>
-                <div class="profile-status" id="programStatus">Program Aktif</div>
-                
-                <div id="stats-height" class="stats">
-                    <div class="stat-box">
-                        <span class="stat-label">Mevcut Boy</span>
-                        <span class="stat-value" id="val-height">-</span>
-                    </div>
-                    <div class="stat-box">
-                        <span class="stat-label">Hedef</span>
-                        <span class="stat-value" id="val-target">-</span>
-                    </div>
-                    <div class="stat-box">
-                        <span class="stat-label">Potansiyel</span>
-                        <span class="stat-value" style="color: var(--success)">+2-4cm</span>
-                    </div>
+        <!-- PANELS -->
+        <div class="panels">
+            
+            <!-- BOY UZATMA PANELİ -->
+            <div class="panel active" id="panel-height">
+                <div class="dashboard">
+                    <aside class="sidebar">
+                        <div class="avatar">👤</div>
+                        <div class="user-name" id="h-name">Misafir</div>
+                        <div class="user-status">Boy Uzatma Programı</div>
+                        <div class="stat-list">
+                            <div class="stat-item">
+                                <span class="stat-label">Mevcut</span>
+                                <span class="stat-value" id="h-current">-</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Hedef</span>
+                                <span class="stat-value" id="h-target">-</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Potansiyel</span>
+                                <span class="stat-value" style="color: var(--success)">+2-4cm</span>
+                            </div>
+                        </div>
+                        <button class="btn" onclick="openProfile()">Profili Düzenle</button>
+                    </aside>
+
+                    <main class="content">
+                        <!-- AI Analiz -->
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="badge">AI ANALİZ</span>
+                                <h2>Boy Uzatma Tahmini</h2>
+                            </div>
+                            <p style="color: #94a3b8; margin-bottom: 20px;">AI algoritmamız 3-6 ay içinde 2-4 cm artış tahmin ediyor.</p>
+                            <div style="height: 250px;">
+                                <canvas id="chartHeight"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- 3D Model -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>🦴 İskelet Analizi</h2>
+                                <span class="badge">CANLI</span>
+                            </div>
+                            <div style="height: 300px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, rgba(102,126,234,0.1) 0%, transparent 70%); border-radius: 15px;">
+                                <svg width="180" height="320" viewBox="0 0 180 320">
+                                    <path d="M90 50 L90 200" stroke="#64748b" stroke-width="3" fill="none">
+                                        <animate attributeName="stroke" values="#64748b;#667eea;#64748b" dur="3s" repeatCount="indefinite"/>
+                                    </path>
+                                    <circle cx="90" cy="35" r="18" stroke="#64748b" stroke-width="3" fill="none"/>
+                                    <path d="M65 90 Q90 110 115 90" stroke="#64748b" stroke-width="2" fill="none"/>
+                                    <path d="M75 200 L70 300" stroke="#64748b" stroke-width="3" fill="none"/>
+                                    <path d="M105 200 L110 300" stroke="#64748b" stroke-width="3" fill="none"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Egzersizler -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>🎯 AI Önerileri</h2>
+                                <button class="btn" style="width: auto; padding: 10px 20px; margin: 0;" onclick="renderHeightEx()">🔄 Yenile</button>
+                            </div>
+                            <div style="background: rgba(16,185,129,0.1); border: 1px solid var(--success); padding: 15px; border-radius: 10px; margin-bottom: 20px; display: flex; gap: 10px; align-items: center;">
+                                <span style="font-size: 1.5em;">🧠</span>
+                                <div><strong>AI:</strong> Bugün omurga esnekliğine odaklanın.</div>
+                            </div>
+                            <div class="exercise-grid" id="grid-height">
+                                <!-- JS ile doldurulacak -->
+                            </div>
+                        </div>
+                    </main>
                 </div>
+            </div>
 
-                <div id="stats-kegel" class="stats hidden">
-                    <div class="stat-box kegel">
-                        <span class="stat-label">Günlük Set</span>
-                        <span class="stat-value kegel" id="val-sets">0/3</span>
-                    </div>
-                    <div class="stat-box kegel">
-                        <span class="stat-label">Toplam Tekrar</span>
-                        <span class="stat-value kegel" id="val-reps">0</span>
-                    </div>
-                    <div class="stat-box kegel">
-                        <span class="stat-label">Seviye</span>
-                        <span class="stat-value kegel" id="val-level">Başlangıç</span>
-                    </div>
+            <!-- PELVIK SAĞLIK PANELİ -->
+            <div class="panel" id="panel-kegel">
+                <div class="dashboard">
+                    <aside class="sidebar">
+                        <div class="avatar" style="background: linear-gradient(135deg, var(--kegel), var(--kegel-dark));">🎯</div>
+                        <div class="user-name" id="k-name">Misafir</div>
+                        <div class="user-status">Pelvik Sağlık Programı</div>
+                        <div class="stat-list">
+                            <div class="stat-item kegel">
+                                <span class="stat-label">Günlük Set</span>
+                                <span class="stat-value kegel" id="k-sets">0/3</span>
+                            </div>
+                            <div class="stat-item kegel">
+                                <span class="stat-label">Toplam Tekrar</span>
+                                <span class="stat-value kegel" id="k-reps">0</span>
+                            </div>
+                            <div class="stat-item kegel">
+                                <span class="stat-label">Seviye</span>
+                                <span class="stat-value kegel" id="k-level">Başlangıç</span>
+                            </div>
+                        </div>
+                        <button class="btn" style="background: linear-gradient(135deg, var(--kegel), var(--kegel-dark));" onclick="openProfile()">Profili Düzenle</button>
+                    </aside>
+
+                    <main class="content">
+                        <!-- Kegel Analiz -->
+                        <div class="card kegel">
+                            <div class="card-header">
+                                <span class="badge kegel">PELVIK SAĞLIK</span>
+                                <h2>Kegel Programı</h2>
+                            </div>
+                            <p style="color: #94a3b8; margin-bottom: 20px;">Harvard protokolüne dayanan egzersizler.</p>
+                            <div style="height: 250px;">
+                                <canvas id="chartKegel"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Zamanlayıcı -->
+                        <div class="card kegel">
+                            <h2 style="text-align: center; margin-bottom: 20px;">⏱️ Kegel Zamanlayıcı</h2>
+                            <div class="timer-box">
+                                <div class="timer-display" id="timer">00:00</div>
+                                <div class="phases">
+                                    <div class="phase active" id="ph-contract">Sık (3s)</div>
+                                    <div class="phase" id="ph-hold">Tut (5s)</div>
+                                    <div class="phase" id="ph-relax">Bırak (5s)</div>
+                                </div>
+                                <div class="timer-controls">
+                                    <button class="timer-btn start" onclick="startKegel()">▶️ Başlat</button>
+                                    <button class="timer-btn stop" onclick="stopKegel()">⏸️ Durdur</button>
+                                    <button class="timer-btn stop" onclick="resetKegel()">🔄 Sıfırla</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kegel Egzersizleri -->
+                        <div class="card kegel">
+                            <div class="card-header">
+                                <h2>🎯 Kegel Egzersizleri</h2>
+                                <button class="btn" style="width: auto; padding: 10px 20px; margin: 0; background: linear-gradient(135deg, var(--kegel), var(--kegel-dark));" onclick="startKegel()">💪 Başlat</button>
+                            </div>
+                            <div style="background: rgba(236,72,153,0.1); border: 1px solid var(--kegel); padding: 15px; border-radius: 10px; margin-bottom: 20px; display: flex; gap: 10px; align-items: center;">
+                                <span style="font-size: 1.5em;">🧠</span>
+                                <div><strong>AI:</strong> Başlangıç: 3 set, 8-10 tekrar, 3sn tutma.</div>
+                            </div>
+                            <div class="exercise-grid" id="grid-kegel">
+                                <!-- JS ile doldurulacak -->
+                            </div>
+                        </div>
+
+                        <!-- Eğitim -->
+                        <div class="card kegel">
+                            <h2>📚 Eğitim</h2>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 20px;">
+                                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; border-left: 3px solid var(--kegel);">
+                                    <h4 style="color: var(--kegel); margin-bottom: 10px;">🔍 Doğru Kasları Bul</h4>
+                                    <ul style="list-style: none; font-size: 0.9em; line-height: 1.8; color: #94a3b8;">
+                                        <li>• İdrarı durdurmayı dene (test için)</li>
+                                        <li>• Gazı engelle gibi sık</li>
+                                        <li>• Karın kaslarını gevşek tut</li>
+                                    </ul>
+                                </div>
+                                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; border-left: 3px solid var(--kegel);">
+                                    <h4 style="color: var(--kegel); margin-bottom: 10px;">⚠️ Yaygın Hatalar</h4>
+                                    <ul style="list-style: none; font-size: 0.9em; line-height: 1.8; color: #94a3b8;">
+                                        <li>• Nefes tutma</li>
+                                        <li>• Karın/bacak sıkma</li>
+                                        <li>• Aşırı egzersiz</li>
+                                    </ul>
+                                </div>
+                                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; border-left: 3px solid var(--kegel);">
+                                    <h4 style="color: var(--kegel); margin-bottom: 10px;">💡 Faydalar</h4>
+                                    <ul style="list-style: none; font-size: 0.9em; line-height: 1.8; color: #94a3b8;">
+                                        <li>• İdrar kaçırma kontrolü</li>
+                                        <li>• Pelvik organ desteği</li>
+                                        <li>• Cinsel fonksiyon</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
                 </div>
+            </div>
 
-                <button class="btn" onclick="openProfile()">Profili Düzenle</button>
-            </aside>
-
-            <!-- Main Content -->
-            <main class="main-content">
-                <!-- HEIGHT TAB -->
-                <div id="tab-height" class="tab-panel active">
-                    <div class="card">
-                        <div class="card-header">
-                            <span class="badge">AI ANALİZ</span>
-                            <h2>Boy Uzatma Tahmini</h2>
-                        </div>
-                        <p>AI algoritmamız 3-6 ay içinde 2-4 cm artış tahmin ediyor.</p>
-                        <div class="chart-container">
-                            <canvas id="chartHeight"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>🦴 3D İskelet Analizi</h2>
-                            <span class="badge">CANLI</span>
-                        </div>
-                        <div style="height: 300px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, rgba(102,126,234,0.1) 0%, transparent 70%); border-radius: 15px;">
-                            <svg width="200" height="350" viewBox="0 0 200 350">
-                                <path class="bone-anim" d="M100 60 L100 220" stroke="#64748b" stroke-width="3" fill="none"/>
-                                <circle cx="100" cy="40" r="20" stroke="#64748b" stroke-width="3" fill="none"/>
-                                <path d="M70 100 Q100 120 130 100" stroke="#64748b" stroke-width="2" fill="none"/>
-                                <path d="M85 220 L80 320" stroke="#64748b" stroke-width="3" fill="none"/>
-                                <path d="M115 220 L120 320" stroke="#64748b" stroke-width="3" fill="none"/>
-                                <style>
-                                    .bone-anim { animation: glow 2s infinite; }
-                                    @keyframes glow { 0%,100% { stroke: #64748b; } 50% { stroke: var(--primary); filter: drop-shadow(0 0 10px var(--primary)); } }
-                                </style>
-                            </svg>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>🎯 AI Önerileri</h2>
-                            <button class="btn" style="width: auto; padding: 10px 20px; margin: 0;" onclick="loadHeightExercises()">🔄 Yenile</button>
-                        </div>
-                        <div style="background: rgba(16,185,129,0.1); border: 1px solid var(--success); padding: 20px; border-radius: 15px; margin-bottom: 20px; display: flex; gap: 15px; align-items: center;">
-                            <span style="font-size: 2em;">🧠</span>
-                            <div><strong>AI:</strong> Bugün omurga esnekliğine odaklanın.</div>
-                        </div>
-                        <div class="exercise-grid" id="grid-height"></div>
-                    </div>
-                </div>
-
-                <!-- KEGEL TAB -->
-                <div id="tab-kegel" class="tab-panel">
-                    <div class="card kegel">
-                        <div class="card-header">
-                            <span class="badge kegel">PELVIK SAĞLIK</span>
-                            <h2>Kegel Programı</h2>
-                        </div>
-                        <p>Harvard Medical School protokolüne dayanan egzersizler.</p>
-                        <div class="chart-container">
-                            <canvas id="chartKegel"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="card kegel">
-                        <h2 style="text-align: center; margin-bottom: 20px;">⏱️ Kegel Zamanlayıcı</h2>
-                        <div class="timer-container">
-                            <div class="timer-display" id="timer">00:00</div>
-                            <div class="phases">
-                                <div class="phase active" id="ph-contract">Sık & Kaldır (3s)</div>
-                                <div class="phase" id="ph-hold">Tut (5s)</div>
-                                <div class="phase" id="ph-relax">Bırak (5s)</div>
-                            </div>
-                            <div class="timer-controls">
-                                <button class="timer-btn start" onclick="startTimer()">▶️ Başlat</button>
-                                <button class="timer-btn secondary" onclick="pauseTimer()">⏸️ Durdur</button>
-                                <button class="timer-btn secondary" onclick="resetTimer()">🔄 Sıfırla</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card kegel">
-                        <div class="card-header">
-                            <h2>🎯 Kegel Egzersizleri</h2>
-                            <button class="btn" style="width: auto; padding: 10px 20px; margin: 0; background: linear-gradient(135deg, var(--kegel) 0%, var(--kegel-dark) 100%);" onclick="startFullWorkout()">💪 Tam Program</button>
-                        </div>
-                        <div style="background: rgba(236,72,153,0.1); border: 1px solid var(--kegel); padding: 20px; border-radius: 15px; margin-bottom: 20px; display: flex; gap: 15px; align-items: center;">
-                            <span style="font-size: 2em;">🧠</span>
-                            <div><strong>AI:</strong> Başlangıç: 3 set, 8-10 tekrar, 3sn tutma.</div>
-                        </div>
-                        <div class="exercise-grid" id="grid-kegel"></div>
-                    </div>
-
-                    <div class="card kegel">
-                        <h2>📚 Eğitim</h2>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
-                            <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; border-left: 4px solid var(--kegel);">
-                                <h4 style="color: var(--kegel); margin-bottom: 10px;">🔍 Doğru Kasları Bul</h4>
-                                <ul style="list-style: none; font-size: 0.9em; line-height: 1.8;">
-                                    <li>• İdrarı durdurmayı dene (test için)</li>
-                                    <li>• Gazı engelle gibi sık</li>
-                                    <li>• Karın kaslarını gevşek tut</li>
-                                </ul>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; border-left: 4px solid var(--kegel);">
-                                <h4 style="color: var(--kegel); margin-bottom: 10px;">⚠️ Hatalar</h4>
-                                <ul style="list-style: none; font-size: 0.9em; line-height: 1.8;">
-                                    <li>• Nefes tutma</li>
-                                    <li>• Karın/bacak sıkma</li>
-                                    <li>• Aşırı egzersiz</li>
-                                </ul>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; border-left: 4px solid var(--kegel);">
-                                <h4 style="color: var(--kegel); margin-bottom: 10px;">💡 Faydalar</h4>
-                                <ul style="list-style: none; font-size: 0.9em; line-height: 1.8;">
-                                    <li>• İdrar kaçırma kontrolü</li>
-                                    <li>• Pelvik organ desteği</li>
-                                    <li>• Cinsel fonksiyon</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </main>
         </div>
     </div>
 
     <script>
-        // State
-        let user = JSON.parse(localStorage.getItem('heightAI_user')) || {};
-        let currentTab = 'height';
-        let timerInterval = null;
-        let timeLeft = 0;
-        let currentPhase = 'contract';
-        let setCount = 0;
-        let repCount = 0;
-
-        // Data
+        // ===== DATA =====
+        const user = JSON.parse(localStorage.getItem('huser')) || {};
+        
         const heightExercises = [
-            {id: 1, name: 'Cobra Pro', diff: 'Orta', dur: 60, match: 95, target: 'Omurga', img: '🧘'},
-            {id: 2, name: 'Bridge Plus', diff: 'Zor', dur: 45, match: 88, target: 'Dekompresyon', img: '🌉'},
-            {id: 3, name: 'Hang Assist', diff: 'Zor', dur: 30, match: 92, target: 'Uzama', img: 🪝'},
-            {id: 4, name: 'Posture Fix', diff: 'Kolay', dur: 120, match: 98, target: 'Duruş', img: 🧍'}
+            {id: 1, name: 'Cobra Pro', diff: 'Orta', dur: 60, match: 95, target: 'Omurga', icon: '🧘'},
+            {id: 2, name: 'Bridge Plus', diff: 'Zor', dur: 45, match: 88, target: 'Dekompresyon', icon: '🌉'},
+            {id: 3, name: 'Hang Assist', diff: 'Zor', dur: 30, match: 92, target: 'Uzama', icon: '🪝'},
+            {id: 4, name: 'Posture Fix', diff: 'Kolay', dur: 120, match: 98, target: 'Duruş', icon: '🧍'}
         ];
 
         const kegelExercises = [
-            {id: 'k1', name: 'Temel Kegel', diff: 'Kolay', dur: 5, match: 100, target: 'Dayanıklılık', desc: '3-5sn sık, 3-5sn bırak. 3 set x 10 tekrar.'},
-            {id: 'k2', name: 'Hızlı Sıkma', diff: 'Orta', dur: 3, match: 95, target: 'Hızlı Tepki', desc: '1sn sık, 1sn bırak. 15-20 tekrar.'},
-            {id: 'k3', name: 'Merdiven Tekniği', diff: 'Orta', dur: 4, match: 90, target: 'Kontrol', desc: '3 kademede sık, 3 kademede bırak.'},
-            {id: 'k4', name: 'Uzun Tutma', diff: 'Zor', dur: 10, match: 85, target: 'Maksimum Güç', desc: '10sn tut, 10sn dinlen. 5-8 tekrar.'}
+            {id: 'k1', name: 'Temel Kegel', diff: 'Kolay', dur: '5dk', match: 100, target: 'Dayanıklılık', desc: '3-5sn sık, 3-5sn bırak. 3 set x 10 tekrar.'},
+            {id: 'k2', name: 'Hızlı Sıkma', diff: 'Orta', dur: '3dk', match: 95, target: 'Hızlı Tepki', desc: '1sn sık, 1sn bırak. 15-20 tekrar.'},
+            {id: 'k3', name: 'Merdiven', diff: 'Orta', dur: '4dk', match: 90, target: 'Kontrol', desc: '3 kademede sık, 3 kademede bırak.'},
+            {id: 'k4', name: 'Uzun Tutma', diff: 'Zor', dur: '10dk', match: 85, target: 'Maksimum Güç', desc: '10sn tut, 10sn dinlen. 5-8 tekrar.'}
         ];
 
-        // Tab Switching
-        function showTab(tab) {
-            currentTab = tab;
+        // ===== SEKME SİSTEMİ =====
+        function setTab(tab) {
+            // Butonları güncelle
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
             
-            // Update buttons
-            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-            document.getElementById('tab-btn-' + tab).classList.add('active');
+            // Panelleri güncelle
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('panel-' + tab).classList.add('active');
             
-            // Update panels
-            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-            document.getElementById('tab-' + tab).classList.add('active');
-            
-            // Update sidebar
-            if (tab === 'height') {
-                document.getElementById('stats-height').classList.remove('hidden');
-                document.getElementById('stats-kegel').classList.add('hidden');
-                document.getElementById('programStatus').textContent = 'Boy Uzatma Programı';
-                if (!window.heightChart) initHeightChart();
-            } else {
-                document.getElementById('stats-height').classList.add('hidden');
-                document.getElementById('stats-kegel').classList.remove('hidden');
-                document.getElementById('programStatus').textContent = 'Pelvik Sağlık Programı';
-                if (!window.kegelChart) initKegelChart();
-            }
+            // Chart init
+            if (tab === 'height' && !window.chartH) initHeightChart();
+            if (tab === 'kegel' && !window.chartK) initKegelChart();
         }
 
-        // Chat Functions
-        function toggleChat() {
-            const chat = document.getElementById('aiChat');
-            chat.classList.toggle('active');
-        }
-
-        function sendMessage() {
-            const input = document.getElementById('chatInput');
-            const text = input.value.trim();
-            if (!text) return;
-            
-            const body = document.getElementById('chatBody');
-            body.innerHTML += `<div class="message user">${text}</div>`;
-            input.value = '';
-            
-            setTimeout(() => {
-                const responses = {
-                    'merhaba': 'Merhaba! Hangi programda yardımcı olabilirim?',
-                    'boy': 'Boy uzatma için düzenli egzersiz ve uyku çok önemli. AI analizimize göre potansiyeliniz yüksek!',
-                    'kegel': 'Kegel egzersizleri pelvik taban kaslarını güçlendirir. Günde 3 set önerilir.',
-                    'nasıl': 'Doğru teknik için zamanlayıcıyı kullanın. Karın kaslarını gevşek tutun.',
-                    'fayda': 'İdrar kaçırma kontrolü, pelvik organ desteği ve cinsel fonksiyon için faydalıdır.'
-                };
-                
-                let reply = 'Anladım. Size nasıl yardımcı olabilirim?';
-                for (let key in responses) {
-                    if (text.toLowerCase().includes(key)) {
-                        reply = responses[key];
-                        break;
-                    }
-                }
-                
-                body.innerHTML += `<div class="message ai">${reply}</div>`;
-                body.scrollTop = body.scrollHeight;
-            }, 800);
-        }
-
-        // Profile Functions
-        function openProfile() {
-            document.getElementById('profileModal').classList.add('active');
-            if (user.name) {
-                document.getElementById('inputName').value = user.name;
-                document.getElementById('inputAge').value = user.age || '';
-                document.getElementById('inputGender').value = user.gender || 'male';
-                document.getElementById('inputHeight').value = user.height || '';
-                document.getElementById('inputMother').value = user.mother || '';
-                document.getElementById('inputFather').value = user.father || '';
-                calcPotential();
-            }
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('active');
-        }
-
-        function calcPotential() {
-            const age = parseInt(document.getElementById('inputAge').value) || 0;
-            const gender = document.getElementById('inputGender').value;
-            const mother = parseInt(document.getElementById('inputMother').value) || 0;
-            const father = parseInt(document.getElementById('inputFather').value) || 0;
-            
-            if (mother && father) {
-                const genetic = gender === 'male' ? (mother + father + 13) / 2 : (mother + father - 13) / 2;
-                let text = `Genetik potansiyel: ${genetic.toFixed(1)} cm. `;
-                if (age < 18) text += 'Büyüme plakaları açık, hızlı ilerleme mümkün!';
-                else if (age < 25) text += 'Postür düzeltmeyle 2-3 cm artış mümkün.';
-                else text += 'Duruş düzeltmeyle 1-2 cm artış sağlanabilir.';
-                document.getElementById('potentialResult').textContent = text;
-            }
-        }
-
-        function saveProfile() {
-            user = {
-                name: document.getElementById('inputName').value,
-                age: parseInt(document.getElementById('inputAge').value),
-                gender: document.getElementById('inputGender').value,
-                height: parseFloat(document.getElementById('inputHeight').value),
-                mother: parseInt(document.getElementById('inputMother').value),
-                father: parseInt(document.getElementById('inputFather').value),
-                kegelSets: 0,
-                kegelReps: 0,
-                kegelLevel: 'Başlangıç'
-            };
-            localStorage.setItem('heightAI_user', JSON.stringify(user));
-            updateUI();
-            closeModal('profileModal');
-            showNotif('Profil kaydedildi!');
-        }
-
-        function updateUI() {
-            if (user.name) {
-                document.getElementById('userName').textContent = user.name;
-                document.getElementById('val-height').textContent = user.height + ' cm';
-                const target = user.gender === 'male' ? (user.mother + user.father + 13) / 2 : (user.mother + user.father - 13) / 2;
-                document.getElementById('val-target').textContent = target.toFixed(1) + ' cm';
-                document.getElementById('val-sets').textContent = (user.kegelSets || 0) + '/3';
-                document.getElementById('val-reps').textContent = user.kegelReps || 0;
-                document.getElementById('val-level').textContent = user.kegelLevel || 'Başlangıç';
-            }
-        }
-
-        // Timer Functions
-        function startTimer() {
-            if (timerInterval) return;
-            setCount = 0;
-            repCount = 0;
-            runPhase();
-        }
-
-        function runPhase() {
-            const phases = {
-                contract: {time: 3, next: 'hold', text: 'Sık & Kaldır'},
-                hold: {time: 5, next: 'relax', text: 'Tut'},
-                relax: {time: 5, next: 'contract', text: 'Bırak'}
-            };
-            
-            const cfg = phases[currentPhase];
-            timeLeft = cfg.time;
-            updatePhaseUI();
-            
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                document.getElementById('timer').textContent = `00:0${timeLeft}`;
-                
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    timerInterval = null;
-                    
-                    if (currentPhase === 'relax') {
-                        repCount++;
-                        if (repCount >= 10) {
-                            setCount++;
-                            repCount = 0;
-                            showNotif(`Set ${setCount} tamamlandı!`, true);
-                            if (setCount >= 3) {
-                                showNotif('Tebrikler! 3 set tamamlandı!', true);
-                                saveKegelProgress();
-                                return;
-                            }
-                        }
-                    }
-                    
-                    currentPhase = cfg.next;
-                    runPhase();
-                }
-            }, 1000);
-        }
-
-        function updatePhaseUI() {
-            document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
-            document.getElementById('ph-' + currentPhase).classList.add('active');
-        }
-
-        function pauseTimer() {
-            if (timerInterval) {
-                clearInterval(timerInterval);
-                timerInterval = null;
-                showNotif('Durduruldu', true);
-            }
-        }
-
-        function resetTimer() {
-            if (timerInterval) clearInterval(timerInterval);
-            timerInterval = null;
-            currentPhase = 'contract';
-            timeLeft = 0;
-            setCount = 0;
-            repCount = 0;
-            document.getElementById('timer').textContent = '00:00';
-            updatePhaseUI();
-        }
-
-        function saveKegelProgress() {
-            user.kegelSets = 3;
-            user.kegelReps = (user.kegelReps || 0) + 30;
-            if (user.kegelReps > 200) user.kegelLevel = 'Orta';
-            if (user.kegelReps > 500) user.kegelLevel = 'İleri';
-            localStorage.setItem('heightAI_user', JSON.stringify(user));
-            updateUI();
-        }
-
-        function startFullWorkout() {
-            showNotif('Tam program başlatılıyor...', true);
-            setTimeout(startTimer, 1500);
-        }
-
-        // Exercise Loaders
-        function loadHeightExercises() {
+        // ===== RENDER FUNCTIONS =====
+        function renderHeightEx() {
             const grid = document.getElementById('grid-height');
             grid.innerHTML = heightExercises.map(ex => `
-                <div class="exercise-card" onclick="openExercise('height', ${ex.id})">
-                    <div class="exercise-img" style="display: flex; align-items: center; justify-content: center; font-size: 4em;">${ex.img}</div>
-                    <div class="exercise-info">
-                        <span class="exercise-tag">🤖 %${ex.match} Eşleşme</span>
-                        <h3 class="exercise-title">${ex.name}</h3>
-                        <div class="exercise-meta">
+                <div class="ex-card" onclick="openExModal('height', ${ex.id})">
+                    <div class="ex-icon">${ex.icon}</div>
+                    <div class="ex-info">
+                        <span class="ex-tag">🤖 %${ex.match}</span>
+                        <h3 class="ex-title">${ex.name}</h3>
+                        <div class="ex-meta">
                             <span>⏱️ ${ex.dur}s</span>
                             <span>🎯 ${ex.target}</span>
                             <span style="color: ${ex.diff === 'Kolay' ? 'var(--success)' : ex.diff === 'Orta' ? 'var(--warning)' : 'var(--danger)'}">${ex.diff}</span>
@@ -1108,64 +917,254 @@
             `).join('');
         }
 
-        function loadKegelExercises() {
+        function renderKegelEx() {
             const grid = document.getElementById('grid-kegel');
             grid.innerHTML = kegelExercises.map(ex => `
-                <div class="exercise-card kegel" onclick="openExercise('kegel', '${ex.id}')">
-                    <div class="exercise-img kegel">🎯</div>
-                    <div class="exercise-info">
-                        <span class="exercise-tag kegel">🤖 %${ex.match} Eşleşme</span>
-                        <h3 class="exercise-title">${ex.name}</h3>
-                        <div class="exercise-meta">
-                            <span>⏱️ ${ex.dur} dk</span>
+                <div class="ex-card kegel" onclick="openExModal('kegel', '${ex.id}')">
+                    <div class="ex-icon kegel">🎯</div>
+                    <div class="ex-info">
+                        <span class="ex-tag kegel">🤖 %${ex.match}</span>
+                        <h3 class="ex-title">${ex.name}</h3>
+                        <div class="ex-meta">
+                            <span>⏱️ ${ex.dur}</span>
                             <span>🎯 ${ex.target}</span>
                             <span style="color: ${ex.diff === 'Kolay' ? 'var(--success)' : ex.diff === 'Orta' ? 'var(--warning)' : 'var(--danger)'}">${ex.diff}</span>
                         </div>
-                        <p style="margin-top: 10px; font-size: 0.9em; opacity: 0.8;">${ex.desc}</p>
+                        <p style="margin-top: 10px; font-size: 0.85em; color: #94a3b8;">${ex.desc}</p>
                     </div>
                 </div>
             `).join('');
         }
 
-        function openExercise(type, id) {
-            const modal = document.getElementById('exerciseModal');
-            const inner = document.getElementById('exerciseModalInner');
-            const title = document.getElementById('modalTitle');
-            const body = document.getElementById('modalBody');
+        // ===== MODAL FUNCTIONS =====
+        function openExModal(type, id) {
+            const modal = document.getElementById('modalEx');
+            const header = document.getElementById('modalExHeader');
+            const title = document.getElementById('modalExTitle');
+            const body = document.getElementById('modalExBody');
             
             if (type === 'height') {
                 const ex = heightExercises.find(e => e.id === id);
+                header.className = 'modal-header';
                 title.textContent = ex.name;
                 body.innerHTML = `
-                    <div style="text-align: center; padding: 40px; background: linear-gradient(135deg, rgba(102,126,234,0.2) 0%, rgba(118,75,162,0.2) 100%); border-radius: 15px; margin-bottom: 20px; font-size: 5em;">${ex.img}</div>
+                    <div style="text-align: center; padding: 40px; background: linear-gradient(135deg, rgba(102,126,234,0.2), rgba(118,75,162,0.2)); border-radius: 15px; margin-bottom: 20px; font-size: 5em;">${ex.icon}</div>
                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; text-align: center; margin-bottom: 20px;">
-                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;"><div style="font-size: 1.5em; color: var(--primary);">${ex.dur}s</div><div style="font-size: 0.85em; opacity: 0.7;">Süre</div></div>
-                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;"><div style="font-size: 1.5em; color: var(--warning);">${ex.diff}</div><div style="font-size: 0.85em; opacity: 0.7;">Zorluk</div></div>
-                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;"><div style="font-size: 1.5em; color: var(--success);">%${ex.match}</div><div style="font-size: 0.85em; opacity: 0.7;">AI Eşleşme</div></div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
+                            <div style="font-size: 1.5em; color: var(--primary);">${ex.dur}s</div>
+                            <div style="font-size: 0.8em; color: #94a3b8;">Süre</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
+                            <div style="font-size: 1.5em; color: var(--warning);">${ex.diff}</div>
+                            <div style="font-size: 0.8em; color: #94a3b8;">Zorluk</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
+                            <div style="font-size: 1.5em; color: var(--success);">%${ex.match}</div>
+                            <div style="font-size: 0.8em; color: #94a3b8;">Eşleşme</div>
+                        </div>
                     </div>
-                    <button class="btn" onclick="closeModal('exerciseModal'); showNotif('Egzersiz başlatıldı!')">▶️ Başlat</button>
+                    <button class="btn" onclick="closeModal('modalEx'); showNotif('Egzersiz başlatıldı!')">▶️ Başlat</button>
                 `;
             } else {
                 const ex = kegelExercises.find(e => e.id === id);
+                header.className = 'modal-header kegel';
                 title.textContent = ex.name;
-                inner.querySelector('.modal-header').style.background = 'linear-gradient(135deg, var(--kegel) 0%, var(--kegel-dark) 100%)';
                 body.innerHTML = `
-                    <div style="text-align: center; padding: 40px; background: linear-gradient(135deg, rgba(236,72,153,0.2) 0%, rgba(190,24,93,0.2) 100%); border-radius: 15px; margin-bottom: 20px; font-size: 5em;">🎯</div>
-                    <div style="background: rgba(236,72,153,0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px; border-left: 4px solid var(--kegel);">
-                        <h4 style="color: var(--kegel); margin-bottom: 10px;">Teknik</h4>
-                        <p>${ex.desc}</p>
+                    <div style="text-align: center; padding: 40px; background: linear-gradient(135deg, rgba(236,72,153,0.2), rgba(190,24,93,0.2)); border-radius: 15px; margin-bottom: 20px; font-size: 5em;">🎯</div>
+                    <div style="background: rgba(236,72,153,0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 3px solid var(--kegel);">
+                        <p style="color: #94a3b8;">${ex.desc}</p>
                     </div>
-                    <button class="btn" style="background: linear-gradient(135deg, var(--kegel) 0%, var(--kegel-dark) 100%);" onclick="closeModal('exerciseModal'); showTab('kegel'); setTimeout(startTimer, 500);">▶️ Zamanlayıcıyı Başlat</button>
+                    <button class="btn" style="background: linear-gradient(135deg, var(--kegel), var(--kegel-dark));" onclick="closeModal('modalEx'); setTab('kegel'); startKegel();">▶️ Zamanlayıcıyı Başlat</button>
                 `;
             }
             
-            modal.classList.add('active');
+            modal.classList.add('show');
         }
 
-        // Charts
+        function openProfile() {
+            document.getElementById('modalProfile').classList.add('show');
+            if (user.name) {
+                document.getElementById('inpName').value = user.name;
+                document.getElementById('inpAge').value = user.age || '';
+                document.getElementById('inpGender').value = user.gender || 'male';
+                document.getElementById('inpHeight').value = user.height || '';
+                document.getElementById('inpMother').value = user.mother || '';
+                document.getElementById('inpFather').value = user.father || '';
+                calcPot();
+            }
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+
+        // ===== PROFILE FUNCTIONS =====
+        function calcPot() {
+            const age = parseInt(document.getElementById('inpAge').value) || 0;
+            const gender = document.getElementById('inpGender').value;
+            const mother = parseInt(document.getElementById('inpMother').value) || 0;
+            const father = parseInt(document.getElementById('inpFather').value) || 0;
+            
+            if (mother && father) {
+                const genetic = gender === 'male' ? (mother + father + 13) / 2 : (mother + father - 13) / 2;
+                let text = `Genetik hedef: ${genetic.toFixed(1)} cm. `;
+                if (age < 18) text += 'Büyüme devam ediyor!';
+                else if (age < 25) text += 'Postürle 2-3 cm artış mümkün.';
+                else text += 'Duruş düzeltmeyle 1-2 cm artış.';
+                document.getElementById('potResult').textContent = text;
+                document.getElementById('potResult').style.color = '#e2e8f0';
+            }
+        }
+
+        function saveUser() {
+            const newUser = {
+                name: document.getElementById('inpName').value,
+                age: parseInt(document.getElementById('inpAge').value),
+                gender: document.getElementById('inpGender').value,
+                height: parseFloat(document.getElementById('inpHeight').value),
+                mother: parseInt(document.getElementById('inpMother').value),
+                father: parseInt(document.getElementById('inpFather').value),
+                kegelSets: user.kegelSets || 0,
+                kegelReps: user.kegelReps || 0,
+                kegelLevel: user.kegelLevel || 'Başlangıç'
+            };
+            localStorage.setItem('huser', JSON.stringify(newUser));
+            Object.assign(user, newUser);
+            updateUI();
+            closeModal('modalProfile');
+            showNotif('Profil kaydedildi!');
+        }
+
+        function updateUI() {
+            if (user.name) {
+                document.getElementById('h-name').textContent = user.name;
+                document.getElementById('k-name').textContent = user.name;
+                document.getElementById('h-current').textContent = user.height + ' cm';
+                const target = user.gender === 'male' ? (user.mother + user.father + 13) / 2 : (user.mother + user.father - 13) / 2;
+                document.getElementById('h-target').textContent = target.toFixed(1) + ' cm';
+                document.getElementById('k-sets').textContent = (user.kegelSets || 0) + '/3';
+                document.getElementById('k-reps').textContent = user.kegelReps || 0;
+                document.getElementById('k-level').textContent = user.kegelLevel || 'Başlangıç';
+            }
+        }
+
+        // ===== KEGEL TIMER =====
+        let timerInt = null;
+        let timeLeft = 0;
+        let phase = 'contract';
+        let sets = 0;
+        let reps = 0;
+
+        function startKegel() {
+            if (timerInt) return;
+            sets = 0;
+            reps = 0;
+            runPhase();
+        }
+
+        function runPhase() {
+            const cfg = {
+                contract: {t: 3, next: 'hold', txt: 'Sık (3s)'},
+                hold: {t: 5, next: 'relax', txt: 'Tut (5s)'},
+                relax: {t: 5, next: 'contract', txt: 'Bırak (5s)'}
+            };
+            
+            const c = cfg[phase];
+            timeLeft = c.t;
+            
+            document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+            document.getElementById('ph-' + phase).classList.add('active');
+            
+            timerInt = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = `00:0${timeLeft}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInt);
+                    timerInt = null;
+                    
+                    if (phase === 'relax') {
+                        reps++;
+                        if (reps >= 10) {
+                            sets++;
+                            reps = 0;
+                            showNotif(`Set ${sets} tamamlandı!`, true);
+                            if (sets >= 3) {
+                                showNotif('Tebrikler! 3 set tamamlandı!', true);
+                                saveKegelProgress();
+                                return;
+                            }
+                        }
+                    }
+                    
+                    phase = c.next;
+                    runPhase();
+                }
+            }, 1000);
+        }
+
+        function stopKegel() {
+            if (timerInt) {
+                clearInterval(timerInt);
+                timerInt = null;
+                showNotif('Durduruldu', true);
+            }
+        }
+
+        function resetKegel() {
+            if (timerInt) clearInterval(timerInt);
+            timerInt = null;
+            phase = 'contract';
+            timeLeft = 0;
+            sets = 0;
+            reps = 0;
+            document.getElementById('timer').textContent = '00:00';
+            document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+            document.getElementById('ph-contract').classList.add('active');
+        }
+
+        function saveKegelProgress() {
+            user.kegelSets = 3;
+            user.kegelReps = (user.kegelReps || 0) + 30;
+            if (user.kegelReps > 200) user.kegelLevel = 'Orta';
+            if (user.kegelReps > 500) user.kegelLevel = 'İleri';
+            localStorage.setItem('huser', JSON.stringify(user));
+            updateUI();
+        }
+
+        // ===== CHAT =====
+        function toggleChat() {
+            document.getElementById('chatBox').classList.toggle('show');
+        }
+
+        function sendMsg() {
+            const inp = document.getElementById('chatInput');
+            const txt = inp.value.trim();
+            if (!txt) return;
+            
+            const box = document.getElementById('chatMessages');
+            box.innerHTML += `<div class="msg user">${txt}</div>`;
+            inp.value = '';
+            
+            setTimeout(() => {
+                const replies = {
+                    'merhaba': 'Merhaba! Hangi programda yardımcı olabilirim?',
+                    'boy': 'Boy uzatma için düzenli egzersiz ve uyku şart. Potansiyelinizi hesaplayın!',
+                    'kegel': 'Kegel için zamanlayıcıyı kullanın. Günde 3 set önerilir.',
+                    'nasıl': 'Doğru teknik: Karın gevşek, sadece pelvik kaslar sıkılır.',
+                    'fayda': 'İdrar kaçırma kontrolü ve pelvik organ desteği sağlar.'
+                };
+                let r = 'Size nasıl yardımcı olabilirim?';
+                for (let k in replies) if (txt.toLowerCase().includes(k)) { r = replies[k]; break; }
+                box.innerHTML += `<div class="msg ai">${r}</div>`;
+                box.scrollTop = box.scrollHeight;
+            }, 600);
+        }
+
+        // ===== CHARTS =====
         function initHeightChart() {
             const ctx = document.getElementById('chartHeight').getContext('2d');
-            window.heightChart = new Chart(ctx, {
+            window.chartH = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: ['1.Ay', '2.Ay', '3.Ay', '4.Ay', '5.Ay', '6.Ay'],
@@ -1182,7 +1181,7 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { labels: { color: '#e2e8f0' } } },
+                    plugins: { legend: { display: false } },
                     scales: {
                         y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#94a3b8' } },
                         x: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#94a3b8' } }
@@ -1193,7 +1192,7 @@
 
         function initKegelChart() {
             const ctx = document.getElementById('chartKegel').getContext('2d');
-            window.kegelChart = new Chart(ctx, {
+            window.chartK = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: ['1.Hf', '3.Hf', '6.Hf', '9.Hf', '12.Hf'],
@@ -1209,7 +1208,7 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { labels: { color: '#e2e8f0' } } },
+                    plugins: { legend: { display: false } },
                     scales: {
                         y: { max: 12, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#94a3b8' } },
                         x: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#94a3b8' } }
@@ -1218,35 +1217,35 @@
             });
         }
 
-        // Notification
+        // ===== UTILS =====
         function showNotif(msg, isKegel) {
-            const n = document.getElementById('notification');
+            const n = document.getElementById('notif');
             n.textContent = msg;
-            n.className = isKegel ? 'notification kegel' : 'notification';
+            n.className = isKegel ? 'notif kegel show' : 'notif show';
             n.style.display = 'block';
             setTimeout(() => n.style.display = 'none', 3000);
         }
 
-        // Init
+        // ===== INIT =====
         window.onload = function() {
             updateUI();
-            loadHeightExercises();
-            loadKegelExercises();
+            renderHeightEx();
+            renderKegelEx();
             initHeightChart();
             
-            // Close modals on outside click
-            document.querySelectorAll('.modal-overlay').forEach(m => {
+            // Modal outside click
+            document.querySelectorAll('.modal').forEach(m => {
                 m.addEventListener('click', (e) => {
-                    if (e.target === m) m.classList.remove('active');
+                    if (e.target === m) m.classList.remove('show');
                 });
             });
         };
 
-        // Keyboard shortcuts
+        // ESC key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
-                if (timerInterval) pauseTimer();
+                document.querySelectorAll('.modal').forEach(m => m.classList.remove('show'));
+                stopKegel();
             }
         });
     </script>
