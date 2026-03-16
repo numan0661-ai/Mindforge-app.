@@ -3,8 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HeightAI Pro - Akıllı Boy Uzatma Platformu</title>
+    <title>HeightAI Pro - AR Egzersiz Sistemi</title>
+    
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- TensorFlow.js ve Pose Detection -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <style>
         * {
             margin: 0;
@@ -18,441 +28,56 @@
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
-            --dark: #1f2937;
-            --light: #f3f4f6;
+            --ar-bg: #0a0a0a;
         }
 
         html, body {
             height: 100%;
             overflow-x: hidden;
-            scroll-behavior: auto; /* Smooth scroll kapatıldı */
-        }
-
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            min-height: 100vh;
             color: #e2e8f0;
-            overflow-y: auto;
-            position: relative;
+            font-family: 'Segoe UI', system-ui, sans-serif;
         }
 
-        /* AI Asistan - Sabit pozisyon */
-        .ai-orb {
+        /* AR Mode - Tam Ekran */
+        .ar-mode {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 70px;
-            height: 70px;
-            background: radial-gradient(circle, rgba(102,126,234,0.8) 0%, rgba(118,75,162,0.6) 100%);
-            border-radius: 50%;
-            cursor: pointer;
-            z-index: 1000;
-            box-shadow: 0 0 30px rgba(102,126,234,0.6);
-            animation: pulse-glow 2s infinite;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2em;
-            transition: transform 0.3s;
-            /* Sabit pozisyon için */
-            transform: translateZ(0);
-            will-change: transform;
-        }
-
-        .ai-orb:hover {
-            transform: scale(1.1) translateZ(0);
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 30px rgba(102,126,234,0.6); }
-            50% { box-shadow: 0 0 50px rgba(102,126,234,0.9); }
-        }
-
-        .ai-chat {
-            position: fixed;
-            bottom: 110px;
-            right: 30px;
-            width: 400px;
-            height: 600px;
-            background: rgba(30, 41, 59, 0.98);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            border: 1px solid rgba(102,126,234,0.3);
-            z-index: 999;
-            display: none;
-            flex-direction: column;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            /* Sabit pozisyon */
-            transform: translateZ(0);
-        }
-
-        .ai-chat.active {
-            display: flex;
-        }
-
-        .chat-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            padding: 20px;
-            border-radius: 20px 20px 0 0;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex-shrink: 0; /* Header küçülmesin */
-        }
-
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            scroll-behavior: auto; /* Auto scroll kapatıldı */
-        }
-
-        .message {
-            max-width: 80%;
-            padding: 15px;
-            border-radius: 15px;
-            animation: messageSlide 0.3s ease-out;
-            flex-shrink: 0; /* Mesajlar küçülmesin */
-        }
-
-        @keyframes messageSlide {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .message.ai {
-            background: rgba(102,126,234,0.2);
-            align-self: flex-start;
-            border-left: 3px solid var(--primary);
-        }
-
-        .message.user {
-            background: rgba(16,185,129,0.2);
-            align-self: flex-end;
-            border-right: 3px solid var(--success);
-        }
-
-        .chat-input {
-            padding: 20px;
-            display: flex;
-            gap: 10px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            flex-shrink: 0; /* Input alanı sabit kalsın */
-        }
-
-        .chat-input input {
-            flex: 1;
-            background: rgba(255,255,255,0.1);
-            border: none;
-            padding: 12px 20px;
-            border-radius: 25px;
-            color: white;
-            outline: none;
-        }
-
-        .chat-input button {
-            background: var(--primary);
-            border: none;
-            color: white;
-            padding: 12px 25px;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        /* Ana Container */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-            min-height: 100vh;
-        }
-
-        header {
-            text-align: center;
-            padding: 40px 0;
-            position: relative;
-        }
-
-        header h1 {
-            font-size: 3.5em;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-            text-shadow: 0 0 30px rgba(102,126,234,0.3);
-        }
-
-        .subtitle {
-            font-size: 1.3em;
-            opacity: 0.8;
-            color: #94a3b8;
-        }
-
-        /* Dashboard Grid */
-        .dashboard {
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 30px;
-            margin-top: 30px;
-            align-items: start; /* Üst hizalama */
-        }
-
-        /* Sidebar Profil - Yapışkan pozisyon düzeltildi */
-        .profile-card {
-            background: rgba(30, 41, 59, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            border: 1px solid rgba(102,126,234,0.2);
-            position: sticky;
-            top: 20px;
-            height: auto; /* Otomatik yükseklik */
-            max-height: calc(100vh - 40px); /* Ekran yüksekliğini aşmasın */
-            overflow-y: auto; /* İçerik taşarsa scroll */
-        }
-
-        .profile-image {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3em;
-            position: relative;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        .profile-image::after {
-            content: '';
-            position: absolute;
-            inset: 3px;
-            background: #1e293b;
-            border-radius: 50%;
-            z-index: 1;
-        }
-
-        .profile-image span {
-            z-index: 2;
-        }
-
-        .profile-name {
-            text-align: center;
-            font-size: 1.5em;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .profile-stats {
-            margin-top: 25px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .stat-item {
-            background: rgba(255,255,255,0.05);
-            padding: 15px;
-            border-radius: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 3px solid var(--primary);
-            flex-shrink: 0;
-        }
-
-        .stat-label {
-            font-size: 0.9em;
-            opacity: 0.7;
-        }
-
-        .stat-value {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: var(--primary);
-        }
-
-        /* Ana İçerik */
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            min-height: 0; /* Flexbox bug fix */
-        }
-
-        /* AI Analiz Kartı */
-        .ai-analysis {
-            background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
-            border: 1px solid rgba(102,126,234,0.3);
-            border-radius: 20px;
-            padding: 30px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .ai-analysis::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(102,126,234,0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-            pointer-events: none; /* Tıklamaya engel olmasın */
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .analysis-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .ai-badge {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.8em;
-            font-weight: bold;
-            animation: glow 2s infinite;
-            flex-shrink: 0;
-        }
-
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 10px rgba(102,126,234,0.5); }
-            50% { box-shadow: 0 0 20px rgba(102,126,234,0.8); }
-        }
-
-        .prediction-box {
-            background: rgba(0,0,0,0.3);
-            border-radius: 15px;
-            padding: 25px;
-            margin-top: 20px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .prediction-chart {
-            height: 200px;
-            position: relative;
-        }
-
-        /* 3D Vücut Modeli */
-        .body-model-container {
-            background: rgba(30, 41, 59, 0.6);
-            border-radius: 20px;
-            padding: 30px;
-            border: 1px solid rgba(102,126,234,0.2);
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-
-        .model-3d {
-            width: 100%;
-            height: 400px;
-            background: radial-gradient(circle at center, rgba(102,126,234,0.1) 0%, transparent 70%);
-            border-radius: 15px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .skeleton-svg {
-            width: 200px;
-            height: 400px;
-            filter: drop-shadow(0 0 20px rgba(102,126,234,0.5));
-            flex-shrink: 0;
-        }
-
-        .bone {
-            fill: none;
-            stroke: #64748b;
-            stroke-width: 3;
-            stroke-linecap: round;
-            transition: all 0.3s;
-        }
-
-        .bone.active {
-            stroke: var(--primary);
-            filter: drop-shadow(0 0 10px var(--primary));
-            animation: bonePulse 2s infinite;
-        }
-
-        @keyframes bonePulse {
-            0%, 100% { stroke-width: 3; }
-            50% { stroke-width: 5; }
-        }
-
-        .muscle-group {
-            position: absolute;
-            background: rgba(102,126,234,0.9);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            cursor: pointer;
-            transition: all 0.3s;
-            opacity: 0;
-            transform: translateY(10px);
-            pointer-events: none; /* Tıklamaya engel olmasın */
-            white-space: nowrap;
-        }
-
-        .muscle-group.visible {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-        }
-
-        /* Kamera Analizi */
-        .camera-section {
-            background: rgba(30, 41, 59, 0.6);
-            border-radius: 20px;
-            padding: 30px;
-            border: 1px solid rgba(102,126,234,0.2);
-            text-align: center;
-        }
-
-        .camera-preview {
-            width: 100%;
-            max-width: 640px;
-            height: 480px;
-            background: #000;
-            border-radius: 15px;
-            margin: 20px auto;
-            position: relative;
-            overflow: hidden;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--ar-bg);
+            z-index: 9999;
             display: none;
         }
 
-        .camera-preview.active {
+        .ar-mode.active {
             display: block;
         }
 
-        .pose-overlay {
+        .ar-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        #ar-video {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1); /* Ayna efekti */
+        }
+
+        #ar-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #three-canvas {
             position: absolute;
             top: 0;
             left: 0;
@@ -461,986 +86,1267 @@
             pointer-events: none;
         }
 
-        .pose-line {
-            stroke: var(--success);
-            stroke-width: 3;
-            fill: none;
-            opacity: 0.8;
-        }
-
-        .pose-point {
-            fill: var(--primary);
-            r: 5;
-            filter: drop-shadow(0 0 5px var(--primary));
-        }
-
-        .camera-controls {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        /* Egzersiz Kartları */
-        .exercises-section {
-            background: rgba(30, 41, 59, 0.6);
-            border-radius: 20px;
-            padding: 30px;
-            border: 1px solid rgba(102,126,234,0.2);
-        }
-
-        .ai-recommendation {
-            background: linear-gradient(135deg, rgba(16,185,129,0.2) 0%, rgba(5,150,105,0.2) 100%);
-            border: 1px solid var(--success);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .exercise-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 25px;
-        }
-
-        .exercise-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: all 0.3s;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .exercise-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-            box-shadow: 0 10px 40px rgba(102,126,234,0.2);
-        }
-
-        .exercise-image {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            display: block;
-        }
-
-        .difficulty-badge {
+        /* AR UI Overlay */
+        .ar-ui {
             position: absolute;
-            top: 15px;
-            right: 15px;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.8em;
-            font-weight: bold;
-            backdrop-filter: blur(10px);
-            z-index: 10;
-        }
-
-        .difficulty-badge.easy { background: rgba(16,185,129,0.9); }
-        .difficulty-badge.medium { background: rgba(245,158,11,0.9); }
-        .difficulty-badge.hard { background: rgba(239,68,68,0.9); }
-
-        .exercise-content {
-            padding: 25px;
-        }
-
-        .ai-match {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            background: rgba(102,126,234,0.2);
-            color: var(--primary);
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 0.85em;
-            margin-bottom: 15px;
-        }
-
-        .exercise-title {
-            font-size: 1.3em;
-            margin-bottom: 10px;
-            color: white;
-        }
-
-        .exercise-meta {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 15px;
-            font-size: 0.9em;
-            opacity: 0.8;
-            flex-wrap: wrap;
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            white-space: nowrap;
-        }
-
-        /* Modal - Sabit pozisyon */
-        .modal {
-            display: none;
-            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 2000;
-            justify-content: center;
-            align-items: flex-start; /* Üstten başlasın */
-            padding: 20px;
-            overflow-y: auto; /* Modal içeriği scroll edilebilir */
+            pointer-events: none;
+            z-index: 100;
         }
 
-        .modal.active {
-            display: flex;
+        .ar-ui > * {
+            pointer-events: auto;
         }
 
-        .modal-content {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border-radius: 25px;
-            max-width: 900px;
-            width: 100%;
-            margin: 20px auto; /* Üstten boşluk */
-            max-height: calc(100vh - 40px); /* Ekran yüksekliğini aşmasın */
-            overflow-y: auto; /* İçerik taşarsa scroll */
-            border: 1px solid rgba(102,126,234,0.3);
-            position: relative;
-        }
-
-        .modal-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            padding: 30px;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        .close-btn {
+        /* AR Header */
+        .ar-header {
             position: absolute;
             top: 20px;
-            right: 25px;
-            font-size: 2.5em;
-            cursor: pointer;
-            color: white;
-            opacity: 0.8;
-            transition: opacity 0.3s;
-            z-index: 11;
-            line-height: 1;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            padding: 15px 25px;
+            border-radius: 20px;
+            border: 1px solid rgba(102,126,234,0.3);
         }
 
-        .close-btn:hover {
-            opacity: 1;
+        .ar-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
-        /* Form Elements */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #94a3b8;
+        .ar-badge {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 8px 20px;
+            border-radius: 20px;
             font-size: 0.9em;
+            font-weight: bold;
+            animation: pulse 2s infinite;
         }
 
-        .form-group input, .form-group select {
-            width: 100%;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 12px 20px;
-            border-radius: 10px;
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(102,126,234,0.5); }
+            50% { box-shadow: 0 0 25px rgba(102,126,234,0.9); }
+        }
+
+        .ar-close {
+            background: rgba(239,68,68,0.8);
+            border: none;
             color: white;
-            font-size: 1em;
-            outline: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5em;
             transition: all 0.3s;
         }
 
-        .form-group input:focus, .form-group select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        .ar-close:hover {
+            transform: scale(1.1);
+            background: var(--danger);
         }
 
-        .btn {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        /* AR Sidebar - Sağ Panel */
+        .ar-sidebar {
+            position: absolute;
+            right: 20px;
+            top: 100px;
+            width: 320px;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(102,126,234,0.3);
+            max-height: calc(100vh - 140px);
+            overflow-y: auto;
+        }
+
+        .muscle-activation {
+            margin-bottom: 25px;
+        }
+
+        .muscle-title {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .muscle-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .muscle-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .muscle-name {
+            width: 100px;
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .muscle-progress {
+            flex: 1;
+            height: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .muscle-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .muscle-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .muscle-fill.spine { background: linear-gradient(90deg, #667eea, #764ba2); }
+        .muscle-fill.core { background: linear-gradient(90deg, #10b981, #059669); }
+        .muscle-fill.shoulders { background: linear-gradient(90deg, #f59e0b, #d97706); }
+        .muscle-fill.legs { background: linear-gradient(90deg, #ef4444, #dc2626); }
+
+        .muscle-percent {
+            width: 45px;
+            text-align: right;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        /* Omurga Analizi */
+        .spine-analysis {
+            background: rgba(102,126,234,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid rgba(102,126,234,0.3);
+        }
+
+        .spine-title {
+            font-size: 1em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .spine-metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .spine-metric:last-child {
+            border-bottom: none;
+        }
+
+        .metric-value {
+            font-weight: bold;
+            color: var(--success);
+        }
+
+        .metric-value.warning {
+            color: var(--warning);
+        }
+
+        /* AR Controls - Alt Panel */
+        .ar-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(15px);
+            padding: 20px 30px;
+            border-radius: 50px;
+            border: 1px solid rgba(102,126,234,0.3);
+        }
+
+        .ar-btn {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
             color: white;
-            border: none;
-            padding: 15px 40px;
+            padding: 15px 30px;
             border-radius: 30px;
             cursor: pointer;
             font-size: 1em;
             font-weight: bold;
             transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(102,126,234,0.4);
-            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .btn:hover {
+        .ar-btn:hover {
+            background: rgba(102,126,234,0.3);
+            border-color: var(--primary);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102,126,234,0.6);
         }
 
-        .btn-secondary {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+        .ar-btn.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-color: transparent;
+            box-shadow: 0 0 20px rgba(102,126,234,0.5);
         }
 
-        .btn-success {
+        .ar-btn.primary {
             background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            border-color: transparent;
         }
 
-        /* Notification - Sabit pozisyon */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
-            color: white;
-            padding: 20px 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        /* Form Feedback */
+        .form-feedback {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(20px);
+            padding: 30px 50px;
+            border-radius: 20px;
+            border: 2px solid var(--primary);
+            text-align: center;
             display: none;
-            animation: slideIn 0.3s ease-out;
-            z-index: 3000;
-            font-weight: bold;
-            max-width: 400px;
-            word-wrap: break-word;
+            z-index: 200;
         }
 
-        @keyframes slideIn {
-            from { transform: translateX(400px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        .form-feedback.active {
+            display: block;
+            animation: feedbackPop 0.5s ease-out;
+        }
+
+        @keyframes feedbackPop {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.05); }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        .feedback-icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+        }
+
+        .feedback-text {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--success);
+        }
+
+        .feedback-text.warning {
+            color: var(--warning);
+        }
+
+        /* Rep Counter */
+        .rep-counter {
+            position: absolute;
+            top: 100px;
+            left: 30px;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(15px);
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid rgba(102,126,234,0.3);
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .rep-number {
+            font-size: 4em;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .rep-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        /* Timer */
+        .ar-timer {
+            position: absolute;
+            top: 100px;
+            left: 200px;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(15px);
+            padding: 20px 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(102,126,234,0.3);
+            font-size: 2.5em;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Skeleton Overlay */
+        .skeleton-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        /* Normal Sayfa Stilleri */
+        .normal-mode {
+            display: block;
+        }
+
+        .normal-mode.hidden {
+            display: none;
+        }
+
+        /* Egzersiz Kartları */
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            padding: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .exercise-card {
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 25px;
+            overflow: hidden;
+            border: 1px solid rgba(102,126,234,0.2);
+            transition: all 0.3s;
+        }
+
+        .exercise-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 15px 50px rgba(102,126,234,0.2);
+        }
+
+        .exercise-preview {
+            position: relative;
+            height: 250px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .exercise-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+        }
+
+        .ar-preview-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: glow 2s infinite;
+        }
+
+        .exercise-content {
+            padding: 30px;
+        }
+
+        .exercise-title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .exercise-features {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .feature-tag {
+            background: rgba(102,126,234,0.2);
+            color: var(--primary);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .start-ar-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .start-ar-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(102,126,234,0.4);
+        }
+
+        /* Loading Screen */
+        .ar-loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--ar-bg);
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ar-loading.active {
+            display: flex;
+        }
+
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border: 4px solid rgba(102,126,234,0.3);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 30px;
+            font-size: 1.2em;
+            color: var(--primary);
+        }
+
+        .loading-status {
+            margin-top: 15px;
+            font-size: 0.9em;
+            opacity: 0.7;
         }
 
         /* Responsive */
         @media (max-width: 1024px) {
-            .dashboard {
-                grid-template-columns: 1fr;
+            .ar-sidebar {
+                width: 280px;
+                right: 10px;
+                top: 80px;
             }
-            .profile-card {
-                position: static;
-                max-height: none;
+            
+            .rep-counter {
+                top: 80px;
+                left: 10px;
+                padding: 15px;
+                min-width: 120px;
             }
-            .ai-chat {
-                width: 90%;
-                right: 5%;
-                left: 5%;
-                height: 70vh;
-                bottom: 100px;
+            
+            .rep-number {
+                font-size: 3em;
+            }
+            
+            .ar-timer {
+                top: 80px;
+                left: 140px;
+                font-size: 2em;
+                padding: 15px 20px;
             }
         }
 
         @media (max-width: 768px) {
-            header h1 { font-size: 2em; }
-            .exercise-grid { grid-template-columns: 1fr; }
-            .modal-content { margin: 10px; max-height: calc(100vh - 20px); }
+            .ar-sidebar {
+                width: calc(100% - 20px);
+                right: 10px;
+                left: 10px;
+                top: auto;
+                bottom: 100px;
+                max-height: 40vh;
+            }
+            
+            .ar-controls {
+                bottom: 20px;
+                padding: 15px 20px;
+                gap: 10px;
+            }
+            
+            .ar-btn {
+                padding: 12px 20px;
+                font-size: 0.9em;
+            }
+            
+            .exercise-grid {
+                grid-template-columns: 1fr;
+                padding: 15px;
+            }
         }
 
-        /* Utility Classes */
-        .text-center { text-align: center; }
-        .mt-20 { margin-top: 20px; }
-        .mb-20 { margin-bottom: 20px; }
+        /* Utility */
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
-    <!-- AI Asistan -->
-    <div class="ai-orb" onclick="toggleChat()">🤖</div>
-    
-    <div class="ai-chat" id="aiChat">
-        <div class="chat-header">
-            <div style="font-size: 2em;">🤖</div>
-            <div>
-                <div style="font-weight: bold;">HeightAI Asistan</div>
-                <div style="font-size: 0.85em; opacity: 0.8;">Çevrimiçi</div>
+
+    <!-- AR Loading Screen -->
+    <div class="ar-loading" id="arLoading">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">AR Sistemi Başlatılıyor...</div>
+        <div class="loading-status" id="loadingStatus">Kamera erişimi bekleniyor...</div>
+    </div>
+
+    <!-- AR Mode - Tam Ekran -->
+    <div class="ar-mode" id="arMode">
+        <div class="ar-container">
+            <!-- Video ve Canvas -->
+            <video id="arVideo" autoplay playsinline></video>
+            <canvas id="arCanvas"></canvas>
+            <canvas id="threeCanvas"></canvas>
+
+            <!-- AR UI -->
+            <div class="ar-ui">
+                <!-- Header -->
+                <div class="ar-header">
+                    <div class="ar-title">
+                        <span style="font-size: 2em;">🥽</span>
+                        <div>
+                            <div style="font-weight: bold; font-size: 1.2em;">AR Egzersiz Modu</div>
+                            <div style="font-size: 0.85em; opacity: 0.8;" id="arExerciseName">Cobra Esnemesi</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div class="ar-badge">LIVE AI</div>
+                        <button class="ar-close" onclick="exitAR()">✕</button>
+                    </div>
+                </div>
+
+                <!-- Sol Panel - Sayaçlar -->
+                <div class="rep-counter">
+                    <div class="rep-number" id="repCount">0</div>
+                    <div class="rep-label">Tekrar</div>
+                </div>
+
+                <div class="ar-timer" id="arTimer">00:00</div>
+
+                <!-- Sağ Panel - Analiz -->
+                <div class="ar-sidebar">
+                    <div class="muscle-activation">
+                        <div class="muscle-title">
+                            💪 Kas Aktivasyonu
+                        </div>
+                        <div class="muscle-bar">
+                            <div class="muscle-item">
+                                <span class="muscle-name">Omurga</span>
+                                <div class="muscle-progress">
+                                    <div class="muscle-fill spine" id="spineBar" style="width: 0%"></div>
+                                </div>
+                                <span class="muscle-percent" id="spinePercent">0%</span>
+                            </div>
+                            <div class="muscle-item">
+                                <span class="muscle-name">Core</span>
+                                <div class="muscle-progress">
+                                    <div class="muscle-fill core" id="coreBar" style="width: 0%"></div>
+                                </div>
+                                <span class="muscle-percent" id="corePercent">0%</span>
+                            </div>
+                            <div class="muscle-item">
+                                <span class="muscle-name">Omuzlar</span>
+                                <div class="muscle-progress">
+                                    <div class="muscle-fill shoulders" id="shoulderBar" style="width: 0%"></div>
+                                </div>
+                                <span class="muscle-percent" id="shoulderPercent">0%</span>
+                            </div>
+                            <div class="muscle-item">
+                                <span class="muscle-name">Bacaklar</span>
+                                <div class="muscle-progress">
+                                    <div class="muscle-fill legs" id="legBar" style="width: 0%"></div>
+                                </div>
+                                <span class="muscle-percent" id="legPercent">0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="spine-analysis">
+                        <div class="spine-title">
+                            🦴 Omurga Analizi
+                        </div>
+                        <div class="spine-metric">
+                            <span>Omurga Açısı</span>
+                            <span class="metric-value" id="spineAngle">0°</span>
+                        </div>
+                        <div class="spine-metric">
+                            <span>Disk Genişlemesi</span>
+                            <span class="metric-value" id="diskExpansion">0mm</span>
+                        </div>
+                        <div class="spine-metric">
+                            <span>Duruş Skoru</span>
+                            <span class="metric-value" id="postureScore">-%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Feedback -->
+                <div class="form-feedback" id="formFeedback">
+                    <div class="feedback-icon" id="feedbackIcon">✅</div>
+                    <div class="feedback-text" id="feedbackText">Mükemmel form!</div>
+                </div>
+
+                <!-- Alt Kontroller -->
+                <div class="ar-controls">
+                    <button class="ar-btn" id="skeletonBtn" onclick="toggleSkeleton()">
+                        🦴 İskelet
+                    </button>
+                    <button class="ar-btn" id="avatarBtn" onclick="toggleAvatar()">
+                        👤 Avatar
+                    </button>
+                    <button class="ar-btn" id="muscleBtn" onclick="toggleMuscles()">
+                        💪 Kaslar
+                    </button>
+                    <button class="ar-btn primary" onclick="toggleExercise()">
+                        ⏸ Durdur
+                    </button>
+                </div>
             </div>
-        </div>
-        <div class="chat-messages" id="chatMessages">
-            <div class="message ai">
-                Merhaba! Ben HeightAI. Boy uzatma yolculuğunuzda size kişiselleştirilmiş rehberlik edeceğim. Bugün nasıl hissediyorsunuz?
-            </div>
-        </div>
-        <div class="chat-input">
-            <input type="text" id="chatInput" placeholder="Mesajınızı yazın..." onkeypress="handleChatKey(event)">
-            <button onclick="sendMessage()">Gönder</button>
         </div>
     </div>
 
-    <div class="container">
-        <header>
-            <h1>HeightAI Pro</h1>
-            <p class="subtitle">Yapay Zeka Destekli Boy Uzatma Platformu</p>
+    <!-- Normal Mod - Egzersiz Seçimi -->
+    <div class="normal-mode" id="normalMode">
+        <header style="text-align: center; padding: 40px 20px;">
+            <h1 style="font-size: 3em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                HeightAI Pro
+            </h1>
+            <p style="font-size: 1.3em; opacity: 0.8; margin-top: 10px;">AR Destekli Boy Uzatma Sistemi</p>
         </header>
 
-        <div class="dashboard">
-            <!-- Sidebar -->
-            <aside class="profile-card">
-                <div class="profile-image">
-                    <span>👤</span>
-                </div>
-                <div class="profile-name" id="userName">Misafir Kullanıcı</div>
-                <div style="text-align: center; opacity: 0.7; font-size: 0.9em;">AI Programı: Aktif</div>
-                
-                <div class="profile-stats">
-                    <div class="stat-item">
-                        <span class="stat-label">Mevcut Boy</span>
-                        <span class="stat-value" id="currentHeight">-</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Hedef Boy</span>
-                        <span class="stat-value" id="targetHeight">-</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Potansiyel</span>
-                        <span class="stat-value" id="potentialHeight" style="color: var(--success);">+2-4cm</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Program Günü</span>
-                        <span class="stat-value" id="programDay">1/90</span>
+        <div class="exercise-grid">
+            <!-- AR Egzersiz Kartları -->
+            <div class="exercise-card">
+                <div class="exercise-preview">
+                    <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800" alt="Cobra">
+                    <div class="ar-preview-badge">
+                        <span>🥽</span> AR DESTEKLİ
                     </div>
                 </div>
-
-                <button class="btn" style="width: 100%; margin-top: 20px;" onclick="openProfileModal()">
-                    Profili Düzenle
-                </button>
-            </aside>
-
-            <!-- Main Content -->
-            <main class="main-content">
-                <!-- AI Analiz -->
-                <section class="ai-analysis">
-                    <div class="analysis-header">
-                        <div class="ai-badge">AI ANALİZ</div>
-                        <h2>Kişiselleştirilmiş Boy Uzatma Tahmini</h2>
+                <div class="exercise-content">
+                    <h2 class="exercise-title">AR Cobra Pro</h2>
+                    <p>Omurga esnekliğini artıran, AI tarafından gerçek zamanlı form düzeltmesi yapılan gelişmiş cobra egzersizi.</p>
+                    <div class="exercise-features">
+                        <span class="feature-tag">🦴 İskelet Takibi</span>
+                        <span class="feature-tag">💪 Kas Analizi</span>
+                        <span class="feature-tag">📐 Açı Ölçümü</span>
                     </div>
-                    <p style="opacity: 0.9; line-height: 1.6;">
-                        Yapay zeka algoritmamız yaş, cinsiyet, genetik potansiyel ve mevcut duruş analizinize göre 
-                        <strong>3-6 ay içinde 2-4 cm</strong> görünür boy artışı tahmin ediyor.
-                    </p>
-                    
-                    <div class="prediction-box">
-                        <h3 style="margin-bottom: 15px;">📈 İlerleme Tahmini</h3>
-                        <div class="prediction-chart">
-                            <canvas id="predictionChart"></canvas>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 3D Vücut Modeli -->
-                <section class="body-model-container">
-                    <div class="section-header">
-                        <h2>🦴 3D İskelet Analizi</h2>
-                        <span class="ai-badge">CANLI</span>
-                    </div>
-                    <div class="model-3d" id="bodyModel">
-                        <svg class="skeleton-svg" viewBox="0 0 200 400">
-                            <!-- Omurga -->
-                            <path class="bone" id="spine" d="M100 80 L100 250" />
-                            <!-- Kafatası -->
-                            <circle class="bone" id="skull" cx="100" cy="50" r="25" />
-                            <!-- Kaburga kafesi -->
-                            <path class="bone" id="ribs" d="M70 120 Q100 140 130 120 M70 140 Q100 160 130 140 M70 160 Q100 180 130 160" />
-                            <!-- Kalça -->
-                            <path class="bone" id="pelvis" d="M70 250 Q100 270 130 250" />
-                            <!-- Bacaklar -->
-                            <path class="bone" id="leg-left" d="M85 250 L80 350" />
-                            <path class="bone" id="leg-right" d="M115 250 L120 350" />
-                            <!-- Kollar -->
-                            <path class="bone" id="arm-left" d="M70 130 L40 200" />
-                            <path class="bone" id="arm-right" d="M130 130 L160 200" />
-                        </svg>
-                        
-                        <div class="muscle-group" id="muscle-spine" style="top: 30%; left: 60%;">Omurga Esniyor</div>
-                        <div class="muscle-group" id="muscle-legs" style="top: 70%; left: 20%;">Bacak Uzaması</div>
-                        <div class="muscle-group" id="muscle-core" style="top: 40%; left: 60%;">Core Aktif</div>
-                    </div>
-                </section>
-
-                <!-- Kamera Analizi -->
-                <section class="camera-section">
-                    <h2>📷 AI Duruş Analizi</h2>
-                    <p style="opacity: 0.8; margin: 10px 0;">Kameranızı açarak duruşunuzu analiz edin</p>
-                    
-                    <div class="camera-preview" id="cameraPreview">
-                        <video id="video" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
-                        <svg class="pose-overlay" id="poseOverlay"></svg>
-                    </div>
-
-                    <div class="camera-controls">
-                        <button class="btn" onclick="startCamera()">📹 Kamerayı Aç</button>
-                        <button class="btn btn-secondary" onclick="stopCamera()">⏹ Durdur</button>
-                        <button class="btn btn-success" onclick="analyzePose()">🔍 Analiz Et</button>
-                    </div>
-
-                    <div id="poseAnalysisResult" style="margin-top: 20px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 15px; display: none;">
-                        <h3>Analiz Sonucu</h3>
-                        <div id="analysisContent"></div>
-                    </div>
-                </section>
-
-                <!-- AI Önerilen Egzersizler -->
-                <section class="exercises-section">
-                    <div class="section-header">
-                        <h2>🎯 AI Size Özel Seçti</h2>
-                        <button class="btn btn-secondary" onclick="regenerateProgram()">🔄 Yenile</button>
-                    </div>
-
-                    <div class="ai-recommendation">
-                        <div style="font-size: 2em;">🧠</div>
-                        <div>
-                            <strong>AI Değerlendirmesi:</strong> Bugün omurga esnekliğiniz düşük görünüyor. 
-                            Cobra ve Ters Köprü egzersizlerine odaklanmanızı öneriyorum.
-                        </div>
-                    </div>
-
-                    <div class="exercise-grid" id="exerciseGrid">
-                        <!-- Egzersizler JS ile yüklenecek -->
-                    </div>
-                </section>
-            </main>
-        </div>
-    </div>
-
-    <!-- Profil Modal -->
-    <div class="modal" id="profileModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="close-btn" onclick="closeModal('profileModal')">&times;</span>
-                <h2>Profil Ayarları & AI Analizi</h2>
+                    <button class="start-ar-btn" onclick="startAR('cobra')">
+                        <span>🥽</span> AR Modunu Başlat
+                    </button>
+                </div>
             </div>
-            <div style="padding: 30px;">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                    <div class="form-group">
-                        <label>Ad Soyad</label>
-                        <input type="text" id="inputName" placeholder="Adınız">
-                    </div>
-                    <div class="form-group">
-                        <label>Yaş</label>
-                        <input type="number" id="inputAge" placeholder="25" onchange="calculatePotential()">
-                    </div>
-                    <div class="form-group">
-                        <label>Cinsiyet</label>
-                        <select id="inputGender" onchange="calculatePotential()">
-                            <option value="male">Erkek</option>
-                            <option value="female">Kadın</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Mevcut Boy (cm)</label>
-                        <input type="number" id="inputHeight" placeholder="175" step="0.1" onchange="calculatePotential()">
-                    </div>
-                    <div class="form-group">
-                        <label>Kilo (kg)</label>
-                        <input type="number" id="inputWeight" placeholder="70">
-                    </div>
-                    <div class="form-group">
-                        <label>Annenin Boyu (cm)</label>
-                        <input type="number" id="inputMotherHeight" placeholder="160" onchange="calculatePotential()">
-                    </div>
-                    <div class="form-group">
-                        <label>Babanın Boyu (cm)</label>
-                        <input type="number" id="inputFatherHeight" placeholder="175" onchange="calculatePotential()">
+
+            <div class="exercise-card">
+                <div class="exercise-preview">
+                    <img src="https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?w=800" alt="Bridge">
+                    <div class="ar-preview-badge">
+                        <span>🥽</span> AR DESTEKLİ
                     </div>
                 </div>
-
-                <div style="background: rgba(102,126,234,0.1); padding: 20px; border-radius: 15px; margin: 20px 0; border: 1px solid var(--primary);">
-                    <h3 style="color: var(--primary); margin-bottom: 10px;">🧬 AI Genetik Analizi</h3>
-                    <p id="geneticAnalysis">Bilgilerinizi girin, genetik potansiyelinizi hesaplayalım...</p>
+                <div class="exercise-content">
+                    <h2 class="exercise-title">AR Bridge Master</h2>
+                    <p>Ters köprü pozisyonunda omurga genişlemesini 3D görselleştirme ile takip edin.</p>
+                    <div class="exercise-features">
+                        <span class="feature-tag">📊 Disk Analizi</span>
+                        <span class="feature-tag">🎯 Pozisyon</span>
+                        <span class="feature-tag">⚡ Gerçek Zamanlı</span>
+                    </div>
+                    <button class="start-ar-btn" onclick="startAR('bridge')">
+                        <span>🥽</span> AR Modunu Başlat
+                    </button>
                 </div>
+            </div>
 
-                <button class="btn" style="width: 100%;" onclick="saveProfile()">💾 Kaydet ve Program Oluştur</button>
+            <div class="exercise-card">
+                <div class="exercise-preview">
+                    <img src="https://images.unsplash.com/photo-1598971639058-211a74a96aea?w=800" alt="Hang">
+                    <div class="ar-preview-badge">
+                        <span>🥽</span> AR DESTEKLİ
+                    </div>
+                </div>
+                <div class="exercise-content">
+                    <h2 class="exercise-title">AR Hang Assist</h2>
+                    <p>Asma egzersizinde omurga dekompresyonunu ve omuz açıklığını AR ile optimize edin.</p>
+                    <div class="exercise-features">
+                        <span class="feature-tag">⏱️ Süre Takibi</span>
+                        <span class="feature-tag">📏 Uzama Ölçümü</span>
+                        <span class="feature-tag">🤖 AI Koç</span>
+                    </div>
+                    <button class="start-ar-btn" onclick="startAR('hang')">
+                        <span>🥽</span> AR Modunu Başlat
+                    </button>
+                </div>
+            </div>
+
+            <div class="exercise-card">
+                <div class="exercise-preview">
+                    <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800" alt="Mountain">
+                    <div class="ar-preview-badge">
+                        <span>🥽</span> AR DESTEKLİ
+                    </div>
+                </div>
+                <div class="exercise-content">
+                    <h2 class="exercise-title">AR Posture Fix</h2>
+                    <p>Duruş analizi ve düzeltme için AI destekli dağ pozu egzersizi.</p>
+                    <div class="exercise-features">
+                        <span class="feature-tag">📐 Duruş Skoru</span>
+                        <span class="feature-tag">⚖️ Denge Analizi</span>
+                        <span class="feature-tag">📈 İlerleme</span>
+                    </div>
+                    <button class="start-ar-btn" onclick="startAR('mountain')">
+                        <span>🥽</span> AR Modunu Başlat
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-
-    <!-- Egzersiz Modal -->
-    <div class="modal" id="exerciseModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="close-btn" onclick="closeModal('exerciseModal')">&times;</span>
-                <h2 id="modalExerciseTitle">Egzersiz</h2>
-            </div>
-            <div style="padding: 30px;" id="modalExerciseContent">
-                <!-- İçerik JS ile doldurulacak -->
-            </div>
-        </div>
-    </div>
-
-    <div class="notification" id="notification"></div>
 
     <script>
-        // Global State
-        let userProfile = JSON.parse(localStorage.getItem('heightAI_profile')) || {};
+        // Global Değişkenler
+        let detector = null;
+        let video = null;
+        let canvas = null;
+        let ctx = null;
+        let threeCanvas = null;
+        let threeRenderer = null;
+        let threeScene = null;
+        let threeCamera = null;
+        let avatarMesh = null;
+        let skeletonLines = [];
+        let isRunning = false;
         let currentExercise = null;
-        let stream = null;
-        let chart = null;
-        let isChatOpen = false;
+        let repCount = 0;
+        let startTime = null;
+        let timerInterval = null;
+        
+        // AR Durumları
+        let showSkeleton = true;
+        let showAvatar = true;
+        let showMuscles = true;
 
-        // AI Chat System
-        const aiResponses = {
-            'merhaba': 'Merhaba! Bugün nasıl hissediyorsunuz? Omurganızda bir gerginlik var mı?',
-            'nasılsın': 'Harika! Sizin için yeni egzersizler planlıyorum. Dünkü programı tamamladınız mı?',
-            'boy': 'Boy uzatma süreci sabır ister. AI analizimize göre potansiyeliniz yüksek! Düzenli egzersiz ve uyku çok önemli.',
-            'egzersiz': 'Size özel seçtiğim egzersizlere göz atın. Bugün özellikle omurga esnekliğine odaklanmalısınız.',
-            'uyku': 'Büyüme hormonu 22:00-02:00 arasında salgılanır. Bu saatlerde derin uyku çok önemli!',
-            'beslenme': 'Protein, kalsiyum ve D vitamini alımınızı artırın. Süt ürünleri, balık ve yeşil yapraklı sebzeler tüketin.',
-            'default': 'Anladım. Size bu konuda yardımcı olmak için egzersiz programınızı inceleyeyim. Başka bir sorunuz var mı?'
+        // Egzersiz Konfigürasyonları
+        const exerciseConfigs = {
+            cobra: {
+                name: "AR Cobra Pro",
+                targetAngles: { spine: 45, shoulders: 90 },
+                muscles: { spine: 85, core: 60, shoulders: 70, legs: 20 },
+                feedback: ["Omurganızı daha yukarı kaldırın", "Omuzları geriye çekin", "Mükemmel!"]
+            },
+            bridge: {
+                name: "AR Bridge Master",
+                targetAngles: { spine: 30, hips: 120 },
+                muscles: { spine: 90, core: 80, shoulders: 85, legs: 60 },
+                feedback: ["Kalçayı daha yukarı", "Omuzları birleştirin", "Harika form!"]
+            },
+            hang: {
+                name: "AR Hang Assist",
+                targetAngles: { shoulders: 180, spine: 0 },
+                muscles: { spine: 70, core: 40, shoulders: 95, legs: 10 },
+                feedback: ["Tamamen sarkın", "Omuzları gevşetin", "Optimal uzama!"]
+            },
+            mountain: {
+                name: "AR Posture Fix",
+                targetAngles: { spine: 0, shoulders: 90 },
+                muscles: { spine: 50, core: 70, shoulders: 60, legs: 80 },
+                feedback: ["Dik durun", "Omuzları geriye", "Mükemmel duruş!"]
+            }
         };
 
-        function toggleChat() {
-            const chat = document.getElementById('aiChat');
-            isChatOpen = !isChatOpen;
+        // AR Başlatma
+        async function startAR(exerciseType) {
+            currentExercise = exerciseType;
+            const config = exerciseConfigs[exerciseType];
             
-            if (isChatOpen) {
-                chat.style.display = 'flex';
-                // Chat açıldığında sayfayı kaydırma
+            // UI Güncelle
+            document.getElementById('arExerciseName').textContent = config.name;
+            document.getElementById('normalMode').classList.add('hidden');
+            document.getElementById('arLoading').classList.add('active');
+            
+            try {
+                // Kamera Başlat
+                await initCamera();
+                document.getElementById('loadingStatus').textContent = "AI modeli yükleniyor...";
+                
+                // TensorFlow Modeli
+                await initPoseDetection();
+                document.getElementById('loadingStatus').textContent = "3D sahne oluşturuluyor...";
+                
+                // Three.js Sahnesi
+                initThreeJS();
+                
+                // AR Modu Göster
+                document.getElementById('arLoading').classList.remove('active');
+                document.getElementById('arMode').classList.add('active');
+                
+                // Başlat
+                isRunning = true;
+                startTime = Date.now();
+                startTimer();
+                detectPose();
+                
+                showNotification('🥽 AR Modu Aktif! Formunuzu takip ediyorum.');
+                
+            } catch (error) {
+                console.error('AR başlatma hatası:', error);
+                document.getElementById('loadingStatus').textContent = "Hata: " + error.message;
                 setTimeout(() => {
-                    document.getElementById('chatInput').focus();
-                }, 100);
-            } else {
-                chat.style.display = 'none';
+                    document.getElementById('arLoading').classList.remove('active');
+                    document.getElementById('normalMode').classList.remove('hidden');
+                }, 3000);
             }
         }
 
-        function handleChatKey(e) {
-            if (e.key === 'Enter') sendMessage();
+        // Kamera Başlatma
+        async function initCamera() {
+            video = document.getElementById('arVideo');
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { 
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 },
+                    facingMode: 'user'
+                },
+                audio: false
+            });
+            video.srcObject = stream;
+            
+            return new Promise((resolve) => {
+                video.onloadedmetadata = () => {
+                    video.play();
+                    resolve();
+                };
+            });
         }
 
-        function sendMessage() {
-            const input = document.getElementById('chatInput');
-            const message = input.value.trim();
-            if (!message) return;
+        // Pose Detection Başlatma
+        async function initPoseDetection() {
+            detector = await poseDetection.createDetector(
+                poseDetection.SupportedModels.MoveNet,
+                {
+                    modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING,
+                    enableTracking: true
+                }
+            );
+            
+            canvas = document.getElementById('arCanvas');
+            ctx = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+        }
 
-            addMessage(message, 'user');
-            input.value = '';
+        // Three.js Sahnesi
+        function initThreeJS() {
+            threeCanvas = document.getElementById('threeCanvas');
+            threeRenderer = new THREE.WebGLRenderer({
+                canvas: threeCanvas,
+                alpha: true,
+                antialias: true
+            });
+            threeRenderer.setSize(window.innerWidth, window.innerHeight);
+            threeRenderer.setPixelRatio(window.devicePixelRatio);
+            
+            threeScene = new THREE.Scene();
+            threeCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            threeCamera.position.z = 5;
+            
+            // Işıklar
+            const ambientLight = new THREE.AmbientLight(0x404040, 2);
+            threeScene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0x667eea, 1);
+            directionalLight.position.set(5, 5, 5);
+            threeScene.add(directionalLight);
+            
+            // Avatar Mesh (Basit iskelet)
+            createAvatar();
+            
+            // Pencere boyutu değişikliği
+            window.addEventListener('resize', onWindowResize, false);
+        }
 
+        // Avatar Oluşturma
+        function createAvatar() {
+            const geometry = new THREE.SphereGeometry(0.1, 16, 16);
+            const material = new THREE.MeshPhongMaterial({ 
+                color: 0x667eea,
+                transparent: true,
+                opacity: 0.6,
+                emissive: 0x667eea,
+                emissiveIntensity: 0.5
+            });
+            
+            // 17 eklem noktası için mesh
+            avatarMesh = new THREE.Group();
+            
+            for (let i = 0; i < 17; i++) {
+                const joint = new THREE.Mesh(geometry, material.clone());
+                avatarMesh.add(joint);
+            }
+            
+            threeScene.add(avatarMesh);
+        }
+
+        // Pose Tespiti ve Çizimi
+        async function detectPose() {
+            if (!isRunning) return;
+            
+            try {
+                const poses = await detector.estimatePoses(video);
+                
+                if (poses.length > 0) {
+                    const pose = poses[0];
+                    drawPose(pose);
+                    updateAvatar(pose);
+                    analyzeForm(pose);
+                    updateMetrics(pose);
+                }
+                
+                requestAnimationFrame(detectPose);
+            } catch (error) {
+                console.error('Pose detection error:', error);
+                requestAnimationFrame(detectPose);
+            }
+        }
+
+        // Canvas Üzerine Çizim
+        function drawPose(pose) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            if (!showSkeleton) return;
+            
+            const keypoints = pose.keypoints;
+            
+            // Noktaları çiz
+            keypoints.forEach((kp, index) => {
+                if (kp.score > 0.3) {
+                    ctx.beginPath();
+                    ctx.arc(kp.x, kp.y, 8, 0, 2 * Math.PI);
+                    ctx.fillStyle = '#667eea';
+                    ctx.fill();
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = '#667eea';
+                }
+            });
+            
+            // İskelet çizgileri
+            const connections = [
+                [0, 1], [1, 2], [2, 3], [3, 4], // Sağ kol
+                [0, 5], [5, 6], [6, 7], [7, 8], // Sol kol
+                [0, 9], [9, 10], [10, 11], // Sağ bacak
+                [0, 12], [12, 13], [13, 14], // Sol bacak
+                [0, 15], [15, 16], // Omurga
+                [1, 5], [9, 12] // Omuz ve kalça bağlantıları
+            ];
+            
+            ctx.strokeStyle = 'rgba(102, 126, 234, 0.8)';
+            ctx.lineWidth = 4;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#667eea';
+            
+            connections.forEach(([i, j]) => {
+                if (keypoints[i].score > 0.3 && keypoints[j].score > 0.3) {
+                    ctx.beginPath();
+                    ctx.moveTo(keypoints[i].x, keypoints[i].y);
+                    ctx.lineTo(keypoints[j].x, keypoints[j].y);
+                    ctx.stroke();
+                }
+            });
+            
+            ctx.shadowBlur = 0;
+        }
+
+        // Three.js Avatar Güncelleme
+        function updateAvatar(pose) {
+            if (!showAvatar) {
+                avatarMesh.visible = false;
+                return;
+            }
+            
+            avatarMesh.visible = true;
+            const keypoints = pose.keypoints;
+            
+            // Video koordinatlarını Three.js koordinatlarına dönüştür
+            keypoints.forEach((kp, index) => {
+                if (kp.score > 0.3 && avatarMesh.children[index]) {
+                    const x = (kp.x / video.videoWidth) * 10 - 5;
+                    const y = -(kp.y / video.videoHeight) * 10 + 5;
+                    const z = 0;
+                    
+                    avatarMesh.children[index].position.set(x, y, z);
+                    
+                    // Kas aktivasyonuna göre renk değiştir
+                    const muscleActivation = getMuscleActivation(index);
+                    const color = new THREE.Color().setHSL(0.6 - (muscleActivation * 0.5), 1, 0.5);
+                    avatarMesh.children[index].material.color = color;
+                    avatarMesh.children[index].material.emissive = color;
+                }
+            });
+            
+            threeRenderer.render(threeScene, threeCamera);
+        }
+
+        // Kas Aktivasyonu Hesaplama
+        function getMuscleActivation(jointIndex) {
+            const config = exerciseConfigs[currentExercise];
+            if (!config) return 0;
+            
+            // Basit eşleme - gerçek uygulamada daha karmaşık olabilir
+            if ([0, 1, 2, 3, 4].includes(jointIndex)) return config.muscles.shoulders / 100;
+            if ([5, 6, 7, 8].includes(jointIndex)) return config.muscles.shoulders / 100;
+            if ([9, 10, 11, 12, 13, 14].includes(jointIndex)) return config.muscles.legs / 100;
+            if ([15, 16].includes(jointIndex)) return config.muscles.spine / 100;
+            return config.muscles.core / 100;
+        }
+
+        // Form Analizi
+        function analyzeForm(pose) {
+            const config = exerciseConfigs[currentExercise];
+            if (!config) return;
+            
+            // Açı hesaplamaları (basit versiyon)
+            const keypoints = pose.keypoints;
+            let spineAngle = calculateAngle(keypoints[0], keypoints[15], keypoints[16]);
+            let shoulderAngle = calculateAngle(keypoints[1], keypoints[0], keypoints[5]);
+            
+            // Form geri bildirimi
+            let feedback = null;
+            let icon = '✅';
+            
+            if (Math.abs(spineAngle - config.targetAngles.spine) > 10) {
+                feedback = config.feedback[0];
+                icon = '⚠️';
+            } else if (Math.abs(shoulderAngle - config.targetAngles.shoulders) > 15) {
+                feedback = config.feedback[1];
+                icon = '⚠️';
+            } else {
+                feedback = config.feedback[2];
+                icon = '✅';
+            }
+            
+            // Feedback göster
+            if (feedback && Math.random() > 0.95) { // Her 20 frame'de bir
+                showFormFeedback(feedback, icon);
+            }
+            
+            // Tekrar sayımı (basit)
+            if (spineAngle > config.targetAngles.spine - 5 && Math.random() > 0.98) {
+                repCount++;
+                document.getElementById('repCount').textContent = repCount;
+                updateMuscleBars(config.muscles);
+            }
+        }
+
+        // Açı Hesaplama
+        function calculateAngle(a, b, c) {
+            const radians = Math.atan2(c.y - b.y, c.x - b.x) - Math.atan2(a.y - b.y, a.x - b.x);
+            let angle = Math.abs(radians * 180.0 / Math.PI);
+            if (angle > 180.0) angle = 360 - angle;
+            return angle;
+        }
+
+        // Metrik Güncelleme
+        function updateMetrics(pose) {
+            const keypoints = pose.keypoints;
+            
+            // Omurga açısı
+            const spineAngle = calculateAngle(keypoints[0], keypoints[15], keypoints[16]);
+            document.getElementById('spineAngle').textContent = spineAngle.toFixed(1) + '°';
+            
+            // Disk genişlemesi (simülasyon)
+            const expansion = (spineAngle / 45) * 3.5;
+            document.getElementById('diskExpansion').textContent = expansion.toFixed(1) + 'mm';
+            
+            // Duruş skoru
+            const score = Math.max(0, 100 - Math.abs(spineAngle - 45));
+            document.getElementById('postureScore').textContent = score.toFixed(0) + '%';
+            
+            // Kas çubukları
+            const config = exerciseConfigs[currentExercise];
+            if (config) {
+                updateMuscleBars(config.muscles, score / 100);
+            }
+        }
+
+        // Kas Çubuklarını Güncelle
+        function updateMuscleBars(muscles, intensity = 1) {
+            document.getElementById('spineBar').style.width = (muscles.spine * intensity) + '%';
+            document.getElementById('spinePercent').textContent = Math.round(muscles.spine * intensity) + '%';
+            
+            document.getElementById('coreBar').style.width = (muscles.core * intensity) + '%';
+            document.getElementById('corePercent').textContent = Math.round(muscles.core * intensity) + '%';
+            
+            document.getElementById('shoulderBar').style.width = (muscles.shoulders * intensity) + '%';
+            document.getElementById('shoulderPercent').textContent = Math.round(muscles.shoulders * intensity) + '%';
+            
+            document.getElementById('legBar').style.width = (muscles.legs * intensity) + '%';
+            document.getElementById('legPercent').textContent = Math.round(muscles.legs * intensity) + '%';
+        }
+
+        // Form Feedback Göster
+        function showFormFeedback(text, icon) {
+            const feedback = document.getElementById('formFeedback');
+            document.getElementById('feedbackText').textContent = text;
+            document.getElementById('feedbackIcon').textContent = icon;
+            
+            if (icon === '⚠️') {
+                document.getElementById('feedbackText').classList.add('warning');
+            } else {
+                document.getElementById('feedbackText').classList.remove('warning');
+            }
+            
+            feedback.classList.add('active');
+            
             setTimeout(() => {
-                const response = generateAIResponse(message);
-                addMessage(response, 'ai');
+                feedback.classList.remove('active');
+            }, 2000);
+        }
+
+        // Timer
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const mins = Math.floor(elapsed / 60).toString().padStart(2, '0');
+                const secs = (elapsed % 60).toString().padStart(2, '0');
+                document.getElementById('arTimer').textContent = `${mins}:${secs}`;
             }, 1000);
         }
 
-        function addMessage(text, sender) {
-            const container = document.getElementById('chatMessages');
-            const div = document.createElement('div');
-            div.className = `message ${sender}`;
-            div.textContent = text;
-            container.appendChild(div);
+        // Toggle Fonksiyonları
+        function toggleSkeleton() {
+            showSkeleton = !showSkeleton;
+            document.getElementById('skeletonBtn').classList.toggle('active', showSkeleton);
+        }
+
+        function toggleAvatar() {
+            showAvatar = !showAvatar;
+            document.getElementById('avatarBtn').classList.toggle('active', showAvatar);
+        }
+
+        function toggleMuscles() {
+            showMuscles = !showMuscles;
+            document.getElementById('muscleBtn').classList.toggle('active', showMuscles);
+        }
+
+        function toggleExercise() {
+            isRunning = !isRunning;
+            if (isRunning) {
+                detectPose();
+                startTimer();
+            } else {
+                clearInterval(timerInterval);
+            }
+        }
+
+        // AR Çıkış
+        function exitAR() {
+            isRunning = false;
+            clearInterval(timerInterval);
             
-            // Sadece chat içinde scroll, sayfayı değil
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function generateAIResponse(input) {
-            const lower = input.toLowerCase();
-            for (let key in aiResponses) {
-                if (lower.includes(key)) return aiResponses[key];
-            }
-            return aiResponses['default'];
-        }
-
-        // Profil ve AI Hesaplamalar
-        function calculatePotential() {
-            const age = parseInt(document.getElementById('inputAge').value) || 0;
-            const gender = document.getElementById('inputGender').value;
-            const motherH = parseInt(document.getElementById('inputMotherHeight').value) || 0;
-            const fatherH = parseInt(document.getElementById('inputFatherHeight').value) || 0;
-            const currentH = parseFloat(document.getElementById('inputHeight').value) || 0;
-
-            if (motherH && fatherH) {
-                let geneticHeight;
-                if (gender === 'male') {
-                    geneticHeight = ((motherH + fatherH + 13) / 2);
-                } else {
-                    geneticHeight = ((motherH + fatherH - 13) / 2);
-                }
-
-                let potential = 0;
-                let analysis = '';
-
-                if (age < 18) {
-                    potential = geneticHeight - currentH + 3;
-                    analysis = `🧬 Genetik potansiyeliniz: ${geneticHeight.toFixed(1)} cm. Büyüme plakalarınız açık, ${potential.toFixed(1)} cm daha uzayabilirsiniz!`;
-                } else if (age <= 25) {
-                    potential = 2 + Math.random() * 3;
-                    analysis = `🧬 Genetik hedef: ${geneticHeight.toFixed(1)} cm. Postür düzeltmeyle ${potential.toFixed(1)} cm artış mümkün.`;
-                } else {
-                    potential = 1 + Math.random() * 2;
-                    analysis = `🧬 Genetik potansiyel tamamlanmış. Duruş düzeltmeyle ${potential.toFixed(1)} cm artış sağlanabilir.`;
-                }
-
-                document.getElementById('geneticAnalysis').innerHTML = analysis;
-            }
-        }
-
-        function saveProfile() {
-            userProfile = {
-                name: document.getElementById('inputName').value,
-                age: parseInt(document.getElementById('inputAge').value),
-                gender: document.getElementById('inputGender').value,
-                height: parseFloat(document.getElementById('inputHeight').value),
-                weight: parseFloat(document.getElementById('inputWeight').value),
-                motherHeight: parseInt(document.getElementById('inputMotherHeight').value),
-                fatherHeight: parseInt(document.getElementById('inputFatherHeight').value),
-                createdAt: new Date().toISOString()
-            };
-
-            localStorage.setItem('heightAI_profile', JSON.stringify(userProfile));
-            updateDashboard();
-            closeModal('profileModal');
-            showNotification('✅ Profil kaydedildi! AI programınız oluşturuluyor...');
-            initChart();
-        }
-
-        function updateDashboard() {
-            if (userProfile.name) {
-                document.getElementById('userName').textContent = userProfile.name;
-                document.getElementById('currentHeight').textContent = userProfile.height + ' cm';
-                
-                const target = userProfile.gender === 'male' ? 
-                    ((userProfile.motherHeight + userProfile.fatherHeight + 13) / 2) :
-                    ((userProfile.motherHeight + userProfile.fatherHeight - 13) / 2);
-                document.getElementById('targetHeight').textContent = target.toFixed(1) + ' cm';
-            }
-        }
-
-        // 3D Model Animasyonu - Düzeltilmiş
-        function animateSkeleton() {
-            const bones = document.querySelectorAll('.bone');
-            const muscles = document.querySelectorAll('.muscle-group');
-            
-            // Rastgele kemik animasyonu
-            setInterval(() => {
-                const randomBone = bones[Math.floor(Math.random() * bones.length)];
-                randomBone.classList.add('active');
-                setTimeout(() => randomBone.classList.remove('active'), 2000);
-            }, 3000);
-
-            // Kas grupları animasyonu
-            setInterval(() => {
-                const randomMuscle = muscles[Math.floor(Math.random() * muscles.length)];
-                randomMuscle.classList.add('visible');
-                setTimeout(() => randomMuscle.classList.remove('visible'), 3000);
-            }, 4000);
-        }
-
-        // Kamera ve Pose Estimation
-        async function startCamera() {
-            try {
-                stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                const video = document.getElementById('video');
-                video.srcObject = stream;
-                document.getElementById('cameraPreview').classList.add('active');
-                
-                // Pose detection interval
-                const intervalId = setInterval(() => {
-                    if (!document.getElementById('cameraPreview').classList.contains('active')) {
-                        clearInterval(intervalId);
-                        return;
-                    }
-                    drawPose();
-                }, 100);
-            } catch (err) {
-                showNotification('❌ Kamera erişimi reddedildi');
-            }
-        }
-
-        function stopCamera() {
             if (stream) {
                 stream.getTracks().forEach(track => track.stop());
-                document.getElementById('cameraPreview').classList.remove('active');
             }
-        }
-
-        function drawPose() {
-            const svg = document.getElementById('poseOverlay');
-            const points = [
-                {x: 320, y: 100},
-                {x: 320, y: 200},
-                {x: 250, y: 220},
-                {x: 390, y: 220},
-                {x: 320, y: 350},
-            ];
-
-            let html = '';
-            for (let i = 0; i < points.length - 1; i++) {
-                html += `<line class="pose-line" x1="${points[i].x}" y1="${points[i].y}" x2="${points[i+1].x}" y2="${points[i+1].y}" />`;
-            }
-            points.forEach(p => {
-                html += `<circle class="pose-point" cx="${p.x}" cy="${p.y}" />`;
-            });
-            svg.innerHTML = html;
-        }
-
-        function analyzePose() {
-            const result = document.getElementById('poseAnalysisResult');
-            const content = document.getElementById('analysisContent');
             
-            result.style.display = 'block';
-            content.innerHTML = `
-                <div style="display: grid; gap: 15px;">
-                    <div style="background: rgba(16,185,129,0.2); padding: 15px; border-radius: 10px; border-left: 4px solid var(--success);">
-                        <strong>✅ Omurga Hizalaması:</strong> Normal (3° lordoz)
-                    </div>
-                    <div style="background: rgba(245,158,11,0.2); padding: 15px; border-radius: 10px; border-left: 4px solid var(--warning);">
-                        <strong>⚠️ Omuzlar:</strong> Hafif öne düşük
-                    </div>
-                    <div style="background: rgba(102,126,234,0.2); padding: 15px; border-radius: 10px; border-left: 4px solid var(--primary);">
-                        <strong>💡 AI Öneri:</strong> Ters Köprü egzersizlerine odaklanın.
-                    </div>
-                </div>
-            `;
-        }
-
-        // Egzersiz Sistemi
-        const exercises = [
-            {
-                id: 1,
-                name: "AI Cobra Pro",
-                difficulty: "medium",
-                image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800",
-                duration: 60,
-                aiMatch: 95,
-                calories: 45,
-                target: "Omurga Esnemesi",
-                description: "AI optimize edilmiş cobra hareketi. Omurga disklerinin %15 daha fazla genişlemesini sağlar."
-            },
-            {
-                id: 2,
-                name: "Smart Bridge Plus",
-                difficulty: "hard",
-                image: "https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?w=800",
-                duration: 45,
-                aiMatch: 88,
-                calories: 60,
-                target: "Omurga Dekompresyonu",
-                description: "Ters yerçekimi etkisiyle omurlar arası mesafeyi artırır."
-            },
-            {
-                id: 3,
-                name: "Hang AI Assist",
-                difficulty: "hard",
-                image: "https://images.unsplash.com/photo-1598971639058-211a74a96aea?w=800",
-                duration: 30,
-                aiMatch: 92,
-                calories: 35,
-                target: "Omurga Uzaması",
-                description: "Asma süresi AI tarafından kişiselleştirilir."
-            },
-            {
-                id: 4,
-                name: "Posture AI Fix",
-                difficulty: "easy",
-                image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800",
-                duration: 120,
-                aiMatch: 98,
-                calories: 25,
-                target: "Duruş Düzeltme",
-                description: "Kamera analizinize göre özelleştirilmiş duruş düzeltme protokolü."
-            }
-        ];
-
-        function renderExercises() {
-            const grid = document.getElementById('exerciseGrid');
-            grid.innerHTML = exercises.map(ex => `
-                <div class="exercise-card" onclick="openExerciseModal(${ex.id})">
-                    <div style="position: relative;">
-                        <img src="${ex.image}" class="exercise-image" alt="${ex.name}" loading="lazy">
-                        <span class="difficulty-badge ${ex.difficulty}">${ex.difficulty.toUpperCase()}</span>
-                    </div>
-                    <div class="exercise-content">
-                        <div class="ai-match">
-                            🤖 AI Eşleşme: %${ex.aiMatch}
-                        </div>
-                        <h3 class="exercise-title">${ex.name}</h3>
-                        <div class="exercise-meta">
-                            <span class="meta-item">⏱️ ${ex.duration}s</span>
-                            <span class="meta-item">🔥 ${ex.calories} kal</span>
-                            <span class="meta-item">🎯 ${ex.target}</span>
-                        </div>
-                        <p style="opacity: 0.8; font-size: 0.95em;">${ex.description}</p>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function openExerciseModal(id) {
-            const ex = exercises.find(e => e.id === id);
-            document.getElementById('modalExerciseTitle').textContent = ex.name;
-            document.getElementById('modalExerciseContent').innerHTML = `
-                <img src="${ex.image}" style="width: 100%; height: 300px; object-fit: cover; border-radius: 15px; margin-bottom: 20px;" loading="lazy">
-                <div style="display: grid; gap: 20px;">
-                    <div style="background: rgba(102,126,234,0.1); padding: 20px; border-radius: 15px;">
-                        <h3 style="color: var(--primary); margin-bottom: 10px;">🤖 AI Değerlendirme</h3>
-                        <p>Bu egzersiz sizin için %${ex.aiMatch} oranında uygun.</p>
-                    </div>
-                    <button class="btn" style="width: 100%;" onclick="startExercise(${ex.id})">
-                        ▶ Egzersizi Başlat
-                    </button>
-                </div>
-            `;
-            document.getElementById('exerciseModal').classList.add('active');
-            // Modal açıldığında sayfayı en üste kaydırma
-            document.body.style.overflow = 'hidden';
-        }
-
-        function startExercise(id) {
-            showNotification('🎯 AI eşlikçi aktif! Formunuzu kamera ile izliyorum...');
-        }
-
-        function regenerateProgram() {
-            showNotification('🤖 Yeni program hesaplanıyor...');
-            setTimeout(() => {
-                exercises.sort(() => Math.random() - 0.5);
-                renderExercises();
-                showNotification('✅ Yeni AI programı hazır!');
-            }, 1500);
-        }
-
-        // Chart.js Grafik
-        function initChart() {
-            const ctx = document.getElementById('predictionChart').getContext('2d');
+            document.getElementById('arMode').classList.remove('active');
+            document.getElementById('normalMode').classList.remove('hidden');
             
-            if (chart) chart.destroy();
-
-            const months = ['1. Ay', '2. Ay', '3. Ay', '4. Ay', '5. Ay', '6. Ay'];
-            const data = [0, 0.5, 1.2, 2.1, 2.8, 3.5];
-
-            chart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: months,
-                    datasets: [{
-                        label: 'Tahmini Boy Artışı (cm)',
-                        data: data,
-                        borderColor: '#667eea',
-                        backgroundColor: 'rgba(102,126,234,0.1)',
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.4,
-                        pointBackgroundColor: '#667eea',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        pointRadius: 6
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: { color: '#e2e8f0' }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: 'rgba(255,255,255,0.1)' },
-                            ticks: { color: '#94a3b8' },
-                            title: {
-                                display: true,
-                                text: 'Boy Artışı (cm)',
-                                color: '#94a3b8'
-                            }
-                        },
-                        x: {
-                            grid: { color: 'rgba(255,255,255,0.1)' },
-                            ticks: { color: '#94a3b8' }
-                        }
-                    },
-                    animation: {
-                        duration: 2000,
-                        easing: 'easeOutQuart'
-                    }
-                }
-            });
+            repCount = 0;
+            document.getElementById('repCount').textContent = '0';
+            document.getElementById('arTimer').textContent = '00:00';
         }
 
-        // Modal Kontrolleri - Düzeltilmiş
-        function openProfileModal() {
-            document.getElementById('profileModal').classList.add('active');
-            document.body.style.overflow = 'hidden'; // Sayfa scrollunu kapat
-            
-            if (userProfile.name) {
-                document.getElementById('inputName').value = userProfile.name;
-                document.getElementById('inputAge').value = userProfile.age;
-                document.getElementById('inputGender').value = userProfile.gender;
-                document.getElementById('inputHeight').value = userProfile.height;
-                document.getElementById('inputWeight').value = userProfile.weight;
-                document.getElementById('inputMotherHeight').value = userProfile.motherHeight;
-                document.getElementById('inputFatherHeight').value = userProfile.fatherHeight;
-                calculatePotential();
+        // Pencere Boyutu
+        function onWindowResize() {
+            if (threeCamera && threeRenderer) {
+                threeCamera.aspect = window.innerWidth / window.innerHeight;
+                threeCamera.updateProjectionMatrix();
+                threeRenderer.setSize(window.innerWidth, window.innerHeight);
             }
         }
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-            document.body.style.overflow = ''; // Sayfa scrollunu aç
-        }
-
+        // Bildirim
         function showNotification(message) {
-            const notif = document.getElementById('notification');
-            notif.textContent = message;
-            notif.style.display = 'block';
-            setTimeout(() => notif.style.display = 'none', 3000);
+            // Basit alert yerine console log (gerçek uygulamada toast kullanılabilir)
+            console.log('Notification:', message);
         }
 
         // Başlatma
         window.onload = function() {
-            renderExercises();
-            animateSkeleton();
-            updateDashboard();
-            
-            if (userProfile.name) {
-                initChart();
-                setTimeout(() => {
-                    showNotification('🤖 Hoş geldiniz ' + userProfile.name + '! AI programınız hazır.');
-                }, 1000);
-            } else {
-                setTimeout(() => {
-                    openProfileModal();
-                }, 1500);
-            }
+            // Başlangıç durumu
+            document.getElementById('skeletonBtn').classList.add('active');
+            document.getElementById('avatarBtn').classList.add('active');
+            document.getElementById('muscleBtn').classList.add('active');
         };
 
-        // ESC ile kapatma
+        // ESC ile çıkış
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                document.querySelectorAll('.modal').forEach(m => {
-                    m.classList.remove('active');
-                });
-                document.body.style.overflow = '';
+            if (e.key === 'Escape' && document.getElementById('arMode').classList.contains('active')) {
+                exitAR();
             }
         });
-
-        // Modal dışına tıklama ile kapatma
-        document.querySelectorAll('.modal').forEach(modal => {
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.classList.remove('active');
-                    document.body.style.overflow = '';
-                }
-            });
-        });
-
-        // Sayfa scroll eventini kontrol et (debug için)
-        let lastScrollTop = 0;
-        window.addEventListener('scroll', () => {
-            const st = window.pageYOffset || document.documentElement.scrollTop;
-            if (st < lastScrollTop && st === 0) {
-                // Sayfa yukarı kayıyorsa ve en üstteyse
-                console.log('Scroll detected');
-            }
-            lastScrollTop = st <= 0 ? 0 : st;
-        }, false);
     </script>
 </body>
 </html>
