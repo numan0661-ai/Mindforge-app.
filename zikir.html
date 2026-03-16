@@ -1,0 +1,106 @@
+                document.getElementById('favoriteCount').textContent = favorites;
+                document.getElementById('progressPercent').textContent = percent + '%';
+                document.getElementById('progressBar').style.width = percent + '%';
+            },
+
+            openModal(id) {
+                this.currentModalId = id;
+                const name = namesData.find(n => n.id === id);
+                const count = this.getCount(id);
+                
+                document.getElementById('modalArabic').textContent = name.arabic;
+                document.getElementById('modalTurkish').textContent = name.turkish;
+                document.getElementById('modalMeaning').textContent = name.meaning;
+                document.getElementById('modalDescription').textContent = name.description;
+                document.getElementById('modalPurpose').textContent = name.purpose;
+                document.getElementById('modalVirtues').textContent = name.virtues;
+                document.getElementById('modalCount').textContent = count;
+                
+                document.getElementById('detailModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+            },
+
+            closeModal() {
+                document.getElementById('detailModal').classList.remove('active');
+                document.body.style.overflow = '';
+                this.currentModalId = null;
+            },
+
+            modalCount(delta) {
+                if (delta > 0) {
+                    this.increment(this.currentModalId);
+                } else {
+                    this.decrement(this.currentModalId);
+                }
+                document.getElementById('modalCount').textContent = this.getCount(this.currentModalId);
+            },
+
+            resetDaily() {
+                if (confirm('Bugünkü tüm zikirleri sıfırlamak istediğinize emin misiniz?')) {
+                    this.data.counts = {};
+                    this.saveData();
+                    this.render();
+                    this.updateStats();
+                    this.showToast('Günlük zikirler sıfırlandı');
+                }
+            },
+
+            resetAll() {
+                if (confirm('Tüm verileri (favoriler dahil) sıfırlamak istediğinize emin misiniz? Bu işlem geri alınamaz!')) {
+                    this.data = {
+                        counts: {},
+                        favorites: [],
+                        lastReset: new Date().toDateString()
+                    };
+                    this.saveData();
+                    this.render();
+                    this.updateStats();
+                    this.showToast('Tüm veriler sıfırlandı');
+                }
+            },
+
+            exportData() {
+                const dataStr = JSON.stringify(this.data, null, 2);
+                const blob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `esma-i-husna-yedek-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                this.showToast('Veriler indirildi');
+            },
+
+            showToast(message) {
+                const toast = document.getElementById('toast');
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2000);
+            }
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+
+        // Close modal on outside click
+        document.getElementById('detailModal').addEventListener('click', (e) => {
+            if (e.target.id === 'detailModal') {
+                app.closeModal();
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                app.closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
