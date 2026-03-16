@@ -1,4 +1,1019 @@
-                document.getElementById('favoriteCount').textContent = favorites;
+<!DOCTYPE html>
+<html lang="tr" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esma-i Hüsna - 99 İsim Zikir Uygulaması</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a5f4a;
+            --primary-light: #2d8a6e;
+            --gold: #d4af37;
+            --gold-light: #f4d03f;
+            --bg-dark: #0f1f1a;
+            --bg-card: #1a332b;
+            --text-light: #e8f5e9;
+            --text-muted: #a8c5b5;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1a2f2a 100%);
+            min-height: 100vh;
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--gold) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--primary-light) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, var(--gold) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 2rem 1rem;
+            background: linear-gradient(180deg, rgba(26,95,74,0.4) 0%, transparent 100%);
+            border-bottom: 2px solid var(--gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '﷽';
+            position: absolute;
+            font-size: 15rem;
+            opacity: 0.03;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Amiri', serif;
+            pointer-events: none;
+        }
+
+        h1 {
+            font-family: 'Amiri', serif;
+            font-size: 3rem;
+            color: var(--gold);
+            text-shadow: 0 0 20px rgba(212,175,55,0.3);
+            margin-bottom: 0.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-top: 1rem;
+        }
+
+        /* Progress Section */
+        .progress-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .progress-card {
+            background: rgba(26,51,43,0.8);
+            border: 1px solid var(--gold);
+            border-radius: 20px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .progress-title {
+            font-size: 1.2rem;
+            color: var(--gold);
+        }
+
+        .progress-stats {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(212,175,55,0.1);
+            border-radius: 15px;
+            min-width: 120px;
+            border: 1px solid rgba(212,175,55,0.3);
+            transition: transform 0.3s;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-5px);
+            background: rgba(212,175,55,0.2);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--gold);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-light), var(--gold));
+            width: 0%;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px var(--gold);
+        }
+
+        /* Controls */
+        .controls {
+            max-width: 800px;
+            margin: 1rem auto;
+            padding: 0 1rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: 1px solid var(--gold);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(212,175,55,0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(212,175,55,0.1);
+            color: var(--gold);
+            border: 1px solid var(--gold);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(212,175,55,0.2);
+        }
+
+        .btn-danger {
+            background: rgba(220,53,69,0.2);
+            color: #ff6b6b;
+            border: 1px solid #ff6b6b;
+        }
+
+        .btn-danger:hover {
+            background: rgba(220,53,69,0.3);
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .filter-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab {
+            padding: 0.6rem 1.2rem;
+            background: rgba(26,51,43,0.6);
+            border: 1px solid var(--primary-light);
+            color: var(--text-muted);
+            border-radius: 20px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .tab.active {
+            background: var(--gold);
+            color: var(--bg-dark);
+            border-color: var(--gold);
+            font-weight: bold;
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(212,175,55,0.2);
+            color: var(--text-light);
+        }
+
+        /* Names Grid */
+        .names-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .name-card {
+            background: linear-gradient(145deg, var(--bg-card), #142921);
+            border: 1px solid rgba(212,175,55,0.2);
+            border-radius: 20px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .name-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold), var(--primary-light));
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .name-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .name-card.completed {
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(212,175,55,0.2);
+        }
+
+        .name-card.completed::after {
+            content: '✓';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--gold);
+            color: var(--bg-dark);
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .name-card.favorite {
+            border-color: #ff6b6b;
+            box-shadow: 0 0 15px rgba(255,107,107,0.2);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .arabic-name {
+            font-family: 'Scheherazade New', 'Amiri', serif;
+            font-size: 2.5rem;
+            color: var(--gold);
+            line-height: 1.2;
+            text-align: center;
+            flex: 1;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .icon-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,0.1);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+        }
+
+        .icon-btn:hover {
+            background: var(--gold);
+            color: var(--bg-dark);
+            transform: scale(1.1);
+        }
+
+        .icon-btn.active {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .turkish-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .meaning {
+            color: var(--text-muted);
+            text-align: center;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .purpose {
+            background: rgba(26,95,74,0.3);
+            padding: 0.8rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-right: 3px solid var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .purpose strong {
+            color: var(--gold-light);
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .counter-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(212,175,55,0.2);
+        }
+
+        .counter-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--gold);
+            background: transparent;
+            color: var(--gold);
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .counter-btn:hover {
+            background: var(--gold);
+            color: var(--bg-dark);
+            transform: scale(1.1);
+        }
+
+        .counter-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--gold);
+            min-width: 60px;
+            text-align: center;
+            font-family: 'Amiri', serif;
+        }
+
+        .target-info {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, var(--bg-card), #0f1f1a);
+            border: 2px solid var(--gold);
+            border-radius: 25px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalOpen 0.3s;
+        }
+
+        @keyframes modalOpen {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 2px solid var(--gold);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(90deg);
+        }
+
+        .modal-arabic {
+            font-family: 'Scheherazade New', 'Amiri', serif;
+            font-size: 4rem;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-turkish {
+            font-size: 1.8rem;
+            color: white;
+            margin-bottom: 0.3rem;
+        }
+
+        .modal-meaning {
+            color: rgba(255,255,255,0.8);
+            font-size: 1.1rem;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .detail-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-title {
+            color: var(--gold);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .detail-text {
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .dhikr-counter {
+            background: rgba(212,175,55,0.1);
+            border: 2px solid var(--gold);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .dhikr-count {
+            font-size: 3rem;
+            color: var(--gold);
+            font-weight: bold;
+            font-family: 'Amiri', serif;
+        }
+
+        .dhikr-label {
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--gold);
+            color: var(--bg-dark);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: bold;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 2000;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .names-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .arabic-name {
+                font-size: 2rem;
+            }
+            
+            .modal-arabic {
+                font-size: 3rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <header>
+        <h1>Esma-i Hüsna</h1>
+        <p class="subtitle">Allah'ın 99 İsmi - Zikir ve İbadet Rehberi</p>
+    </header>
+
+    <div class="progress-container">
+        <div class="progress-card">
+            <div class="progress-header">
+                <span class="progress-title">📊 İlerleme Durumum</span>
+            </div>
+            <div class="progress-stats">
+                <div class="stat-box">
+                    <span class="stat-number" id="completedCount">0</span>
+                    <span class="stat-label">Tamamlanan</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number" id="totalDhikr">0</span>
+                    <span class="stat-label">Toplam Zikir</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number" id="favoriteCount">0</span>
+                    <span class="stat-label">Favorilerim</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number" id="progressPercent">0%</span>
+                    <span class="stat-label">Tamamlanma</span>
+                </div>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-primary" onclick="app.resetDaily()">
+            <span>🔄</span> Günlük Sıfırla
+        </button>
+        <button class="btn btn-secondary" onclick="app.exportData()">
+            <span>💾</span> Verileri Kaydet
+        </button>
+        <button class="btn btn-danger" onclick="app.resetAll()">
+            <span>🗑️</span> Tümünü Sıfırla
+        </button>
+    </div>
+
+    <div class="filter-tabs">
+        <div class="tab active" onclick="app.filter('all')">Tümü</div>
+        <div class="tab" onclick="app.filter('completed')">Tamamlananlar</div>
+        <div class="tab" onclick="app.filter('incomplete')">Devam Eden</div>
+        <div class="tab" onclick="app.filter('favorites')">Favorilerim</div>
+    </div>
+
+    <div class="names-container" id="namesContainer"></div>
+
+    <!-- Modal -->
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="modal-close" onclick="app.closeModal()">×</button>
+                <div class="modal-arabic" id="modalArabic"></div>
+                <div class="modal-turkish" id="modalTurkish"></div>
+                <div class="modal-meaning" id="modalMeaning"></div>
+            </div>
+            <div class="modal-body">
+                <div class="detail-section">
+                    <div class="detail-title">📖 Anlamı</div>
+                    <div class="detail-text" id="modalDescription"></div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-title">🎯 Kullanım Amacı</div>
+                    <div class="detail-text" id="modalPurpose"></div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-title">✨ Faziletleri</div>
+                    <div class="detail-text" id="modalVirtues"></div>
+                </div>
+                <div class="dhikr-counter">
+                    <div class="dhikr-count" id="modalCount">0</div>
+                    <div class="dhikr-label">Bugünkü Zikir Sayısı</div>
+                    <div style="margin-top: 1rem; display: flex; justify-content: center; gap: 1rem;">
+                        <button class="counter-btn" onclick="app.modalCount(-1)">−</button>
+                        <button class="counter-btn" onclick="app.modalCount(1)" style="background: var(--gold); color: var(--bg-dark);">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Esma-i Hüsna Data
+        const namesData = [
+            { id: 1, arabic: "الرَّحْمَنُ", turkish: "Er-Rahmân", meaning: "Çok merhametli, esirgeyen", description: "Dünya ve ahirette tüm mahlûkata merhamet eden, rızkını veren.", purpose: "Rızık bolluğu, sıkıntıdan kurtulmak için.", virtues: "Her gün 100 defa okuyanın kalbi ferahlar, rızkı artar.", target: 100 },
+            { id: 2, arabic: "الرَّحِيمُ", turkish: "Er-Rahîm", meaning: "Çok acıyan, merhamet eden", description: "Ahirette müminlere merhamet eden, mağfiret eden.", purpose: "Günahların affı, ahiret saadeti için.", virtues: "Her gün 100 defa okuyan Allah'ın rahmetine nail olur.", target: 100 },
+            { id: 3, arabic: "الْمَلِكُ", turkish: "El-Melik", meaning: "Mülkün gerçek sahibi", description: "Her şeyin maliki ve hükümdarı olan.", purpose: "İtibar, saygınlık ve otorite için.", virtues: "Devamlı okuyan kişiye itibar ve hürmet kazandırır.", target: 100 },
+            { id: 4, arabic: "الْقُدُّوسُ", turkish: "El-Kuddûs", meaning: "Her türlü eksiklikten uzak", description: "Noksanlıktan uzak, her türlü üstün sıfatların sahibi.", purpose: "Kalp temizliği, ruhani yükseliş için.", virtues: "Kalbi temizler, insanı manevi kirlerden arındırır.", target: 100 },
+            { id: 5, arabic: "السَّلاَمُ", turkish: "Es-Selâm", meaning: "Selamet veren", description: "Kullarına selamet ve esenlik veren.", purpose: "Huzur, güvenlik ve sıhhat için.", virtues: "Hastalıklara şifa, gönüllere huzur verir.", target: 100 },
+            { id: 6, arabic: "الْمُؤْمِنُ", turkish: "El-Mü'min", meaning: "Güven veren, emin kılan", description: "Kullarını korkulardan emin kılan, cenneti vaad eden.", purpose: "Korku ve endişeden kurtulmak için.", virtues: "Korku ve huzursuzluğu giderir, emniyet verir.", target: 100 },
+            { id: 7, arabic: "الْمُهَيْمِنُ", turkish: "El-Müheymin", meaning: "Gözeten, koruyan", description: "Her şeyi gözetip koruyan, şahit olan.", purpose: "Korunma, gözetim altında olmak için.", virtues: "Kötülüklerden korur, gözetimi altına alır.", target: 100 },
+            { id: 8, arabic: "الْعَزِيزُ", turkish: "El-Azîz", meaning: "İzzet ve güç sahibi", description: "Galip ve üstün olan, hiçbir şeye muhtaç olmayan.", purpose: "Güç, kuvvet ve izzet için.", virtues: "Zelil olmaktan korur, izzet ve ikram verir.", target: 100 },
+            { id: 9, arabic: "الْجَبَّارُ", turkish: "El-Cebbâr", meaning: "İradesi galip olan", description: "Dilediğini yapan, büyüklenenleri alçaltan.", purpose: "Zorlukların üstesinden gelmek için.", virtues: "Zor işleri kolaylaştırır, büyüklerden çekinilmez.", target: 100 },
+            { id: 10, arabic: "الْمُتَكَبِّرُ", turkish: "El-Mütekebbir", meaning: "Büyüklük sahibi", description: "Büyüklüğün gerçek sahibi, her şeyden üstün.", purpose: "Kibirden kurtulmak, tevazu için.", virtues: "Kibri giderir, tevazu sahibi yapar.", target: 100 },
+            { id: 11, arabic: "الْخَالِقُ", turkish: "El-Hâlık", meaning: "Yaratan", description: "Hiçbir örneği olmadan yaratan.", purpose: "Yaratıcının kudretini anlamak için.", virtues: "Yaratılış sırlarını anlamaya vesile olur.", target: 100 },
+            { id: 12, arabic: "الْبَارِئُ", turkish: "El-Bâri'", meaning: "Mükemmel yaratan", description: "Yarattıklarını en güzel şekilde düzenleyen.", purpose: "İşlerin düzgün gitmesi için.", virtues: "İşleri düzene koyar, güzel neticeler verir.", target: 100 },
+            { id: 13, arabic: "الْمُصَوِّرُ", turkish: "El-Musavvir", meaning: "Şekil veren", description: "Yarattıklarına çeşitli şekiller veren.", purpose: "Güzellik ve estetik için.", virtues: "Güzel ahlak ve görünüş verir.", target: 100 },
+            { id: 14, arabic: "الْغَفَّارُ", turkish: "El-Gaffâr", meaning: "Çok bağışlayan", description: "Günahları örten, çok mağfiret eden.", purpose: "Günahların affı için.", virtues: "Günahları affettirir, tevbeleri kabul ettirir.", target: 100 },
+            { id: 15, arabic: "الْقَهَّارُ", turkish: "El-Kahhâr", meaning: "Her şeye galip olan", description: "Bütün mahlûkata galip ve hakim olan.", purpose: "Düşmanlara karşı galip gelmek için.", virtues: "Düşmanları kahreder, galibiyet verir.", target: 100 },
+            { id: 16, arabic: "الْوَهَّابُ", turkish: "El-Vehhâb", meaning: "Karşılıksız veren", description: "Lütfu bol, karşılık beklemeden veren.", purpose: "Nimet ve bereket için.", virtues: "Rızkı artırır, nimetleri çoğaltır.", target: 100 },
+            { id: 17, arabic: "الرَّزَّاقُ", turkish: "Er-Razzâk", meaning: "Rızık veren", description: "Bütün mahlûkatın rızkını veren.", purpose: "Rızık bolluğu için.", virtues: "Rızkı genişletir, bolluk verir.", target: 100 },
+            { id: 18, arabic: "الْفَتَّاحُ", turkish: "El-Fettâh", meaning: "Açan, halleden", description: "Kapıları açan, işleri halleden.", purpose: "Sıkıntılı işlerin çözümü için.", virtues: "Kapalı kapıları açar, zorlukları giderir.", target: 100 },
+            { id: 19, arabic: "اَلْعَلِيمُ", turkish: "El-Alîm", meaning: "Her şeyi bilen", description: "Gizliyi ve açığı bilen, her şeyden haberdar.", purpose: "İlim ve bilgi için.", virtues: "Akıl ve bilgi verir, anlayışı artırır.", target: 100 },
+            { id: 20, arabic: "الْقَابِضُ", turkish: "El-Kâbız", meaning: "Daraltan, alan", description: "Rızkını dilediği gibi daraltan.", purpose: "Nefsi terbiye için.", virtues: "Nefsi kontrol altına alır, israfa engel olur.", target: 100 },
+            { id: 21, arabic: "الْبَاسِطُ", turkish: "El-Bâsıt", meaning: "Genişleten", description: "Rızkını ve rahmetini genişleten.", purpose: "Rızık ve bereket için.", virtues: "Rızkı genişletir, kalbi ferahlatır.", target: 100 },
+            { id: 22, arabic: "الْخَافِضُ", turkish: "El-Hâfız", meaning: "Alçaltan", description: "Kibirlileri alçaltan, zelil eden.", purpose: "Kibirden kurtulmak için.", virtues: "Kibri giderir, alçak gönüllülük verir.", target: 100 },
+            { id: 23, arabic: "الرَّافِعُ", turkish: "Er-Râfi'", meaning: "Yükselten", description: "Dereceleri yükselten, izzet veren.", purpose: "Makam ve itibar için.", virtues: "Dereceleri yükseltir, izzet verir.", target: 100 },
+            { id: 24, arabic: "الْمُعِزُّ", turkish: "El-Mu'izz", meaning: "İzzet veren", description: "Dilediğine izzet ve üstünlük veren.", purpose: "İtibar ve saygınlık için.", virtues: "İzzet ve ikram sahibi yapar.", target: 100 },
+            { id: 25, arabic: "المُذِلُّ", turkish: "El-Müzil", meaning: "Zelil eden", description: "Dilediğini zelil ve alçak kılan.", purpose: "Düşmanlara karşı üstünlük için.", virtues: "Düşmanları zelil eder, galip gelmeyi sağlar.", target: 100 },
+            { id: 26, arabic: "السَّمِيعُ", turkish: "Es-Semî'", meaning: "Her şeyi işiten", description: "Gizliyi ve açığı, sessizi işiten.", purpose: "Duayı kabul ettirmek için.", virtues: "Duaları işitir, kabul eder.", target: 100 },
+            { id: 27, arabic: "الْبَصِيرُ", turkish: "El-Basîr", meaning: "Her şeyi gören", description: "Zerreleri bile gören, her şeyden haberdar.", purpose: "Gönül gözünü açmak için.", virtues: "Basiret verir, doğru görmeyi sağlar.", target: 100 },
+            { id: 28, arabic: "الْحَكَمُ", turkish: "El-Hâkam", meaning: "Hüküm veren", description: "Adaletli hüküm veren, hakkı batıldan ayıran.", purpose: "Adalet ve doğru karar için.", virtues: "Adaletli olmayı sağlar, doğru karar verdirir.", target: 100 },
+            { id: 29, arabic: "الْعَدْلُ", turkish: "El-Adl", meaning: "Adaletli", description: "Adaletin kaynağı, haksızlık yapmayan.", purpose: "Adalet ve hak için.", virtues: "Adaletli yapar, zulümden korur.", target: 100 },
+            { id: 30, arabic: "اللَّطِيفُ", turkish: "El-Latîf", meaning: "Lütufkâr, ince işiten", description: "Kullarına ince ince lütuf eden.", purpose: "Gizli lütuf ve yardım için.", virtues: "Gizli yardımlarını esirgemez.", target: 100 },
+            { id: 31, arabic: "الْخَبِيرُ", turkish: "El-Habîr", meaning: "Her şeyden haberdar", description: "Her şeyin iç yüzünden haberdar olan.", purpose: "Gerçekleri öğrenmek için.", virtues: "İç yüzü görmeyi sağlar, gerçekleri öğretir.", target: 100 },
+            { id: 32, arabic: "الْحَلِيمُ", turkish: "El-Halîm", meaning: "Yumuşak davranan", description: "Acele etmeyen, yumuşak davranan.", purpose: "Sabır ve yumuşak huyluluk için.", virtues: "Sabır ve tahammül verir.", target: 100 },
+            { id: 33, arabic: "الْعَظِيمُ", turkish: "El-Azîm", meaning: "Büyük, ulu", description: "Büyüklükte benzeri olmayan.", purpose: "Büyük işler başarmak için.", virtues: "Büyük işleri kolaylaştırır.", target: 100 },
+            { id: 34, arabic: "الْغَفُورُ", turkish: "El-Gafûr", meaning: "Çok affeden", description: "Günahları çok affeden, bağışlayan.", purpose: "Günahların affı için.", virtues: "Günahları affettirir, mağfiret buldurur.", target: 100 },
+            { id: 35, arabic: "الشَّكُورُ", turkish: "Eş-Şekûr", meaning: "Karşılık veren", description: "Az şükre çok karşılık veren.", purpose: "Şükür ve karşılık için.", virtues: "Şükürde artış verir, karşılıksız bırakmaz.", target: 100 },
+            { id: 36, arabic: "الْعَلِيُّ", turkish: "El-Alîyy", meaning: "Yüce, ulu", description: "Yücelikte eşi benzeri olmayan.", purpose: "Yücelik ve ululuk için.", virtues: "Dereceyi yükseltir, ululuk verir.", target: 100 },
+            { id: 37, arabic: "الْكَبِيرُ", turkish: "El-Kebîr", meaning: "Büyük", description: "Büyüklükte eşi olmayan.", purpose: "Büyüklük ve azamet için.", virtues: "Kalbe büyüklük verir.", target: 100 },
+            { id: 38, arabic: "الْحَفِيظُ", turkish: "El-Hafîz", meaning: "Koruyan", description: "Her şeyi koruyan, gözeten.", purpose: "Korunma ve emniyet için.", virtues: "Korur, gözetir, emniyet verir.", target: 100 },
+            { id: 39, arabic: "المُقيِت", turkish: "El-Mukît", meaning: "Besleyen, kuvvet veren", description: "Besleyip kuvvet veren, rızık veren.", purpose: "Kuvvet ve güç için.", virtues: "Kuvvet ve kudret verir.", target: 100 },
+            { id: 40, arabic: "الْحسِيبُ", turkish: "El-Haseeb", meaning: "Hesap gören", description: "Kullarına hesap gören, kâfi olan.", purpose: "Hesap verme gücü için.", virtues: "Kâfi gelir, hesabı görür.", target: 100 },
+            { id: 41, arabic: "الْجَلِيلُ", turkish: "El-Celîl", meaning: "Celal ve azamet sahibi", description: "Celal, azamet ve büyüklük sahibi.", purpose: "Celal ve heybet için.", virtues: "Heybet ve azamet verir.", target: 100 },
+            { id: 42, arabic: "الْكَرِيمُ", turkish: "El-Kerîm", meaning: "İkram eden, cömert", description: "İkramı bol, cömert olan.", purpose: "İkram ve cömertlik için.", virtues: "Cömertlik ve ikram sahibi yapar.", target: 100 },
+            { id: 43, arabic: "الرَّقِيبُ", turkish: "Er-Rakîb", meaning: "Gözeten", description: "Her an her şeyi gözeten.", purpose: "Gözetim altında olmak için.", virtues: "Gözetir, korur, muhafaza eder.", target: 100 },
+            { id: 44, arabic: "الْمُجِيبُ", turkish: "El-Mucîb", meaning: "Duaları kabul eden", description: "Duaları kabul eden, icabet eden.", purpose: "Dua kabulü için.", virtues: "Duaları kabul eder, istekleri verir.", target: 100 },
+            { id: 45, arabic: "الْوَاسِعُ", turkish: "El-Vâsi'", meaning: "Geniş, her şeye yeten", description: "Rahmeti ve ilmi geniş olan.", purpose: "Genişlik ve bolluk için.", virtues: "Kalbe genişlik verir, bolluk sağlar.", target: 100 },
+            { id: 46, arabic: "الْحَكِيمُ", turkish: "El-Hakîm", meaning: "Hikmetli", description: "Her işi hikmetli olan, eksiksiz bilen.", purpose: "Hikmet ve doğru karar için.", virtues: "Hikmet verir, işleri düzene koyar.", target: 100 },
+            { id: 47, arabic: "الْوَدُودُ", turkish: "El-Vedûd", meaning: "Çok seven", description: "Kullarını çok seven, sevilen.", purpose: "Sevgi ve muhabbet için.", virtues: "Kalplere sevgi verir, sevilir kılar.", target: 100 },
+            { id: 48, arabic: "الْمَجِيدُ", turkish: "El-Mecîd", meaning: "Şan ve şeref sahibi", description: "Şanı büyük, ikramı bol.", purpose: "Şeref ve ikram için.", virtues: "Şeref ve ikram sahibi yapar.", target: 100 },
+            { id: 49, arabic: "الْبَاعِثُ", turkish: "El-Bâ'is", meaning: "Dirilten", description: "Ölüleri dirilten, uyandıran.", purpose: "Kalb diriliği için.", virtues: "Kalpleri canlandırır, uyandırır.", target: 100 },
+            { id: 50, arabic: "الشَّهِيدُ", turkish: "Eş-Şehîd", meaning: "Her şeye şahit", description: "Gizliyi ve açığı gören, şahit olan.", purpose: "Şahitlik ve doğruluk için.", virtues: "Doğru sözlü yapar, şahitlik verir.", target: 100 },
+            { id: 51, arabic: "الْحَقُّ", turkish: "El-Haqq", meaning: "Gerçek, hakk", description: "Varlığı gerçek, her işi doğru.", purpose: "Hak ve gerçek için.", virtues: "Hakka iletir, gerçeği gösterir.", target: 100 },
+            { id: 52, arabic: "الْوَكِيلُ", turkish: "El-Vekîl", meaning: "Güvenilen, vekil", description: "İşleri güzel yöneten, güvenilen.", purpose: "İşlerin yoluna girmesi için.", virtues: "İşleri düzene koyar, güven verir.", target: 100 },
+            { id: 53, arabic: "الْقَوِيُّ", turkish: "El-Kaviyy", meaning: "Güçlü, kuvvetli", description: "Kudreti sonsuz, güçlü olan.", purpose: "Kuvvet ve güç için.", virtues: "Kuvvet ve kudret verir.", target: 100 },
+            { id: 54, arabic: "الْمَتِينُ", turkish: "El-Metîn", meaning: "Sağlam, metin", description: "Kuvveti sağlam, dayanıklı.", purpose: "Metanet ve dayanıklılık için.", virtues: "Metanet ve sabır verir.", target: 100 },
+            { id: 55, arabic: "الْوَلِيُّ", turkish: "El-Veliyy", meaning: "Dost, yardımcı", description: "Müminlerin dostu ve yardımcısı.", purpose: "Dostluk ve yardım için.", virtues: "Dostluk ve yardımını esirgemez.", target: 100 },
+            { id: 56, arabic: "الْحَمِيدُ", turkish: "El-Hamîd", meaning: "Övgüye layık", description: "Her türlü övgüye layık olan.", purpose: "Övgü ve şükür için.", virtues: "Övgüye layık işler yaptırır.", target: 100 },
+            { id: 57, arabic: "الْمُحْصِي", turkish: "El-Muhsî", meaning: "Sayan, bilen", description: "Her şeyi sayıp bilen.", purpose: "Düzen ve hesap için.", virtues: "Düzenli ve hesaplı yapar.", target: 100 },
+            { id: 58, arabic: "الْمُبْدِئُ", turkish: "El-Mübdi'", meaning: "İlk defa yaratan", description: "Hiç yoktan yaratan, başlatan.", purpose: "Yeni başlangıçlar için.", virtues: "Yeni işlere başlamayı kolaylaştırır.", target: 100 },
+            { id: 59, arabic: "الْمُعِيدُ", turkish: "El-Mu'îd", meaning: "İade eden", description: "Yaratıkları öldükten sonra dirilten.", purpose: "Tekrar ve iade için.", virtues: "Kayıpları geri getirir, yeniler.", target: 100 },
+            { id: 60, arabic: "الْمُحْيِي", turkish: "El-Muhyî", meaning: "Dirilten", description: "Can veren, dirilten.", purpose: "Hayat ve canlılık için.", virtues: "Kalplere hayat verir, canlandırır.", target: 100 },
+            { id: 61, arabic: "اَلْمُمِيتُ", turkish: "El-Mümît", meaning: "Öldüren", description: "Can alan, öldüren.", purpose: "Nefsi öldürmek, tezkiye için.", virtues: "Nefsi kontrol altına alır, tezkiye eder.", target: 100 },
+            { id: 62, arabic: "الْحَيُّ", turkish: "El-Hayy", meaning: "Diri, ebedi", description: "Ebedî diri olan, ölümsüz.", purpose: "Hayat ve dirilik için.", virtues: "Kalbe hayat verir, diri tutar.", target: 100 },
+            { id: 63, arabic: "الْقَيُّومُ", turkish: "El-Kayyûm", meaning: "Kendine muhtaç olmayan", description: "Varlığı kendinden olan, her şeyi ayakta tutan.", purpose: "Ayakta kalma ve kuvvet için.", virtues: "Ayakta tutar, kuvvet verir.", target: 100 },
+            { id: 64, arabic: "الْوَاجِدُ", turkish: "El-Vâcid", meaning: "Bulan, kavuşan", description: "Dilediğini bulan, hiçbir şeye muhtaç olmayan.", purpose: "Arananları bulmak için.", virtues: "Kayıpları bulur, murada erdirir.", target: 100 },
+            { id: 65, arabic: "الْمَاجِدُ", turkish: "El-Mâcid", meaning: "Şerefli, ulu", description: "İkramı bol, şanı büyük.", purpose: "Şeref ve ululuk için.", virtues: "Şeref ve ikram sahibi yapar.", target: 100 },
+            { id: 66, arabic: "الْواحِدُ", turkish: "El-Vâhid", meaning: "Bir olan", description: "Zatında ve sıfatlarında bir olan.", purpose: "Birlik ve tevhid için.", virtues: "Kalbe tevhid aşkı verir.", target: 100 },
+            { id: 67, arabic: "اَلاَحَدُ", turkish: "El-Ahad", meaning: "Tek olan", description: "Eşi ve benzeri olmayan tek.", purpose: "Teklik ve benzersizlik için.", virtues: "Eşsizlik ve yükseklik verir.", target: 100 },
+            { id: 68, arabic: "الصَّمَدُ", turkish: "Es-Samed", meaning: "Samed, her şey O'na muhtaç", description: "Her şeyin kendisine muhtaç olduğu, kendisi hiçbir şeye muhtaç olmayan.", purpose: "İhtiyaçların giderilmesi için.", virtues: "İhtiyaçları giderir, kâfi gelir.", target: 100 },
+            { id: 69, arabic: "الْقَادِرُ", turkish: "El-Kâdir", meaning: "Güç yetiren, kadir", description: "Her şeye gücü yeten, kadir.", purpose: "Güç ve kudret için.", virtues: "Güç ve kudret verir, her işi kolaylaştırır.", target: 100 },
+            { id: 70, arabic: "الْمُقْتَدِرُ", turkish: "El-Muktedir", meaning: "Güç ve kudret sahibi", description: "Kudreti sonsuz, dilediğini yapan.", purpose: "Üstün güç ve kudret için.", virtues: "Üstün kuvvet ve kudret verir.", target: 100 },
+            { id: 71, arabic: "الْمُقَدِّمُ", turkish: "El-Mukaddim", meaning: "Öne alan", description: "Dilediğini öne alan, ileri götüren.", purpose: "İlerleme ve terfi için.", virtues: "İşleri ilerletir, terfi ettirir.", target: 100 },
+            { id: 72, arabic: "الْمُؤَخِّرُ", turkish: "El-Muahhir", meaning: "Geri bırakan", description: "Dilediğini geri bırakan.", purpose: "Sabır ve beklemek için.", virtues: "Sabır ve tahammül verir.", target: 100 },
+            { id: 73, arabic: "الأوَّلُ", turkish: "El-Evvel", meaning: "İlk", description: "Varlığında ilk, ezeli.", purpose: "Başlangıç ve öncelik için.", virtues: "İşlere güzel başlatır.", target: 100 },
+            { id: 74, arabic: "الآخِرُ", turkish: "El-Âhir", meaning: "Son", description: "Varlığında son, ebedi.", purpose: "Sonuç ve netice için.", virtues: "İşleri güzel neticelendirir.", target: 100 },
+            { id: 75, arabic: "الظَّاهِرُ", turkish: "Ez-Zâhir", meaning: "Açık, görünen", description: "Varlığı açık, görünen.", purpose: "Açıklık ve görünürlük için.", virtues: "Gerçekleri gösterir, açıklık verir.", target: 100 },
+            { id: 76, arabic: "الْبَاطِنُ", turkish: "El-Bâtın", meaning: "Gizli, iç yüzü bilen", description: "Gizliyi bilen, iç yüzü gören.", purpose: "Gizli ilimler ve basiret için.", virtues: "Gizliyi öğretir, basiret verir.", target: 100 },
+            { id: 77, arabic: "الْوَالِي", turkish: "El-Vâlî", meaning: "Vekil, yöneten", description: "Her şeyi yöneten, işleri idare eden.", purpose: "İdare ve yönetim için.", virtues: "İdare ve yönetim kabiliyeti verir.", target: 100 },
+            { id: 78, arabic: "الْمُتَعَالِي", turkish: "El-Müteâlî", meaning: "Yüce, ulu", description: "Yücelikte eşi olmayan, ulu.", purpose: "Yücelik ve ululuk için.", virtues: "Yücelik ve ululuk verir.", target: 100 },
+            { id: 79, arabic: "الْبَرُّ", turkish: "El-Berr", meaning: "İyilik eden, yararlı", description: "İyiliği bol, yararlı işler yapan.", purpose: "İyilik ve fayda için.", virtues: "İyilik yapmayı ve faydalı olmayı sağlar.", target: 100 },
+            { id: 80, arabic: "التَّوَّابُ", turkish: "Et-Tevvâb", meaning: "Tevbeleri kabul eden", description: "Tevbeleri çok kabul eden, bağışlayan.", purpose: "Tevbe kabulü için.", virtues: "Tevbeleri kabul eder, bağışlar.", target: 100 },
+            { id: 81, arabic: "الْمُنْتَقِمُ", turkish: "El-Müntakim", meaning: "İntikam alan", description: "Zalimlerden intikam alan.", purpose: "Zalimlerden kurtulmak için.", virtues: "Zalimlere fırsat vermez, adaletini gösterir.", target: 100 },
+            { id: 82, arabic: "العَفُوُّ", turkish: "El-Afuvv", meaning: "Affeden, geçen", description: "Günahları affeden, geçen.", purpose: "Affedilmek için.", virtues: "Günahları affettirir, bağışlar.", target: 100 },
+            { id: 83, arabic: "الرَّؤُوفُ", turkish: "Er-Ra'ûf", meaning: "Çok şefkatli", description: "Kullarına çok şefkatli, merhametli.", purpose: "Şefkat ve merhamet için.", virtues: "Şefkat ve merhamet duygusu verir.", target: 100 },
+            { id: 84, arabic: "مَالِكُ الْمُلْكِ", turkish: "Mâlikü'l-Mülk", meaning: "Mülkün gerçek sahibi", description: "Mülkün gerçek sahibi, dilediği gibi tasarruf eden.", purpose: "Mülk ve tasarruf için.", virtues: "Mülk ve tasarruf gücü verir.", target: 100 },
+            { id: 85, arabic: "ذُوالْجَلاَلِ وَالإكْرَامِ", turkish: "Zü'l-Celâli ve'l-İkrâm", meaning: "Celal ve ikram sahibi", description: "Celal, azamet ve ikram sahibi.", purpose: "Celal ve ikram için.", virtues: "Hem korku hem ikram sahibi yapar.", target: 100 },
+            { id: 86, arabic: "الْمُقْسِطُ", turkish: "El-Muksit", meaning: "Adaletli", description: "Adaletli davranan, hakkı veren.", purpose: "Adalet ve hak için.", virtues: "Adaletli olmayı sağlar.", target: 100 },
+            { id: 87, arabic: "الْجَامِعُ", turkish: "El-Câmi'", meaning: "Toplayan", description: "Dilediğini toplayan, bir araya getiren.", purpose: "Toplanma ve bir araya gelme için.", virtues: "Dağınıklığı giderir, toplar.", target: 100 },
+            { id: 88, arabic: "الْغَنِيُّ", turkish: "El-Ganiyy", meaning: "Zengin, hiçbir şeye muhtaç olmayan", description: "Hiçbir şeye muhtaç olmayan, zengin.", purpose: "Zenginlik ve kanaat için.", virtues: "Zenginlik ve kanaat verir.", target: 100 },
+            { id: 89, arabic: "الْمُغْنِي", turkish: "El-Muğnî", meaning: "Zengin eden", description: "Dilediğini zengin eden.", purpose: "Zenginlik ve bolluk için.", virtues: "Zenginlik ve bolluk verir.", target: 100 },
+            { id: 90, arabic: "اَلْمَانِعُ", turkish: "El-Mâni'", meaning: "Engelleyen", description: "Dilediğine engel olan, koruyan.", purpose: "Korunma ve engelden kurtulma için.", virtues: "Kötülükleri engeller, korur.", target: 100 },
+            { id: 91, arabic: "الضَّارَّ", turkish: "Ed-Dârr", meaning: "Zarar veren", description: "Dilediğine zarar veren.", purpose: "Zarardan korunmak için.", virtues: "Zararları defeder, korur.", target: 100 },
+            { id: 92, arabic: "النَّافِعُ", turkish: "En-Nâfi'", meaning: "Fayda veren", description: "Dilediğine fayda veren.", purpose: "Fayda ve menfaat için.", virtues: "Faydalı işler yaptırır.", target: 100 },
+            { id: 93, arabic: "النُّورُ", turkish: "En-Nûr", meaning: "Nur, aydınlık", description: "Alemleri nurlandıran, aydınlatan.", purpose: "Nur ve aydınlık için.", virtues: "Kalbe nur verir, aydınlatır.", target: 100 },
+            { id: 94, arabic: "الْهَادِي", turkish: "El-Hâdî", meaning: "Hidayet eden", description: "Doğru yola ileten, hidayet veren.", purpose: "Hidayet ve doğru yol için.", virtues: "Doğru yola iletir, hidayet verir.", target: 100 },
+            { id: 95, arabic: "الْبَدِيعُ", turkish: "El-Bedî'", meaning: "Eşsiz yaratan", description: "Eşi benzeri olmadan yaratan.", purpose: "İcat ve yenilik için.", virtues: "Yaratıcılık ve güzellik verir.", target: 100 },
+            { id: 96, arabic: "اَلْبَاقِي", turkish: "El-Bâkî", meaning: "Baki kalan", description: "Ebedî baki olan, yok olmayan.", purpose: "Bekâ ve devamlılık için.", virtues: "Kalıcı işler yaptırır.", target: 100 },
+            { id: 97, arabic: "الْوَارِثُ", turkish: "El-Vâris", meaning: "Varis, geride kalan", description: "Her şeyin geride kalanı, varisi.", purpose: "Miras ve kalıcı değerler için.", virtues: "Kalıcı eserler bıraktırır.", target: 100 },
+            { id: 98, arabic: "الرَّشِيدُ", turkish: "Er-Reşîd", meaning: "Doğru yola ileten", description: "Doğru yola ileten, akıllıca yöneten.", purpose: "Rüşd ve doğru yönetim için.", virtues: "Doğru kararlar verdirir, yönetir.", target: 100 },
+            { id: 99, arabic: "الصَّبُورُ", turkish: "Es-Sabûr", meaning: "Çok sabreden", description: "Ceza vermede acele etmeyen, çok sabreden.", purpose: "Sabır ve tahammül için.", virtues: "Sabır ve metanet verir.", target: 100 }
+        ];
+
+        // Application Logic
+        const app = {
+            data: {
+                counts: {},
+                favorites: [],
+                lastReset: null
+            },
+            currentFilter: 'all',
+            currentModalId: null,
+
+            init() {
+                this.loadData();
+                this.checkDailyReset();
+                this.render();
+                this.updateStats();
+            },
+
+            loadData() {
+                const saved = localStorage.getItem('esmaData');
+                if (saved) {
+                    this.data = JSON.parse(saved);
+                }
+            },
+
+            saveData() {
+                localStorage.setItem('esmaData', JSON.stringify(this.data));
+            },
+
+            checkDailyReset() {
+                const today = new Date().toDateString();
+                if (this.data.lastReset !== today) {
+                    this.data.counts = {};
+                    this.data.lastReset = today;
+                    this.saveData();
+                }
+            },
+
+            getCount(id) {
+                return this.data.counts[id] || 0;
+            },
+
+            increment(id) {
+                this.data.counts[id] = (this.data.counts[id] || 0) + 1;
+                this.saveData();
+                this.render();
+                this.updateStats();
+                this.showToast(`${namesData.find(n => n.id === id).turkish} +1`);
+            },
+
+            decrement(id) {
+                if (this.data.counts[id] > 0) {
+                    this.data.counts[id]--;
+                    this.saveData();
+                    this.render();
+                    this.updateStats();
+                }
+            },
+
+            toggleFavorite(id) {
+                const index = this.data.favorites.indexOf(id);
+                if (index > -1) {
+                    this.data.favorites.splice(index, 1);
+                } else {
+                    this.data.favorites.push(id);
+                }
+                this.saveData();
+                this.render();
+                this.updateStats();
+            },
+
+            isFavorite(id) {
+                return this.data.favorites.includes(id);
+            },
+
+            isCompleted(id) {
+                const name = namesData.find(n => n.id === id);
+                return (this.data.counts[id] || 0) >= name.target;
+            },
+
+            filter(type) {
+                this.currentFilter = type;
+                document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+                event.target.classList.add('active');
+                this.render();
+            },
+
+            getFilteredNames() {
+                switch(this.currentFilter) {
+                    case 'completed':
+                        return namesData.filter(n => this.isCompleted(n.id));
+                    case 'incomplete':
+                        return namesData.filter(n => !this.isCompleted(n.id));
+                    case 'favorites':
+                        return namesData.filter(n => this.isFavorite(n.id));
+                    default:
+                        return namesData;
+                }
+            },
+
+            render() {
+                const container = document.getElementById('namesContainer');
+                const names = this.getFilteredNames();
+                
+                container.innerHTML = names.map(name => {
+                    const count = this.getCount(name.id);
+                    const isCompleted = this.isCompleted(name.id);
+                    const isFav = this.isFavorite(name.id);
+                    
+                    return `
+                        <div class="name-card ${isCompleted ? 'completed' : ''} ${isFav ? 'favorite' : ''}" onclick="app.openModal(${name.id})">
+                            <div class="card-header">
+                                <div class="card-actions" onclick="event.stopPropagation()">
+                                    <button class="icon-btn ${isFav ? 'active' : ''}" onclick="app.toggleFavorite(${name.id})">
+                                        ${isFav ? '♥' : '♡'}
+                                    </button>
+                                </div>
+                                <div class="arabic-name">${name.arabic}</div>
+                            </div>
+                            <div class="turkish-name">${name.turkish}</div>
+                            <div class="meaning">${name.meaning}</div>
+                            <div class="purpose">
+                                <strong>🎯 Kullanım Amacı:</strong>
+                                ${name.purpose}
+                            </div>
+                            <div class="counter-section" onclick="event.stopPropagation()">
+                                <button class="counter-btn" onclick="app.decrement(${name.id})">−</button>
+                                <div class="counter-display">${count}</div>
+                                <button class="counter-btn" onclick="app.increment(${name.id})">+</button>
+                            </div>
+                            <div class="target-info">Hedef: ${name.target} | ${isCompleted ? '✓ Tamamlandı' : 'Devam ediyor...'}</div>
+                        </div>
+                    `;
+                }).join('');
+            },
+
+            updateStats() {
+                const completed = namesData.filter(n => this.isCompleted(n.id)).length;
+                const totalDhikr = Object.values(this.data.counts).reduce((a, b) => a + b, 0);
+                const favorites = this.data.favorites.length;
+                const percent = Math.round((completed / namesData.length) * 100);
+
+                document.getElementById('completedCount').textContent = completed;
+                document.getElementById('totalDhikr').textContent = totalDhikr;
+                               document.getElementById('favoriteCount').textContent = favorites;
                 document.getElementById('progressPercent').textContent = percent + '%';
                 document.getElementById('progressBar').style.width = percent + '%';
             },
