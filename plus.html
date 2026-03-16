@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boy Uzatma Egzersiz Programı - Profesyonel Rehber</title>
+    <title>HeightAI Pro - Akıllı Boy Uzatma Platformu</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
             margin: 0;
@@ -11,289 +12,591 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1f2937;
+            --light: #f3f4f6;
         }
 
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        /* AI Asistan Animasyonu */
+        .ai-orb {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            background: radial-gradient(circle, rgba(102,126,234,0.8) 0%, rgba(118,75,162,0.6) 100%);
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 0 30px rgba(102,126,234,0.6);
+            animation: pulse-glow 2s infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            transition: transform 0.3s;
+        }
+
+        .ai-orb:hover {
+            transform: scale(1.1);
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 30px rgba(102,126,234,0.6); }
+            50% { box-shadow: 0 0 50px rgba(102,126,234,0.9); }
+        }
+
+        .ai-chat {
+            position: fixed;
+            bottom: 110px;
+            right: 30px;
+            width: 400px;
+            height: 600px;
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(102,126,234,0.3);
+            z-index: 999;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .ai-chat.active {
+            display: flex;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 20px;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 15px;
+            border-radius: 15px;
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        @keyframes messageSlide {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.ai {
+            background: rgba(102,126,234,0.2);
+            align-self: flex-start;
+            border-left: 3px solid var(--primary);
+        }
+
+        .message.user {
+            background: rgba(16,185,129,0.2);
+            align-self: flex-end;
+            border-right: 3px solid var(--success);
+        }
+
+        .chat-input {
+            padding: 20px;
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .chat-input input {
+            flex: 1;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            color: white;
+            outline: none;
+        }
+
+        .chat-input button {
+            background: var(--primary);
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        /* Ana Container */
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
         }
 
         header {
             text-align: center;
-            color: white;
             padding: 40px 0;
+            position: relative;
         }
 
         header h1 {
-            font-size: 3em;
+            font-size: 3.5em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 0 0 30px rgba(102,126,234,0.3);
         }
 
-        header p {
-            font-size: 1.2em;
-            opacity: 0.9;
+        .subtitle {
+            font-size: 1.3em;
+            opacity: 0.8;
+            color: #94a3b8;
         }
 
-        .info-card {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            margin: 20px 0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .exercise-grid {
+        /* Dashboard Grid */
+        .dashboard {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 25px;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
             margin-top: 30px;
         }
 
-        .exercise-card {
-            background: white;
+        /* Sidebar Profil */
+        .profile-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(102,126,234,0.2);
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            position: relative;
             overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        .exercise-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        .profile-image::after {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            background: #1e293b;
+            border-radius: 50%;
+            z-index: 1;
         }
 
-        .exercise-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
+        .profile-image span {
+            z-index: 2;
         }
 
-        .exercise-header h3 {
+        .profile-name {
+            text-align: center;
             font-size: 1.5em;
+            font-weight: bold;
             margin-bottom: 5px;
         }
 
-        .difficulty {
-            display: inline-block;
+        .profile-stats {
+            margin-top: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .stat-item {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 3px solid var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.7;
+        }
+
+        .stat-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        /* Ana İçerik */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* AI Analiz Kartı */
+        .ai-analysis {
+            background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
+            border: 1px solid rgba(102,126,234,0.3);
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-analysis::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102,126,234,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .analysis-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .ai-badge {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             padding: 5px 15px;
             border-radius: 20px;
             font-size: 0.8em;
-            margin-top: 10px;
             font-weight: bold;
+            animation: glow 2s infinite;
         }
 
-        .difficulty.easy { background: #4ade80; color: #064e3b; }
-        .difficulty.medium { background: #fbbf24; color: #78350f; }
-        .difficulty.hard { background: #f87171; color: #7f1d1d; }
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(102,126,234,0.5); }
+            50% { box-shadow: 0 0 20px rgba(102,126,234,0.8); }
+        }
 
-        .image-container {
+        .prediction-box {
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .prediction-chart {
+            height: 200px;
+            margin-top: 20px;
+        }
+
+        /* 3D Vücut Modeli */
+        .body-model-container {
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(102,126,234,0.2);
+        }
+
+        .model-3d {
             width: 100%;
-            height: 300px;
-            background: #f3f4f6;
+            height: 400px;
+            background: radial-gradient(circle at center, rgba(102,126,234,0.1) 0%, transparent 70%);
+            border-radius: 15px;
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            position: relative;
         }
 
-        .image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s;
+        .skeleton-svg {
+            width: 200px;
+            height: 400px;
+            filter: drop-shadow(0 0 20px rgba(102,126,234,0.5));
         }
 
-        .exercise-card:hover .image-container img {
-            transform: scale(1.05);
-        }
-
-        .exercise-details {
-            padding: 25px;
-        }
-
-        .exercise-details h4 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 1.1em;
-        }
-
-        .steps {
-            list-style: none;
-            margin: 15px 0;
-            background: #f9fafb;
-            padding: 15px;
-            border-radius: 10px;
-        }
-
-        .steps li {
-            padding: 10px 0;
-            padding-left: 30px;
-            position: relative;
-            border-bottom: 1px solid #e5e7eb;
-            line-height: 1.5;
-        }
-
-        .steps li:last-child {
-            border-bottom: none;
-        }
-
-        .steps li:before {
-            content: "✓";
-            position: absolute;
-            left: 0;
-            color: #10b981;
-            font-weight: bold;
-            font-size: 1.2em;
-        }
-
-        .timer-section {
-            background: #f3f4f6;
-            padding: 20px;
-            border-radius: 15px;
-            margin-top: 20px;
-            text-align: center;
-            border: 2px solid #e5e7eb;
-        }
-
-        .timer {
-            font-size: 3em;
-            font-weight: bold;
-            color: #667eea;
-            margin: 15px 0;
-            font-family: 'Courier New', monospace;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 1.1em;
-            font-weight: bold;
+        .bone {
+            fill: none;
+            stroke: #64748b;
+            stroke-width: 3;
+            stroke-linecap: round;
             transition: all 0.3s;
-            margin: 5px;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        .bone.active {
+            stroke: var(--primary);
+            filter: drop-shadow(0 0 10px var(--primary));
+            animation: bonePulse 2s infinite;
         }
 
-        .btn.active {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            animation: pulse 1.5s infinite;
+        @keyframes bonePulse {
+            0%, 100% { stroke-width: 3; }
+            50% { stroke-width: 5; }
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .benefits-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 15px;
-        }
-
-        .benefit-tag {
-            background: #e0e7ff;
-            color: #3730a3;
-            padding: 5px 12px;
+        .muscle-group {
+            position: absolute;
+            background: rgba(102,126,234,0.9);
+            color: white;
+            padding: 8px 15px;
             border-radius: 20px;
             font-size: 0.85em;
-            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            opacity: 0;
+            transform: translateY(10px);
         }
 
-        .schedule-section {
-            background: white;
+        .muscle-group.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .muscle-group:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(102,126,234,0.5);
+        }
+
+        /* Egzersiz Kartları */
+        .exercises-section {
+            background: rgba(30, 41, 59, 0.6);
             border-radius: 20px;
             padding: 30px;
-            margin-top: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 1px solid rgba(102,126,234,0.2);
         }
 
-        .week-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
         }
 
-        .day-card {
-            background: #f3f4f6;
+        .ai-recommendation {
+            background: linear-gradient(135deg, rgba(16,185,129,0.2) 0%, rgba(5,150,105,0.2) 100%);
+            border: 1px solid var(--success);
             border-radius: 15px;
             padding: 20px;
-            text-align: center;
-            transition: all 0.3s;
-            cursor: pointer;
-            border: 3px solid transparent;
-        }
-
-        .day-card:hover {
-            background: #e0e7ff;
-            transform: scale(1.05);
-            border-color: #667eea;
-        }
-
-        .day-card.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-color: #764ba2;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 15px;
-            background: #e5e7eb;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 20px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            transition: width 0.5s ease;
-            border-radius: 10px;
-        }
-
-        .tips-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .tip-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .tip-card h4 {
-            margin-bottom: 10px;
-            font-size: 1.3em;
+            margin-bottom: 25px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
         }
 
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .exercise-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .exercise-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .exercise-card:hover::before {
+            left: 100%;
+        }
+
+        .exercise-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 40px rgba(102,126,234,0.2);
+        }
+
+        .exercise-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            position: relative;
+        }
+
+        .difficulty-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+        }
+
+        .difficulty-badge.easy { background: rgba(16,185,129,0.9); }
+        .difficulty-badge.medium { background: rgba(245,158,11,0.9); }
+        .difficulty-badge.hard { background: rgba(239,68,68,0.9); }
+
+        .exercise-content {
+            padding: 25px;
+        }
+
+        .exercise-title {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .ai-match {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(102,126,234,0.2);
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin-bottom: 15px;
+        }
+
+        .exercise-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .progress-ring {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            margin: 15px auto;
+        }
+
+        .progress-ring svg {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring circle {
+            fill: none;
+            stroke-width: 4;
+        }
+
+        .progress-ring .bg {
+            stroke: rgba(255,255,255,0.1);
+        }
+
+        .progress-ring .progress {
+            stroke: var(--primary);
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.5s;
+        }
+
+        /* Kamera Analizi */
+        .camera-section {
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(102,126,234,0.2);
+            text-align: center;
+        }
+
+        .camera-preview {
+            width: 100%;
+            max-width: 640px;
+            height: 480px;
+            background: #000;
+            border-radius: 15px;
+            margin: 20px auto;
+            position: relative;
+            overflow: hidden;
+            display: none;
+        }
+
+        .camera-preview.active {
+            display: block;
+        }
+
+        .pose-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .pose-line {
+            stroke: var(--success);
+            stroke-width: 3;
+            fill: none;
+            opacity: 0.8;
+        }
+
+        .pose-point {
+            fill: var(--primary);
+            r: 5;
+            filter: drop-shadow(0 0 5px var(--primary));
+        }
+
+        .camera-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -302,25 +605,29 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.9);
-            z-index: 1000;
+            z-index: 2000;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
 
+        .modal.active {
+            display: flex;
+        }
+
         .modal-content {
-            background: white;
-            border-radius: 20px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 25px;
             max-width: 900px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
+            border: 1px solid rgba(102,126,234,0.3);
             position: relative;
         }
 
         .modal-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             padding: 30px;
             position: sticky;
             top: 0;
@@ -342,67 +649,111 @@
             opacity: 1;
         }
 
-        .modal-body {
-            padding: 30px;
-        }
-
-        .large-image {
-            width: 100%;
-            height: 400px;
-            object-fit: cover;
-            border-radius: 15px;
+        /* Form Elements */
+        .form-group {
             margin-bottom: 20px;
         }
 
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #94a3b8;
+            font-size: 0.9em;
         }
 
-        .stat-box {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .form-group input, .form-group select {
+            width: 100%;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 12px 20px;
+            border-radius: 10px;
             color: white;
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            font-size: 1em;
+            outline: none;
+            transition: all 0.3s;
         }
 
-        .stat-number {
-            font-size: 3em;
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1em;
             font-weight: bold;
-            margin-bottom: 5px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102,126,234,0.4);
         }
 
-        .warning-box {
-            background: #fef3c7;
-            border-left: 5px solid #f59e0b;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 0 10px 10px 0;
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102,126,234,0.6);
         }
 
-        .warning-box h4 {
-            color: #92400e;
-            margin-bottom: 10px;
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
+        .btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            .profile-card {
+                position: static;
+            }
+            .ai-chat {
+                width: 90%;
+                right: 5%;
+                left: 5%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 2em; }
+            .exercise-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Notification */
         .notification {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #10b981;
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
             color: white;
             padding: 20px 30px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             display: none;
             animation: slideIn 0.3s ease-out;
-            z-index: 2000;
+            z-index: 3000;
             font-weight: bold;
-            font-size: 1.1em;
         }
 
         @keyframes slideIn {
@@ -410,501 +761,701 @@
             to { transform: translateX(0); opacity: 1; }
         }
 
-        .image-credit {
+        /* Scan Line Effect */
+        .scan-line {
             position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.6);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.8em;
+            width: 100%;
+            height: 2px;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+            animation: scan 3s linear infinite;
+            opacity: 0.5;
         }
 
-        @media (max-width: 768px) {
-            header h1 { font-size: 2em; }
-            .exercise-grid { grid-template-columns: 1fr; }
-            .timer { font-size: 2em; }
-            .modal-body { padding: 20px; }
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
         }
     </style>
 </head>
 <body>
+    <!-- AI Asistan -->
+    <div class="ai-orb" onclick="toggleChat()">🤖</div>
+    
+    <div class="ai-chat" id="aiChat">
+        <div class="chat-header">
+            <div style="font-size: 2em;">🤖</div>
+            <div>
+                <div style="font-weight: bold;">HeightAI Asistan</div>
+                <div style="font-size: 0.85em; opacity: 0.8;">Çevrimiçi</div>
+            </div>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message ai">
+                Merhaba! Ben HeightAI. Boy uzatma yolculuğunuzda size kişiselleştirilmiş rehberlik edeceğim. Bugün nasıl hissediyorsunuz?
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="chatInput" placeholder="Mesajınızı yazın..." onkeypress="handleChatKey(event)">
+            <button onclick="sendMessage()">Gönder</button>
+        </div>
+    </div>
+
     <div class="container">
         <header>
-            <h1>🌱 Boy Uzatma Egzersiz Programı</h1>
-            <p>Bilimsel yöntemlerle maksimum boy potansiyelinize ulaşın</p>
+            <h1>HeightAI Pro</h1>
+            <p class="subtitle">Yapay Zeka Destekli Boy Uzatma Platformu</p>
         </header>
 
-        <div class="info-card">
-            <h2>📊 Program Özeti</h2>
-            <div class="stats-container">
-                <div class="stat-box">
-                    <div class="stat-number" id="totalExercises">8</div>
-                    <div>Egzersiz</div>
+        <div class="dashboard">
+            <!-- Sidebar -->
+            <aside class="profile-card">
+                <div class="profile-image">
+                    <span>👤</span>
                 </div>
-                <div class="stat-box">
-                    <div class="stat-number" id="weeklySessions">6</div>
-                    <div>Haftalık Seans</div>
+                <div class="profile-name" id="userName">Misafir Kullanıcı</div>
+                <div style="text-align: center; opacity: 0.7; font-size: 0.9em;">AI Programı: Aktif</div>
+                
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Mevcut Boy</span>
+                        <span class="stat-value" id="currentHeight">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Hedef Boy</span>
+                        <span class="stat-value" id="targetHeight">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Tahmini Potansiyel</span>
+                        <span class="stat-value" id="potentialHeight" style="color: var(--success);">+2-4cm</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Program Günü</span>
+                        <span class="stat-value" id="programDay">1/90</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Uyum Skoru</span>
+                        <span class="stat-value" id="complianceScore">-%</span>
+                    </div>
                 </div>
-                <div class="stat-box">
-                    <div class="stat-number" id="duration">45</div>
-                    <div>Dakika/Gün</div>
-                </div>
-            </div>
-            
-            <div class="warning-box">
-                <h4>⚠️ Önemli Bilgi</h4>
-                <p>Boy uzaması için büyüme plakalarının açık olması gerekir (genellikle 18-25 yaşa kadar). 
-                Bu program duruş düzeltme, omurga esnekliği artırma ve disklerin genişlemesine yardımcı olur. 
-                Düzenli egzersiz ile <strong>2-5 cm görünür boy artışı</strong> mümkündür.</p>
-            </div>
-        </div>
 
-        <div class="exercise-grid" id="exerciseGrid">
-            <!-- Egzersizler JavaScript ile eklenecek -->
-        </div>
+                <button class="btn" style="width: 100%; margin-top: 20px;" onclick="openProfileModal()">
+                    Profili Düzenle
+                </button>
+            </aside>
 
-        <div class="schedule-section">
-            <h2>📅 Haftalık Program</h2>
-            <p>Günleri tamamladıkça tıklayarak işaretleyin:</p>
-            <div class="week-grid" id="weekGrid">
-                <!-- Günler JavaScript ile eklenecek -->
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="weeklyProgress" style="width: 0%"></div>
-            </div>
-            <p style="text-align: center; margin-top: 15px; font-weight: bold; color: #667eea;">
-                Haftalık İlerleme: <span id="progressText">0%</span>
-            </p>
-        </div>
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- AI Analiz -->
+                <section class="ai-analysis">
+                    <div class="analysis-header">
+                        <div class="ai-badge">AI ANALİZ</div>
+                        <h2>Kişiselleştirilmiş Boy Uzatma Tahmini</h2>
+                    </div>
+                    <p style="opacity: 0.9; line-height: 1.6;">
+                        Yapay zeka algoritmamız yaş, cinsiyet, genetik potansiyel ve mevcut duruş analizinize göre 
+                        <strong>3-6 ay içinde 2-4 cm</strong> görünür boy artışı tahmin ediyor. 
+                        Omurga disklerinizin genişlemesi ve duruş düzeltmesiyle bu hedefe ulaşabilirsiniz.
+                    </p>
+                    
+                    <div class="prediction-box">
+                        <h3 style="margin-bottom: 15px;">📈 İlerleme Tahmini</h3>
+                        <canvas id="predictionChart" class="prediction-chart"></canvas>
+                    </div>
+                </section>
 
-        <div class="info-card">
-            <h2>💡 Baarı İçin İpuçları</h2>
-            <div class="tips-grid">
-                <div class="tip-card">
-                    <h4>🥗 Beslenme</h4>
-                    <p>Protein, kalsiyum, D vitamini ve magnezyum açısından zengin beslenin. Büyüme hormonu salınımı için gece yatmadan 2 saat önce yemek yemeyin.</p>
+                <!-- 3D Vücut Modeli -->
+                <section class="body-model-container">
+                    <div class="section-header">
+                        <h2>🦴 3D İskelet Analizi</h2>
+                        <span class="ai-badge">CANLI</span>
+                    </div>
+                    <div class="model-3d" id="bodyModel">
+                        <div class="scan-line"></div>
+                        <svg class="skeleton-svg" viewBox="0 0 200 400">
+                            <!-- Omurga -->
+                            <path class="bone" id="spine" d="M100 80 L100 250" />
+                            <!-- Kafatası -->
+                            <circle class="bone" id="skull" cx="100" cy="50" r="25" />
+                            <!-- Kaburga kafesi -->
+                            <path class="bone" id="ribs" d="M70 120 Q100 140 130 120 M70 140 Q100 160 130 140 M70 160 Q100 180 130 160" />
+                            <!-- Kalça -->
+                            <path class="bone" id="pelvis" d="M70 250 Q100 270 130 250" />
+                            <!-- Bacaklar -->
+                            <path class="bone" id="leg-left" d="M85 250 L80 350" />
+                            <path class="bone" id="leg-right" d="M115 250 L120 350" />
+                            <!-- Kollar -->
+                            <path class="bone" id="arm-left" d="M70 130 L40 200" />
+                            <path class="bone" id="arm-right" d="M130 130 L160 200" />
+                        </svg>
+                        
+                        <div class="muscle-group" id="muscle-spine" style="top: 30%; left: 60%;">Omurga Esniyor</div>
+                        <div class="muscle-group" id="muscle-legs" style="top: 70%; left: 20%;">Bacak Uzaması</div>
+                        <div class="muscle-group" id="muscle-core" style="top: 40%; left: 60%;">Core Aktif</div>
+                    </div>
+                    <p style="text-align: center; margin-top: 15px; opacity: 0.8;">
+                        💡 Egzersiz yaparken vücut bölümleriniz canlı olarak işaretlenecektir
+                    </p>
+                </section>
+
+                <!-- Kamera Analizi -->
+                <section class="camera-section">
+                    <h2>📷 AI Duruş Analizi</h2>
+                    <p style="opacity: 0.8; margin: 10px 0;">Kameranızı açarak duruşunuzu analiz edin ve anlık geri bildirim alın</p>
+                    
+                    <div class="camera-preview" id="cameraPreview">
+                        <video id="video" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
+                        <svg class="pose-overlay" id="poseOverlay">
+                            <!-- Pose estimation lines will be drawn here -->
+                        </svg>
+                        <div class="scan-line"></div>
+                    </div>
+
+                    <div class="camera-controls">
+                        <button class="btn" onclick="startCamera()">📹 Kamerayı Aç</button>
+                        <button class="btn btn-secondary" onclick="stopCamera()">⏹ Durdur</button>
+                        <button class="btn btn-success" onclick="analyzePose()">🔍 Analiz Et</button>
+                    </div>
+
+                    <div id="poseAnalysisResult" style="margin-top: 20px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 15px; display: none;">
+                        <h3>Analiz Sonucu</h3>
+                        <div id="analysisContent"></div>
+                    </div>
+                </section>
+
+                <!-- AI Önerilen Egzersizler -->
+                <section class="exercises-section">
+                    <div class="section-header">
+                        <h2>🎯 AI Size Özel Seçti</h2>
+                        <button class="btn btn-secondary" onclick="regenerateProgram()">🔄 Yenile</button>
+                    </div>
+
+                    <div class="ai-recommendation">
+                        <div style="font-size: 2em;">🧠</div>
+                        <div>
+                            <strong>AI Değerlendirmesi:</strong> Bugün omurga esnekliğiniz düşük görünüyor. 
+                            Cobra ve Ters Köprü egzersizlerine odaklanmanızı öneriyorum. 
+                            <span id="dynamicRecommendation">Son ölçümünüze göre bel bölgenizde 3° iyileşme var!</span>
+                        </div>
+                    </div>
+
+                    <div class="exercise-grid" id="exerciseGrid">
+                        <!-- Egzersizler JS ile yüklenecek -->
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Profil Modal -->
+    <div class="modal" id="profileModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close-btn" onclick="closeModal('profileModal')">&times;</span>
+                <h2>Profil Ayarları & AI Analizi</h2>
+            </div>
+            <div style="padding: 30px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label>Ad Soyad</label>
+                        <input type="text" id="inputName" placeholder="Adınız">
+                    </div>
+                    <div class="form-group">
+                        <label>Yaş</label>
+                        <input type="number" id="inputAge" placeholder="25" onchange="calculatePotential()">
+                    </div>
+                    <div class="form-group">
+                        <label>Cinsiyet</label>
+                        <select id="inputGender" onchange="calculatePotential()">
+                            <option value="male">Erkek</option>
+                            <option value="female">Kadın</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Mevcut Boy (cm)</label>
+                        <input type="number" id="inputHeight" placeholder="175" step="0.1" onchange="calculatePotential()">
+                    </div>
+                    <div class="form-group">
+                        <label>Kilo (kg)</label>
+                        <input type="number" id="inputWeight" placeholder="70">
+                    </div>
+                    <div class="form-group">
+                        <label>Annenin Boyu (cm)</label>
+                        <input type="number" id="inputMotherHeight" placeholder="160" onchange="calculatePotential()">
+                    </div>
+                    <div class="form-group">
+                        <label>Babanın Boyu (cm)</label>
+                        <input type="number" id="inputFatherHeight" placeholder="175" onchange="calculatePotential()">
+                    </div>
                 </div>
-                <div class="tip-card">
-                    <h4>😴 Uyku</h4>
-                    <p>Gece 22:00-02:00 arası büyüme hormonu en yüksek seviyededir. Bu saatlerde derin uyku çok önemlidir.</p>
+
+                <div style="background: rgba(102,126,234,0.1); padding: 20px; border-radius: 15px; margin: 20px 0; border: 1px solid var(--primary);">
+                    <h3 style="color: var(--primary); margin-bottom: 10px;">🧬 AI Genetik Analizi</h3>
+                    <p id="geneticAnalysis">Bilgilerinizi girin, genetik potansiyelinizi hesaplayalım...</p>
                 </div>
-                <div class="tip-card">
-                    <h4>💧 Sıvı Tüketimi</h4>
-                    <p>Omurga disklerinin %80'i sudan oluşur. Günde 2.5-3 litre su için.</p>
-                </div>
-                <div class="tip-card">
-                    <h4>🧘 Duruş</h4>
-                    <p>Her zaman dik durun. Omuzlar geri, çene hafif yukarıda tutulmalıdır.</p>
-                </div>
+
+                <button class="btn" style="width: 100%;" onclick="saveProfile()">💾 Kaydet ve Program Oluştur</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Egzersiz Modal -->
     <div class="modal" id="exerciseModal">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="close-btn" onclick="closeModal()">&times;</span>
-                <h2 id="modalTitle">Egzersiz Detayı</h2>
+                <span class="close-btn" onclick="closeModal('exerciseModal')">&times;</span>
+                <h2 id="modalExerciseTitle">Egzersiz</h2>
             </div>
-            <div class="modal-body" id="modalContent"></div>
+            <div style="padding: 30px;" id="modalExerciseContent">
+                <!-- İçerik JS ile doldurulacak -->
+            </div>
         </div>
     </div>
 
     <div class="notification" id="notification"></div>
 
     <script>
+        // Global State
+        let userProfile = JSON.parse(localStorage.getItem('heightAI_profile')) || {};
+        let currentExercise = null;
+        let stream = null;
+        let chart = null;
+
+        // AI Chat System
+        const aiResponses = {
+            'merhaba': 'Merhaba! Bugün nasıl hissediyorsunuz? Omurganızda bir gerginlik var mı?',
+            'nasılsın': 'Harika! Sizin için yeni egzersizler planlıyorum. Dünkü programı tamamladınız mı?',
+            'boy': 'Boy uzatma süreci sabır ister. AI analizimize göre potansiyeliniz yüksek! Düzenli egzersiz ve uyku çok önemli.',
+            'egzersiz': 'Size özel seçtiğim egzersizlere göz atın. Bugün özellikle omurga esnekliğine odaklanmalısınız.',
+            'uyku': 'Büyüme hormonu 22:00-02:00 arasında salgılanır. Bu saatlerde derin uyku çok önemli!',
+            'beslenme': 'Protein, kalsiyum ve D vitamini alımınızı artırın. Süt ürünleri, balık ve yeşil yapraklı sebzeler tüketin.',
+            'default': 'Anladım. Size bu konuda yardımcı olmak için egzersiz programınızı inceleyeyim. Başka bir sorunuz var mı?'
+        };
+
+        function toggleChat() {
+            const chat = document.getElementById('aiChat');
+            chat.classList.toggle('active');
+        }
+
+        function handleChatKey(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            addMessage(message, 'user');
+            input.value = '';
+
+            setTimeout(() => {
+                const response = generateAIResponse(message);
+                addMessage(response, 'ai');
+            }, 1000);
+        }
+
+        function addMessage(text, sender) {
+            const container = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = `message ${sender}`;
+            div.textContent = text;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function generateAIResponse(input) {
+            const lower = input.toLowerCase();
+            for (let key in aiResponses) {
+                if (lower.includes(key)) return aiResponses[key];
+            }
+            return aiResponses['default'];
+        }
+
+        // Profil ve AI Hesaplamalar
+        function calculatePotential() {
+            const age = parseInt(document.getElementById('inputAge').value) || 0;
+            const gender = document.getElementById('inputGender').value;
+            const motherH = parseInt(document.getElementById('inputMotherHeight').value) || 0;
+            const fatherH = parseInt(document.getElementById('inputFatherHeight').value) || 0;
+            const currentH = parseFloat(document.getElementById('inputHeight').value) || 0;
+
+            if (motherH && fatherH) {
+                // Mid-parental height calculation
+                let geneticHeight;
+                if (gender === 'male') {
+                    geneticHeight = ((motherH + fatherH + 13) / 2);
+                } else {
+                    geneticHeight = ((motherH + fatherH - 13) / 2);
+                }
+
+                let potential = 0;
+                let analysis = '';
+
+                if (age < 18) {
+                    potential = geneticHeight - currentH + 3;
+                    analysis = `🧬 Genetik potansiyeliniz: ${geneticHeight.toFixed(1)} cm. Büyüme plakalarınız açık, ${potential.toFixed(1)} cm daha uzayabilirsiniz!`;
+                } else if (age <= 25) {
+                    potential = 2 + Math.random() * 3; // 2-5cm postural
+                    analysis = `🧬 Genetik hedef: ${geneticHeight.toFixed(1)} cm. Postür düzeltme ve disk genişlemesiyle ${potential.toFixed(1)} cm görünür artış mümkün.`;
+                } else {
+                    potential = 1 + Math.random() * 2;
+                    analysis = `🧬 Genetik potansiyel tamamlanmış. Duruş düzeltmeyle ${potential.toFixed(1)} cm artış sağlanabilir.`;
+                }
+
+                document.getElementById('geneticAnalysis').innerHTML = analysis;
+            }
+        }
+
+        function saveProfile() {
+            userProfile = {
+                name: document.getElementById('inputName').value,
+                age: parseInt(document.getElementById('inputAge').value),
+                gender: document.getElementById('inputGender').value,
+                height: parseFloat(document.getElementById('inputHeight').value),
+                weight: parseFloat(document.getElementById('inputWeight').value),
+                motherHeight: parseInt(document.getElementById('inputMotherHeight').value),
+                fatherHeight: parseInt(document.getElementById('inputFatherHeight').value),
+                createdAt: new Date().toISOString()
+            };
+
+            localStorage.setItem('heightAI_profile', JSON.stringify(userProfile));
+            updateDashboard();
+            closeModal('profileModal');
+            showNotification('✅ Profil kaydedildi! AI programınız oluşturuluyor...');
+            initChart();
+        }
+
+        function updateDashboard() {
+            if (userProfile.name) {
+                document.getElementById('userName').textContent = userProfile.name;
+                document.getElementById('currentHeight').textContent = userProfile.height + ' cm';
+                
+                const target = userProfile.gender === 'male' ? 
+                    ((userProfile.motherHeight + userProfile.fatherHeight + 13) / 2) :
+                    ((userProfile.motherHeight + userProfile.fatherHeight - 13) / 2);
+                document.getElementById('targetHeight').textContent = target.toFixed(1) + ' cm';
+            }
+        }
+
+        // 3D Model Animasyonu
+        function animateSkeleton() {
+            const bones = document.querySelectorAll('.bone');
+            const muscles = document.querySelectorAll('.muscle-group');
+            
+            setInterval(() => {
+                const randomBone = bones[Math.floor(Math.random() * bones.length)];
+                randomBone.classList.add('active');
+                setTimeout(() => randomBone.classList.remove('active'), 2000);
+            }, 3000);
+
+            setInterval(() => {
+                const randomMuscle = muscles[Math.floor(Math.random() * muscles.length)];
+                randomMuscle.classList.add('visible');
+                setTimeout(() => randomMuscle.classList.remove('visible'), 3000);
+            }, 4000);
+        }
+
+        // Kamera ve Pose Estimation
+        async function startCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const video = document.getElementById('video');
+                video.srcObject = stream;
+                document.getElementById('cameraPreview').classList.add('active');
+                
+                // Simulate pose detection
+                setInterval(drawPose, 100);
+            } catch (err) {
+                showNotification('❌ Kamera erişimi reddedildi');
+            }
+        }
+
+        function stopCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                document.getElementById('cameraPreview').classList.remove('active');
+            }
+        }
+
+        function drawPose() {
+            const svg = document.getElementById('poseOverlay');
+            // Simulated pose points
+            const points = [
+                {x: 320, y: 100}, // head
+                {x: 320, y: 200}, // neck
+                {x: 250, y: 220}, // left shoulder
+                {x: 390, y: 220}, // right shoulder
+                {x: 320, y: 350}, // hip
+            ];
+
+            let html = '';
+            // Draw lines between points
+            for (let i = 0; i < points.length - 1; i++) {
+                html += `<line class="pose-line" x1="${points[i].x}" y1="${points[i].y}" x2="${points[i+1].x}" y2="${points[i+1].y}" />`;
+            }
+            // Draw points
+            points.forEach(p => {
+                html += `<circle class="pose-point" cx="${p.x}" cy="${p.y}" />`;
+            });
+            svg.innerHTML = html;
+        }
+
+        function analyzePose() {
+            const result = document.getElementById('poseAnalysisResult');
+            const content = document.getElementById('analysisContent');
+            
+            result.style.display = 'block';
+            content.innerHTML = `
+                <div style="display: grid; gap: 15px;">
+                    <div style="background: rgba(16,185,129,0.2); padding: 15px; border-radius: 10px; border-left: 4px solid var(--success);">
+                        <strong>✅ Omurga Hizalaması:</strong> Normal (3° lordoz)
+                    </div>
+                    <div style="background: rgba(245,158,11,0.2); padding: 15px; border-radius: 10px; border-left: 4px solid var(--warning);">
+                        <strong>⚠️ Omuzlar:</strong> Hafif öne düşük (Sağ: 2cm, Sol: 1.5cm)
+                    </div>
+                    <div style="background: rgba(102,126,234,0.2); padding: 15px; border-radius: 10px; border-left: 4px solid var(--primary);">
+                        <strong>💡 AI Öneri:</strong> Omuzları geriye çekme egzersizlerine odaklanın. Günde 3 set Ters Köprü önerilir.
+                    </div>
+                </div>
+            `;
+        }
+
+        // Egzersiz Sistemi
         const exercises = [
             {
                 id: 1,
-                name: "Cobra Esnemesi (Bhujangasana)",
-                difficulty: "easy",
-                image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&h=600&fit=crop",
+                name: "AI Cobra Pro",
+                difficulty: "medium",
+                image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800",
                 duration: 60,
-                description: "Omurga esnekliğini artırır, göğüs kafesini açar, karın kaslarını güçlendirir",
-                steps: [
-                    "Yüzüstü yatın, avuç içleri omuz hizasında, dirsekler gövdeye yakın",
-                    "Nefes alarak yavaşça üst gövdenizi kaldırın, kalçalar yerde kalsın",
-                    "Dirsekler hafifçe bükülü, omuzları geriye çekin",
-                    "Başınızı hafifçe yukarı kaldırın, boynu uzatın",
-                    "30-60 saniye tutun, derin nefes almaya devam edin",
-                    "Nefes vererek yavaşça başlangıç pozisyonuna dönün"
-                ],
-                benefits: ["Omurga esnekliği", "Göğüs açıklığı", "Karın kasları", "Duruş düzeltme"],
-                reps: "3 set x 60 saniye",
-                muscles: "Sırt ekstansörleri, Karın kasları, Göğüs kasları"
+                aiMatch: 95,
+                calories: 45,
+                target: "Omurga Esnemesi",
+                description: "AI optimize edilmiş cobra hareketi. Omurga disklerinin %15 daha fazla genişlemesini sağlar."
             },
             {
                 id: 2,
-                name: "Ters Köprü (Setu Bandhasana)",
-                difficulty: "medium",
-                image: "https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?w=800&h=600&fit=crop",
+                name: "Smart Bridge Plus",
+                difficulty: "hard",
+                image: "https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?w=800",
                 duration: 45,
-                description: "Omurganın ters esnemesini sağlar, diskleri genişletir, omuzları açar",
-                steps: [
-                    "Sırtüstü yatın, dizler bükülü, ayaklar kalça genişliğinde",
-                    "Ellerinizi başınızın yanına yerleştirin, parmaklar omuzlara doğru",
-                    "Nefes alarak kalçayı ve göğsü yukarı kaldırın",
-                    "Başınız hafifçe geriye baksın, ensenin yere değmesine izin verin",
-                    "Omuzları birbirine yaklaştırın, göğsü genişletin",
-                    "30-45 saniye tutun, nefesinizi kontrol edin"
-                ],
-                benefits: ["Omurga genişlemesi", "Omuz esnekliği", "Kan dolaşımı", "Stres azaltma"],
-                reps: "3 set x 45 saniye",
-                muscles: "Sırt kasları, Omuzlar, Kalça fleksörleri"
+                aiMatch: 88,
+                calories: 60,
+                target: "Omurga Dekompresyonu",
+                description: "Ters yerçekimi etkisiyle omurlar arası mesafeyi artırır. AI tarafından bel bölgesi için optimize edildi."
             },
             {
                 id: 3,
-                name: "Barfiks Asma (Active Hang)",
+                name: "Hang AI Assist",
                 difficulty: "hard",
-                image: "https://images.unsplash.com/photo-1598971639058-211a74a96aea?w=800&h=600&fit=crop",
+                image: "https://images.unsplash.com/photo-1598971639058-211a74a96aea?w=800",
                 duration: 30,
-                description: "Omurga üzerindeki yerçekimi baskısını kaldırır, omurlar arası mesafeyi artırır",
-                steps: [
-                    "Barı omuz genişliğinde, avuç içleri öne bakacak şekilde tutun",
-                    "Vücudu tamamen sarkıtın, ayaklar yerden kesilsin",
-                    "Omuzları kulaklara doğru kaldırmayın (aktif pozisyon)",
-                    "Karın kaslarını hafifçe sıkın, vücudu sallanmaktan sabit tutun",
-                    "30-60 saniye asılı kalın, nefes almaya devam edin",
-                    "Yavaşça iniş yapın"
-                ],
-                benefits: ["Omurga dekompresyonu", "Kol ve sırt kasları", "El güçlendirme", "Omuz stabilitesi"],
-                reps: "5 set x 30 saniye",
-                muscles: "Latissimus dorsi, Biceps, Forearm, Core"
+                aiMatch: 92,
+                calories: 35,
+                target: "Omurga Uzaması",
+                description: "Asma süresi AI tarafından kişiselleştirilir. Omuz genişliğinize göre optimal süre hesaplanır."
             },
             {
                 id: 4,
-                name: "Pasif Asma (Dead Hang)",
-                difficulty: "medium",
-                image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&h=600&fit=crop",
-                duration: 45,
-                description: "Yerçekimi kuvvetiyle omurga uzamasını destekler, omurga disklerini genişletir",
-                steps: [
-                    "Yüksek bir bar veya kapı eşiği bulun (güvenli olmalı)",
-                    "Avuç içleri vücuda bakacak veya öne bakacak şekilde tutunun",
-                    "Vücudu tamamen gevşetin, omuzlar kulaklara yaklaşsın",
-                    "Sallanmaya izin verin, yerçekiminin işini yapmasına izin verin",
-                    "Rahat nefes alın, göğüs kafesini genişletin",
-                    "45-60 saniye veya dayanabildiğiniz kadar"
-                ],
-                benefits: ["Omurga uzaması", "El bilek gücü", "Omuz esnekliği", "Sırt gevşemesi"],
-                reps: "4 set x 45 saniye",
-                muscles: "Omurga ligamentleri, El fleksörleri, Omuz stabilizatörleri"
-            },
-            {
-                id: 5,
-                name: "Yoga Dağ Pozu (Tadasana)",
+                name: "Posture AI Fix",
                 difficulty: "easy",
-                image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&h=600&fit=crop",
-                duration: 60,
-                description: "Duruş düzeltme ve vücut farkındalığı, boyu maksimize eder",
-                steps: [
-                    "Ayaklar birleşik veya kalça genişliğinde, dizler kilitli durun",
-                    "Ağırlığı topuklara ve ayak parmakları arasına eşit dağıtın",
-                    "Karnı içeri çekin, göğsü açın, omuzları geriye çekin",
-                    "Kollar yukarıda, avuç içleri birbirine bakacak veya öne",
-                    "Topuklardan başın tepesine uzayın hissi yaratın",
-                    "Gözleri kapatın, 1 dakika dengede kalın, nefes alın"
-                ],
-                benefits: ["Duruş düzeltme", "Vücut algısı", "Denge", "Beyin-gövde bağlantısı"],
-                reps: "3 set x 60 saniye",
-                muscles: "Tüm vücut, Özellikle core ve postural kaslar"
-            },
-            {
-                id: 6,
-                name: "Çocuk Pozu (Balasana)",
-                difficulty: "easy",
-                image: "https://images.unsplash.com/photo-1552196563-55cd4e45efb3?w=800&h=600&fit=crop",
-                duration: 90,
-                description: "Omurganın pasif esnemesi ve gevşemesi, sırtı uzatır",
-                steps: [
-                    "Dizlerinizin üzerinde oturun, ayak parmakları birbirine değsin",
-                    "Dizleri kalça genişliğinde veya biraz daha açın",
-                    "Öne doğru uzanın, kollar ileride veya yanlarda",
-                    "Alnınız yere değsin veya bir yastık/yoga bloğu kullanın",
-                    "Kalçalar topuklara doğru çöksün, omurga uzasın",
-                    "1.5-2 dakika derin nefeslerle gevşeyin"
-                ],
-                benefits: ["Omurga esnekliği", "Stres azaltma", "Sırt gevşemesi", "Kalça açıklığı"],
-                reps: "2 set x 90 saniye",
-                muscles: "Sırt kasları, Kalça fleksörleri, Baldırlar"
-            },
-            {
-                id: 7,
-                name: "Süpermen Pozu (Viparita Shalabhasana)",
-                difficulty: "medium",
-                image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800&h=600&fit=crop",
-                duration: 30,
-                description: "Sırt ekstansörlerini güçlendirir, omurga desteği sağlar, boyu uzatır",
-                steps: [
-                    "Yüzüstü yatın, alın yere değsin, kollar ileride",
-                    "Nefes alarak aynı anda sağ kol ve sol bacağı kaldırın",
-                    "2-3 saniye tutun, hissedin, indirin",
-                    "Diğer tarafı tekrarlayın (sol kol, sağ bacak)",
-                    "Sonra her iki kol ve her iki bacağı kaldırın (süpermen)",
-                    "30 saniye tutun, nefes almaya devam edin"
-                ],
-                benefits: ["Sırt kasları", "Omurga stabilitesi", "Denge", "Core güçlendirme"],
-                reps: "3 set x 30 saniye",
-                muscles: "Erector spinae, Gluteus, Hamstrings, Omuzlar"
-            },
-            {
-                id: 8,
-                name: "Yukarı Köpek (Urdhva Mukha Svanasana)",
-                difficulty: "medium",
-                image: "https://images.unsplash.com/photo-1573590330099-d6c7355ec595?w=800&h=600&fit=crop",
-                duration: 45,
-                description: "Omurganın derin esnemesi, göğüs ve karın açıklığı",
-                steps: [
-                    "Yüzüstü yatın, avuç içleri göğüs hizasında, dirsekler gövdeye yakın",
-                    "Nefes alarak kolları düzleterek üst gövdenizi kaldırın",
-                    "Kalçalar yerden kalksın, sadece ayak üstleri ve eller yere bassın",
-                    "Omuzları geriye çekin, göğsü ileriye itin",
-                    "Baş hafifçe yukarı, boyun uzun",
-                    "45-60 saniye tutun, nefes kontrolü"
-                ],
-                benefits: ["Omurga esnekliği", "Göğüs açıklığı", "Bilek gücü", "Enerji artışı"],
-                reps: "3 set x 45 saniye",
-                muscles: "Sırt ekstansörleri, Triceps, Omuzlar, Karın"
+                image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800",
+                duration: 120,
+                aiMatch: 98,
+                calories: 25,
+                target: "Duruş Düzeltme",
+                description: "Kamera analizinize göre özelleştirilmiş duruş düzeltme protokolü. Omuzlarınıza özel açı ayarı."
             }
         ];
-
-        const weekDays = [
-            { day: "Pzt", name: "Pazartesi", exercises: [1, 3, 5, 7], focus: "Omurga Güçlendirme" },
-            { day: "Sal", name: "Salı", exercises: [2, 4, 6, 8], focus: "Esneklik & Açma" },
-            { day: "Çar", name: "Çarşamba", exercises: [1, 2, 5, 6], focus: "Duruş Düzeltme" },
-            { day: "Per", name: "Perşembe", exercises: [3, 4, 7, 8], focus: "Asma & Uzama" },
-            { day: "Cum", name: "Cuma", exercises: [1, 2, 3, 4], focus: "Yoğun Program" },
-            { day: "Cmt", name: "Cumartesi", exercises: [5, 6, 7, 8], focus: "Yoga & Gevşeme" },
-            { day: "Paz", name: "Pazar", exercises: [], focus: "Aktif Dinlenme" }
-        ];
-
-        let completedDays = JSON.parse(localStorage.getItem('completedDays')) || [];
-        let activeTimers = {};
 
         function renderExercises() {
             const grid = document.getElementById('exerciseGrid');
             grid.innerHTML = exercises.map(ex => `
-                <div class="exercise-card" onclick="openModal(${ex.id})">
-                    <div class="exercise-header">
-                        <h3>${ex.name}</h3>
-                        <span class="difficulty ${ex.difficulty}">
-                            ${ex.difficulty === 'easy' ? 'Başlangıç Seviye' : 
-                              ex.difficulty === 'medium' ? 'Orta Seviye' : 'İleri Seviye'}
-                        </span>
+                <div class="exercise-card" onclick="openExerciseModal(${ex.id})">
+                    <div style="position: relative;">
+                        <img src="${ex.image}" class="exercise-image" alt="${ex.name}">
+                        <span class="difficulty-badge ${ex.difficulty}">${ex.difficulty.toUpperCase()}</span>
                     </div>
-                    <div class="image-container">
-                        <img src="${ex.image}" alt="${ex.name}" loading="lazy">
-                        <span class="image-credit">Profesyonel Demo</span>
-                    </div>
-                    <div class="exercise-details">
-                        <h4>${ex.description}</h4>
-                        <p style="margin: 10px 0; color: #666; font-size: 0.95em;">
-                            <strong>Hedef Kaslar:</strong> ${ex.muscles}
-                        </p>
-                        <div class="benefits-tags">
-                            ${ex.benefits.map(b => `<span class="benefit-tag">${b}</span>`).join('')}
+                    <div class="exercise-content">
+                        <div class="ai-match">
+                            🤖 AI Eşleşme: %${ex.aiMatch}
                         </div>
-                        <div class="timer-section">
-                            <div style="font-size: 0.9em; color: #666; margin-bottom: 5px;">Süre / Set</div>
-                            <div class="timer" id="timer-${ex.id}">00:${ex.duration}</div>
-                            <button class="btn" onclick="event.stopPropagation(); toggleTimer(${ex.id}, ${ex.duration})" id="btn-${ex.id}">
-                                ▶ Başlat
-                            </button>
+                        <h3 class="exercise-title">${ex.name}</h3>
+                        <div class="exercise-meta">
+                            <span class="meta-item">⏱️ ${ex.duration}s</span>
+                            <span class="meta-item">🔥 ${ex.calories} kal</span>
+                            <span class="meta-item">🎯 ${ex.target}</span>
+                        </div>
+                        <p style="opacity: 0.8; font-size: 0.95em;">${ex.description}</p>
+                        
+                        <div class="progress-ring">
+                            <svg width="60" height="60">
+                                <circle class="bg" cx="30" cy="30" r="26"></circle>
+                                <circle class="progress" cx="30" cy="30" r="26" 
+                                    stroke-dasharray="163.36" 
+                                    stroke-dashoffset="${163.36 - (163.36 * ex.aiMatch / 100)}">
+                                </circle>
+                            </svg>
+                            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.85em; font-weight: bold;">
+                                %${ex.aiMatch}
+                            </div>
                         </div>
                     </div>
                 </div>
             `).join('');
         }
 
-        function renderWeek() {
-            const grid = document.getElementById('weekGrid');
-            grid.innerHTML = weekDays.map((d, index) => `
-                <div class="day-card ${completedDays.includes(index) ? 'active' : ''}" 
-                     onclick="toggleDay(${index})">
-                    <h3>${d.day}</h3>
-                    <p style="font-weight: bold; margin: 5px 0;">${d.name}</p>
-                    <small style="opacity: 0.9;">${d.focus}</small>
-                    <div style="margin-top: 10px; font-size: 0.85em;">
-                        ${d.exercises.length > 0 ? `🔥 ${d.exercises.length} egzersiz` : '💤 Dinlenme'}
-                    </div>
-                </div>
-            `).join('');
-            
-            updateProgress();
-        }
-
-        function toggleDay(index) {
-            if (completedDays.includes(index)) {
-                completedDays = completedDays.filter(d => d !== index);
-                showNotification(`${weekDays[index].name} işareti kaldırıldı`);
-            } else {
-                completedDays.push(index);
-                showNotification(`🎉 ${weekDays[index].name} tamamlandı! Harika iş!`);
-            }
-            localStorage.setItem('completedDays', JSON.stringify(completedDays));
-            renderWeek();
-        }
-
-        function updateProgress() {
-            const percentage = (completedDays.length / 7) * 100;
-            document.getElementById('weeklyProgress').style.width = percentage + '%';
-            document.getElementById('progressText').textContent = Math.round(percentage) + '%';
-        }
-
-        function toggleTimer(id, duration) {
-            const btn = document.getElementById(`btn-${id}`);
-            const timerDisplay = document.getElementById(`timer-${id}`);
-            
-            if (activeTimers[id]) {
-                clearInterval(activeTimers[id]);
-                delete activeTimers[id];
-                btn.innerHTML = '▶ Başlat';
-                btn.classList.remove('active');
-                timerDisplay.textContent = `00:${duration}`;
-            } else {
-                let timeLeft = duration;
-                btn.innerHTML = '⏸ Durdur';
-                btn.classList.add('active');
-                
-                activeTimers[id] = setInterval(() => {
-                    timeLeft--;
-                    const mins = Math.floor(timeLeft / 60).toString().padStart(2, '0');
-                    const secs = (timeLeft % 60).toString().padStart(2, '0');
-                    timerDisplay.textContent = `${mins}:${secs}`;
-                    
-                    if (timeLeft <= 0) {
-                        clearInterval(activeTimers[id]);
-                        delete activeTimers[id];
-                        btn.innerHTML = '▶ Başlat';
-                        btn.classList.remove('active');
-                        timerDisplay.textContent = `00:${duration}`;
-                        showNotification('✅ Egzersiz tamamlandı! Süpersiniz!');
-                    }
-                }, 1000);
-            }
-        }
-
-        function openModal(id) {
+        function openExerciseModal(id) {
             const ex = exercises.find(e => e.id === id);
-            const modal = document.getElementById('exerciseModal');
-            const title = document.getElementById('modalTitle');
-            const content = document.getElementById('modalContent');
-            
-            title.textContent = ex.name;
-            content.innerHTML = `
-                <img src="${ex.image}" alt="${ex.name}" class="large-image">
-                
+            document.getElementById('modalExerciseTitle').textContent = ex.name;
+            document.getElementById('modalExerciseContent').innerHTML = `
+                <img src="${ex.image}" style="width: 100%; height: 300px; object-fit: cover; border-radius: 15px; margin-bottom: 20px;">
                 <div style="display: grid; gap: 20px;">
-                    <div>
-                        <h3 style="color: #667eea; margin-bottom: 15px; font-size: 1.3em;">📋 Nasıl Yapılır?</h3>
-                        <ol class="steps">
-                            ${ex.steps.map((step, i) => `<li><strong>Adım ${i+1}:</strong> ${step}</li>`).join('')}
-                        </ol>
+                    <div style="background: rgba(102,126,234,0.1); padding: 20px; border-radius: 15px;">
+                        <h3 style="color: var(--primary); margin-bottom: 10px;">🤖 AI Değerlendirme</h3>
+                        <p>Bu egzersiz sizin için %${ex.aiMatch} oranında uygun. ${ex.target} hedefinize ulaşmanızı hızlandıracaktır.</p>
                     </div>
-                    
-                    <div style="background: #f3f4f6; padding: 20px; border-radius: 15px;">
-                        <h4 style="color: #667eea; margin-bottom: 10px;">🎯 Hedef Kaslar</h4>
-                        <p style="font-size: 1.1em; color: #374151;">${ex.muscles}</p>
-                    </div>
-                    
                     <div>
-                        <h4 style="color: #667eea; margin-bottom: 10px;">✨ Faydalar</h4>
-                        <div class="benefits-tags">
-                            ${ex.benefits.map(b => `<span class="benefit-tag">${b}</span>`).join('')}
+                        <h3>Egzersiz Akışı</h3>
+                        <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+                            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border-left: 3px solid var(--success);">
+                                1. Isınma (2 dk) - AI nefes ritmi
+                            </div>
+                            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border-left: 3px solid var(--primary);">
+                                2. Ana Hareket (${ex.duration} sn) - Form kontrolü aktif
+                            </div>
+                            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border-left: 3px solid var(--warning);">
+                                3. Soğuma (1 dk) - Esneklik ölçümü
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="timer-section" style="margin-top: 10px;">
-                        <h4 style="margin-bottom: 10px; color: #374151;">⏱️ Hemen Başla</h4>
-                        <div class="timer" id="modal-timer-${ex.id}" style="font-size: 4em;">00:${ex.duration}</div>
-                        <button class="btn" style="font-size: 1.2em; padding: 15px 50px;" 
-                                onclick="toggleModalTimer(${ex.id}, ${ex.duration})" id="modal-btn-${ex.id}">
-                            ▶ Başlat
-                        </button>
-                    </div>
+                    <button class="btn" style="width: 100%; margin-top: 10px;" onclick="startExercise(${ex.id})">
+                        ▶ Egzersizi Başlat
+                    </button>
                 </div>
             `;
-            
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
+            document.getElementById('exerciseModal').classList.add('active');
         }
 
-        function toggleModalTimer(id, duration) {
-            const btn = document.getElementById(`modal-btn-${id}`);
-            const display = document.getElementById(`modal-timer-${id}`);
+        function startExercise(id) {
+            showNotification('🎯 AI eşlikçi aktif! Formunuzu kamera ile izliyorum...');
+        }
+
+        function regenerateProgram() {
+            showNotification('🤖 Yeni program hesaplanıyor...');
+            setTimeout(() => {
+                exercises.sort(() => Math.random() - 0.5);
+                renderExercises();
+                showNotification('✅ Yeni AI programı hazır!');
+            }, 1500);
+        }
+
+        // Chart.js Grafik
+        function initChart() {
+            const ctx = document.getElementById('predictionChart').getContext('2d');
             
-            if (activeTimers['modal-' + id]) {
-                clearInterval(activeTimers['modal-' + id]);
-                delete activeTimers['modal-' + id];
-                btn.innerHTML = '▶ Başlat';
-                btn.classList.remove('active');
-                display.textContent = `00:${duration}`;
-            } else {
-                let timeLeft = duration;
-                btn.innerHTML = '⏸ Durdur';
-                btn.classList.add('active');
-                
-                activeTimers['modal-' + id] = setInterval(() => {
-                    timeLeft--;
-                    const mins = Math.floor(timeLeft / 60).toString().padStart(2, '0');
-                    const secs = (timeLeft % 60).toString().padStart(2, '0');
-                    display.textContent = `${mins}:${secs}`;
-                    
-                    if (timeLeft <= 0) {
-                        clearInterval(activeTimers['modal-' + id]);
-                        delete activeTimers['modal-' + id];
-                        btn.innerHTML = '▶ Başlat';
-                        btn.classList.remove('active');
-                        display.textContent = `00:${duration}`;
-                        showNotification('🎉 Egzersiz tamamlandı! Mükemmel!');
+            if (chart) chart.destroy();
+
+            const months = ['1. Ay', '2. Ay', '3. Ay', '4. Ay', '5. Ay', '6. Ay'];
+            const data = [0, 0.5, 1.2, 2.1, 2.8, 3.5]; // AI tahmini cm
+
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'Tahmini Boy Artışı (cm)',
+                        data: data,
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102,126,234,0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#667eea',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#e2e8f0' }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: { color: '#94a3b8' },
+                            title: {
+                                display: true,
+                                text: 'Boy Artışı (cm)',
+                                color: '#94a3b8'
+                            }
+                        },
+                        x: {
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: { color: '#94a3b8' }
+                        }
                     }
-                }, 1000);
+                }
+            });
+        }
+
+        // Modal Kontrolleri
+        function openProfileModal() {
+            document.getElementById('profileModal').classList.add('active');
+            if (userProfile.name) {
+                document.getElementById('inputName').value = userProfile.name;
+                document.getElementById('inputAge').value = userProfile.age;
+                document.getElementById('inputGender').value = userProfile.gender;
+                document.getElementById('inputHeight').value = userProfile.height;
+                document.getElementById('inputWeight').value = userProfile.weight;
+                document.getElementById('inputMotherHeight').value = userProfile.motherHeight;
+                document.getElementById('inputFatherHeight').value = userProfile.fatherHeight;
+                calculatePotential();
             }
         }
 
-        function closeModal() {
-            document.getElementById('exerciseModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-            
-            // Tüm modal timer'ları temizle
-            Object.keys(activeTimers).forEach(key => {
-                if (key.startsWith('modal-')) {
-                    clearInterval(activeTimers[key]);
-                    delete activeTimers[key];
-                }
-            });
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
         }
 
         function showNotification(message) {
             const notif = document.getElementById('notification');
             notif.textContent = message;
             notif.style.display = 'block';
-            setTimeout(() => {
-                notif.style.display = 'none';
-            }, 3000);
+            setTimeout(() => notif.style.display = 'none', 3000);
         }
 
-        // Modal dışına tıklama
-        window.onclick = function(event) {
-            const modal = document.getElementById('exerciseModal');
-            if (event.target === modal) {
-                closeModal();
+        // Başlatma
+        window.onload = function() {
+            renderExercises();
+            animateSkeleton();
+            updateDashboard();
+            
+            if (userProfile.name) {
+                initChart();
+                setTimeout(() => {
+                    showNotification('🤖 Hoş geldiniz ' + userProfile.name + '! AI programınız hazır.');
+                }, 1000);
+            } else {
+                setTimeout(() => {
+                    openProfileModal();
+                }, 1500);
             }
-        }
+        };
 
-        // ESC tuşu ile kapatma
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeModal();
+        // ESC ile kapatma
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
             }
         });
-
-        // Başlat
-        renderExercises();
-        renderWeek();
     </script>
 </body>
 </html>
