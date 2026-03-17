@@ -2,16 +2,14 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HeightAI Pro</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Yapay Zeka Destekli Boy Uzatma ve Pelvik Sağlık Platformu">
+    <meta name="theme-color" content="#667eea">
+    <title>HeightAI Pro + Pelvik Sağlık - Kişiselleştirilmiş Sağlık Platformu</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         :root {
             --primary: #667eea;
             --secondary: #764ba2;
@@ -20,144 +18,427 @@
             --danger: #ef4444;
             --kegel: #ec4899;
             --kegel-dark: #be185d;
-            --dark: #0f172a;
-            --card: #1e293b;
+            --dark: #1f2937;
+            --light: #f3f4f6;
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --border-color: rgba(102,126,234,0.2);
+            --card-bg: rgba(30, 41, 59, 0.6);
+            --transition-speed: 0.3s;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: rgba(102,126,234,0.2);
+            --card-bg: rgba(255, 255, 255, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: linear-gradient(135deg, var(--dark) 0%, #1e293b 100%);
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
             min-height: 100vh;
-            color: #e2e8f0;
+            color: var(--text-primary);
+            overflow-y: auto;
+            position: relative;
+            transition: background var(--transition-speed), color var(--transition-speed);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--border-color) 50%, var(--bg-secondary) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .ai-orb {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            background: radial-gradient(circle, rgba(102,126,234,0.8) 0%, rgba(118,75,162,0.6) 100%);
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 0 30px rgba(102,126,234,0.6);
+            animation: pulse-glow 2s infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            transform: translateZ(0);
+            will-change: transform;
+            border: none;
+            outline: none;
+        }
+
+        .ai-orb:hover, .ai-orb:focus {
+            transform: scale(1.1) translateZ(0);
+            box-shadow: 0 0 40px rgba(102,126,234,0.8);
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 30px rgba(102,126,234,0.6); }
+            50% { box-shadow: 0 0 50px rgba(102,126,234,0.9); }
+        }
+
+        .ai-chat {
+            position: fixed;
+            bottom: 110px;
+            right: 30px;
+            width: 400px;
+            height: 600px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            z-index: 999;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            transform: translateZ(0);
+            transition: opacity var(--transition-speed), transform var(--transition-speed);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .ai-chat.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             padding: 20px;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-shrink: 0;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            scroll-behavior: smooth;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 15px;
+            border-radius: 15px;
+            animation: messageSlide 0.3s ease-out;
+            flex-shrink: 0;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        @keyframes messageSlide {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.ai {
+            background: rgba(102,126,234,0.2);
+            align-self: flex-start;
+            border-left: 3px solid var(--primary);
+        }
+
+        .message.user {
+            background: rgba(16,185,129,0.2);
+            align-self: flex-end;
+            border-right: 3px solid var(--success);
+        }
+
+        .chat-input {
+            padding: 20px;
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
+        }
+
+        .chat-input input {
+            flex: 1;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid transparent;
+            padding: 12px 20px;
+            border-radius: 25px;
+            color: var(--text-primary);
+            outline: none;
+            transition: all var(--transition-speed);
+            font-size: 1em;
+        }
+
+        .chat-input input:focus {
+            border-color: var(--primary);
+            background: rgba(255,255,255,0.15);
+        }
+
+        .chat-input button {
+            background: var(--primary);
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            font-weight: 600;
+            min-width: 80px;
+        }
+
+        .chat-input button:hover, .chat-input button:focus {
+            background: var(--secondary);
+            transform: scale(1.05);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            font-size: 1.5em;
+            transition: all var(--transition-speed);
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(180deg);
+            box-shadow: 0 0 20px rgba(102,126,234,0.3);
         }
 
         .container {
             max-width: 1400px;
             margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            padding-top: 80px;
         }
 
         header {
             text-align: center;
-            padding: 30px 0;
-        }
-
-        h1 {
-            font-size: 3em;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            color: #94a3b8;
-            font-size: 1.2em;
-        }
-
-        /* SEKME SİSTEMİ - TEMEL */
-        .tabs {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin: 30px 0;
-        }
-
-        .tab-btn {
-            padding: 15px 40px;
-            border: 2px solid rgba(255,255,255,0.1);
-            background: rgba(255,255,255,0.05);
-            color: #94a3b8;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .tab-btn:hover {
-            background: rgba(255,255,255,0.1);
-            transform: translateY(-2px);
-        }
-
-        .tab-btn.active {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border-color: transparent;
-        }
-
-        .tab-btn.kegel.active {
-            background: linear-gradient(135deg, var(--kegel), var(--kegel-dark));
-        }
-
-        /* PANEL SİSTEMİ - TEMEL */
-        .panels {
+            padding: 40px 0;
             position: relative;
         }
 
-        .panel {
-            display: none;
-            animation: fadeIn 0.3s;
+        header h1 {
+            font-size: clamp(2em, 5vw, 3.5em);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(102,126,234,0.3);
+            animation: gradient-shift 5s ease infinite;
         }
 
-        .panel.active {
-            display: block;
+        @keyframes gradient-shift {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(10deg); }
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .subtitle {
+            font-size: clamp(1em, 2vw, 1.3em);
+            opacity: 0.8;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        /* DASHBOARD */
-        .dashboard {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 25px;
-            margin-top: 20px;
-        }
-
-        /* SIDEBAR */
-        .sidebar {
-            background: var(--card);
-            border-radius: 20px;
-            padding: 25px;
-            border: 1px solid rgba(102,126,234,0.2);
-            height: fit-content;
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
             position: sticky;
             top: 20px;
+            z-index: 50;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
         }
 
-        .avatar {
-            width: 100px;
-            height: 100px;
+        [data-theme="light"] .nav-tabs {
+            background: rgba(248, 250, 252, 0.8);
+        }
+
+        .nav-tab {
+            padding: 15px 30px;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid transparent;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            color: var(--text-secondary);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-tab:hover::before {
+            left: 100%;
+        }
+
+        .nav-tab:hover, .nav-tab:focus {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+            color: var(--text-primary);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+        }
+
+        .nav-tab.kegel-tab.active {
+            background: linear-gradient(135deg, var(--kegel) 0%, var(--kegel-dark) 100%);
+            box-shadow: 0 4px 15px rgba(236,72,153,0.4);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+            margin-top: 30px;
+            align-items: start;
+        }
+
+        .profile-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            position: sticky;
+            top: 100px;
+            height: auto;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        .profile-card:hover {
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .profile-image {
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            margin: 0 auto 15px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            margin: 0 auto 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5em;
+            font-size: 3em;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 4px solid var(--border-color);
+            transition: transform var(--transition-speed);
         }
 
-        .user-name {
+        .profile-image:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-image::after {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            background: var(--bg-secondary);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .profile-image span {
+            z-index: 2;
+        }
+
+        .profile-name {
             text-align: center;
-            font-size: 1.3em;
+            font-size: 1.5em;
             font-weight: bold;
             margin-bottom: 5px;
+            color: var(--text-primary);
         }
 
-        .user-status {
-            text-align: center;
-            color: #94a3b8;
-            font-size: 0.9em;
-            margin-bottom: 20px;
-        }
-
-        .stat-list {
+        .profile-stats {
+            margin-top: 25px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 15px;
         }
 
         .stat-item {
@@ -166,214 +447,491 @@
             border-radius: 12px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
             border-left: 3px solid var(--primary);
+            flex-shrink: 0;
+            transition: all var(--transition-speed);
         }
 
-        .stat-item.kegel {
+        .stat-item:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateX(5px);
+        }
+
+        .stat-item.kegel-stat {
             border-left-color: var(--kegel);
         }
 
         .stat-label {
-            font-size: 0.85em;
-            color: #94a3b8;
+            font-size: 0.9em;
+            opacity: 0.7;
+            color: var(--text-secondary);
         }
 
         .stat-value {
+            font-size: 1.2em;
             font-weight: bold;
             color: var(--primary);
         }
 
-        .stat-value.kegel {
+        .stat-value.kegel-value {
             color: var(--kegel);
         }
 
-        .btn {
-            width: 100%;
-            margin-top: 20px;
-            padding: 15px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: bold;
-        }
-
-        /* MAIN CONTENT */
-        .content {
+        .main-content {
             display: flex;
             flex-direction: column;
-            gap: 25px;
+            gap: 30px;
+            min-height: 0;
         }
 
-        .card {
-            background: var(--card);
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .tab-content.active {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ai-analysis {
+            background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
+            border: 1px solid rgba(102,126,234,0.3);
             border-radius: 20px;
-            padding: 25px;
-            border: 1px solid rgba(102,126,234,0.2);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .card.kegel {
-            border-color: rgba(236,72,153,0.2);
+        .ai-analysis.kegel-theme {
+            background: linear-gradient(135deg, rgba(236,72,153,0.1) 0%, rgba(190,24,93,0.1) 100%);
+            border-color: rgba(236,72,153,0.3);
         }
 
-        .card-header {
+        .analysis-header {
             display: flex;
             align-items: center;
             gap: 15px;
             margin-bottom: 20px;
-        }
-
-        .badge {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.75em;
-            font-weight: bold;
-        }
-
-        .badge.kegel {
-            background: linear-gradient(135deg, var(--kegel), var(--kegel-dark));
-        }
-
-        /* EGZERSIZ KARTLARI */
-        .exercise-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .ex-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .ex-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-        }
-
-        .ex-card.kegel:hover {
-            border-color: var(--kegel);
-        }
-
-        .ex-icon {
-            height: 160px;
-            background: linear-gradient(135deg, rgba(102,126,234,0.2), rgba(118,75,162,0.2));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4em;
-        }
-
-        .ex-icon.kegel {
-            background: linear-gradient(135deg, rgba(236,72,153,0.2), rgba(190,24,93,0.2));
-        }
-
-        .ex-info {
-            padding: 20px;
-        }
-
-        .ex-tag {
-            display: inline-block;
-            background: rgba(102,126,234,0.2);
-            color: var(--primary);
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 0.8em;
-            margin-bottom: 10px;
-        }
-
-        .ex-tag.kegel {
-            background: rgba(236,72,153,0.2);
-            color: var(--kegel);
-        }
-
-        .ex-title {
-            font-size: 1.2em;
-            margin-bottom: 10px;
-        }
-
-        .ex-meta {
-            display: flex;
-            gap: 15px;
-            font-size: 0.85em;
-            color: #94a3b8;
-        }
-
-        /* ZAMANLAYICI */
-        .timer-box {
-            text-align: center;
-            padding: 40px;
-        }
-
-        .timer-display {
-            font-size: 6em;
-            font-weight: bold;
-            color: var(--kegel);
-            font-family: monospace;
-            margin: 20px 0;
-            text-shadow: 0 0 30px rgba(236,72,153,0.5);
-        }
-
-        .phases {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 20px 0;
+            position: relative;
+            z-index: 1;
             flex-wrap: wrap;
         }
 
-        .phase {
-            padding: 10px 20px;
-            background: rgba(255,255,255,0.05);
+        .ai-badge {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 5px 15px;
             border-radius: 20px;
-            opacity: 0.5;
-            transition: all 0.3s;
+            font-size: 0.8em;
+            font-weight: bold;
+            animation: glow 2s infinite;
+            flex-shrink: 0;
         }
 
-        .phase.active {
-            background: rgba(236,72,153,0.3);
-            color: var(--kegel);
+        .ai-badge.kegel-badge {
+            background: linear-gradient(135deg, var(--kegel) 0%, var(--kegel-dark) 100%);
+            animation: glow-kegel 2s infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(102,126,234,0.5); }
+            50% { box-shadow: 0 0 20px rgba(102,126,234,0.8); }
+        }
+
+        @keyframes glow-kegel {
+            0%, 100% { box-shadow: 0 0 10px rgba(236,72,153,0.5); }
+            50% { box-shadow: 0 0 20px rgba(236,72,153,0.8); }
+        }
+
+        .prediction-box {
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .prediction-chart {
+            height: 200px;
+            position: relative;
+        }
+
+        .body-model-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            transition: all var(--transition-speed);
+        }
+
+        .body-model-container:hover {
+            border-color: var(--primary);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .model-3d {
+            width: 100%;
+            height: 400px;
+            background: radial-gradient(circle at center, rgba(102,126,234,0.1) 0%, transparent 70%);
+            border-radius: 15px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .pelvic-model {
+            background: radial-gradient(circle at center, rgba(236,72,153,0.1) 0%, transparent 70%);
+        }
+
+        .skeleton-svg {
+            width: 200px;
+            height: 400px;
+            filter: drop-shadow(0 0 20px rgba(102,126,234,0.5));
+            flex-shrink: 0;
+        }
+
+        .pelvic-svg {
+            width: 300px;
+            height: 300px;
+            filter: drop-shadow(0 0 20px rgba(236,72,153,0.5));
+        }
+
+        .bone {
+            fill: none;
+            stroke: #64748b;
+            stroke-width: 3;
+            stroke-linecap: round;
+            transition: all var(--transition-speed);
+        }
+
+        .bone.active {
+            stroke: var(--primary);
+            filter: drop-shadow(0 0 10px var(--primary));
+            animation: bonePulse 2s infinite;
+        }
+
+        .pelvic-muscle {
+            fill: none;
+            stroke: #be185d;
+            stroke-width: 4;
+            stroke-linecap: round;
+            opacity: 0.3;
+            transition: all 0.5s;
+        }
+
+        .pelvic-muscle.active {
             opacity: 1;
-            border: 1px solid var(--kegel);
+            stroke: var(--kegel);
+            filter: drop-shadow(0 0 15px var(--kegel));
+            animation: musclePulse 2s infinite;
+        }
+
+        @keyframes bonePulse {
+            0%, 100% { stroke-width: 3; }
+            50% { stroke-width: 5; }
+        }
+
+        @keyframes musclePulse {
+            0%, 100% { stroke-width: 4; opacity: 0.8; }
+            50% { stroke-width: 6; opacity: 1; }
+        }
+
+        .muscle-group {
+            position: absolute;
+            background: rgba(102,126,234,0.9);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            opacity: 0;
+            transform: translateY(10px);
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        .muscle-group.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .kegel-timer-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(236,72,153,0.3);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kegel-timer-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(236,72,153,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .timer-display {
+            font-size: clamp(3em, 8vw, 5em);
+            font-weight: bold;
+            color: var(--kegel);
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 30px rgba(236,72,153,0.5);
+            position: relative;
+            z-index: 1;
         }
 
         .timer-controls {
             display: flex;
             gap: 15px;
             justify-content: center;
-            margin-top: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
         }
 
-        .timer-btn {
-            padding: 15px 30px;
-            border-radius: 25px;
-            border: none;
+        .phase-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .phase {
+            padding: 10px 20px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.05);
+            opacity: 0.5;
+            transition: all var(--transition-speed);
+            border: 2px solid transparent;
+        }
+
+        .phase.active {
+            background: rgba(236,72,153,0.3);
+            opacity: 1;
+            border-color: var(--kegel);
+            transform: scale(1.05);
+        }
+
+        .technique-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid var(--kegel);
+            text-align: left;
+            transition: all var(--transition-speed);
+        }
+
+        .technique-card:hover {
+            transform: translateX(5px);
+            background: rgba(255,255,255,0.08);
+        }
+
+        .technique-card h4 {
+            color: var(--kegel);
+            margin-bottom: 10px;
+        }
+
+        .progress-ring {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-ring svg {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-circle {
+            fill: none;
+            stroke: rgba(255,255,255,0.1);
+            stroke-width: 10;
+        }
+
+        .progress-ring-progress {
+            fill: none;
+            stroke: var(--kegel);
+            stroke-width: 10;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.35s;
+            stroke-dasharray: 565.48;
+            stroke-dashoffset: 565.48;
+        }
+
+        .exercises-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .exercises-section.kegel-section {
+            border-color: rgba(236,72,153,0.2);
+        }
+
+        .ai-recommendation {
+            background: linear-gradient(135deg, rgba(16,185,129,0.2) 0%, rgba(5,150,105,0.2) 100%);
+            border: 1px solid var(--success);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all var(--transition-speed);
+        }
+
+        .ai-recommendation:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(16,185,129,0.2);
+        }
+
+        .ai-recommendation.kegel-rec {
+            background: linear-gradient(135deg, rgba(236,72,153,0.2) 0%, rgba(190,24,93,0.2) 100%);
+            border-color: var(--kegel);
+        }
+
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .exercise-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all var(--transition-speed);
+            position: relative;
             cursor: pointer;
-            font-size: 1em;
+        }
+
+        .exercise-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 40px rgba(102,126,234,0.2);
+        }
+
+        .exercise-card.kegel-card:hover {
+            border-color: var(--kegel);
+            box-shadow: 0 10px 40px rgba(236,72,153,0.2);
+        }
+
+        .exercise-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+            transition: transform var(--transition-speed);
+        }
+
+        .exercise-card:hover .exercise-image {
+            transform: scale(1.05);
+        }
+
+        .difficulty-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
             font-weight: bold;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .timer-btn.start {
-            background: linear-gradient(135deg, var(--kegel), var(--kegel-dark));
-            color: white;
+        .difficulty-badge.easy { background: rgba(16,185,129,0.9); color: white; }
+        .difficulty-badge.medium { background: rgba(245,158,11,0.9); color: white; }
+        .difficulty-badge.hard { background: rgba(239,68,68,0.9); color: white; }
+
+        .exercise-content {
+            padding: 25px;
         }
 
-        .timer-btn.stop {
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.2);
+        .ai-match {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(102,126,234,0.2);
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin-bottom: 15px;
+            font-weight: 600;
         }
 
-        /* MODAL */
+        .ai-match.kegel-match {
+            background: rgba(236,72,153,0.2);
+            color: var(--kegel);
+        }
+
+        .exercise-title {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .exercise-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            opacity: 0.8;
+            flex-wrap: wrap;
+            color: var(--text-secondary);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -381,188 +939,244 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             padding: 20px;
+            overflow-y: auto;
+            opacity: 0;
+            transition: opacity var(--transition-speed);
         }
 
-        .modal.show {
+        .modal.active {
             display: flex;
+            opacity: 1;
         }
 
         .modal-content {
-            background: var(--card);
-            border-radius: 20px;
-            max-width: 600px;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+            border-radius: 25px;
+            max-width: 900px;
             width: 100%;
-            max-height: 90vh;
+            margin: 20px auto;
+            max-height: calc(100vh - 40px);
             overflow-y: auto;
             border: 1px solid rgba(102,126,234,0.3);
+            position: relative;
+            transform: scale(0.9);
+            transition: transform var(--transition-speed);
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-content.kegel-modal {
+            border-color: rgba(236,72,153,0.3);
         }
 
         .modal-header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            padding: 25px;
-            border-radius: 20px 20px 0 0;
-            position: relative;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 30px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
-        .modal-header.kegel {
-            background: linear-gradient(135deg, var(--kegel), var(--kegel-dark));
+        .modal-header.kegel-header {
+            background: linear-gradient(135deg, var(--kegel) 0%, var(--kegel-dark) 100%);
         }
 
-        .modal-close {
+        .close-btn {
             position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 2em;
-            color: white;
+            top: 20px;
+            right: 25px;
+            font-size: 2.5em;
             cursor: pointer;
+            color: white;
+            opacity: 0.8;
+            transition: opacity var(--transition-speed), transform var(--transition-speed);
+            z-index: 11;
+            line-height: 1;
+            background: none;
+            border: none;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
         }
 
-        .modal-body {
-            padding: 25px;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
+        .close-btn:hover, .close-btn:focus {
+            opacity: 1;
+            transform: rotate(90deg);
+            background: rgba(255,255,255,0.1);
         }
 
         .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
-            font-size: 0.85em;
-            color: #94a3b8;
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            font-weight: 500;
         }
 
-        .form-group input,
-        .form-group select {
-            padding: 12px;
+        .form-group input, .form-group select {
+            width: 100%;
             background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 2px solid transparent;
+            padding: 12px 20px;
             border-radius: 10px;
-            color: white;
+            color: var(--text-primary);
             font-size: 1em;
+            outline: none;
+            transition: all var(--transition-speed);
         }
 
-        /* CHAT */
-        .chat-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--primary);
+            background: rgba(255,255,255,0.15);
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
             border: none;
-            font-size: 1.5em;
+            padding: 15px 40px;
+            border-radius: 30px;
             cursor: pointer;
-            box-shadow: 0 5px 20px rgba(102,126,234,0.4);
-            z-index: 999;
-        }
-
-        .chat-box {
-            display: none;
-            position: fixed;
-            bottom: 100px;
-            right: 30px;
-            width: 350px;
-            height: 450px;
-            background: var(--card);
-            border-radius: 20px;
-            border: 1px solid rgba(102,126,234,0.3);
-            flex-direction: column;
-            z-index: 998;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all var(--transition-speed);
+            box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
             overflow: hidden;
         }
 
-        .chat-box.show {
-            display: flex;
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
         }
 
-        .chat-header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            padding: 20px;
-            color: white;
+        .btn:hover::before {
+            left: 100%;
         }
 
-        .chat-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        .btn:hover, .btn:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102,126,234,0.6);
         }
 
-        .msg {
-            max-width: 80%;
-            padding: 12px 15px;
-            border-radius: 15px;
-            font-size: 0.9em;
+        .btn:active {
+            transform: translateY(0);
         }
 
-        .msg.ai {
-            background: rgba(102,126,234,0.2);
-            align-self: flex-start;
-        }
-
-        .msg.user {
-            background: rgba(16,185,129,0.2);
-            align-self: flex-end;
-        }
-
-        .chat-input {
-            padding: 15px;
-            display: flex;
-            gap: 10px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .chat-input input {
-            flex: 1;
-            padding: 12px;
+        .btn-secondary {
             background: rgba(255,255,255,0.1);
-            border: none;
-            border-radius: 20px;
-            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: none;
         }
 
-        .chat-input button {
-            padding: 12px 20px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
-        /* NOTIFICATION */
-        .notif {
+        .btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            box-shadow: 0 4px 15px rgba(16,185,129,0.4);
+        }
+
+        .btn-kegel {
+            background: linear-gradient(135deg, var(--kegel) 0%, var(--kegel-dark) 100%);
+            box-shadow: 0 4px 15px rgba(236,72,153,0.4);
+        }
+
+        .btn-kegel:hover, .btn-kegel:focus {
+            box-shadow: 0 6px 20px rgba(236,72,153,0.6);
+        }
+
+        .notification-container {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: linear-gradient(135deg, var(--success), #059669);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            display: none;
-            z-index: 2000;
-            animation: slideIn 0.3s;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 400px;
+            pointer-events: none;
         }
 
-        .notif.kegel {
-            background: linear-gradient(135deg, var(--kegel), var(--kegel-dark));
+        .notification {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease-out;
+            font-weight: bold;
+            word-wrap: break-word;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notification.kegel-notif {
+            background: linear-gradient(135deg, var(--kegel) 0%, var(--kegel-dark) 100%);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+        }
+
+        .notification.warning {
+            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
+        }
+
+        .notification-close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: none;
+            border: none;
+            color: white;
+            opacity: 0.6;
+            cursor: pointer;
+            font-size: 1.2em;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all var(--transition-speed);
+        }
+
+        .notification-close:hover {
+            opacity: 1;
+            background: rgba(255,255,255,0.2);
         }
 
         @keyframes slideIn {
@@ -570,683 +1184,1353 @@
             to { transform: translateX(0); opacity: 1; }
         }
 
-        /* RESPONSIVE */
+        @keyframes slideOut {
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        .notification.hiding {
+            animation: slideOut 0.3s ease-out forwards;
+        }
+
+        .progress-tracker {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all var(--transition-speed);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary);
+            background: rgba(255,255,255,0.08);
+        }
+
+        .stat-card.kegel-card:hover {
+            border-color: var(--kegel);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-number.kegel-number {
+            color: var(--kegel);
+        }
+
+        .stat-label-small {
+            font-size: 0.9em;
+            opacity: 0.7;
+            color: var(--text-secondary);
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 5000;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border: 4px solid rgba(102,126,234,0.3);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.2em;
+            color: var(--text-secondary);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .tooltip {
+            position: fixed;
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            pointer-events: none;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity var(--transition-speed);
+            max-width: 250px;
+            line-height: 1.4;
+        }
+
+        .tooltip.visible {
+            opacity: 1;
+        }
+
         @media (max-width: 1024px) {
             .dashboard {
                 grid-template-columns: 1fr;
             }
-            .sidebar {
+
+            .profile-card {
                 position: static;
+                max-height: none;
             }
         }
 
         @media (max-width: 768px) {
-            h1 { font-size: 2em; }
-            .tabs { flex-direction: column; align-items: center; }
-            .tab-btn { width: 80%; }
-            .form-grid { grid-template-columns: 1fr; }
-            .timer-display { font-size: 4em; }
+            .container {
+                padding: 10px;
+                padding-top: 70px;
+            }
+
+            .nav-tabs {
+                position: static;
+                border-radius: 20px;
+                padding: 10px;
+            }
+
+            .nav-tab {
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+
+            .ai-chat {
+                width: calc(100% - 40px);
+                right: 20px;
+                left: 20px;
+                height: calc(100vh - 140px);
+            }
+
+            .ai-orb {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5em;
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .exercise-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .model-3d {
+                height: 300px;
+            }
+
+            .skeleton-svg {
+                width: 150px;
+                height: 300px;
+            }
         }
 
-        .hidden {
-            display: none !important;
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .slide-up {
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .pulse-animation {
+            animation: pulse-scale 2s infinite;
+        }
+
+        @keyframes pulse-scale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .kegel-gradient-text {
+            background: linear-gradient(135deg, var(--kegel) 0%, var(--kegel-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
     </style>
+<base target="_blank">
 </head>
 <body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Yükleniyor...</div>
+    </div>
 
-    <!-- Chat -->
-    <button class="chat-btn" onclick="toggleChat()">🤖</button>
-    <div class="chat-box" id="chatBox">
-        <div class="chat-header">HeightAI Asistan</div>
+    <div class="tooltip" id="tooltip"></div>
+
+    <button class="theme-toggle" id="themeToggle" aria-label="Tema Değiştir">🌙</button>
+
+    <div class="ai-orb" id="aiOrb" role="button" tabindex="0" aria-label="AI Asistan">🤖</div>
+
+    <div class="ai-chat" id="aiChat" role="dialog" aria-label="AI Sohbet">
+        <div class="chat-header">
+            <span style="font-size: 2em;">🤖</span>
+            <div>
+                <div style="font-weight: bold;">HeightAI Pro Asistan</div>
+                <div style="font-size: 0.8em; opacity: 0.8;">Çevrimiçi</div>
+            </div>
+        </div>
         <div class="chat-messages" id="chatMessages">
-            <div class="msg ai">Merhaba! Size nasıl yardımcı olabilirim?</div>
+            <div class="message ai">
+                Merhaba! Ben HeightAI Pro asistanınızım. Boy uzatma ve pelvik sağlık konularında size yardımcı olabilirim. Size nasıl yardımcı olabilirim?
+            </div>
         </div>
         <div class="chat-input">
-            <input type="text" id="chatInput" placeholder="Mesaj yaz..." onkeypress="if(event.key==='Enter')sendMsg()">
-            <button onclick="sendMsg()">Gönder</button>
+            <input type="text" id="chatInput" placeholder="Mesajınızı yazın..." aria-label="Mesaj">
+            <button id="sendBtn" aria-label="Gönder">Gönder</button>
         </div>
     </div>
 
-    <!-- Notification -->
-    <div class="notif" id="notif"></div>
-
-    <!-- Profile Modal -->
-    <div class="modal" id="modalProfile">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-close" onclick="closeModal('modalProfile')">&times;</span>
-                <h2>Profil Ayarları</h2>
-            </div>
-            <div class="modal-body">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Ad Soyad</label>
-                        <input type="text" id="inpName">
-                    </div>
-                    <div class="form-group">
-                        <label>Yaş</label>
-                        <input type="number" id="inpAge" onchange="calcPot()">
-                    </div>
-                    <div class="form-group">
-                        <label>Cinsiyet</label>
-                        <select id="inpGender" onchange="calcPot()">
-                            <option value="male">Erkek</option>
-                            <option value="female">Kadın</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Boy (cm)</label>
-                        <input type="number" id="inpHeight" step="0.1" onchange="calcPot()">
-                    </div>
-                    <div class="form-group">
-                        <label>Anne Boyu</label>
-                        <input type="number" id="inpMother" onchange="calcPot()">
-                    </div>
-                    <div class="form-group">
-                        <label>Baba Boyu</label>
-                        <input type="number" id="inpFather" onchange="calcPot()">
-                    </div>
-                </div>
-                <div id="potResult" style="background: rgba(102,126,234,0.1); padding: 15px; border-radius: 10px; margin-bottom: 20px; color: #94a3b8;">
-                    Bilgilerinizi girin...
-                </div>
-                <button class="btn" onclick="saveUser()">Kaydet</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Exercise Modal -->
-    <div class="modal" id="modalEx">
-        <div class="modal-content" id="modalExContent">
-            <div class="modal-header" id="modalExHeader">
-                <span class="modal-close" onclick="closeModal('modalEx')">&times;</span>
-                <h2 id="modalExTitle">Egzersiz</h2>
-            </div>
-            <div class="modal-body" id="modalExBody">
-                <!-- Dynamic content -->
-            </div>
-        </div>
-    </div>
+    <div class="notification-container" id="notificationContainer"></div>
 
     <div class="container">
         <header>
-            <h1>HeightAI Pro</h1>
-            <p class="subtitle">Boy Uzatma & Pelvik Sağlık Platformu</p>
+            <h1>HeightAI Pro + Pelvik Sağlık</h1>
+            <p class="subtitle">Yapay Zeka Destekli Kişiselleştirilmiş Boy Uzatma ve Pelvik Sağlık Platformu</p>
         </header>
 
-        <!-- SEKMELER -->
-        <div class="tabs">
-            <button class="tab-btn active" onclick="setTab('height')">📏 Boy Uzatma</button>
-            <button class="tab-btn kegel" onclick="setTab('kegel')">🎯 Pelvik Sağlık</button>
+        <nav class="nav-tabs" role="tablist">
+            <button class="nav-tab active" data-tab="height" role="tab" aria-selected="true">
+                <span>📏</span> Boy Uzatma
+            </button>
+            <button class="nav-tab kegel-tab" data-tab="kegel" role="tab" aria-selected="false">
+                <span>💪</span> Pelvik Sağlık
+            </button>
+            <button class="nav-tab" data-tab="progress" role="tab" aria-selected="false">
+                <span>📊</span> İlerleme
+            </button>
+            <button class="nav-tab" data-tab="profile" role="tab" aria-selected="false">
+                <span>👤</span> Profil
+            </button>
+        </nav>
+
+        <div class="dashboard">
+            <aside class="profile-card">
+                <div class="profile-image">
+                    <span>👤</span>
+                </div>
+                <div class="profile-name" id="profileName">Kullanıcı</div>
+                <div style="text-align: center; color: var(--text-secondary); font-size: 0.9em;" id="profileAge">-- yaş</div>
+
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Mevcut Boy</span>
+                        <span class="stat-value" id="currentHeight">-- cm</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Hedef Boy</span>
+                        <span class="stat-value" id="targetHeight">-- cm</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Program Günü</span>
+                        <span class="stat-value" id="programDay">1</span>
+                    </div>
+                    <div class="stat-item kegel-stat">
+                        <span class="stat-label">Kegel Seviyesi</span>
+                        <span class="stat-value kegel-value" id="kegelLevel">Başlangıç</span>
+                    </div>
+                    <div class="stat-item kegel-stat">
+                        <span class="stat-label">Toplam Kegel</span>
+                        <span class="stat-value kegel-value" id="totalKegels">0</span>
+                    </div>
+                </div>
+
+                <button class="btn" style="width: 100%; margin-top: 20px;" onclick="openProfileModal()">
+                    <span>✏️</span> Profili Düzenle
+                </button>
+            </aside>
+
+            <main class="main-content">
+                <!-- Boy Uzatma Sekmesi -->
+                <div class="tab-content active" id="heightTab" role="tabpanel">
+                    <div class="ai-analysis">
+                        <div class="analysis-header">
+                            <span style="font-size: 2.5em;">🧠</span>
+                            <div>
+                                <div class="ai-badge">AI ANALİZ</div>
+                                <h2 style="margin-top: 5px;">Boy Uzama Potansiyeli</h2>
+                            </div>
+                        </div>
+                        <p id="aiAnalysisText" style="line-height: 1.6; opacity: 0.9;">
+                            Profil bilgilerinizi girerek kişiselleştirilmiş AI analizinizi görüntüleyin.
+                        </p>
+                        <div class="prediction-box">
+                            <h3 style="margin-bottom: 15px;">📈 Büyüme Tahmini</h3>
+                            <div class="prediction-chart">
+                                <canvas id="growthChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="body-model-container">
+                        <div class="section-header">
+                            <h3>🦴 İskelet Sistemi Görselleştirme</h3>
+                            <span class="ai-badge">Etkileşimli</span>
+                        </div>
+                        <div class="model-3d">
+                            <svg class="skeleton-svg" viewBox="0 0 200 400" id="skeletonSvg">
+                                <!-- Kafatası -->
+                                <ellipse class="bone skull" cx="100" cy="40" rx="25" ry="30" />
+                                <!-- Omurga -->
+                                <line class="bone spine" x1="100" y1="70" x2="100" y2="200" />
+                                <!-- Kaburga kafesi -->
+                                <path class="bone ribs" d="M75 90 Q100 85 125 90 M75 105 Q100 100 125 105 M75 120 Q100 115 125 120" />
+                                <!-- Omuzlar -->
+                                <line class="bone shoulder-left" x1="100" y1="75" x2="50" y2="90" />
+                                <line class="bone shoulder-right" x1="100" y1="75" x2="150" y2="90" />
+                                <!-- Kollar -->
+                                <line class="bone arm-left" x1="50" y1="90" x2="30" y2="150" />
+                                <line class="bone arm-right" x1="150" y1="90" x2="170" y2="150" />
+                                <!-- Önkollar -->
+                                <line class="bone forearm-left" x1="30" y1="150" x2="25" y2="200" />
+                                <line class="bone forearm-right" x1="170" y1="150" x2="175" y2="200" />
+                                <!-- Kalça -->
+                                <path class="bone pelvis" d="M70 200 Q100 190 130 200 L130 220 Q100 230 70 220 Z" />
+                                <!-- Bacaklar -->
+                                <line class="bone leg-left" x1="85" y1="220" x2="75" y2="300" />
+                                <line class="bone leg-right" x1="115" y1="220" x2="125" y2="300" />
+                                <!-- Kaval kemikleri -->
+                                <line class="bone shin-left" x1="75" y1="300" x2="70" y2="380" />
+                                <line class="bone shin-right" x1="125" y1="300" x2="130" y2="380" />
+                            </svg>
+
+                            <div class="muscle-group" id="spineTooltip" style="top: 20%; left: 60%;">
+                                Omurga: Uzama bölgesi
+                            </div>
+                            <div class="muscle-group" id="legTooltip" style="top: 70%; left: 70%;">
+                                Uyluk: Ana uzama noktası
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="exercises-section">
+                        <div class="ai-recommendation">
+                            <span style="font-size: 2em;">🎯</span>
+                            <div>
+                                <h3>AI Önerisi</h3>
+                                <p id="aiRecommendationText">Profilinizi tamamlayarak size özel egzersiz önerileri alın.</p>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-bottom: 20px;">🎯 Önerilen Egzersizler</h3>
+                        <div class="exercise-grid" id="exerciseGrid">
+                            <!-- Egzersiz kartları JavaScript ile doldurulacak -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pelvik Sağlık Sekmesi -->
+                <div class="tab-content" id="kegelTab" role="tabpanel">
+                    <div class="ai-analysis kegel-theme">
+                        <div class="analysis-header">
+                            <span style="font-size: 2.5em;">🧠</span>
+                            <div>
+                                <div class="ai-badge kegel-badge">PELVIK AI</div>
+                                <h2 style="margin-top: 5px;">Pelvik Taban Analizi</h2>
+                            </div>
+                        </div>
+                        <p id="kegelAnalysisText" style="line-height: 1.6; opacity: 0.9;">
+                            Kegel egzersizleri pelvik taban kaslarını güçlendirir. AI destekli programımız ile optimal sonuçlar elde edin.
+                        </p>
+                    </div>
+
+                    <div class="kegel-timer-container">
+                        <h3 style="position: relative; z-index: 1;">⏱️ Kegel Egzersiz Zamanlayıcı</h3>
+
+                        <div class="progress-ring">
+                            <svg width="200" height="200">
+                                <circle class="progress-ring-circle" cx="100" cy="100" r="90"/>
+                                <circle class="progress-ring-progress" id="progressCircle" cx="100" cy="100" r="90"/>
+                            </svg>
+                        </div>
+
+                        <div class="timer-display" id="timerDisplay">00:00</div>
+
+                        <div class="phase-indicator">
+                            <div class="phase active" id="contractPhase">Kasılma</div>
+                            <div class="phase" id="relaxPhase">Rahatlama</div>
+                            <div class="phase" id="restPhase">Dinlenme</div>
+                        </div>
+
+                        <div class="timer-controls">
+                            <button class="btn btn-kegel" id="startTimerBtn">▶️ Başlat</button>
+                            <button class="btn btn-secondary" id="pauseTimerBtn">⏸️ Duraklat</button>
+                            <button class="btn btn-secondary" id="resetTimerBtn">🔄 Sıfırla</button>
+                        </div>
+
+                        <div style="margin-top: 20px; position: relative; z-index: 1;">
+                            <label style="display: block; margin-bottom: 10px; color: var(--text-secondary);">Seviye Seçimi:</label>
+                            <select id="kegelLevelSelect" style="padding: 10px 20px; border-radius: 25px; border: 2px solid var(--kegel); background: rgba(255,255,255,0.1); color: var(--text-primary); font-size: 1em; cursor: pointer;">
+                                <option value="beginner">Başlangıç (3sn kasılma / 3sn rahatlama)</option>
+                                <option value="intermediate">Orta (5sn kasılma / 5sn rahatlama)</option>
+                                <option value="advanced">İleri (10sn kasılma / 10sn rahatlama)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="body-model-container">
+                        <div class="section-header">
+                            <h3>🎯 Pelvik Taban Kasları</h3>
+                            <span class="ai-badge kegel-badge">Eğitim</span>
+                        </div>
+                        <div class="model-3d pelvic-model">
+                            <svg class="pelvic-svg" viewBox="0 0 300 300" id="pelvicSvg">
+                                <!-- Pelvik kemik yapısı -->
+                                <path class="bone" d="M100 150 Q150 120 200 150 L200 200 Q150 220 100 200 Z" style="stroke: #64748b; fill: none; stroke-width: 3;" />
+                                <!-- Pubik kemik -->
+                                <line class="bone" x1="100" y1="150" x2="200" y2="150" style="stroke: #64748b; stroke-width: 3;" />
+                                <!-- Pelvik taban kasları -->
+                                <path class="pelvic-muscle" id="muscle1" d="M110 160 Q150 170 190 160" />
+                                <path class="pelvic-muscle" id="muscle2" d="M115 175 Q150 185 185 175" />
+                                <path class="pelvic-muscle" id="muscle3" d="M120 190 Q150 200 180 190" />
+                            </svg>
+                        </div>
+                        <div style="text-align: center; margin-top: 15px; color: var(--text-secondary);">
+                            <p>Kaslar aktif olduğunda pembe renkte parlayacaktır</p>
+                        </div>
+                    </div>
+
+                    <div class="exercises-section kegel-section">
+                        <div class="ai-recommendation kegel-rec">
+                            <span style="font-size: 2em;">💡</span>
+                            <div>
+                                <h3>Pelvik Sağlık İpuçları</h3>
+                                <p>Düzenli Kegel egzersizleri idrar kaçırma, s prolapsus ve cinsel fonksiyon bozukluklarına karşı koruma sağlar.</p>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-bottom: 20px;">🎯 Kegel Egzersiz Teknikleri</h3>
+
+                        <div class="technique-card">
+                            <h4>🌬️ Nefes Tekniği</h4>
+                            <p>Kasılma sırasında nefesinizi tutmayın. Rahat ve derin nefes almaya devam edin. Karın kaslarınızı değil, pelvik taban kaslarınızı kullanın.</p>
+                        </div>
+
+                        <div class="technique-card">
+                            <h4>🎯 Doğru Pozisyon</h4>
+                            <p>Başlangıçta yatarak veya oturarak yapabilirsiniz. Ayaklarınız yerde, sırtınız düz olsun. İlerleyen seviyelerde ayakta da yapabilirsiniz.</p>
+                        </div>
+
+                        <div class="technique-card">
+                            <h4>⚡ İlerleme Takibi</h4>
+                            <p>Her gün 3 set x 10 tekrar hedefleyin. Haftada 3-4 kez yapın. Kaslarınız güçlendikçe süreyi artırın.</p>
+                        </div>
+
+                        <div class="exercise-grid" id="kegelExerciseGrid" style="margin-top: 30px;">
+                            <!-- Kegel egzersiz kartları JavaScript ile doldurulacak -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- İlerleme Sekmesi -->
+                <div class="tab-content" id="progressTab" role="tabpanel">
+                    <div class="progress-tracker">
+                        <div class="progress-header">
+                            <h2>📊 İlerleme Grafiği</h2>
+                            <select id="progressPeriod" style="padding: 10px 20px; border-radius: 20px; border: 2px solid var(--primary); background: rgba(255,255,255,0.1); color: var(--text-primary);">
+                                <option value="week">Son 1 Hafta</option>
+                                <option value="month">Son 1 Ay</option>
+                                <option value="3months">Son 3 Ay</option>
+                            </select>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="progressChart"></canvas>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-number" id="totalWorkouts">0</div>
+                                <div class="stat-label-small">Toplam Antrenman</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="totalMinutes">0</div>
+                                <div class="stat-label-small">Toplam Dakika</div>
+                            </div>
+                            <div class="stat-card kegel-card">
+                                <div class="stat-number kegel-number" id="kegelStreak">0</div>
+                                <div class="stat-label-small">Kegel Serisi (Gün)</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="heightProgress">0</div>
+                                <div class="stat-label-small">Boy Uzaması (cm)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profil Sekmesi -->
+                <div class="tab-content" id="profileTab" role="tabpanel">
+                    <div class="ai-analysis">
+                        <div class="analysis-header">
+                            <span style="font-size: 2.5em;">👤</span>
+                            <div>
+                                <h2>Kullanıcı Profili</h2>
+                                <p style="opacity: 0.8;">Bilgilerinizi güncelleyerek daha iyi sonuçlar alın</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--card-bg); padding: 30px; border-radius: 20px; border: 1px solid var(--border-color);">
+                        <form id="profileForm" onsubmit="saveProfile(event)">
+                            <div class="form-group">
+                                <label>Ad Soyad</label>
+                                <input type="text" id="userName" placeholder="Adınızı girin" required>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                <div class="form-group">
+                                    <label>Yaş</label>
+                                    <input type="number" id="userAge" placeholder="Yaşınız" min="10" max="100" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Cinsiyet</label>
+                                    <select id="userGender" required>
+                                        <option value="">Seçin</option>
+                                        <option value="male">Erkek</option>
+                                        <option value="female">Kadın</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                <div class="form-group">
+                                    <label>Mevcut Boy (cm)</label>
+                                    <input type="number" id="userHeight" placeholder="Örn: 170" min="100" max="250" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Hedef Boy (cm)</label>
+                                    <input type="number" id="userTargetHeight" placeholder="Örn: 175" min="100" max="250" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Aktivite Seviyesi</label>
+                                <select id="activityLevel" required>
+                                    <option value="">Seçin</option>
+                                    <option value="sedentary">Hareketsiz (Masa başı iş)</option>
+                                    <option value="light">Hafif Aktif (Haftada 1-2 egzersiz)</option>
+                                    <option value="moderate">Orta Aktif (Haftada 3-4 egzersiz)</option>
+                                    <option value="active">Çok Aktif (Haftada 5+ egzersiz)</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn" style="width: 100%;">
+                                <span>💾</span> Kaydet
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </main>
         </div>
+    </div>
 
-        <!-- PANELS -->
-        <div class="panels">
-            
-            <!-- BOY UZATMA PANELİ -->
-            <div class="panel active" id="panel-height">
-                <div class="dashboard">
-                    <aside class="sidebar">
-                        <div class="avatar">👤</div>
-                        <div class="user-name" id="h-name">Misafir</div>
-                        <div class="user-status">Boy Uzatma Programı</div>
-                        <div class="stat-list">
-                            <div class="stat-item">
-                                <span class="stat-label">Mevcut</span>
-                                <span class="stat-value" id="h-current">-</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-label">Hedef</span>
-                                <span class="stat-value" id="h-target">-</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-label">Potansiyel</span>
-                                <span class="stat-value" style="color: var(--success)">+2-4cm</span>
-                            </div>
-                        </div>
-                        <button class="btn" onclick="openProfile()">Profili Düzenle</button>
-                    </aside>
-
-                    <main class="content">
-                        <!-- AI Analiz -->
-                        <div class="card">
-                            <div class="card-header">
-                                <span class="badge">AI ANALİZ</span>
-                                <h2>Boy Uzatma Tahmini</h2>
-                            </div>
-                            <p style="color: #94a3b8; margin-bottom: 20px;">AI algoritmamız 3-6 ay içinde 2-4 cm artış tahmin ediyor.</p>
-                            <div style="height: 250px;">
-                                <canvas id="chartHeight"></canvas>
-                            </div>
-                        </div>
-
-                        <!-- 3D Model -->
-                        <div class="card">
-                            <div class="card-header">
-                                <h2>🦴 İskelet Analizi</h2>
-                                <span class="badge">CANLI</span>
-                            </div>
-                            <div style="height: 300px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, rgba(102,126,234,0.1) 0%, transparent 70%); border-radius: 15px;">
-                                <svg width="180" height="320" viewBox="0 0 180 320">
-                                    <path d="M90 50 L90 200" stroke="#64748b" stroke-width="3" fill="none">
-                                        <animate attributeName="stroke" values="#64748b;#667eea;#64748b" dur="3s" repeatCount="indefinite"/>
-                                    </path>
-                                    <circle cx="90" cy="35" r="18" stroke="#64748b" stroke-width="3" fill="none"/>
-                                    <path d="M65 90 Q90 110 115 90" stroke="#64748b" stroke-width="2" fill="none"/>
-                                    <path d="M75 200 L70 300" stroke="#64748b" stroke-width="3" fill="none"/>
-                                    <path d="M105 200 L110 300" stroke="#64748b" stroke-width="3" fill="none"/>
-                                </svg>
-                            </div>
-                        </div>
-
-                        <!-- Egzersizler -->
-                        <div class="card">
-                            <div class="card-header">
-                                <h2>🎯 AI Önerileri</h2>
-                                <button class="btn" style="width: auto; padding: 10px 20px; margin: 0;" onclick="renderHeightEx()">🔄 Yenile</button>
-                            </div>
-                            <div style="background: rgba(16,185,129,0.1); border: 1px solid var(--success); padding: 15px; border-radius: 10px; margin-bottom: 20px; display: flex; gap: 10px; align-items: center;">
-                                <span style="font-size: 1.5em;">🧠</span>
-                                <div><strong>AI:</strong> Bugün omurga esnekliğine odaklanın.</div>
-                            </div>
-                            <div class="exercise-grid" id="grid-height">
-                                <!-- JS ile doldurulacak -->
-                            </div>
-                        </div>
-                    </main>
-                </div>
+    <!-- Egzersiz Modalı -->
+    <div class="modal" id="exerciseModal" role="dialog" aria-label="Egzersiz Detayı">
+        <div class="modal-content" id="modalContent">
+            <div class="modal-header">
+                <button class="close-btn" onclick="closeExerciseModal()" aria-label="Kapat">&times;</button>
+                <h2 id="modalTitle">Egzersiz Adı</h2>
+                <div class="exercise-meta" id="modalMeta" style="color: white; opacity: 0.9;"></div>
             </div>
-
-            <!-- PELVIK SAĞLIK PANELİ -->
-            <div class="panel" id="panel-kegel">
-                <div class="dashboard">
-                    <aside class="sidebar">
-                        <div class="avatar" style="background: linear-gradient(135deg, var(--kegel), var(--kegel-dark));">🎯</div>
-                        <div class="user-name" id="k-name">Misafir</div>
-                        <div class="user-status">Pelvik Sağlık Programı</div>
-                        <div class="stat-list">
-                            <div class="stat-item kegel">
-                                <span class="stat-label">Günlük Set</span>
-                                <span class="stat-value kegel" id="k-sets">0/3</span>
-                            </div>
-                            <div class="stat-item kegel">
-                                <span class="stat-label">Toplam Tekrar</span>
-                                <span class="stat-value kegel" id="k-reps">0</span>
-                            </div>
-                            <div class="stat-item kegel">
-                                <span class="stat-label">Seviye</span>
-                                <span class="stat-value kegel" id="k-level">Başlangıç</span>
-                            </div>
-                        </div>
-                        <button class="btn" style="background: linear-gradient(135deg, var(--kegel), var(--kegel-dark));" onclick="openProfile()">Profili Düzenle</button>
-                    </aside>
-
-                    <main class="content">
-                        <!-- Kegel Analiz -->
-                        <div class="card kegel">
-                            <div class="card-header">
-                                <span class="badge kegel">PELVIK SAĞLIK</span>
-                                <h2>Kegel Programı</h2>
-                            </div>
-                            <p style="color: #94a3b8; margin-bottom: 20px;">Harvard protokolüne dayanan egzersizler.</p>
-                            <div style="height: 250px;">
-                                <canvas id="chartKegel"></canvas>
-                            </div>
-                        </div>
-
-                        <!-- Zamanlayıcı -->
-                        <div class="card kegel">
-                            <h2 style="text-align: center; margin-bottom: 20px;">⏱️ Kegel Zamanlayıcı</h2>
-                            <div class="timer-box">
-                                <div class="timer-display" id="timer">00:00</div>
-                                <div class="phases">
-                                    <div class="phase active" id="ph-contract">Sık (3s)</div>
-                                    <div class="phase" id="ph-hold">Tut (5s)</div>
-                                    <div class="phase" id="ph-relax">Bırak (5s)</div>
-                                </div>
-                                <div class="timer-controls">
-                                    <button class="timer-btn start" onclick="startKegel()">▶️ Başlat</button>
-                                    <button class="timer-btn stop" onclick="stopKegel()">⏸️ Durdur</button>
-                                    <button class="timer-btn stop" onclick="resetKegel()">🔄 Sıfırla</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Kegel Egzersizleri -->
-                        <div class="card kegel">
-                            <div class="card-header">
-                                <h2>🎯 Kegel Egzersizleri</h2>
-                                <button class="btn" style="width: auto; padding: 10px 20px; margin: 0; background: linear-gradient(135deg, var(--kegel), var(--kegel-dark));" onclick="startKegel()">💪 Başlat</button>
-                            </div>
-                            <div style="background: rgba(236,72,153,0.1); border: 1px solid var(--kegel); padding: 15px; border-radius: 10px; margin-bottom: 20px; display: flex; gap: 10px; align-items: center;">
-                                <span style="font-size: 1.5em;">🧠</span>
-                                <div><strong>AI:</strong> Başlangıç: 3 set, 8-10 tekrar, 3sn tutma.</div>
-                            </div>
-                            <div class="exercise-grid" id="grid-kegel">
-                                <!-- JS ile doldurulacak -->
-                            </div>
-                        </div>
-
-                        <!-- Eğitim -->
-                        <div class="card kegel">
-                            <h2>📚 Eğitim</h2>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 20px;">
-                                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; border-left: 3px solid var(--kegel);">
-                                    <h4 style="color: var(--kegel); margin-bottom: 10px;">🔍 Doğru Kasları Bul</h4>
-                                    <ul style="list-style: none; font-size: 0.9em; line-height: 1.8; color: #94a3b8;">
-                                        <li>• İdrarı durdurmayı dene (test için)</li>
-                                        <li>• Gazı engelle gibi sık</li>
-                                        <li>• Karın kaslarını gevşek tut</li>
-                                    </ul>
-                                </div>
-                                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; border-left: 3px solid var(--kegel);">
-                                    <h4 style="color: var(--kegel); margin-bottom: 10px;">⚠️ Yaygın Hatalar</h4>
-                                    <ul style="list-style: none; font-size: 0.9em; line-height: 1.8; color: #94a3b8;">
-                                        <li>• Nefes tutma</li>
-                                        <li>• Karın/bacak sıkma</li>
-                                        <li>• Aşırı egzersiz</li>
-                                    </ul>
-                                </div>
-                                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; border-left: 3px solid var(--kegel);">
-                                    <h4 style="color: var(--kegel); margin-bottom: 10px;">💡 Faydalar</h4>
-                                    <ul style="list-style: none; font-size: 0.9em; line-height: 1.8; color: #94a3b8;">
-                                        <li>• İdrar kaçırma kontrolü</li>
-                                        <li>• Pelvik organ desteği</li>
-                                        <li>• Cinsel fonksiyon</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </main>
-                </div>
+            <div style="padding: 30px;">
+                <img id="modalImage" src="" alt="" style="width: 100%; height: 300px; object-fit: cover; border-radius: 15px; margin-bottom: 20px;">
+                <div id="modalDescription" style="line-height: 1.6; margin-bottom: 20px;"></div>
+                <div id="modalSteps" style="margin-bottom: 20px;"></div>
+                <button class="btn" style="width: 100%;" onclick="startExercise()">
+                    <span>▶️</span> Egzersizi Başlat
+                </button>
             </div>
-
         </div>
     </div>
 
     <script>
-        // ===== DATA =====
-        const user = JSON.parse(localStorage.getItem('huser')) || {};
-        
-        const heightExercises = [
-            {id: 1, name: 'Cobra Pro', diff: 'Orta', dur: 60, match: 95, target: 'Omurga', icon: '🧘'},
-            {id: 2, name: 'Bridge Plus', diff: 'Zor', dur: 45, match: 88, target: 'Dekompresyon', icon: '🌉'},
-            {id: 3, name: 'Hang Assist', diff: 'Zor', dur: 30, match: 92, target: 'Uzama', icon: '🪝'},
-            {id: 4, name: 'Posture Fix', diff: 'Kolay', dur: 120, match: 98, target: 'Duruş', icon: '🧍'}
+        // Global değişkenler
+        let currentUser = null;
+        let growthChartInstance = null;
+        let progressChartInstance = null;
+        let kegelTimer = null;
+        let kegelState = 'idle'; // idle, contract, relax, rest
+        let kegelCycle = 0;
+        let chatOpen = false;
+
+        // Egzersiz verileri
+        const exercises = [
+            {
+                id: 1,
+                title: "Barfiks (Pull-up)",
+                difficulty: "hard",
+                duration: "3 set x 8-12 tekrar",
+                calories: "50-80 kcal",
+                image: "https://images.unsplash.com/photo-1598971639058-211a74a96ae1?w=800",
+                description: "Barfiks, omurga dekompresyonu ve üst vücut güçlenmesi için en etkili egzersizlerden biridir.",
+                steps: ["Barı omuz genişliğinde tutun", "Vücudunuzu tamamen uzatın", "Çeneyi barın üzerine çıkarın", "Kontrollü şekilde inin"]
+            },
+            {
+                id: 2,
+                title: "Asmak (Hanging)",
+                difficulty: "easy",
+                duration: "3 set x 30-60 saniye",
+                calories: "20-30 kcal",
+                image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800",
+                description: "Omurga üzerindeki yerçekimi etkisini azaltarak disklerin genişlemesine yardımcı olur.",
+                steps: ["Barı omuz genişliğinde tutun", "Vücudunuzu tamamen gevşetin", "30-60 saniye boyunca asılın", "Yavaşça bırakın"]
+            },
+            {
+                id: 3,
+                title: "Yüzme",
+                difficulty: "medium",
+                duration: "30-45 dakika",
+                calories: "300-400 kcal",
+                image: "https://images.unsplash.com/photo-1530549387789-4c1017266635?w=800",
+                description: "Yüzme, omurgayı uzatır ve tüm vücut kaslarını çalıştırır.",
+                steps: ["Isınma hareketleri yapın", "Serbest veya kurbağalama stili seçin", "Düzenli nefes alın", "Soğuma hareketleriyle bitirin"]
+            },
+            {
+                id: 4,
+                title: "Yoga - Tadasana",
+                difficulty: "easy",
+                duration: "5-10 dakika",
+                calories: "30-50 kcal",
+                image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800",
+                description: "Dağ pozisyonu duruşu düzeltir ve omurga uzunluğunu artırır.",
+                steps: ["Ayaklarınızı birleştirin", "Başı yukarı uzatın", "Omuzları geriye çekin", "Derin nefes alın"]
+            },
+            {
+                id: 5,
+                title: "Pilates Roll Over",
+                difficulty: "medium",
+                duration: "3 set x 10 tekrar",
+                calories: "40-60 kcal",
+                image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800",
+                description: "Omurga esnekliğini artırır ve karın kaslarını güçlendirir.",
+                steps: ["Sırtüstü yatın", "Bacakları 90 derece kaldırın", "Kalçayı kaldırarak bacakları geriye atın", "Kontrollü dönün"]
+            },
+            {
+                id: 6,
+                title: "Sırt Esneme",
+                difficulty: "easy",
+                duration: "5 dakika",
+                calories: "15-25 kcal",
+                image: "https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=800",
+                description: "Günlük esneme hareketleri omurga sağlığını korur.",
+                steps: ["Dizlerinizin üzerinde durun", "Kolları öne uzatın", "Kalçayı topuklara doğru çekin", "20-30 saniye tutun"]
+            }
         ];
 
         const kegelExercises = [
-            {id: 'k1', name: 'Temel Kegel', diff: 'Kolay', dur: '5dk', match: 100, target: 'Dayanıklılık', desc: '3-5sn sık, 3-5sn bırak. 3 set x 10 tekrar.'},
-            {id: 'k2', name: 'Hızlı Sıkma', diff: 'Orta', dur: '3dk', match: 95, target: 'Hızlı Tepki', desc: '1sn sık, 1sn bırak. 15-20 tekrar.'},
-            {id: 'k3', name: 'Merdiven', diff: 'Orta', dur: '4dk', match: 90, target: 'Kontrol', desc: '3 kademede sık, 3 kademede bırak.'},
-            {id: 'k4', name: 'Uzun Tutma', diff: 'Zor', dur: '10dk', match: 85, target: 'Maksimum Güç', desc: '10sn tut, 10sn dinlen. 5-8 tekrar.'}
+            {
+                id: 'k1',
+                title: "Temel Kegel",
+                difficulty: "easy",
+                duration: "3 set x 10 tekrar",
+                description: "Pelvik taban kaslarını sıkıp bırakma temel egzersizi.",
+                steps: ["Kasları 3 saniye sıkın", "3 saniye gevşetin", "10 tekrar yapın", "Setler arası 1 dakika dinlenin"]
+            },
+            {
+                id: 'k2',
+                title: "Hızlı Kegel",
+                difficulty: "medium",
+                duration: "3 set x 20 tekrar",
+                description: "Kas reaksiyon hızını artıran hızlı kasılma egzersizi.",
+                steps: ["Kasları hızlıca sıkın", "Hemen gevşetin", "1 saniye aralıklarla yapın", "Kas yorgunluğuna dikkat edin"]
+            },
+            {
+                id: 'k3',
+                title: "Yavaş Kegel",
+                difficulty: "medium",
+                duration: "3 set x 5 tekrar",
+                description: "Kas dayanıklılığını artıran uzun süreli kasılma.",
+                steps: ["Kasları yavaşça sıkın", "10 saniye tutun", "Yavaşça gevşetin", "Tam kas gevşemesini sağlayın"]
+            },
+            {
+                id: 'k4',
+                title: "Merdiven Kegel",
+                difficulty: "hard",
+                duration: "3 set x 5 tekrar",
+                description: "Kademeli kasılma gücü ile ileri seviye egzersiz.",
+                steps: ["Kasları %25 sıkın", "%50'ye çıkarın", "%100'e kadar artırın", "Ters sırayla gevşetin"]
+            }
         ];
 
-        // ===== SEKME SİSTEMİ =====
-        function setTab(tab) {
-            // Butonları güncelle
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            // Panelleri güncelle
-            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-            document.getElementById('panel-' + tab).classList.add('active');
-            
-            // Chart init
-            if (tab === 'height' && !window.chartH) initHeightChart();
-            if (tab === 'kegel' && !window.chartK) initKegelChart();
+        // Sayfa yüklendiğinde
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            initCharts();
+            renderExercises();
+            renderKegelExercises();
+            initEventListeners();
+            initSkeletonInteraction();
+
+            // Yükleme ekranını gizle
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').classList.add('hidden');
+            }, 1000);
+        });
+
+        // Kullanıcı verilerini yükle
+        function loadUserData() {
+            const saved = localStorage.getItem('heightAIUser');
+            if (saved) {
+                currentUser = JSON.parse(saved);
+                updateProfileUI();
+                generateAIAnalysis();
+            }
         }
 
-        // ===== RENDER FUNCTIONS =====
-        function renderHeightEx() {
-            const grid = document.getElementById('grid-height');
-            grid.innerHTML = heightExercises.map(ex => `
-                <div class="ex-card" onclick="openExModal('height', ${ex.id})">
-                    <div class="ex-icon">${ex.icon}</div>
-                    <div class="ex-info">
-                        <span class="ex-tag">🤖 %${ex.match}</span>
-                        <h3 class="ex-title">${ex.name}</h3>
-                        <div class="ex-meta">
-                            <span>⏱️ ${ex.dur}s</span>
-                            <span>🎯 ${ex.target}</span>
-                            <span style="color: ${ex.diff === 'Kolay' ? 'var(--success)' : ex.diff === 'Orta' ? 'var(--warning)' : 'var(--danger)'}">${ex.diff}</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+        // Profil UI güncelle
+        function updateProfileUI() {
+            if (!currentUser) return;
+
+            document.getElementById('profileName').textContent = currentUser.name || 'Kullanıcı';
+            document.getElementById('profileAge').textContent = (currentUser.age || '--') + ' yaş';
+            document.getElementById('currentHeight').textContent = (currentUser.height || '--') + ' cm';
+            document.getElementById('targetHeight').textContent = (currentUser.targetHeight || '--') + ' cm';
+
+            // Form alanlarını doldur
+            document.getElementById('userName').value = currentUser.name || '';
+            document.getElementById('userAge').value = currentUser.age || '';
+            document.getElementById('userGender').value = currentUser.gender || '';
+            document.getElementById('userHeight').value = currentUser.height || '';
+            document.getElementById('userTargetHeight').value = currentUser.targetHeight || '';
+            document.getElementById('activityLevel').value = currentUser.activityLevel || '';
         }
 
-        function renderKegelEx() {
-            const grid = document.getElementById('grid-kegel');
-            grid.innerHTML = kegelExercises.map(ex => `
-                <div class="ex-card kegel" onclick="openExModal('kegel', '${ex.id}')">
-                    <div class="ex-icon kegel">🎯</div>
-                    <div class="ex-info">
-                        <span class="ex-tag kegel">🤖 %${ex.match}</span>
-                        <h3 class="ex-title">${ex.name}</h3>
-                        <div class="ex-meta">
-                            <span>⏱️ ${ex.dur}</span>
-                            <span>🎯 ${ex.target}</span>
-                            <span style="color: ${ex.diff === 'Kolay' ? 'var(--success)' : ex.diff === 'Orta' ? 'var(--warning)' : 'var(--danger)'}">${ex.diff}</span>
-                        </div>
-                        <p style="margin-top: 10px; font-size: 0.85em; color: #94a3b8;">${ex.desc}</p>
-                    </div>
-                </div>
-            `).join('');
-        }
+        // AI Analizi oluştur
+        function generateAIAnalysis() {
+            if (!currentUser) return;
 
-        // ===== MODAL FUNCTIONS =====
-        function openExModal(type, id) {
-            const modal = document.getElementById('modalEx');
-            const header = document.getElementById('modalExHeader');
-            const title = document.getElementById('modalExTitle');
-            const body = document.getElementById('modalExBody');
-            
-            if (type === 'height') {
-                const ex = heightExercises.find(e => e.id === id);
-                header.className = 'modal-header';
-                title.textContent = ex.name;
-                body.innerHTML = `
-                    <div style="text-align: center; padding: 40px; background: linear-gradient(135deg, rgba(102,126,234,0.2), rgba(118,75,162,0.2)); border-radius: 15px; margin-bottom: 20px; font-size: 5em;">${ex.icon}</div>
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; text-align: center; margin-bottom: 20px;">
-                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
-                            <div style="font-size: 1.5em; color: var(--primary);">${ex.dur}s</div>
-                            <div style="font-size: 0.8em; color: #94a3b8;">Süre</div>
-                        </div>
-                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
-                            <div style="font-size: 1.5em; color: var(--warning);">${ex.diff}</div>
-                            <div style="font-size: 0.8em; color: #94a3b8;">Zorluk</div>
-                        </div>
-                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
-                            <div style="font-size: 1.5em; color: var(--success);">%${ex.match}</div>
-                            <div style="font-size: 0.8em; color: #94a3b8;">Eşleşme</div>
-                        </div>
-                    </div>
-                    <button class="btn" onclick="closeModal('modalEx'); showNotif('Egzersiz başlatıldı!')">▶️ Başlat</button>
-                `;
+            const age = parseInt(currentUser.age);
+            const height = parseInt(currentUser.height);
+            const target = parseInt(currentUser.targetHeight);
+            const gender = currentUser.gender;
+
+            let analysis = '';
+            let potential = 0;
+
+            // Büyüme potansiyeli hesaplama
+            if (gender === 'male') {
+                if (age < 18) potential = 8;
+                else if (age < 21) potential = 3;
+                else potential = 1;
             } else {
-                const ex = kegelExercises.find(e => e.id === id);
-                header.className = 'modal-header kegel';
-                title.textContent = ex.name;
-                body.innerHTML = `
-                    <div style="text-align: center; padding: 40px; background: linear-gradient(135deg, rgba(236,72,153,0.2), rgba(190,24,93,0.2)); border-radius: 15px; margin-bottom: 20px; font-size: 5em;">🎯</div>
-                    <div style="background: rgba(236,72,153,0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 3px solid var(--kegel);">
-                        <p style="color: #94a3b8;">${ex.desc}</p>
-                    </div>
-                    <button class="btn" style="background: linear-gradient(135deg, var(--kegel), var(--kegel-dark));" onclick="closeModal('modalEx'); setTab('kegel'); startKegel();">▶️ Zamanlayıcıyı Başlat</button>
-                `;
+                if (age < 16) potential = 5;
+                else if (age < 19) potential = 2;
+                else potential = 0.5;
             }
-            
-            modal.classList.add('show');
-        }
 
-        function openProfile() {
-            document.getElementById('modalProfile').classList.add('show');
-            if (user.name) {
-                document.getElementById('inpName').value = user.name;
-                document.getElementById('inpAge').value = user.age || '';
-                document.getElementById('inpGender').value = user.gender || 'male';
-                document.getElementById('inpHeight').value = user.height || '';
-                document.getElementById('inpMother').value = user.mother || '';
-                document.getElementById('inpFather').value = user.father || '';
-                calcPot();
+            const targetDiff = target - height;
+
+            analysis = `Sayın ${currentUser.name}, ${age} yaşında ${gender === 'male' ? 'bir erkek' : 'bir kadın'} olarak `;
+
+            if (targetDiff <= potential && targetDiff > 0) {
+                analysis += `hedefinize ulaşma olasılığınız yüksek. Doğal yöntemlerle ${potential} cm'ye kadar uzama potansiyeliniz bulunmaktadır.`;
+            } else if (targetDiff > potential) {
+                analysis += `hedefiniz doğal limitlerin biraz üzerinde. Ancak ${potential} cm civarında bir uzama sağlayarak postür düzeltmesi ile toplamda ${potential + 2} cm civarında bir artış elde edebilirsiniz.`;
+            } else {
+                analysis += `mevcut boyunuzu koruma ve postürünüzü iyileştirme odaklanmanızı öneririm.`;
             }
+
+            analysis += ` ${getActivityRecommendation(currentUser.activityLevel)}`;
+
+            document.getElementById('aiAnalysisText').textContent = analysis;
+
+            // Öneri metni
+            const recText = getExerciseRecommendation(age, gender, currentUser.activityLevel);
+            document.getElementById('aiRecommendationText').textContent = recText;
+
+            // Grafiği güncelle
+            updateGrowthChart(height, target, potential);
         }
 
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('show');
-        }
-
-        // ===== PROFILE FUNCTIONS =====
-        function calcPot() {
-            const age = parseInt(document.getElementById('inpAge').value) || 0;
-            const gender = document.getElementById('inpGender').value;
-            const mother = parseInt(document.getElementById('inpMother').value) || 0;
-            const father = parseInt(document.getElementById('inpFather').value) || 0;
-            
-            if (mother && father) {
-                const genetic = gender === 'male' ? (mother + father + 13) / 2 : (mother + father - 13) / 2;
-                let text = `Genetik hedef: ${genetic.toFixed(1)} cm. `;
-                if (age < 18) text += 'Büyüme devam ediyor!';
-                else if (age < 25) text += 'Postürle 2-3 cm artış mümkün.';
-                else text += 'Duruş düzeltmeyle 1-2 cm artış.';
-                document.getElementById('potResult').textContent = text;
-                document.getElementById('potResult').style.color = '#e2e8f0';
-            }
-        }
-
-        function saveUser() {
-            const newUser = {
-                name: document.getElementById('inpName').value,
-                age: parseInt(document.getElementById('inpAge').value),
-                gender: document.getElementById('inpGender').value,
-                height: parseFloat(document.getElementById('inpHeight').value),
-                mother: parseInt(document.getElementById('inpMother').value),
-                father: parseInt(document.getElementById('inpFather').value),
-                kegelSets: user.kegelSets || 0,
-                kegelReps: user.kegelReps || 0,
-                kegelLevel: user.kegelLevel || 'Başlangıç'
+        function getActivityRecommendation(level) {
+            const recs = {
+                'sedentary': 'Hareketsiz yaşam tarzınızı değiştirmek için günlük 30 dakika yürüyüşle başlayın.',
+                'light': 'Mevcut aktivite seviyenizi koruyun ve haftada 2 kez direnç egzersizleri ekleyin.',
+                'moderate': 'Harika! Haftada 3-4 kez yapılan egzersizlerinize barfiks ve asma hareketlerini ekleyin.',
+                'active': 'Çok aktifsiniz! Yoğun programınıza omurga dekompresyonu için asma egzersizleri ekleyin.'
             };
-            localStorage.setItem('huser', JSON.stringify(newUser));
-            Object.assign(user, newUser);
-            updateUI();
-            closeModal('modalProfile');
-            showNotif('Profil kaydedildi!');
+            return recs[level] || recs['sedentary'];
         }
 
-        function updateUI() {
-            if (user.name) {
-                document.getElementById('h-name').textContent = user.name;
-                document.getElementById('k-name').textContent = user.name;
-                document.getElementById('h-current').textContent = user.height + ' cm';
-                const target = user.gender === 'male' ? (user.mother + user.father + 13) / 2 : (user.mother + user.father - 13) / 2;
-                document.getElementById('h-target').textContent = target.toFixed(1) + ' cm';
-                document.getElementById('k-sets').textContent = (user.kegelSets || 0) + '/3';
-                document.getElementById('k-reps').textContent = user.kegelReps || 0;
-                document.getElementById('k-level').textContent = user.kegelLevel || 'Başlangıç';
+        function getExerciseRecommendation(age, gender, level) {
+            if (age < 18) {
+                return 'Genç yaşta olmanız büyüme potansiyelinizin yüksek olduğunu gösteriyor. Yüzme, basketbol ve barfiks egzersizlerine odaklanın.';
+            } else if (age < 25) {
+                return 'Son büyüme döneminizdesiniz. Omurga esnetme ve asma egzersizleri ile maksimum uzunluğa ulaşabilirsiniz.';
+            } else {
+                return 'Yetişkin olarak postür düzeltme ve omurga dekompresyonu odaklı egzersizler önerilir. Pilates ve yoga etkili olacaktır.';
             }
         }
 
-        // ===== KEGEL TIMER =====
-        let timerInt = null;
-        let timeLeft = 0;
-        let phase = 'contract';
-        let sets = 0;
-        let reps = 0;
-
-        function startKegel() {
-            if (timerInt) return;
-            sets = 0;
-            reps = 0;
-            runPhase();
-        }
-
-        function runPhase() {
-            const cfg = {
-                contract: {t: 3, next: 'hold', txt: 'Sık (3s)'},
-                hold: {t: 5, next: 'relax', txt: 'Tut (5s)'},
-                relax: {t: 5, next: 'contract', txt: 'Bırak (5s)'}
-            };
-            
-            const c = cfg[phase];
-            timeLeft = c.t;
-            
-            document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
-            document.getElementById('ph-' + phase).classList.add('active');
-            
-            timerInt = setInterval(() => {
-                timeLeft--;
-                document.getElementById('timer').textContent = `00:0${timeLeft}`;
-                
-                if (timeLeft <= 0) {
-                    clearInterval(timerInt);
-                    timerInt = null;
-                    
-                    if (phase === 'relax') {
-                        reps++;
-                        if (reps >= 10) {
-                            sets++;
-                            reps = 0;
-                            showNotif(`Set ${sets} tamamlandı!`, true);
-                            if (sets >= 3) {
-                                showNotif('Tebrikler! 3 set tamamlandı!', true);
-                                saveKegelProgress();
-                                return;
-                            }
+        // Grafikleri başlat
+        function initCharts() {
+            // Büyüme tahmini grafiği
+            const growthCtx = document.getElementById('growthChart').getContext('2d');
+            growthChartInstance = new Chart(growthCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Başlangıç', '1. Ay', '2. Ay', '3. Ay', '6. Ay', '1 Yıl'],
+                    datasets: [{
+                        label: 'Tahmini Boy (cm)',
+                        data: [170, 170.3, 170.6, 171, 171.5, 172],
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102,126,234,0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: { color: '#94a3b8' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#94a3b8' }
                         }
                     }
-                    
-                    phase = c.next;
-                    runPhase();
                 }
+            });
+
+            // İlerleme grafiği
+            const progressCtx = document.getElementById('progressChart').getContext('2d');
+            progressChartInstance = new Chart(progressCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'],
+                    datasets: [{
+                        label: 'Egzersiz (dk)',
+                        data: [30, 45, 0, 60, 30, 90, 45],
+                        backgroundColor: 'rgba(102,126,234,0.6)',
+                        borderColor: '#667eea',
+                        borderWidth: 1,
+                        borderRadius: 8
+                    }, {
+                        label: 'Kegel (set)',
+                        data: [3, 3, 3, 0, 3, 3, 3],
+                        backgroundColor: 'rgba(236,72,153,0.6)',
+                        borderColor: '#ec4899',
+                        borderWidth: 1,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#e2e8f0' }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: { color: '#94a3b8' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#94a3b8' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Büyüme grafiğini güncelle
+        function updateGrowthChart(current, target, potential) {
+            if (!growthChartInstance) return;
+
+            const months = ['Başlangıç', '1. Ay', '2. Ay', '3. Ay', '6. Ay', '1 Yıl'];
+            const data = [current];
+
+            // Gerçekçi bir büyüme eğrisi oluştur
+            const totalGain = Math.min(target - current, potential);
+            const monthlyGain = totalGain / 12;
+
+            for (let i = 1; i <= 5; i++) {
+                let gain;
+                if (i === 1) gain = monthlyGain * 0.5;
+                else if (i === 2) gain = monthlyGain * 1.5;
+                else if (i === 3) gain = monthlyGain * 3;
+                else if (i === 4) gain = monthlyGain * 6;
+                else gain = monthlyGain * 12;
+
+                data.push(parseFloat((current + gain).toFixed(1)));
+            }
+
+            growthChartInstance.data.datasets[0].data = data;
+            growthChartInstance.update();
+        }
+
+        // Egzersizleri render et
+        function renderExercises() {
+            const grid = document.getElementById('exerciseGrid');
+            grid.innerHTML = exercises.map(ex => `
+                <div class="exercise-card" onclick="openExerciseModal(${ex.id})">
+                    <div style="position: relative;">
+                        <img src="${ex.image}" alt="${ex.title}" class="exercise-image">
+                        <span class="difficulty-badge ${ex.difficulty}">${ex.difficulty}</span>
+                    </div>
+                    <div class="exercise-content">
+                        <div class="ai-match">🤖 %${Math.floor(Math.random() * 20 + 80)} Eşleşme</div>
+                        <h3 class="exercise-title">${ex.title}</h3>
+                        <div class="exercise-meta">
+                            <span class="meta-item">⏱️ ${ex.duration}</span>
+                            <span class="meta-item">🔥 ${ex.calories}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Kegel egzersizlerini render et
+        function renderKegelExercises() {
+            const grid = document.getElementById('kegelExerciseGrid');
+            grid.innerHTML = kegelExercises.map(ex => `
+                <div class="exercise-card kegel-card" onclick="openKegelModal('${ex.id}')">
+                    <div class="exercise-content" style="padding-top: 30px;">
+                        <div class="ai-match kegel-match">💪 Pelvik Egzersiz</div>
+                        <h3 class="exercise-title">${ex.title}</h3>
+                        <div class="exercise-meta">
+                            <span class="meta-item">⏱️ ${ex.duration}</span>
+                            <span class="meta-item">📊 ${ex.difficulty}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Event listener'ları başlat
+        function initEventListeners() {
+            // Sekme değiştirme
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+            });
+
+            // Tema değiştirme
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+            // AI sohbet
+            document.getElementById('aiOrb').addEventListener('click', toggleChat);
+            document.getElementById('sendBtn').addEventListener('click', sendMessage);
+            document.getElementById('chatInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendMessage();
+            });
+
+            // Kegel zamanlayıcı
+            document.getElementById('startTimerBtn').addEventListener('click', startKegelTimer);
+            document.getElementById('pauseTimerBtn').addEventListener('click', pauseKegelTimer);
+            document.getElementById('resetTimerBtn').addEventListener('click', resetKegelTimer);
+
+            // İlerleme periyodu
+            document.getElementById('progressPeriod').addEventListener('change', updateProgressChart);
+        }
+
+        // Sekme değiştir
+        function switchTab(tabName) {
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+                tab.setAttribute('aria-selected', 'false');
+            });
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            document.querySelector(`[data-tab="${tabName}"]`).setAttribute('aria-selected', 'true');
+
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        // Tema değiştir
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', next);
+            document.getElementById('themeToggle').textContent = next === 'light' ? '☀️' : '🌙';
+            localStorage.setItem('theme', next);
+        }
+
+        // AI Sohbet aç/kapat
+        function toggleChat() {
+            const chat = document.getElementById('aiChat');
+            chatOpen = !chatOpen;
+            chat.classList.toggle('active', chatOpen);
+        }
+
+        // Mesaj gönder
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            addMessage(message, 'user');
+            input.value = '';
+
+            // AI yanıtı simülasyonu
+            setTimeout(() => {
+                const response = generateAIResponse(message);
+                addMessage(response, 'ai');
             }, 1000);
         }
 
-        function stopKegel() {
-            if (timerInt) {
-                clearInterval(timerInt);
-                timerInt = null;
-                showNotif('Durduruldu', true);
+        function addMessage(text, sender) {
+            const container = document.getElementById('chatMessages');
+            const msg = document.createElement('div');
+            msg.className = `message ${sender}`;
+            msg.textContent = text;
+            container.appendChild(msg);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function generateAIResponse(message) {
+            const lower = message.toLowerCase();
+            if (lower.includes('boy') || lower.includes('uzun')) {
+                return 'Boy uzatma için düzenli egzersiz, beslenme ve uyku çok önemli. Özellikle barfiks, yüzme ve yoga öneriyorum.';
+            } else if (lower.includes('kegel') || lower.includes('pelvik')) {
+                return 'Kegel egzersizleri günde 3 set x 10 tekrar şeklinde yapılmalı. Kasları 3 saniye sıkıp 3 saniye gevşetin.';
+            } else if (lower.includes('merhaba') || lower.includes('selam')) {
+                return 'Merhaba! Size nasıl yardımcı olabilirim? Boy uzatma veya pelvik sağlık hakkında sorularınız var mı?';
+            } else {
+                return 'Anladım. Bu konuda size yardımcı olmak için daha fazla detay paylaşabilir misiniz? Veya egzersiz programınız hakkında konuşabiliriz.';
             }
         }
 
-        function resetKegel() {
-            if (timerInt) clearInterval(timerInt);
-            timerInt = null;
-            phase = 'contract';
-            timeLeft = 0;
-            sets = 0;
-            reps = 0;
-            document.getElementById('timer').textContent = '00:00';
+        // Kegel zamanlayıcı
+        function startKegelTimer() {
+            if (kegelTimer) return;
+
+            const level = document.getElementById('kegelLevelSelect').value;
+            const timings = {
+                'beginner': { contract: 3, relax: 3, rest: 3 },
+                'intermediate': { contract: 5, relax: 5, rest: 5 },
+                'advanced': { contract: 10, relax: 10, rest: 5 }
+            };
+
+            const timing = timings[level];
+            let currentPhase = 'contract';
+            let timeLeft = timing.contract;
+
+            updateKegelUI(currentPhase, timeLeft);
+            animatePelvicMuscles(true);
+
+            kegelTimer = setInterval(() => {
+                timeLeft--;
+
+                if (timeLeft <= 0) {
+                    // Faz değiştir
+                    if (currentPhase === 'contract') {
+                        currentPhase = 'relax';
+                        timeLeft = timing.relax;
+                        animatePelvicMuscles(false);
+                    } else if (currentPhase === 'relax') {
+                        currentPhase = 'rest';
+                        timeLeft = timing.rest;
+                        kegelCycle++;
+                        document.getElementById('totalKegels').textContent = kegelCycle * 10;
+                    } else {
+                        currentPhase = 'contract';
+                        timeLeft = timing.contract;
+                        animatePelvicMuscles(true);
+                    }
+                }
+
+                updateKegelUI(currentPhase, timeLeft);
+            }, 1000);
+
+            document.getElementById('startTimerBtn').disabled = true;
+        }
+
+        function pauseKegelTimer() {
+            if (kegelTimer) {
+                clearInterval(kegelTimer);
+                kegelTimer = null;
+                document.getElementById('startTimerBtn').disabled = false;
+                document.getElementById('startTimerBtn').innerHTML = '▶️ Devam Et';
+            }
+        }
+
+        function resetKegelTimer() {
+            pauseKegelTimer();
+            kegelState = 'idle';
+            kegelCycle = 0;
+            document.getElementById('timerDisplay').textContent = '00:00';
+            document.getElementById('startTimerBtn').innerHTML = '▶️ Başlat';
+            document.getElementById('startTimerBtn').disabled = false;
+
             document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
-            document.getElementById('ph-contract').classList.add('active');
+            document.getElementById('contractPhase').classList.add('active');
+
+            animatePelvicMuscles(false);
+            updateProgressCircle(0);
         }
 
-        function saveKegelProgress() {
-            user.kegelSets = 3;
-            user.kegelReps = (user.kegelReps || 0) + 30;
-            if (user.kegelReps > 200) user.kegelLevel = 'Orta';
-            if (user.kegelReps > 500) user.kegelLevel = 'İleri';
-            localStorage.setItem('huser', JSON.stringify(user));
-            updateUI();
+        function updateKegelUI(phase, timeLeft) {
+            document.getElementById('timerDisplay').textContent = `00:${timeLeft.toString().padStart(2, '0')}`;
+
+            document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+            document.getElementById(phase + 'Phase').classList.add('active');
+
+            // Progress ring güncelle
+            const level = document.getElementById('kegelLevelSelect').value;
+            const maxTime = level === 'beginner' ? 3 : level === 'intermediate' ? 5 : 10;
+            const progress = ((maxTime - timeLeft) / maxTime) * 565.48;
+            updateProgressCircle(progress);
         }
 
-        // ===== CHAT =====
-        function toggleChat() {
-            document.getElementById('chatBox').classList.toggle('show');
+        function updateProgressCircle(offset) {
+            const circle = document.getElementById('progressCircle');
+            circle.style.strokeDashoffset = 565.48 - offset;
         }
 
-        function sendMsg() {
-            const inp = document.getElementById('chatInput');
-            const txt = inp.value.trim();
-            if (!txt) return;
-            
-            const box = document.getElementById('chatMessages');
-            box.innerHTML += `<div class="msg user">${txt}</div>`;
-            inp.value = '';
-            
-            setTimeout(() => {
-                const replies = {
-                    'merhaba': 'Merhaba! Hangi programda yardımcı olabilirim?',
-                    'boy': 'Boy uzatma için düzenli egzersiz ve uyku şart. Potansiyelinizi hesaplayın!',
-                    'kegel': 'Kegel için zamanlayıcıyı kullanın. Günde 3 set önerilir.',
-                    'nasıl': 'Doğru teknik: Karın gevşek, sadece pelvik kaslar sıkılır.',
-                    'fayda': 'İdrar kaçırma kontrolü ve pelvik organ desteği sağlar.'
-                };
-                let r = 'Size nasıl yardımcı olabilirim?';
-                for (let k in replies) if (txt.toLowerCase().includes(k)) { r = replies[k]; break; }
-                box.innerHTML += `<div class="msg ai">${r}</div>`;
-                box.scrollTop = box.scrollHeight;
-            }, 600);
-        }
-
-        // ===== CHARTS =====
-        function initHeightChart() {
-            const ctx = document.getElementById('chartHeight').getContext('2d');
-            window.chartH = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['1.Ay', '2.Ay', '3.Ay', '4.Ay', '5.Ay', '6.Ay'],
-                    datasets: [{
-                        label: 'Boy Artışı (cm)',
-                        data: [0, 0.5, 1.2, 2.1, 2.8, 3.5],
-                        borderColor: '#667eea',
-                        backgroundColor: 'rgba(102,126,234,0.1)',
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#94a3b8' } },
-                        x: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#94a3b8' } }
-                    }
-                }
+        // Pelvik kas animasyonu
+        function animatePelvicMuscles(active) {
+            document.querySelectorAll('.pelvic-muscle').forEach(muscle => {
+                muscle.classList.toggle('active', active);
             });
         }
 
-        function initKegelChart() {
-            const ctx = document.getElementById('chartKegel').getContext('2d');
-            window.chartK = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['1.Hf', '3.Hf', '6.Hf', '9.Hf', '12.Hf'],
-                    datasets: [{
-                        label: 'Tutma Süresi (sn)',
-                        data: [3, 5, 7, 9, 10],
-                        backgroundColor: 'rgba(236,72,153,0.6)',
-                        borderColor: '#ec4899',
-                        borderWidth: 2,
-                        borderRadius: 10
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { max: 12, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#94a3b8' } },
-                        x: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#94a3b8' } }
-                    }
-                }
-            });
-        }
+        // İskelet etkileşimi
+        function initSkeletonInteraction() {
+            const bones = document.querySelectorAll('.bone');
+            const tooltip = document.getElementById('tooltip');
 
-        // ===== UTILS =====
-        function showNotif(msg, isKegel) {
-            const n = document.getElementById('notif');
-            n.textContent = msg;
-            n.className = isKegel ? 'notif kegel show' : 'notif show';
-            n.style.display = 'block';
-            setTimeout(() => n.style.display = 'none', 3000);
-        }
-
-        // ===== INIT =====
-        window.onload = function() {
-            updateUI();
-            renderHeightEx();
-            renderKegelEx();
-            initHeightChart();
-            
-            // Modal outside click
-            document.querySelectorAll('.modal').forEach(m => {
-                m.addEventListener('click', (e) => {
-                    if (e.target === m) m.classList.remove('show');
+            bones.forEach(bone => {
+                bone.addEventListener('mouseenter', (e) => {
+                    bone.classList.add('active');
+                    showTooltip(e, getBoneInfo(bone.classList[1]));
                 });
-            });
-        };
 
-        // ESC key
+                bone.addEventListener('mouseleave', () => {
+                    bone.classList.remove('active');
+                    hideTooltip();
+                });
+
+                bone.addEventListener('mousemove', moveTooltip);
+            });
+        }
+
+        function getBoneInfo(boneClass) {
+            const info = {
+                'spine': 'Omurga: Uzama bölgesi - Egzersizle uzatılabilir',
+                'leg-left': 'Sol bacak: Uyluk kemiği uzama noktası',
+                'leg-right': 'Sağ bacak: Uyluk kemiği uzama noktası',
+                'shin-left': 'Sol kaval: Alt bacak uzama noktası',
+                'shin-right': 'Sağ kaval: Alt bacak uzama noktası'
+            };
+            return info[boneClass] || 'Kemik yapısı';
+        }
+
+        function showTooltip(e, text) {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.textContent = text;
+            tooltip.classList.add('visible');
+            moveTooltip(e);
+        }
+
+        function moveTooltip(e) {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.style.left = (e.clientX + 10) + 'px';
+            tooltip.style.top = (e.clientY + 10) + 'px';
+        }
+
+        function hideTooltip() {
+            document.getElementById('tooltip').classList.remove('visible');
+        }
+
+        // Profil modalı
+        function openProfileModal() {
+            switchTab('profile');
+        }
+
+        // Profil kaydet
+        function saveProfile(e) {
+            e.preventDefault();
+
+            currentUser = {
+                name: document.getElementById('userName').value,
+                age: document.getElementById('userAge').value,
+                gender: document.getElementById('userGender').value,
+                height: document.getElementById('userHeight').value,
+                targetHeight: document.getElementById('userTargetHeight').value,
+                activityLevel: document.getElementById('activityLevel').value,
+                joinDate: new Date().toISOString()
+            };
+
+            localStorage.setItem('heightAIUser', JSON.stringify(currentUser));
+            updateProfileUI();
+            generateAIAnalysis();
+            showNotification('Profil başarıyla kaydedildi! ✅', 'success');
+
+            setTimeout(() => switchTab('height'), 1000);
+        }
+
+        // Egzersiz modalı
+        function openExerciseModal(id) {
+            const ex = exercises.find(e => e.id === id);
+            if (!ex) return;
+
+            document.getElementById('modalTitle').textContent = ex.title;
+            document.getElementById('modalMeta').innerHTML = `
+                <span>⏱️ ${ex.duration}</span> | <span>🔥 ${ex.calories}</span> | <span>📊 ${ex.difficulty}</span>
+            `;
+            document.getElementById('modalImage').src = ex.image;
+            document.getElementById('modalDescription').textContent = ex.description;
+            document.getElementById('modalSteps').innerHTML = `
+                <h4>Adımlar:</h4>
+                <ol style="margin-left: 20px; line-height: 2;">
+                    ${ex.steps.map(s => `<li>${s}</li>`).join('')}
+                </ol>
+            `;
+
+            document.getElementById('exerciseModal').classList.add('active');
+        }
+
+        function openKegelModal(id) {
+            const ex = kegelExercises.find(e => e.id === id);
+            if (!ex) return;
+
+            document.getElementById('modalTitle').textContent = ex.title;
+            document.getElementById('modalMeta').innerHTML = `
+                <span>⏱️ ${ex.duration}</span> | <span>📊 ${ex.difficulty}</span>
+            `;
+            document.getElementById('modalImage').src = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800';
+            document.getElementById('modalDescription').textContent = ex.description;
+            document.getElementById('modalSteps').innerHTML = `
+                <h4>Adımlar:</h4>
+                <ol style="margin-left: 20px; line-height: 2;">
+                    ${ex.steps.map(s => `<li>${s}</li>`).join('')}
+                </ol>
+            `;
+
+            document.getElementById('modalContent').classList.add('kegel-modal');
+            document.querySelector('.modal-header').classList.add('kegel-header');
+            document.getElementById('exerciseModal').classList.add('active');
+        }
+
+        function closeExerciseModal() {
+            document.getElementById('exerciseModal').classList.remove('active');
+            document.getElementById('modalContent').classList.remove('kegel-modal');
+            document.querySelector('.modal-header').classList.remove('kegel-header');
+        }
+
+        function startExercise() {
+            showNotification('Egzersiz başlatıldı! Başarılar! 💪', 'success');
+            closeExerciseModal();
+        }
+
+        // İlerleme grafiğini güncelle
+        function updateProgressChart() {
+            const period = document.getElementById('progressPeriod').value;
+            // Gerçek uygulamada burada API'dan veri çekilir
+            showNotification('İlerleme verileri güncellendi 📊', 'success');
+        }
+
+        // Bildirim göster
+        function showNotification(message, type = 'success') {
+            const container = document.getElementById('notificationContainer');
+            const notif = document.createElement('div');
+            notif.className = `notification ${type === 'kegel' ? 'kegel-notif' : ''}`;
+            notif.innerHTML = `
+                <span>${message}</span>
+                <button class="notification-close" onclick="this.parentElement.remove()">&times;</button>
+            `;
+
+            container.appendChild(notif);
+
+            setTimeout(() => {
+                notif.classList.add('hiding');
+                setTimeout(() => notif.remove(), 300);
+            }, 3000);
+        }
+
+        // Klavye navigasyonu
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                document.querySelectorAll('.modal').forEach(m => m.classList.remove('show'));
-                stopKegel();
+                closeExerciseModal();
+                if (chatOpen) toggleChat();
             }
+        });
+
+        // Sayfa kapanırken zamanlayıcıyı temizle
+        window.addEventListener('beforeunload', () => {
+            if (kegelTimer) clearInterval(kegelTimer);
         });
     </script>
 </body>
