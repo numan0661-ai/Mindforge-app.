@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kimi Photo Studio - Profesyonel Web Editör</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo::before {
+            content: "📸";
+            font-size: 28px;
+        }
+
+        .top-tools {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn.secondary {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .container {
+            display: flex;
+            height: calc(100vh - 70px);
+        }
+
+        .sidebar {
+            width: 280px;
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            overflow-y: auto;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .tool-section {
+            margin-bottom: 25px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .section-title {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .tool-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tool-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.05);
+        }
+
+        .tool-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: transparent;
+        }
+
+        .tool-icon {
+            font-size: 20px;
+        }
+
+        .slider-container {
+            margin: 10px 0;
+        }
+
+        .slider-label {
+            color: rgba(255,255,255,0.8);
+            font-size: 12px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .canvas-area {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .canvas-wrapper {
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            border-radius: 10px;
+            overflow: hidden;
+            background: #2a2a2a;
+        }
+
+        #mainCanvas {
+            display: block;
+            max-width: 100%;
+            max-height: 70vh;
+        }
+
+        .crop-overlay {
+            position: absolute;
+            border: 2px dashed #667eea;
+            background: rgba(102, 126, 234, 0.2);
+            display: none;
+            pointer-events: none;
+        }
+
+        .layers-panel {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            width: 200px;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .layer-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 8px;
+            color: white;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .layer-item:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .layer-item.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .hidden-input {
+            display: none;
+        }
+
+        .merge-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .modal-title {
+            color: white;
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .merge-preview {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .preview-box {
+            width: 150px;
+            height: 150px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            border: 2px dashed rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .preview-box:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .preview-box img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 8px;
+        }
+
+        .loading {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.9);
+            padding: 30px;
+            border-radius: 15px;
+            color: white;
+            z-index: 2000;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .ai-tools {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            border: 1px solid rgba(102, 126, 234, 0.5);
+        }
+
+        .color-picker-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        input[type="color"] {
+            width: 50px;
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div class="header">
+        <div class="logo">Kimi Photo Studio</div>
+        <div class="top-tools">
+            <button class="btn" onclick="document.getElementById('fileInput').click()">
+                📁 Fotoğraf Yükle
+            </button>
+            <button class="btn secondary" onclick="downloadImage()">
+                💾 İndir
+            </button>
+            <button class="btn secondary" onclick="resetCanvas()">
+                🔄 Sıfırla
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <!-- Temel Araçlar -->
+            <div class="tool-section">
+                <div class="section-title">🛠️ Temel Araçlar</div>
+                <div class="tool-grid">
+                    <button class="tool-btn active" onclick="setTool('select')">
+                        <span class="tool-icon">↖️</span>
+                        <span>Seçim</span>
+                    </button>
+                    <button class="tool-btn" onclick="setTool('crop')">
+                        <span class="tool-icon">✂️</span>
+                        <span>Kırp</span>
+                    </button>
+                    <button class="tool-btn" onclick="setTool('brush')">
+                        <span class="tool-icon">🖌️</span>
+                        <span>Fırça</span>
+                    </button>
+                    <button class="tool-btn" onclick="setTool('eraser')">
+                        <span class="tool-icon">🧹</span>
+                        <span>Silgi</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Ayarlar -->
+            <div class="tool-section">
+                <div class="section-title">⚡ Görüntü Ayarları</div>
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>Parlaklık</span>
+                        <span id="brightnessVal">100%</span>
+                    </div>
+                    <input type="range" id="brightness" min="0" max="200" value="100" oninput="adjustImage()">
+                </div>
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>Kontrast</span>
+                        <span id="contrastVal">100%</span>
+                    </div>
+                    <input type="range" id="contrast" min="0" max="200" value="100" oninput="adjustImage()">
+                </div>
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>Doygunluk</span>
+                        <span id="saturateVal">100%</span>
+                    </div>
+                    <input type="range" id="saturate" min="0" max="200" value="100" oninput="adjustImage()">
+                </div>
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>Bulanıklık</span>
+                        <span id="blurVal">0px</span>
+                    </div>
+                    <input type="range" id="blur" min="0" max="10" value="0" step="0.5" oninput="adjustImage()">
+                </div>
+            </div>
+
+            <!-- Filtreler -->
+            <div class="tool-section">
+                <div class="section-title">🎨 Filtreler</div>
+                <div class="tool-grid">
+                    <button class="tool-btn" onclick="applyFilter('grayscale')">
+                        <span class="tool-icon">⚫</span>
+                        <span>S/B</span>
+                    </button>
+                    <button class="tool-btn" onclick="applyFilter('sepia')">
+                        <span class="tool-icon">🟤</span>
+                        <span>Sepia</span>
+                    </button>
+                    <button class="tool-btn" onclick="applyFilter('invert')">
+                        <span class="tool-icon">🔄</span>
+                        <span>Ters</span>
+                    </button>
+                    <button class="tool-btn" onclick="applyFilter('vintage')">
+                        <span class="tool-icon">📷</span>
+                        <span>Vintage</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- AI Özellikler -->
+            <div class="tool-section ai-tools">
+                <div class="section-title">🤖 AI Özellikler</div>
+                <button class="tool-btn" onclick="openMergeModal()" style="width: 100%; margin-bottom: 10px;">
+                    <span class="tool-icon">🖼️</span>
+                    <span>Fotoğraf Birleştir</span>
+                </button>
+                <button class="tool-btn" onclick="startClothingChange()" style="width: 100%;">
+                    <span class="tool-icon">👕</span>
+                    <span>Kıyafet Değiştir</span>
+                </button>
+                <div class="color-picker-wrapper" id="colorPicker" style="display: none;">
+                    <span style="color: white; font-size: 12px;">Renk Seç:</span>
+                    <input type="color" id="clothColor" value="#ff0000" onchange="applyClothingColor()">
+                </div>
+            </div>
+
+            <!-- Döndürme -->
+            <div class="tool-section">
+                <div class="section-title">🔄 Dönüştürme</div>
+                <div class="tool-grid">
+                    <button class="tool-btn" onclick="rotateImage(-90)">
+                        <span class="tool-icon">↪️</span>
+                        <span>Sola</span>
+                    </button>
+                    <button class="tool-btn" onclick="rotateImage(90)">
+                        <span class="tool-icon">↩️</span>
+                        <span>Sağa</span>
+                    </button>
+                    <button class="tool-btn" onclick="flipImage('h')">
+                        <span class="tool-icon">↔️</span>
+                        <span>Yatay</span>
+                    </button>
+                    <button class="tool-btn" onclick="flipImage('v')">
+                        <span class="tool-icon">↕️</span>
+                        <span>Dikey</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="canvas-area">
+            <div class="canvas-wrapper">
+                <canvas id="mainCanvas"></canvas>
+                <div class="crop-overlay" id="cropOverlay"></div>
+            </div>
+
+            <div class="layers-panel">
+                <div class="section-title">📚 Katmanlar</div>
+                <div id="layersList">
+                    <div class="layer-item active">
+                        <span>🖼️</span>
+                        <span>Ana Katman</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="fileInput" class="hidden-input" accept="image/*" onchange="loadImage(event)">
+    <input type="file" id="mergeInput1" class="hidden-input" accept="image/*" onchange="loadMergeImage(1, event)">
+    <input type="file" id="mergeInput2" class="hidden-input" accept="image/*" onchange="loadMergeImage(2, event)">
+
+    <!-- Birleştirme Modal -->
+    <div class="merge-modal" id="mergeModal">
+        <div class="modal-content">
+            <div class="modal-title">🖼️ Fotoğraf Birleştirme</div>
+            <p style="color: rgba(255,255,255,0.8); text-align: center; margin-bottom: 20px;">
+                İki fotoğraf seçin ve otomatik uyumlu hale getirin
+            </p>
+            <div class="merge-preview">
+                <div class="preview-box" onclick="document.getElementById('mergeInput1').click()" id="preview1">
+                    <span style="font-size: 40px;">+</span>
+                    <span>Fotoğraf 1</span>
+                </div>
+                <div class="preview-box" onclick="document.getElementById('mergeInput2').click()" id="preview2">
+                    <span style="font-size: 40px;">+</span>
+                    <span>Fotoğraf 2</span>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn" onclick="mergeImages()" style="flex: 1;">🔄 Birleştir</button>
+                <button class="btn secondary" onclick="closeMergeModal()" style="flex: 1;">❌ Kapat</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <div>İşleniyor...</div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('mainCanvas');
+        const ctx = canvas.getContext('2d');
+        let originalImage = null;
+        let currentImage = null;
+        let currentTool = 'select';
+        let isDrawing = false;
+        let cropStart = null;
+        let rotation = 0;
+        let flipH = 1;
+        let flipV = 1;
+        let mergeImage1 = null;
+        let mergeImage2 = null;
+        let layers = [];
+
+        // Başlangıç boş canvas
+        canvas.width = 800;
+        canvas.height = 600;
+        ctx.fillStyle = '#2a2a2a';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#666';
+        ctx.font = '20px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Fotoğraf yüklemek için "Fotoğraf Yükle" butonuna tıklayın', canvas.width/2, canvas.height/2);
+
+        function loadImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    originalImage = img;
+                    currentImage = img;
+                    resetTransformations();
+                    adjustImage();
+                    addLayer('Yüklenen Fotoğraf');
+                }
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+
+        function resetTransformations() {
+            rotation = 0;
+            flipH = 1;
+            flipV = 1;
+            document.getElementById('brightness').value = 100;
+            document.getElementById('contrast').value = 100;
+            document.getElementById('saturate').value = 100;
+            document.getElementById('blur').value = 0;
+            updateSliderLabels();
+        }
+
+        function adjustImage() {
+            if (!currentImage) return;
+
+            const brightness = document.getElementById('brightness').value;
+            const contrast = document.getElementById('contrast').value;
+            const saturate = document.getElementById('saturate').value;
+            const blur = document.getElementById('blur').value;
+
+            updateSliderLabels();
+
+            canvas.width = currentImage.width;
+            canvas.height = currentImage.height;
+
+            ctx.save();
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.filter = `brightness(${brightness}%) contrast(${contrast}%) saturate(${saturate}%) blur(${blur}px)`;
+
+            ctx.translate(canvas.width/2, canvas.height/2);
+            ctx.rotate(rotation * Math.PI / 180);
+            ctx.scale(flipH, flipV);
+            ctx.drawImage(currentImage, -currentImage.width/2, -currentImage.height/2);
+
+            ctx.restore();
+        }
+
+        function updateSliderLabels() {
+            document.getElementById('brightnessVal').textContent = document.getElementById('brightness').value + '%';
+            document.getElementById('contrastVal').textContent = document.getElementById('contrast').value + '%';
+            document.getElementById('saturateVal').textContent = document.getElementById('saturate').value + '%';
+            document.getElementById('blurVal').textContent = document.getElementById('blur').value + 'px';
+        }
+
+        function applyFilter(type) {
+            if (!currentImage) return;
+
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCanvas.width = canvas.width;
+            tempCanvas.height = canvas.height;
+            tempCtx.drawImage(canvas, 0, 0);
+
+            const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+            const data = imageData.data;
+
+            for (let i = 0; i < data.length; i += 4) {
+                const r = data[i];
+                const g = data[i + 1];
+                const b = data[i + 2];
+
+                switch(type) {
+                    case 'grayscale':
+                        const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+                        data[i] = data[i + 1] = data[i + 2] = gray;
+                        break;
+                    case 'sepia':
+                        data[i] = Math.min(255, (r * 0.393) + (g * 0.769) + (b * 0.189));
+                        data[i + 1] = Math.min(255, (r * 0.349) + (g * 0.686) + (b * 0.168));
+                        data[i + 2] = Math.min(255, (r * 0.272) + (g * 0.534) + (b * 0.131));
+                        break;
+                    case 'invert':
+                        data[i] = 255 - r;
+                        data[i + 1] = 255 - g;
+                        data[i + 2] = 255 - b;
+                        break;
+                    case 'vintage':
+                        data[i] = Math.min(255, r + 40);
+                        data[i + 1] = Math.min(255, g + 20);
+                        data[i + 2] = Math.max(0, b - 20);
+                        break;
+                }
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+
+            // Yeni görüntüyü kaydet
+            const newImg = new Image();
+            newImg.onload = function() {
+                currentImage = newImg;
+            }
+            newImg.src = canvas.toDataURL();
+        }
+
+        function setTool(tool) {
+            currentTool = tool;
+            document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.tool-btn').classList.add('active');
+
+            if (tool === 'crop') {
+                canvas.style.cursor = 'crosshair';
+            } else if (tool === 'brush' || tool === 'eraser') {
+                canvas.style.cursor = 'crosshair';
+            } else {
+                canvas.style.cursor = 'default';
+            }
+        }
+
+        canvas.addEventListener('mousedown', function(e) {
+            if (currentTool === 'crop') {
+                const rect = canvas.getBoundingClientRect();
+                cropStart = {
+                    x: e.clientX - rect.left,
+                    y: e.clientY - rect.top
+                };
+            } else if (currentTool === 'brush' || currentTool === 'eraser') {
+                isDrawing = true;
+                const rect = canvas.getBoundingClientRect();
+                ctx.beginPath();
+                ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+            }
+        });
+
+        canvas.addEventListener('mousemove', function(e) {
+            if (currentTool === 'crop' && cropStart) {
+                const rect = canvas.getBoundingClientRect();
+                const x = Math.min(cropStart.x, e.clientX - rect.left);
+                const y = Math.min(cropStart.y, e.clientY - rect.top);
+                const w = Math.abs(e.clientX - rect.left - cropStart.x);
+                const h = Math.abs(e.clientY - rect.top - cropStart.y);
+
+                const overlay = document.getElementById('cropOverlay');
+                overlay.style.display = 'block';
+                overlay.style.left = x + 'px';
+                overlay.style.top = y + 'px';
+                overlay.style.width = w + 'px';
+                overlay.style.height = h + 'px';
+            } else if ((currentTool === 'brush' || currentTool === 'eraser') && isDrawing) {
+                const rect = canvas.getBoundingClientRect();
+                ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+                ctx.strokeStyle = currentTool === 'eraser' ? 'rgba(0,0,0,1)' : document.getElementById('clothColor').value || '#000';
+                ctx.lineWidth = 5;
+                ctx.lineCap = 'round';
+                ctx.stroke();
+            }
+        });
+
+        canvas.addEventListener('mouseup', function(e) {
+            if (currentTool === 'crop' && cropStart) {
+                const rect = canvas.getBoundingClientRect();
+                const x = Math.min(cropStart.x, e.clientX - rect.left);
+                const y = Math.min(cropStart.y, e.clientY - rect.top);
+                const w = Math.abs(e.clientX - rect.left - cropStart.x);
+                const h = Math.abs(e.clientY - rect.top - cropStart.y);
+
+                if (w > 10 && h > 10) {
+                    cropImage(x, y, w, h);
+                }
+
+                cropStart = null;
+                document.getElementById('cropOverlay').style.display = 'none';
+            } else if (currentTool === 'brush' || currentTool === 'eraser') {
+                isDrawing = false;
+                ctx.closePath();
+
+                const newImg = new Image();
+                newImg.onload = function() {
+                    currentImage = newImg;
+                }
+                newImg.src = canvas.toDataURL();
+            }
+        });
+
+        function cropImage(x, y, w, h) {
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCanvas.width = w;
+            tempCanvas.height = h;
+            tempCtx.drawImage(canvas, x, y, w, h, 0, 0, w, h);
+
+            const newImg = new Image();
+            newImg.onload = function() {
+                currentImage = newImg;
+                originalImage = newImg;
+                adjustImage();
+                addLayer('Kırpılmış');
+            }
+            newImg.src = tempCanvas.toDataURL();
+        }
+
+        function rotateImage(deg) {
+            rotation += deg;
+            adjustImage();
+        }
+
+        function flipImage(dir) {
+            if (dir === 'h') flipH *= -1;
+            if (dir === 'v') flipV *= -1;
+            adjustImage();
+        }
+
+        function resetCanvas() {
+            if (originalImage) {
+                currentImage = originalImage;
+                resetTransformations();
+                adjustImage();
+            }
+        }
+
+        function downloadImage() {
+            if (!currentImage) return;
+            const link = document.createElement('a');
+            link.download = 'kimi-edited-photo.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        // Birleştirme fonksiyonları
+        function openMergeModal() {
+            document.getElementById('mergeModal').style.display = 'flex';
+        }
+
+        function closeMergeModal() {
+            document.getElementById('mergeModal').style.display = 'none';
+            mergeImage1 = null;
+            mergeImage2 = null;
+            document.getElementById('preview1').innerHTML = '<span style="font-size: 40px;">+</span><span>Fotoğraf 1</span>';
+            document.getElementById('preview2').innerHTML = '<span style="font-size: 40px;">+</span><span>Fotoğraf 2</span>';
+        }
+
+        function loadMergeImage(num, event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    if (num === 1) mergeImage1 = img;
+                    else mergeImage2 = img;
+
+                    const preview = document.getElementById('preview' + num);
+                    preview.innerHTML = '<img src="' + e.target.result + '" style="max-width: 100%; max-height: 100%;">';
+                }
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+
+        function mergeImages() {
+            if (!mergeImage1 || !mergeImage2) {
+                alert('Lütfen iki fotoğraf da seçin!');
+                return;
+            }
+
+            document.getElementById('loading').style.display = 'block';
+
+            setTimeout(() => {
+                const maxWidth = Math.max(mergeImage1.width, mergeImage2.width);
+                const maxHeight = Math.max(mergeImage1.height, mergeImage2.height);
+
+                canvas.width = maxWidth;
+                canvas.height = maxHeight;
+
+                ctx.globalAlpha = 0.5;
+                ctx.drawImage(mergeImage1, 0, 0, maxWidth, maxHeight);
+                ctx.drawImage(mergeImage2, 0, 0, maxWidth, maxHeight);
+                ctx.globalAlpha = 1.0;
+
+                const newImg = new Image();
+                newImg.onload = function() {
+                    currentImage = newImg;
+                    originalImage = newImg;
+                    document.getElementById('loading').style.display = 'none';
+                    closeMergeModal();
+                    addLayer('Birleştirilmiş');
+                    alert('Fotoğraflar başarıyla birleştirildi!');
+                }
+                newImg.src = canvas.toDataURL();
+            }, 1000);
+        }
+
+        // Kıyafet değiştirme simülasyonu
+        function startClothingChange() {
+            if (!currentImage) {
+                alert('Önce bir fotoğraf yükleyin!');
+                return;
+            }
+            document.getElementById('colorPicker').style.display = 'flex';
+            setTool('brush');
+            alert('Fırça aracı aktif! Kıyafetin üzerine istediğiniz rengi uygulayın. Renk seçiciyi kullanın.');
+        }
+
+        function applyClothingColor() {
+            // Renk değişikliği fırça ile yapılıyor
+        }
+
+        function addLayer(name) {
+            const layersList = document.getElementById('layersList');
+            const layerDiv = document.createElement('div');
+            layerDiv.className = 'layer-item';
+            layerDiv.innerHTML = '<span>🖼️</span><span>' + name + '</span>';
+            layerDiv.onclick = function() {
+                document.querySelectorAll('.layer-item').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            }
+            layersList.insertBefore(layerDiv, layersList.firstChild);
+        }
+    </script>
+</body>
+</html>
