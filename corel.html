@@ -1,0 +1,850 @@
+
+html_content = """<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CorelDRAW Öğren - Mobil Eğitim</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #00d4ff 0%, #7b2cbf 100%);
+            padding: 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 30px rgba(0,212,255,0.3);
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            background: rgba(255,255,255,0.1);
+            padding: 5px;
+            margin: 15px;
+            border-radius: 15px;
+            gap: 5px;
+        }
+        
+        .nav-tab {
+            flex: 1;
+            padding: 12px 8px;
+            border: none;
+            background: transparent;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-tab.active {
+            background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,212,255,0.4);
+        }
+        
+        /* Content Sections */
+        .content-section {
+            display: none;
+            padding: 0 15px 20px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Shortcut Cards */
+        .shortcut-category {
+            margin-bottom: 20px;
+        }
+        
+        .category-title {
+            font-size: 1.1rem;
+            color: #00d4ff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .category-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(180deg, #00d4ff, #7b2cbf);
+            border-radius: 2px;
+        }
+        
+        .shortcut-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .shortcut-card:active {
+            transform: scale(0.98);
+            background: rgba(255,255,255,0.15);
+        }
+        
+        .shortcut-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .shortcut-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        .shortcut-keys {
+            background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 10px rgba(0,212,255,0.3);
+        }
+        
+        .shortcut-desc {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.4;
+        }
+        
+        /* Tutorial Cards */
+        .tutorial-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .tutorial-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+        
+        .tutorial-content {
+            padding: 20px;
+        }
+        
+        .tutorial-number {
+            display: inline-block;
+            background: #00d4ff;
+            color: #1a1a2e;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .tutorial-title {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        
+        .tutorial-text {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.5;
+        }
+        
+        .tutorial-steps {
+            margin-top: 15px;
+            padding-left: 20px;
+        }
+        
+        .tutorial-steps li {
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.9);
+        }
+        
+        /* Practice Section */
+        .practice-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 20px rgba(0,212,255,0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .practice-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 10px rgba(0,212,255,0.3);
+        }
+        
+        .quiz-container {
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .quiz-question {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .quiz-options {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .quiz-option {
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .quiz-option.correct {
+            background: rgba(0,255,136,0.3);
+            border-color: #00ff88;
+        }
+        
+        .quiz-option.wrong {
+            background: rgba(255,0,85,0.3);
+            border-color: #ff0055;
+        }
+        
+        .score-display {
+            text-align: center;
+            font-size: 1.3rem;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0,212,255,0.2);
+            border-radius: 15px;
+        }
+        
+        /* Search Bar */
+        .search-container {
+            padding: 0 15px 15px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            backdrop-filter: blur(10px);
+        }
+        
+        .search-input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            margin: 0 15px 15px;
+            border-radius: 15px;
+        }
+        
+        .progress-text {
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+        
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+            border-radius: 50%;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,212,255,0.5);
+            z-index: 99;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .fab:active {
+            transform: scale(0.9);
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid rgba(0,212,255,0.3);
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #00d4ff;
+        }
+        
+        .close-modal {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <h1>🎨 CorelDRAW Öğren</h1>
+            <p>Kısayollar ve Eğitim Rehberi</p>
+        </div>
+        
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Kısayol veya araç ara..." id="searchInput">
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-text">
+                <span>Öğrenme İlerlemen</span>
+                <span id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+        
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showSection('shortcuts')">Kısayollar</button>
+            <button class="nav-tab" onclick="showSection('tutorials')">Eğitimler</button>
+            <button class="nav-tab" onclick="showSection('practice')">Pratik</button>
+        </div>
+        
+        <!-- Shortcuts Section -->
+        <div id="shortcuts" class="content-section active">
+            <div class="shortcut-category">
+                <div class="category-title">Temel Araçlar</div>
+                <div class="shortcut-card" onclick="markLearned(this)">
+                    <div class="shortcut-header">
+                        <span class="shortcut-name">Seçim Aracı</span>
+                        <span class="shortcut-keys">F10</span>
+                    </div>
+                    <div class="shortcut-desc">Nesneleri seçmek ve taşımak için kullanılır. En temel araçtır.</div>
+                </div>
+                <div class="shortcut-card" onclick="markLearned(this)">
+                    <div class="shortcut-header">
+                        <span class="shortcut-name">Şekil Aracı</span>
+                        <span class="shortcut-keys">F6</span>
+                    </div>
+                    <div class="shortcut-desc">Dikdörtgen ve kare çizmek için kullanılır.</div>
+                </div>
+                <div class="shortcut-card" onclick="markLearned(this)">
+                    <div class="shortcut-header">
+                        <span class="shortcut-name">Elips Aracı</span>
+                        <span class="shortcut-keys">F7</span>
+                    </div>
+                    <div class="shortcut-desc">Daire ve elips çizmek için kullanılır.</div>
+                </div>
+                <div class="shortcut-card" onclick="markLearned(this)">
+                    <div class="shortcut-header">
+                        <span class="shortcut-name">Kalem Aracı</span>
+                        <span class="shortcut-keys">F5</span>
+                    </div>
+                    <div class="shortcut-desc">Serbest çizim yapmak ve Bézier eğrileri oluşturmak için.</div>
+                </div>
+            </div>
+            
+            <div class="shortcut-category">
+                <div class="category-title">Düzenleme</div>
+                <div class="shortcut-card" onclick="markLearned(this)">
+                    <div class="shortcut-header">
+                        <span class="shortcut-name">Kopyala</span>
+                        <span class="shortcut-keys">Ctrl+C</span>
+                    </div>
+                    <div class="shortcut-desc">Seçili nesneyi kopyalar.</div>
+                </div>
+                <div class="shortcut-card" onclick="markLearned(this)">
+                    <div class="shortcut-header">
+                        <span class="shortcut-name">Yapıştır</span>
+                        <span class="shortcut-keys">Ctrl+V</span>
+                    </div>
+                    <div class="shortcut-desc">Kopyalanan nesneyi yapıştırır.</div>
+                </div>
+                <div class="shortcut-card" onclick="markLearned(this)">
+                    <div class="shortcut-header">
+                        <span class="shortcut-name">Geri Al</span>
+                        <span class="shortcut-keys">Ctrl+Z</span>
+                    </div>
+                    <div class="shortcut-desc">Son işlemi geri alır.</div>
+                </div>
+                <div class="shortcut-card" onclick="markLearned(this)">
+                    <div class="shortcut-header">
+                        <span class="shortcut-name">Grup Yap</span>
+                        <span class="shortcut-keys">Ctrl+G</span>
+                    </div>
+                    <div class="shortcut-desc">Birden fazla nesneyi tek grup haline getirir.</div>
+                </div>
+            </div>
+            
+            <div class="shortcut-category">
+                <div class="category-title">Görünüm</div>
+                <div class="shortcut-card" onclick="markLearned(this)">
+                    <div class="shortcut-header">
+                        <span class="shortcut-name">Yakınlaştır</span>
+                        <span class="shortcut-keys">F2</span>
+                    </div>
+                    <div class="shortcut-desc">Seçili alanı yakınlaştırır.</div>
+                </div>
+                <div class="shortcut-card" onclick="markLearned(this)">
+                    <div class="shortcut-header">
+                        <span class="shortcut-name">Uzaklaştır</span>
+                        <span class="shortcut-keys">F3</span>
+                    </div>
+                    <div class="shortcut-desc">Görünümü uzaklaştırır.</div>
+                </div>
+                <div class="shortcut-card" onclick="markLearned(this)">
+                    <div class="shortcut-header">
+                        <span class="shortcut-name">Tümünü Göster</span>
+                        <span class="shortcut-keys">F4</span>
+                    </div>
+                    <div class="shortcut-desc">Tüm sayfayı görünür hale getirir.</div>
+                </div>
+            </div>
+            
+            <div class="shortcut-category">
+                <div class="category-title">Metin</div>
+                <div class="shortcut-card" onclick="markLearned(this)">
+                    <div class="shortcut-header">
+                        <span class="shortcut-name">Metin Aracı</span>
+                        <span class="shortcut-keys">F8</span>
+                    </div>
+                    <div class="shortcut-desc">Metin kutusu oluşturmak için kullanılır.</div>
+                </div>
+                <div class="shortcut-card" onclick="markLearned(this)">
+                    <div class="shortcut-header">
+                        <span class="shortcut-name">Kalın</span>
+                        <span class="shortcut-keys">Ctrl+B</span>
+                    </div>
+                    <div class="shortcut-desc">Seçili metni kalın yapar.</div>
+                </div>
+                <div class="shortcut-card" onclick="markLearned(this)">
+                    <div class="shortcut-header">
+                        <span class="shortcut-name">İtalik</span>
+                        <span class="shortcut-keys">Ctrl+I</span>
+                    </div>
+                    <div class="shortcut-desc">Seçili metni italik yapar.</div>
+                </div>
+            </div>
+            
+            <div class="shortcut-category">
+                <div class="category-title">Dosya</div>
+                <div class="shortcut-card" onclick="markLearned(this)">
+                    <div class="shortcut-header">
+                        <span class="shortcut-name">Yeni</span>
+                        <span class="shortcut-keys">Ctrl+N</span>
+                    </div>
+                    <div class="shortcut-desc">Yeni belge oluşturur.</div>
+                </div>
+                <div class="shortcut-card" onclick="markLearned(this)">
+                    <div class="shortcut-header">
+                        <span class="shortcut-name">Aç</span>
+                        <span class="shortcut-keys">Ctrl+O</span>
+                    </div>
+                    <div class="shortcut-desc">Mevcut dosyayı açar.</div>
+                </div>
+                <div class="shortcut-card" onclick="markLearned(this)">
+                    <div class="shortcut-header">
+                        <span class="shortcut-name">Kaydet</span>
+                        <span class="shortcut-keys">Ctrl+S</span>
+                    </div>
+                    <div class="shortcut-desc">Dosyayı kaydeder.</div>
+                </div>
+                <div class="shortcut-card" onclick="markLearned(this)">
+                    <div class="shortcut-header">
+                        <span class="shortcut-name">Dışa Aktar</span>
+                        <span class="shortcut-keys">Ctrl+E</span>
+                    </div>
+                    <div class="shortcut-desc">Dosyayı farklı formatta kaydeder (PNG, JPG, PDF vb.).</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tutorials Section -->
+        <div id="tutorials" class="content-section">
+            <div class="tutorial-card">
+                <div class="tutorial-image">🎯</div>
+                <div class="tutorial-content">
+                    <span class="tutorial-number">1</span>
+                    <h3 class="tutorial-title">CorelDRAW Arayüzü Tanıma</h3>
+                    <p class="tutorial-text">CorelDRAW'ı açtığında karşına çıkan temel bileşenleri öğren.</p>
+                    <ol class="tutorial-steps">
+                        <li>Araç kutusu (sol): Tüm çizim araçları burada</li>
+                        <li>Özellik çubuğu (üst): Seçili aracın ayarları</li>
+                        <li>Palet (sağ): Renk ve katman yönetimi</li>
+                        <li>Durum çubuğu (alt): Sayfa bilgileri</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="tutorial-card">
+                <div class="tutorial-image">✏️</div>
+                <div class="tutorial-content">
+                    <span class="tutorial-number">2</span>
+                    <h3 class="tutorial-title">İlk Çizimini Yap</h3>
+                    <p class="tutorial-text">Basit bir logo çizimi ile başla.</p>
+                    <ol class="tutorial-steps">
+                        <li>F6'ya bas (Dikdörtgen aracı)</li>
+                        <li>Sayfada sürükle-bırak ile şekil çiz</li>
+                        <li>F10'a bas (Seçim aracı) ve şekli seç</li>
+                        <li>Sağ tık > Düzenle > Köşeleri yuvarlat</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="tutorial-card">
+                <div class="tutorial-image">🎨</div>
+                <div class="tutorial-content">
+                    <span class="tutorial-number">3</span>
+                    <h3 class="tutorial-title">Renk ve Dolgu</h3>
+                    <p class="tutorial-text">Nesnelere renk verme ve gradyan oluşturma.</p>
+                    <ol class="tutorial-steps">
+                        <li>Nesneyi F10 ile seç</li>
+                        <li>Sağdaki renk paletinden sol tık (dolgu)</li>
+                        <li>Sağ tık (kenarlık/stroke)</li>
+                        <li>Dolgu aracı ile gradyan efekti ekle</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="tutorial-card">
+                <div class="tutorial-image">📝</div>
+                <div class="tutorial-content">
+                    <span class="tutorial-number">4</span>
+                    <h3 class="tutorial-title">Metin İşlemleri</h3>
+                    <p class="tutorial-text">Profesyonel metin düzenleme teknikleri.</p>
+                    <ol class="tutorial-steps">
+                        <li>F8'e bas (Metin aracı)</li>
+                        <li>Sayfada metin kutusu oluştur</li>
+                        <li>Metni yaz ve Ctrl+A ile tümünü seç</li>
+                        <li>Üst menüden font ve boyut ayarla</li>
+                        <li>Efektler > Kontur efekti ekle</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="tutorial-card">
+                <div class="tutorial-image">🔧</div>
+                <div class="tutorial-content">
+                    <span class="tutorial-number">5</span>
+                    <h3 class="tutorial-title">Kesişim ve Birleştirme</h3>
+                    <p class="tutorial-text">Birden fazla nesneyi birleştirme teknikleri.</p>
+                    <ol class="tutorial-steps">
+                        <li>İki şekil çiz (F6 ve F7)</li>
+                        <li>Her iki şekli de Ctrl tuşuyla seç</li>
+                        <li>Nesne > Şekil > Kesişim (Ctrl+Shift+Q)</li>
+                        <li>Veya Birleştir (Ctrl+L) dene</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="tutorial-card">
+                <div class="tutorial-image">💾</div>
+                <div class="tutorial-content">
+                    <span class="tutorial-number">6</span>
+                    <h3 class="tutorial-title">Dışa Aktarma</h3>
+                    <p class="tutorial-text">Çalışmanı farklı formatlarda kaydetme.</p>
+                    <ol class="tutorial-steps">
+                        <li>Dosya > Dışa Aktar veya Ctrl+E</li>
+                        <li>Format seç: CDR (kaynak), PDF (yazdırma), PNG (web)</li>
+                        <li>Çözünürlüğü ayarla (web için 72-150 dpi)</li>
+                        <li>Renk modu: RGB (web) veya CMYK (baskı)</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Practice Section -->
+        <div id="practice" class="content-section">
+            <button class="practice-btn" onclick="startQuiz()">🎮 Quiz Başlat</button>
+            <button class="practice-btn" onclick="showChallenge()">🏆 Günlük Meydan Okuma</button>
+            
+            <div id="quizArea" style="display:none;">
+                <div class="quiz-container">
+                    <div class="quiz-question" id="quizQuestion">Soru yükleniyor...</div>
+                    <div class="quiz-options" id="quizOptions"></div>
+                    <div class="score-display" id="scoreDisplay">Skor: 0</div>
+                </div>
+            </div>
+        </div>
+        
+        <button class="fab" onclick="showHelp()">?</button>
+    </div>
+    
+    <!-- Help Modal -->
+    <div class="modal" id="helpModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Nasıl Kullanılır?</h2>
+            <p style="line-height: 1.6; margin-bottom: 15px;">
+                📚 <strong>Kısayollar:</strong> Kartlara dokunarak öğrendiklerini işaretle<br><br>
+                🎓 <strong>Eğitimler:</strong> Adım adım CorelDRAW öğren<br><br>
+                🎮 <strong>Pratik:</strong> Quiz ile bilgini test et<br><br>
+                🔍 <strong>Arama:</strong> Hızlıca kısayol bul
+            </p>
+            <button class="close-modal" onclick="closeModal()">Anladım</button>
+        </div>
+    </div>
+
+    <script>
+        let learnedCards = new Set();
+        let currentQuiz = 0;
+        let score = 0;
+        
+        const quizData = [
+            { q: "Seçim aracının kısayolu nedir?", options: ["F6", "F10", "F8", "F5"], correct: 1 },
+            { q: "Dikdörtgen çizmek için hangi tuş?", options: ["F7", "F5", "F6", "F8"], correct: 2 },
+            { q: "Geri almak için kullanılan kısayol?", options: ["Ctrl+Y", "Ctrl+Z", "Ctrl+X", "Ctrl+C"], correct: 1 },
+            { q: "Metin aracı hangi tuşla açılır?", options: ["F8", "F10", "F6", "F7"], correct: 0 },
+            { q: "Yakınlaştırma kısayolu nedir?", options: ["F3", "F4", "F2", "F5"], correct: 2 },
+            { q: "Grup yapma kısayolu?", options: ["Ctrl+U", "Ctrl+G", "Ctrl+L", "Ctrl+K"], correct: 1 },
+            { q: "Tüm sayfayı görmek için?", options: ["F2", "F3", "F4", "F5"], correct: 2 },
+            { q: "Dışa aktarma kısayolu?", options: ["Ctrl+P", "Ctrl+S", "Ctrl+E", "Ctrl+N"], correct: 2 }
+        ];
+        
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        function markLearned(card) {
+            const cardId = card.querySelector('.shortcut-keys').textContent;
+            if (!learnedCards.has(cardId)) {
+                learnedCards.add(cardId);
+                card.style.border = '2px solid #00ff88';
+                card.style.background = 'rgba(0,255,136,0.1)';
+                updateProgress();
+            }
+        }
+        
+        function updateProgress() {
+            const total = document.querySelectorAll('.shortcut-card').length;
+            const percent = Math.round((learnedCards.size / total) * 100);
+            document.getElementById('progressFill').style.width = percent + '%';
+            document.getElementById('progressPercent').textContent = percent + '%';
+        }
+        
+        function startQuiz() {
+            document.getElementById('quizArea').style.display = 'block';
+            currentQuiz = 0;
+            score = 0;
+            showQuestion();
+        }
+        
+        function showQuestion() {
+            if (currentQuiz >= quizData.length) {
+                document.getElementById('quizQuestion').innerHTML = 
+                    `🎉 Tebrikler! Testi tamamladın.<br>Skorun: ${score}/${quizData.length}`;
+                document.getElementById('quizOptions').innerHTML = 
+                    '<button class="practice-btn" onclick="startQuiz()">Tekrar Başla</button>';
+                return;
+            }
+            
+            const q = quizData[currentQuiz];
+            document.getElementById('quizQuestion').textContent = q.q;
+            
+            const optionsDiv = document.getElementById('quizOptions');
+            optionsDiv.innerHTML = '';
+            
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('div');
+                btn.className = 'quiz-option';
+                btn.textContent = opt;
+                btn.onclick = () => checkAnswer(idx, q.correct);
+                optionsDiv.appendChild(btn);
+            });
+            
+            document.getElementById('scoreDisplay').textContent = `Soru: ${currentQuiz + 1}/${quizData.length} | Skor: ${score}`;
+        }
+        
+        function checkAnswer(selected, correct) {
+            const options = document.querySelectorAll('.quiz-option');
+            options[selected].classList.add(selected === correct ? 'correct' : 'wrong');
+            options[correct].classList.add('correct');
+            
+            if (selected === correct) score++;
+            
+            setTimeout(() => {
+                currentQuiz++;
+                showQuestion();
+            }, 1000);
+        }
+        
+        function showChallenge() {
+            const challenges = [
+                "Bugün bir logo çiz ve 3 farklı kısayol kullan!",
+                "Metin efektleri oluştur ve F8, Ctrl+B, Ctrl+I kullan!",
+                "İki şekli kesiştir ve Ctrl+Shift+Q dene!",
+                "Bir çalışmayı PDF olarak dışa aktar (Ctrl+E)!"
+            ];
+            const random = challenges[Math.floor(Math.random() * challenges.length)];
+            alert("🏆 Günlük Meydan Okuma:\n\n" + random);
+        }
+        
+        function showHelp() {
+            document.getElementById('helpModal').classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('helpModal').classList.remove('active');
+        }
+        
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('.shortcut-card').forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(term) ? 'block' : 'none';
+            });
+        });
+        
+        // Touch feedback
+        document.querySelectorAll('button, .shortcut-card').forEach(el => {
+            el.addEventListener('touchstart', function() {
+                this.style.transform = 'scale(0.98)';
+            });
+            el.addEventListener('touchend', function() {
+                this.style.transform = '';
+            });
+        });
+    </script>
+</body>
+</html>"""
+
+# Save the file
+with open('/mnt/kimi/output/coreldraw_ogren_app.html', 'w', encoding='utf-8') as f:
+    f.write(html_content)
+
+print("✅ CorelDRAW Öğren uygulaması oluşturuldu!")
+print("📱 Dosya: /mnt/kimi/output/coreldraw_ogren_app.html")
