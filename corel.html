@@ -1,4 +1,6 @@
-'''<!DOCTYPE html>
+
+# Tüm HTML'i tek seferde oluştur ve kaydet
+html_content = '''<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
@@ -195,12 +197,8 @@
         </div>
     </div>
     <script>
-'''
 
-print(f"Part 1 length: {len(html_content)} characters")
 
-# JavaScript part
-js_content = '''
 const shortcutsData = [
     { id: "pick", name: "Seçim Aracı", keys: "F10", desc: "Nesneleri seçmek ve taşımak için kullanılır. En temel araçtır.", category: "basic", difficulty: "easy" },
     { id: "shape", name: "Şekil Aracı", keys: "F6", desc: "Dikdörtgen ve kare çizmek için kullanılır.", category: "basic", difficulty: "easy" },
@@ -796,6 +794,3 @@ document.addEventListener('DOMContentLoaded', () => {
     </script>
 </body>
 </html>
-'''
-
-
