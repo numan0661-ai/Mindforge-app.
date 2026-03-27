@@ -417,4 +417,384 @@ function updateStreak() {
     const lastDate = lastQuizDate ? new Date(lastQuizDate).toDateString() : null;
     if (lastDate !== today) {
         dailyStreak++;
-        last
+                lastQuizDate = new Date().toISOString();
+        saveToStorage();
+        showToast(`🔥 ${dailyStreak} günlük seri!`, 'success');
+    }
+}
+
+function showToast(message, type = 'success', duration = 3000) {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-20px)';
+        setTimeout(() => toast.remove(), 300);
+    }, duration);
+}
+
+function renderShortcuts(filter = 'all', searchTerm = '') {
+    const container = document.getElementById('shortcutsContainer');
+    container.innerHTML = '';
+    const categories = { basic: 'Temel Araçlar', editing: 'Düzenleme', view: 'Görünüm', text: 'Metin', file: 'Dosya', advanced: 'İleri Seviye' };
+    let filteredData = shortcutsData;
+    if (filter !== 'all') {
+        filteredData = filteredData.filter(s => s.category === filter);
+    }
+    if (searchTerm) {
+        const term = searchTerm.toLowerCase();
+        filteredData = filteredData.filter(s => s.name.toLowerCase().includes(term) || s.keys.toLowerCase().includes(term) || s.desc.toLowerCase().includes(term));
+    }
+    const grouped = {};
+    filteredData.forEach(s => {
+        if (!grouped[s.category]) grouped[s.category] = [];
+        grouped[s.category].push(s);
+    });
+    Object.keys(grouped).forEach(category => {
+        const categoryDiv = document.createElement('div');
+        categoryDiv.className = 'shortcut-category';
+        categoryDiv.innerHTML = `<div class="category-title">${categories[category]}</div>`;
+        const grid = document.createElement('div');
+        grid.className = 'shortcuts-grid';
+        grid.setAttribute('role', 'list');
+        grouped[category].forEach(shortcut => {
+            const card = createShortcutCard(shortcut);
+            grid.appendChild(card);
+        });
+        categoryDiv.appendChild(grid);
+        container.appendChild(categoryDiv);
+    });
+    if (filteredData.length === 0) {
+        container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🔍</div><p>Sonuç bulunamadı</p></div>`;
+    }
+}
+
+function createShortcutCard(shortcut) {
+    const card = document.createElement('div');
+    card.className = 'shortcut-card';
+    card.setAttribute('role', 'listitem');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-label', `${shortcut.name}: ${shortcut.keys}`);
+    if (learnedCards.has(shortcut.id)) {
+        card.classList.add('learned');
+    }
+    const difficultyClass = shortcut.difficulty;
+    card.innerHTML = `
+        <div class="shortcut-header">
+            <span class="shortcut-name">${highlightMatch(shortcut.name)}</span>
+            <span class="shortcut-keys">${shortcut.keys}</span>
+        </div>
+        <div class="shortcut-desc">${highlightMatch(shortcut.desc)}</div>
+        <div class="shortcut-meta">
+            <span class="difficulty-badge ${difficultyClass}">${getDifficultyText(shortcut.difficulty)}</span>
+        </div>
+    `;
+    card.onclick = () => markLearned(shortcut.id, card);
+    card.onkeydown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            markLearned(shortcut.id, card);
+        }
+    };
+    return card;
+}
+
+function highlightMatch(text) {
+    const searchTerm = document.getElementById('searchInput').value;
+    if (!searchTerm) return text;
+    const regex = new RegExp(`(${searchTerm})`, 'gi');
+    return text.replace(regex, '<mark style="background: rgba(0,212,255,0.5); color: white; padding: 2px 4px; border-radius: 4px;">$1</mark>');
+}
+
+function getDifficultyText(diff) {
+    const map = { easy: 'Kolay', medium: 'Orta', hard: 'Zor' };
+    return map[diff] || diff;
+}
+
+function markLearned(id, cardElement) {
+    if (learnedCards.has(id)) {
+        learnedCards.delete(id);
+        cardElement.classList.remove('learned');
+        showToast('İşaret kaldırıldı', 'warning');
+    } else {
+        learnedCards.add(id);
+        cardElement.classList.add('learned');
+        showToast('✓ Öğrenildi olarak işaretlendi!');
+    }
+    saveToStorage();
+    updateProgress();
+    updateStats();
+}
+
+function updateProgress() {
+    const total = shortcutsData.length;
+    const learned = learnedCards.size;
+    const percent = Math.round((learned / total) * 100);
+    document.getElementById('progressFill').style.width = percent + '%';
+    document.getElementById('progressPercent').textContent = percent + '%';
+    document.getElementById('progressFill').parentElement.setAttribute('aria-valuenow', percent);
+}
+
+function showSection(sectionId) {
+    document.querySelectorAll('.content-section').forEach(s => {
+        s.classList.remove('active');
+        s.setAttribute('aria-hidden', 'true');
+    });
+    const activeSection = document.getElementById(sectionId);
+    activeSection.classList.add('active');
+    activeSection.setAttribute('aria-hidden', 'false');
+    document.querySelectorAll('.nav-tab').forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+    });
+    const activeTab = document.getElementById(`tab-${sectionId}`);
+    if (activeTab) {
+        activeTab.classList.add('active');
+        activeTab.setAttribute('aria-selected', 'true');
+    }
+    if (sectionId === 'stats') {
+        updateStats();
+    }
+}
+
+function selectDifficulty(difficulty) {
+    currentDifficulty = difficulty;
+    document.querySelectorAll('.difficulty-btn').forEach(btn => {
+        btn.classList.remove('selected');
+        btn.setAttribute('aria-checked', 'false');
+    });
+    const selectedBtn = document.querySelector(`[data-difficulty="${difficulty}"]`);
+    selectedBtn.classList.add('selected');
+    selectedBtn.setAttribute('aria-checked', 'true');
+}
+
+function startQuiz() {
+    currentQuizData = [...quizData[currentDifficulty]];
+    currentQuizData.sort(() => Math.random() - 0.5);
+    currentQuiz = 0;
+    score = 0;
+    document.getElementById('quizArea').style.display = 'block';
+    document.getElementById('quizArea').scrollIntoView({ behavior: 'smooth' });
+    showQuestion();
+    showToast(`${getDifficultyText(currentDifficulty)} seviye quiz başladı!`);
+}
+
+function showQuestion() {
+    if (currentQuiz >= currentQuizData.length) {
+        finishQuiz();
+        return;
+    }
+    const q = currentQuizData[currentQuiz];
+    document.getElementById('quizQuestion').textContent = q.q;
+    const optionsDiv = document.getElementById('quizOptions');
+    optionsDiv.innerHTML = '';
+    q.options.forEach((opt, idx) => {
+        const btn = document.createElement('div');
+        btn.className = 'quiz-option';
+        btn.textContent = opt;
+        btn.setAttribute('role', 'button');
+        btn.setAttribute('tabindex', '0');
+        btn.setAttribute('aria-label', `Seçenek ${idx + 1}: ${opt}`);
+        btn.onclick = () => checkAnswer(idx, q.correct, q.explanation);
+        btn.onkeydown = (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                checkAnswer(idx, q.correct, q.explanation);
+            }
+        };
+        optionsDiv.appendChild(btn);
+    });
+    document.getElementById('scoreDisplay').textContent = `Soru: ${currentQuiz + 1}/${currentQuizData.length} | Skor: ${score}`;
+}
+
+function checkAnswer(selected, correct, explanation) {
+    const options = document.querySelectorAll('.quiz-option');
+    const isCorrect = selected === correct;
+    options[selected].classList.add(isCorrect ? 'correct' : 'wrong');
+    options[correct].classList.add('correct');
+    options.forEach(opt => {
+        opt.style.pointerEvents = 'none';
+        opt.setAttribute('aria-disabled', 'true');
+    });
+    if (isCorrect) {
+        score++;
+        showToast('✓ Doğru!');
+    } else {
+        showToast(`✗ Yanlış! ${explanation}`, 'error', 4000);
+    }
+    setTimeout(() => {
+        currentQuiz++;
+        showQuestion();
+    }, isCorrect ? 1000 : 2500);
+}
+
+function finishQuiz() {
+    const finalScore = score;
+    const total = currentQuizData.length;
+    const percent = Math.round((finalScore / total) * 100);
+    quizHistory.push({
+        date: new Date().toISOString(),
+        difficulty: currentDifficulty,
+        score: finalScore,
+        total: total,
+        percent: percent
+    });
+    updateStreak();
+    saveToStorage();
+    let message = '';
+    let icon = '';
+    if (percent >= 90) {
+        message = 'Mükemmel! Uzman seviyesisin! 🏆';
+        icon = '🏆';
+    } else if (percent >= 70) {
+        message = 'Çok iyi! Gelişmeye devam et! ⭐';
+        icon = '⭐';
+    } else if (percent >= 50) {
+        message = 'İyi! Biraz daha pratik yapmalısın! 📚';
+        icon = '📚';
+    } else {
+        message = 'Daha fazla çalışmalısın! 💪';
+        icon = '💪';
+    }
+    document.getElementById('quizQuestion').innerHTML = `${icon}<br><br>${message}<br><br>Skorun: ${finalScore}/${total} (${percent}%)`;
+    document.getElementById('quizOptions').innerHTML = '<button class="practice-btn" onclick="startQuiz()">Tekrar Başla</button>';
+    document.getElementById('scoreDisplay').textContent = 'Quiz Tamamlandı!';
+}
+
+function startKeyboardPractice() {
+    showToast('⌨️ Klavye pratiği modu yakında gelecek!', 'warning');
+}
+
+function showChallenge() {
+    const challenges = [
+        { task: "Bugün bir logo çiz ve 3 farklı kısayol kullan!", shortcuts: ["F6", "Spacebar", "Ctrl+G"] },
+        { task: "Metin efektleri oluştur ve F8, Ctrl+B, Ctrl+I kullan!", shortcuts: ["F8", "Ctrl+B", "Ctrl+I"] },
+        { task: "İki şekli birleştir ve Ctrl+L dene!", shortcuts: ["F6", "F7", "Ctrl+L"] },
+        { task: "Bir çalışmayı PDF olarak dışa aktar (Ctrl+E)!", shortcuts: ["Ctrl+E"] },
+        { task: "PowerClip efekti dene (Ctrl+1)!", shortcuts: ["Ctrl+1"] },
+        { task: "Bir nesneye kontur ekle (Ctrl+F9)!", shortcuts: ["Ctrl+F9"] },
+        { task: "3 farklı nesneyi grupla ve hizala!", shortcuts: ["Ctrl+G", "L", "R", "C"] },
+        { task: "Bir metni eğriye çevir (Ctrl+Q)!", shortcuts: ["F8", "Ctrl+Q"] }
+    ];
+    const random = challenges[Math.floor(Math.random() * challenges.length)];
+    const modal = document.getElementById('helpModal');
+    document.getElementById('helpTitle').textContent = '🏆 Günlük Meydan Okuma';
+    modal.querySelector('p').innerHTML = `<strong>${random.task}</strong><br><br>Gerekli kısayollar:<br>${random.shortcuts.map(s => `<code style="background: rgba(0,212,255,0.3); padding: 4px 8px; border-radius: 4px;">${s}</code>`).join(' ')}`;
+    modal.classList.add('active');
+}
+
+function updateStats() {
+    document.getElementById('statTotal').textContent = shortcutsData.length;
+    document.getElementById('statLearned').textContent = learnedCards.size;
+    const totalQuizScore = quizHistory.reduce((sum, q) => sum + q.percent, 0);
+    const avgScore = quizHistory.length > 0 ? Math.round(totalQuizScore / quizHistory.length) : 0;
+    document.getElementById('statQuiz').textContent = avgScore + '%';
+    document.getElementById('statStreak').textContent = dailyStreak;
+}
+
+function resetProgress() {
+    if (confirm('Tüm ilerlemeniz silinecek. Emin misiniz?')) {
+        learnedCards.clear();
+        quizHistory = [];
+        dailyStreak = 0;
+        lastQuizDate = null;
+        saveToStorage();
+        updateProgress();
+        updateStats();
+        renderShortcuts();
+        showToast('İlerleme sıfırlandı', 'warning');
+    }
+}
+
+function exportData() {
+    const data = {
+        learnedCards: Array.from(learnedCards),
+        quizHistory: quizHistory,
+        dailyStreak: dailyStreak,
+        exportDate: new Date().toISOString()
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `coreldraw-progress-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Veriler dışa aktarıldı!');
+}
+
+function showHelp() {
+    document.getElementById('helpTitle').textContent = 'Nasıl Kullanılır?';
+    document.getElementById('helpModal').querySelector('p').innerHTML = `
+        📚 <strong>Kısayollar:</strong> Kartlara dokunarak öğrendiklerini işaretle<br><br>
+        🎓 <strong>Eğitimler:</strong> Adım adım CorelDRAW öğren<br><br>
+        🎮 <strong>Pratik:</strong> Quiz ile bilgini test et (3 zorluk seviyesi)<br><br>
+        ⌨️ <strong>Klavye Pratiği:</strong> Gerçek kısayolları uygula<br><br>
+        🔍 <strong>Arama:</strong> Hızlıca kısayol bul<br><br>
+        📊 <strong>İstatistik:</strong> İlerlemeni takip et
+    `;
+    document.getElementById('helpModal').classList.add('active');
+}
+
+function closeModal() {
+    document.getElementById('helpModal').classList.remove('active');
+}
+
+document.getElementById('helpModal').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) {
+        closeModal();
+    }
+});
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeModal();
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadFromStorage();
+    renderShortcuts();
+    updateProgress();
+    updateStats();
+    const searchInput = document.getElementById('searchInput');
+    let searchTimeout;
+    searchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            const activeFilter = document.querySelector('.filter-btn.active');
+            const category = activeFilter ? activeFilter.dataset.category : 'all';
+            renderShortcuts(category, e.target.value);
+        }, 300);
+    });
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => {
+                b.classList.remove('active');
+                b.setAttribute('aria-selected', 'false');
+            });
+            btn.classList.add('active');
+            btn.setAttribute('aria-selected', 'true');
+            renderShortcuts(btn.dataset.category, searchInput.value);
+        });
+    });
+    document.querySelectorAll('button, .shortcut-card, .quiz-option').forEach(el => {
+        el.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.98)';
+        }, { passive: true });
+        el.addEventListener('touchend', function() {
+            this.style.transform = '';
+        }, { passive: true });
+    });
+    if (!localStorage.getItem('coreldrawApp')) {
+        setTimeout(() => {
+            showToast('👋 Hoş geldin! İlk kısayolunu öğrenmeye başla!');
+        }, 1000);
+    }
+});
+    </script>
+</body>
+</html>
