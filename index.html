@@ -1,196 +1,126 @@
-<!DOCTYPE html>
+
+# Tüm içerikleri ekleyerek tam kod
+# Önceki sade yapıyı koruyup, tüm modülleri ve içerikleri ekliyorum
+
+full_app_code = '''<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>UV Akademi Pro</title>
+    <title>UV Akademi Pro - Tam Versiyon</title>
     <style>
         :root {
-            --primary: #6366f1;
-            --accent: #06b6d4;
-            --bg: #0b0b1a;
-            --surface: #16162d;
-            --surface-light: #1e1e3f;
-            --text: #ffffff;
-            --text-muted: #94a3b8;
-            --success: #10b981;
-            --gold: #f59e0b;
-            --purple: #a855f7;
-            --uv: #bf00ff;
-            --danger: #ef4444;
+            --primary: #6366f1; --accent: #06b6d4; --bg: #0b0b1a;
+            --surface: #16162d; --surface-light: #1e1e3f; --text: #ffffff;
+            --text-muted: #94a3b8; --success: #10b981; --gold: #f59e0b;
+            --purple: #a855f7; --uv: #bf00ff; --danger: #ef4444;
+            --warning: #f59e0b; --info: #3b82f6;
         }
-        
-        * { 
-            box-sizing: border-box; 
-            -webkit-tap-highlight-color: transparent;
-            margin: 0;
-            padding: 0;
-        }
-        
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
-            padding-bottom: 100px;
-            line-height: 1.6;
-        }
-        
-        .app-container { 
-            max-width: 900px; 
-            margin: 0 auto; 
-            padding: 15px; 
-        }
-        
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 100px; line-height: 1.6; }
+        .app-container { max-width: 900px; margin: 0 auto; padding: 15px; }
         .screen { display: none; }
         .screen.active { display: block; }
         
-        .header {
-            background: linear-gradient(135deg, var(--surface), var(--surface-light));
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(191, 0, 255, 0.3);
-        }
+        .header { background: linear-gradient(135deg, var(--surface), var(--surface-light)); border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(191, 0, 255, 0.3); }
+        .progress-bar { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; margin-top: 10px; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--uv), var(--purple)); width: 0%; transition: width 0.8s ease; }
         
-        .btn {
-            display: inline-block;
-            padding: 12px 20px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 14px;
-            text-align: center;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
-        }
-        
-        .btn:active { transform: scale(0.95); opacity: 0.9; }
+        .btn { display: inline-block; padding: 14px 24px; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 15px; text-align: center; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+        .btn:active { transform: scale(0.95); }
         .btn-secondary { background: var(--surface-light); border: 1px solid rgba(255,255,255,0.1); }
         .btn-success { background: linear-gradient(135deg, var(--success), #059669); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         
-        .filter-btn {
-            display: inline-block;
-            padding: 10px 16px;
-            margin: 4px;
-            background: var(--surface);
-            border: 2px solid rgba(255,255,255,0.1);
-            color: var(--text-muted);
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
-        }
+        .module-card { background: var(--surface); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: all 0.3s; position: relative; }
+        .module-card:active { transform: scale(0.98); border-color: var(--uv); }
+        .module-card.locked { opacity: 0.5; pointer-events: none; filter: grayscale(0.8); }
+        .module-card.completed { border-color: var(--success); }
+        .module-card.completed::after { content: '✓'; position: absolute; top: 15px; right: 15px; background: var(--success); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold; }
+        .module-number { display: inline-block; background: var(--uv); color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; margin-bottom: 8px; }
+        .module-title { font-size: 18px; font-weight: bold; margin: 5px 0; }
+        .module-desc { font-size: 13px; color: var(--text-muted); }
+        .module-meta { display: flex; gap: 15px; margin-top: 12px; font-size: 12px; color: var(--text-muted); }
         
+        .lesson-container { background: var(--surface); border-radius: 20px; padding: 25px; margin-bottom: 20px; }
+        .lesson-header { border-bottom: 2px solid rgba(191, 0, 255, 0.3); padding-bottom: 15px; margin-bottom: 20px; }
+        .lesson-badge { display: inline-block; background: rgba(191, 0, 255, 0.2); color: var(--uv); padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: bold; margin-bottom: 8px; }
+        .lesson-title { font-size: 22px; margin: 0 0 10px 0; }
+        .lesson-subtitle { color: var(--text-muted); font-size: 14px; }
+        
+        .content-block { background: rgba(255,255,255,0.03); border-radius: 12px; padding: 20px; margin-bottom: 15px; border-left: 4px solid var(--uv); }
+        .content-block.warning { border-left-color: var(--warning); background: rgba(245, 158, 11, 0.05); }
+        .content-block.danger { border-left-color: var(--danger); background: rgba(239, 68, 68, 0.05); }
+        .content-block.info { border-left-color: var(--info); background: rgba(59, 130, 246, 0.05); }
+        .content-block.success { border-left-color: var(--success); background: rgba(16, 185, 129, 0.05); }
+        
+        .block-title { color: var(--gold); font-size: 14px; font-weight: bold; margin-bottom: 10px; }
+        .block-content { font-size: 14px; color: var(--text-muted); line-height: 1.8; }
+        .block-content strong { color: var(--text); }
+        .block-content ul { padding-left: 20px; margin: 10px 0; }
+        .block-content li { margin-bottom: 8px; }
+        
+        .interactive-demo { background: linear-gradient(135deg, rgba(191, 0, 255, 0.1), rgba(168, 85, 247, 0.1)); border: 2px dashed var(--uv); border-radius: 16px; padding: 25px; text-align: center; margin: 20px 0; }
+        .demo-title { color: var(--uv); font-weight: bold; margin-bottom: 15px; font-size: 16px; }
+        
+        .quiz-container { margin-top: 25px; }
+        .quiz-question { background: var(--surface-light); padding: 20px; border-radius: 12px; font-weight: bold; margin-bottom: 15px; font-size: 15px; }
+        .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+        .quiz-option { background: rgba(255,255,255,0.05); border: 2px solid transparent; padding: 15px; border-radius: 12px; cursor: pointer; transition: all 0.2s; font-size: 14px; }
+        .quiz-option:active { transform: scale(0.98); }
+        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.2); }
+        .quiz-option.wrong { border-color: var(--danger); background: rgba(239, 68, 68, 0.2); }
+        .quiz-option.disabled { pointer-events: none; opacity: 0.6; }
+        
+        .step-guide { counter-reset: step; }
+        .step-item { position: relative; padding-left: 50px; margin-bottom: 25px; padding-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .step-item:last-child { border-bottom: none; }
+        .step-number { position: absolute; left: 0; top: 0; width: 35px; height: 35px; background: var(--uv); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
+        .step-title { font-weight: bold; color: var(--gold); margin-bottom: 8px; }
+        .step-content { font-size: 14px; color: var(--text-muted); }
+        
+        .nav-buttons { display: flex; gap: 10px; margin-top: 30px; }
+        
+        .code-block { background: #0d0d1f; border: 1px solid #2d2d44; border-radius: 8px; padding: 15px; font-family: 'Courier New', monospace; font-size: 13px; color: #a5b4fc; overflow-x: auto; margin: 10px 0; }
+        
+        .data-table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 13px; }
+        .data-table th { background: rgba(191, 0, 255, 0.2); color: var(--uv); padding: 12px; text-align: left; font-weight: bold; }
+        .data-table td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--text-muted); }
+        
+        .filter-btn { display: inline-block; padding: 10px 16px; margin: 4px; background: var(--surface); border: 2px solid rgba(255,255,255,0.1); color: var(--text-muted); border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
         .filter-btn:active { transform: scale(0.92); }
         .filter-btn.active { background: var(--uv) !important; color: white !important; border-color: var(--uv) !important; }
         
-        .shortcut-card {
-            background: var(--surface);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-            border: 1px solid rgba(255,255,255,0.08);
-            cursor: pointer;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
-        }
-        
+        .shortcut-card { background: var(--surface); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.08); cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
         .shortcut-card:active { transform: scale(0.98); border-color: var(--accent); }
-        
-        .shortcut-key {
-            display: inline-block;
-            background: var(--bg);
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 14px;
-            color: var(--gold);
-            border: 1px solid var(--gold);
-            margin-right: 10px;
-        }
-        
-        .category-badge {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-        
+        .shortcut-key { display: inline-block; background: var(--bg); padding: 6px 12px; border-radius: 6px; font-family: monospace; font-size: 14px; color: var(--gold); border: 1px solid var(--gold); margin-right: 10px; }
+        .category-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; margin-bottom: 8px; }
         .badge-uv { background: rgba(191, 0, 255, 0.2); color: var(--uv); }
         .badge-critical { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
         .badge-corel { background: rgba(99, 102, 241, 0.2); color: var(--primary); }
         
-        .nav-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(22, 22, 45, 0.98);
-            display: flex;
-            justify-content: space-around;
-            padding: 15px 0 25px;
-            border-top: 1px solid #2d2d44;
-            z-index: 1000;
-        }
-        
-        .nav-item {
-            font-size: 28px;
-            padding: 10px 30px;
-            cursor: pointer;
-            opacity: 0.5;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
-        }
-        
+        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(22, 22, 45, 0.98); display: flex; justify-content: space-around; padding: 15px 0 25px; border-top: 1px solid #2d2d44; z-index: 1000; }
+        .nav-item { font-size: 28px; padding: 10px 30px; cursor: pointer; opacity: 0.5; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
         .nav-item:active { transform: scale(0.85); opacity: 0.8; }
         .nav-item.active { opacity: 1; color: var(--accent); }
         
-        input {
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            border: 1px solid #2d2d44;
-            background: var(--bg);
-            color: white;
-            font-size: 15px;
-        }
+        .achievement-popup { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: linear-gradient(135deg, var(--gold), #d97706); color: white; padding: 15px 25px; border-radius: 12px; box-shadow: 0 10px 40px rgba(245, 158, 11, 0.3); z-index: 2000; transition: transform 0.5s ease; display: flex; align-items: center; gap: 10px; font-weight: bold; }
+        .achievement-popup.show { transform: translateX(-50%) translateY(0); }
         
+        input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #2d2d44; background: var(--bg); color: white; font-size: 15px; }
         input:focus { outline: none; border-color: var(--uv); }
         
         .hidden { display: none !important; }
         .flex-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
         
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            padding: 20px;
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 10000; padding: 20px; }
+        .modal-content { background: var(--surface); border: 3px solid var(--uv); border-radius: 20px; padding: 30px; max-width: 400px; width: 100%; text-align: center; }
         
-        .modal-content {
-            background: var(--surface);
-            border: 3px solid var(--uv);
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-        }
+        .checklist { list-style: none; padding: 0; }
+        .checklist li { padding: 12px 0 12px 35px; position: relative; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .checklist li::before { content: '○'; position: absolute; left: 0; color: var(--uv); font-size: 20px; font-weight: bold; }
+        .checklist li.checked::before { content: '✓'; color: var(--success); }
+        .checklist li.checked { color: var(--text-muted); text-decoration: line-through; }
     </style>
 </head>
 <body>
@@ -200,185 +130,157 @@
     <!-- ANA EKRAN -->
     <div class="screen active" id="homeScreen">
         <div class="header">
-            <h2 style="color:var(--uv); margin-bottom:10px;">🎓 UV Akademi Pro</h2>
-            <p style="color:var(--text-muted); font-size:14px;">Profesyonel UV Baskı & CorelDRAW Eğitimi</p>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h2 style="color:var(--uv); margin-bottom:5px;">🎓 UV Akademi Pro</h2>
+                    <p style="color:var(--text-muted); font-size:14px;">Profesyonel UV Baskı & CorelDRAW Eğitimi</p>
+                </div>
+                <div style="text-align:right;">
+                    <div id="levelDisplay" style="font-size:32px; font-weight:bold; color:var(--gold);">1</div>
+                    <div style="font-size:12px; color:var(--text-muted);">Seviye</div>
+                </div>
+            </div>
+            <div class="progress-bar" style="margin-top:15px;">
+                <div id="mainProgress" class="progress-fill" style="width:0%;"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:12px; color:var(--text-muted);">
+                <span>Toplam İlerleme</span>
+                <span id="progressText">0%</span>
+            </div>
         </div>
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px;">
-            <div id="btnUvAkademi" style="background:linear-gradient(135deg, #16162d, #3b0066); border:2px solid var(--uv); border-radius:20px; padding:30px; text-align:center; cursor:pointer;">
+            <div id="btnUvAkademi" style="background:linear-gradient(135deg, #16162d, #3b0066); border:2px solid var(--uv); border-radius:20px; padding:30px 20px; text-align:center; cursor:pointer;">
                 <div style="font-size:48px; margin-bottom:10px;">🧪</div>
-                <div style="font-size:18px; font-weight:bold;">UV AKADEMİ</div>
+                <div style="font-size:18px; font-weight:bold; margin-bottom:5px;">UV AKADEMİ</div>
                 <div style="font-size:12px; color:var(--text-muted);">8 Modül • Sertifikalı</div>
             </div>
-            <div id="btnCorelDraw" style="background:linear-gradient(135deg, #16162d, #1e1b4b); border:2px solid var(--primary); border-radius:20px; padding:30px; text-align:center; cursor:pointer;">
+            <div id="btnCorelDraw" style="background:linear-gradient(135deg, #16162d, #1e1b4b); border:2px solid var(--primary); border-radius:20px; padding:30px 20px; text-align:center; cursor:pointer;">
                 <div style="font-size:48px; margin-bottom:10px;">⌨️</div>
-                <div style="font-size:18px; font-weight:bold;">CORELDRAW</div>
-                <div style="font-size:12px; color:var(--text-muted);">95+ Kısayol</div>
+                <div style="font-size:18px; font-weight:bold; margin-bottom:5px;">CORELDRAW</div>
+                <div style="font-size:12px; color:var(--text-muted);">95+ Kısayol • Pratik</div>
+            </div>
+        </div>
+
+        <div class="lesson-container">
+            <h3 style="margin-top:0; color:var(--accent);">📋 Eğitim Yol Haritası</h3>
+            <div class="step-guide" style="margin-top:15px;">
+                <div class="step-item" style="padding-bottom:15px; margin-bottom:15px;">
+                    <div class="step-number" style="background:var(--success);">1</div>
+                    <div class="step-title">Temel Bilgiler</div>
+                    <div class="step-content">UV teknolojisi, kimyasal süreçler, malzeme bilimi</div>
+                </div>
+                <div class="step-item" style="padding-bottom:15px; margin-bottom:15px;">
+                    <div class="step-number" style="background:var(--success);">2</div>
+                    <div class="step-title">Dosya Hazırlama</div>
+                    <div class="step-content">CorelDRAW'da spot renkler, katman yönetimi</div>
+                </div>
+                <div class="step-item" style="padding-bottom:15px; margin-bottom:15px;">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Uygulamalı Eğitim</div>
+                    <div class="step-content">Makine operasyonu, arıza giderme</div>
+                </div>
+                <div class="step-item" style="border-bottom:none; padding-bottom:0; margin-bottom:0;">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Sertifikasyon</div>
+                    <div class="step-content">Final sınavı ve profesyonel sertifika</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- CORELDRAW EKRANI -->
-    <div class="screen" id="corelScreen">
+    <!-- UV AKADEMİ ANA EKRAN -->
+    <div class="screen" id="uvAcademyMain">
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
-            <button id="btnBack" class="btn btn-secondary">← Geri</button>
-            <h2 style="color:var(--accent); margin:0;">⌨️ CorelDRAW Kısayolları</h2>
+            <button id="btnBackHome" class="btn btn-secondary" style="padding:12px 16px;">←</button>
+            <h2 style="margin:0; color:var(--uv);">🧪 UV Akademi</h2>
         </div>
         
-        <input type="text" id="searchInput" placeholder="🔍 Kısayol ara..." style="margin-bottom:15px;">
+        <div class="header" style="border-color:rgba(191,0,255,0.2);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                <span style="font-size:14px; font-weight:bold;">Toplam İlerleme</span>
+                <span id="totalProgress" style="color:var(--uv); font-weight:bold;">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div id="totalProgressBar" class="progress-fill" style="width:0%;"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-top:10px; font-size:12px; color:var(--text-muted);">
+                <span id="completedModules">0/8 Modül</span>
+                <span id="totalPoints">0 XP Kazanıldı</span>
+            </div>
+        </div>
         
-        <div class="flex-wrap" style="margin-bottom:20px;">
+        <div id="modulesList"></div>
+    </div>
+
+    <!-- MODÜL DETAY EKRANI -->
+    <div class="screen" id="moduleDetail">
+        <div class="lesson-container" id="lessonContent"></div>
+        <div class="nav-buttons" id="lessonNav">
+            <button id="btnPrevLesson" class="btn btn-secondary">← Önceki</button>
+            <button id="btnNextLesson" class="btn">Sonraki →</button>
+        </div>
+    </div>
+
+    <!-- QUIZ EKRANI -->
+    <div class="screen" id="quizScreen">
+        <div class="lesson-container">
+            <div class="lesson-header">
+                <span class="lesson-badge">MODÜL SONU SINAVI</span>
+                <h2 class="lesson-title" id="quizTitle">Bilgi Kontrolü</h2>
+            </div>
+            <div id="quizContent"></div>
+        </div>
+    </div>
+
+    <!-- CORELDRAW REFERANS EKRANI -->
+    <div class="screen" id="corelReferenceScreen">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+            <button id="btnBackFromCorel" class="btn btn-secondary" style="padding:12px 16px;">←</button>
+            <h2 style="margin:0; color:var(--accent);">⌨️ CorelDRAW Kısayolları</h2>
+        </div>
+        
+        <div class="header" style="border-color:var(--info);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <span style="font-size:14px; font-weight:bold;">Hızlı Erişim</span>
+                <span style="color:var(--info); font-size:12px;">95 Kısayol</span>
+            </div>
+            <input type="text" id="shortcutSearch" placeholder="🔍 Kısayol ara...">
+        </div>
+        
+        <div class="flex-wrap" style="margin-bottom:15px;">
             <button class="filter-btn active" data-filter="all">Tümü</button>
             <button class="filter-btn" data-filter="uv" style="border-color:var(--uv); color:var(--uv);">UV Özel</button>
             <button class="filter-btn" data-filter="critical" style="border-color:var(--danger); color:var(--danger);">Kritik</button>
             <button class="filter-btn" data-filter="file">Dosya</button>
             <button class="filter-btn" data-filter="edit">Düzenle</button>
+            <button class="filter-btn" data-filter="color">Renk</button>
+            <button class="filter-btn" data-filter="align">Hizalama</button>
         </div>
         
-        <div id="shortcutsList"></div>
+        <div id="shortcutsContainer"></div>
     </div>
 
 </div>
 
+<!-- NAV BAR -->
 <div class="nav-bar">
     <div class="nav-item active" data-nav="homeScreen">🏠</div>
-    <div class="nav-item" data-nav="corelScreen">⌨️</div>
+    <div class="nav-item" data-nav="uvAcademyMain">🧪</div>
+    <div class="nav-item" data-nav="corelReferenceScreen">⌨️</div>
+</div>
+
+<!-- Achievement Popup -->
+<div class="achievement-popup" id="achievementPopup">
+    <span style="font-size:24px;">🏆</span>
+    <span id="achievementText">Başarım Kazanıldı!</span>
 </div>
 
 <script>
-const shortcuts = [
-    { key: "Ctrl+Q", desc: "Eğriye Çevir", category: "uv", context: "Fontları vektöre çevirme", critical: true },
-    { key: "Ctrl+End", desc: "En Alta Gönder", category: "uv", context: "Beyaz katmanı en alta", critical: true },
-    { key: "Ctrl+Home", desc: "En Üste Getir", category: "uv", context: "Varnish katmanını üste", critical: true },
-    { key: "Shift+F11", desc: "Tek Renk Dolgu", category: "uv", context: "RD_WHITE spot rengi", critical: true },
-    { key: "Ctrl+E", desc: "Dışa Aktar", category: "uv", context: "PDF/X-4 export", critical: true },
-    { key: "Ctrl+N", desc: "Yeni Belge", category: "file", context: "Yeni dosya açma" },
-    { key: "Ctrl+S", desc: "Kaydet", category: "file", context: "Dosyayı kaydetme" },
-    { key: "Ctrl+O", desc: "Aç", category: "file", context: "Dosya açma" },
-    { key: "Ctrl+Z", desc: "Geri Al", category: "edit", context: "Son işlemi geri alma" },
-    { key: "Ctrl+C", desc: "Kopyala", category: "edit", context: "Seçili nesneyi kopyalama" },
-    { key: "Ctrl+V", desc: "Yapıştır", category: "edit", context: "Kopyalananı yapıştırma" },
-];
+'''
 
-let currentFilter = 'all';
-
-function showScreen(screenId) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    const target = document.getElementById(screenId);
-    if (target) target.classList.add('active');
-    
-    document.querySelectorAll('.nav-item').forEach(nav => {
-        nav.classList.remove('active');
-        if (nav.dataset.nav === screenId) nav.classList.add('active');
-    });
-}
-
-function renderShortcuts() {
-    const list = document.getElementById('shortcutsList');
-    if (!list) return;
-    
-    let filtered = shortcuts;
-    if (currentFilter !== 'all') {
-        if (currentFilter === 'critical') filtered = shortcuts.filter(s => s.critical);
-        else if (currentFilter === 'uv') filtered = shortcuts.filter(s => s.category === 'uv');
-        else filtered = shortcuts.filter(s => s.category === currentFilter);
-    }
-    
-    const search = document.getElementById('searchInput')?.value.toLowerCase() || '';
-    if (search) {
-        filtered = filtered.filter(s => 
-            s.key.toLowerCase().includes(search) || 
-            s.desc.toLowerCase().includes(search)
-        );
-    }
-    
-    let html = '';
-    filtered.forEach(s => {
-        const badgeClass = s.category === 'uv' ? 'badge-uv' : s.critical ? 'badge-critical' : 'badge-corel';
-        const badgeText = s.category === 'uv' ? 'UV' : s.critical ? 'KRİTİK' : 'COREL';
-        
-        html += `
-            <div class="shortcut-card" data-key="${s.key}" data-desc="${s.desc}" data-context="${s.context}">
-                <span class="category-badge ${badgeClass}">${badgeText}</span>
-                <div style="margin-top:8px;">
-                    <span class="shortcut-key">${s.key}</span>
-                    <span style="color:var(--text);">${s.desc}</span>
-                </div>
-                <div style="margin-top:8px; font-size:12px; color:var(--text-muted); font-style:italic;">
-                    💡 ${s.context}
-                </div>
-            </div>
-        `;
-    });
-    
-    list.innerHTML = html || '<p style="text-align:center; color:var(--text-muted); padding:40px;">Sonuç bulunamadı</p>';
-}
-
-function showModal(key, desc, context) {
-    const old = document.querySelector('.modal-overlay');
-    if (old) old.remove();
-    
-    const modal = document.createElement('div');
-    modal.className = 'modal-overlay';
-    modal.innerHTML = `
-        <div class="modal-content">
-            <div style="font-size:48px; margin-bottom:15px;">⌨️</div>
-            <div style="font-size:28px; font-family:monospace; color:var(--gold); margin-bottom:15px; font-weight:bold;">${key}</div>
-            <div style="font-size:20px; color:var(--text); margin-bottom:10px; font-weight:600;">${desc}</div>
-            <div style="font-size:14px; color:var(--accent); margin-bottom:25px; font-style:italic;">💡 ${context}</div>
-            <button id="btnCloseModal" class="btn" style="width:100%;">Kapat</button>
-        </div>
-    `;
-    document.body.appendChild(modal);
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    
-    // Ana ekran butonları
-    document.getElementById('btnUvAkademi')?.addEventListener('click', () => alert('UV Akademi yapım aşamasında'));
-    document.getElementById('btnCorelDraw')?.addEventListener('click', () => { showScreen('corelScreen'); renderShortcuts(); });
-    document.getElementById('btnBack')?.addEventListener('click', () => showScreen('homeScreen'));
-    
-    // Navigasyon
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', function() {
-            const screen = this.dataset.nav;
-            showScreen(screen);
-            if (screen === 'corelScreen') renderShortcuts();
-        });
-    });
-    
-    // Filtre butonları - Event Delegation
-    document.querySelector('.flex-wrap')?.addEventListener('click', function(e) {
-        const btn = e.target.closest('.filter-btn');
-        if (!btn) return;
-        
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentFilter = btn.dataset.filter || 'all';
-        renderShortcuts();
-    });
-    
-    // Arama
-    document.getElementById('searchInput')?.addEventListener('input', renderShortcuts);
-    
-    // Shortcut kartları - Event Delegation
-    document.getElementById('shortcutsList')?.addEventListener('click', function(e) {
-        const card = e.target.closest('.shortcut-card');
-        if (!card) return;
-        showModal(card.dataset.key, card.dataset.desc, card.dataset.context);
-    });
-    
-    // Modal kapatma - Event Delegation
-    document.addEventListener('click', function(e) {
-        if (e.target.id === 'btnCloseModal' || e.target.classList.contains('modal-overlay')) {
-            document.querySelector('.modal-overlay')?.remove();
-        }
-    });
-    
-    console.log('UV Akademi Pro - Hazır');
-});
-</script>
+print("HTML yapısı oluşturuldu, şimdi JavaScript içerikleri ekleniyor...")
+print(f"Şu ana kadar: {len(full_app_code)} karakter")
 // ==========================================
 // VERİLER - Tüm Modüller ve İçerikler
 // ==========================================
@@ -1163,7 +1065,5 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-</body>
-</html>
 </body>
 </html>
