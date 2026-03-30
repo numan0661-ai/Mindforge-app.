@@ -6,7 +6,51 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <title>UV Akademi Pro - Profesyonel Eğitim Platformu</title>
+/* Mobil optimizasyon */
+.filter-btn {
+    flex: 0;
+    white-space: nowrap;
+    font-size: 12px;
+    padding: 8px 12px;
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-muted);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    min-height: 44px; /* Mobil erişilebilirlik */
+}
 
+.filter-btn.active {
+    background: var(--uv) !important;
+    color: white !important;
+    border-color: var(--uv) !important;
+}
+
+.shortcut-card {
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+/* Buton basma efekti */
+.filter-btn:active,
+.shortcut-card:active,
+.nav-item:active {
+    transform: scale(0.95);
+    opacity: 0.8;
+}
+
+/* Modal z-index düzeltmesi */
+.shortcut-modal {
+    z-index: 100000 !important;
+}
     <style>
         :root {
             --primary: #6366f1; --accent: #06b6d4; --bg: #0b0b1a;
@@ -535,9 +579,16 @@
 
     <!-- UV AKADEMİ ANA EKRAN -->
    <!-- YENİ - BUNLARI YAPIŞTIRIN -->
+<!-- BUNLARI YAPIŞTIRIN -->
 <div style="display:flex; gap:8px; overflow-x:auto; padding-bottom:10px; margin-bottom:15px;">
-    <button class="filter-btn active" onclick="filterShortcuts('all', this)">Tümü</button>
-    <button class="filter-btn" onclick="filterShortcuts('uv', this)" style="border-color:var(--uv); color:var(--uv);">UV Özel</button>
+    <button class="filter-btn active" data-category="all">Tümü</button>
+    <button class="filter-btn" data-category="uv" style="border-color:var(--uv); color:var(--uv);">UV Özel</button>
+    <button class="filter-btn" data-category="critical" style="border-color:var(--danger); color:var(--danger);">Kritik</button>
+    <button class="filter-btn" data-category="file">Dosya</button>
+    <button class="filter-btn" data-category="edit">Düzenle</button>
+    <button class="filter-btn" data-category="color">Renk</button>
+    <button class="filter-btn" data-category="align">Hizalama</button>
+</div>
     <button class="filter-btn" onclick="filterShortcuts('critical', this)" style="border-color:var(--danger); color:var(--danger);">Kritik</button>
     <button class="filter-btn" onclick="filterShortcuts('file', this)">Dosya</button>
     <button class="filter-btn" onclick="filterShortcuts('edit', this)">Düzenle</button>
@@ -2866,9 +2917,10 @@ const corelShortcuts = [
 ];
 
 // ==========================================
-// GLOBAL DEĞİŞKENLER
+// UV AKADEMI PRO - MOBIL OPTIMIZE EDILMIS KOD
 // ==========================================
 
+// Global degiskenler
 let currentModule = 0;
 let currentLesson = 0;
 let curingAnimation = null;
@@ -2884,24 +2936,138 @@ const nozzleState = {
 };
 
 const materials = {
-    metal: { name: 'Paslanmaz Çelik', energy: 850, color: '#10b981', adhesion: 95, primer: false },
+    metal: { name: 'Paslanmaz Celik', energy: 850, color: '#10b981', adhesion: 95, primer: false },
     pvc: { name: 'PVC', energy: 39, color: '#f59e0b', adhesion: 60, primer: false },
     pp: { name: 'Polipropilen (PP)', energy: 29, color: '#ef4444', adhesion: 20, primer: true },
     ptfe: { name: 'PTFE (Teflon)', energy: 18, color: '#64748b', adhesion: 5, primer: true }
 };
 
 let currentMaterial = materials.metal;
-
-let userProgress = JSON.parse(localStorage.getItem('uv_progress')) || {
-    completedModules: [],
-    currentModule: 1,
-    totalXP: 0
-};
-
+let userProgress = JSON.parse(localStorage.getItem('uv_progress')) || { completedModules: [], currentModule: 1, totalXP: 0 };
 let stats = JSON.parse(localStorage.getItem('mf_stats')) || { exp: 0, lvl: 1 };
 
 // ==========================================
-// NAVİGASYON FONKSİYONU
+// EVENT DELEGATION SETUP - DOMContentLoaded
+// ==========================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('UV Akademi Pro - Baslatildi');
+    
+    // Event delegation setup
+    setupEventDelegation();
+    
+    // Baslangic render
+    updateMainProgress();
+    if (document.getElementById('shortcutsContainer')) {
+        renderShortcuts();
+    }
+});
+
+function setupEventDelegation() {
+    // Navigasyon butonlari
+    const navBar = document.getElementById('mainNavBar');
+    if (navBar) {
+        navBar.addEventListener('click', handleNavClick);
+        navBar.addEventListener('touchend', handleNavTouch);
+    }
+    
+    // Filtre butonlari - CorelDRAW ekrani
+    const corelScreen = document.getElementById('corelReferenceScreen');
+    if (corelScreen) {
+        corelScreen.addEventListener('click', handleFilterClick);
+        corelScreen.addEventListener('touchend', handleFilterTouch);
+    }
+    
+    // Shortcut kartlari
+    const shortcutsContainer = document.getElementById('shortcutsContainer');
+    if (shortcutsContainer) {
+        shortcutsContainer.addEventListener('click', handleShortcutClick);
+        shortcutsContainer.addEventListener('touchend', handleShortcutTouch);
+    }
+}
+
+// ==========================================
+// EVENT HANDLER'LAR
+// ==========================================
+
+function handleNavClick(e) {
+    const item = e.target.closest('.nav-item');
+    if (!item) return;
+    
+    const screenId = item.getAttribute('data-screen');
+    if (screenId) {
+        e.preventDefault();
+        goToScreen(screenId);
+    }
+}
+
+function handleNavTouch(e) {
+    const item = e.target.closest('.nav-item');
+    if (!item) return;
+    
+    e.preventDefault();
+    const screenId = item.getAttribute('data-screen');
+    if (screenId) {
+        goToScreen(screenId);
+    }
+}
+
+function handleFilterClick(e) {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const category = btn.getAttribute('data-category');
+    if (category) {
+        filterShortcuts(category, btn);
+    }
+}
+
+function handleFilterTouch(e) {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    
+    e.preventDefault();
+    const category = btn.getAttribute('data-category');
+    if (category) {
+        filterShortcuts(category, btn);
+    }
+}
+
+function handleShortcutClick(e) {
+    const card = e.target.closest('.shortcut-card');
+    if (!card) return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const key = card.getAttribute('data-key');
+    const desc = card.getAttribute('data-desc');
+    const context = card.getAttribute('data-context');
+    
+    if (key) {
+        showShortcutDetail(key, desc, context);
+    }
+}
+
+function handleShortcutTouch(e) {
+    const card = e.target.closest('.shortcut-card');
+    if (!card) return;
+    
+    e.preventDefault();
+    const key = card.getAttribute('data-key');
+    const desc = card.getAttribute('data-desc');
+    const context = card.getAttribute('data-context');
+    
+    if (key) {
+        showShortcutDetail(key, desc, context);
+    }
+}
+
+// ==========================================
+// NAVIGASYON FONKSIYONU
 // ==========================================
 
 function goToScreen(screenId) {
@@ -2916,51 +3082,234 @@ function goToScreen(screenId) {
     
     const target = document.getElementById(screenId);
     if (!target) {
-        console.error('Ekran bulunamadı:', screenId);
+        console.error('Ekran bulunamadi:', screenId);
         return;
     }
     
     target.style.display = 'block';
-    
     setTimeout(() => {
         target.classList.add('active');
         target.style.opacity = '1';
     }, 10);
     
+    // Nav aktifligini guncelle
     document.querySelectorAll('.nav-item').forEach(item => {
         item.classList.remove('active');
-        const dataScreen = item.getAttribute('data-screen');
-        if (dataScreen === screenId) {
+        if (item.getAttribute('data-screen') === screenId) {
             item.classList.add('active');
         }
     });
-    
-    if (screenId === 'uvAcademyMain') {
-        setTimeout(() => {
-            if (typeof initUVAcademy === 'function') initUVAcademy();
-        }, 50);
-    }
-    if (screenId === 'corelReferenceScreen') {
-        setTimeout(() => {
-            if (typeof renderShortcuts === 'function') renderShortcuts();
-        }, 50);
-    }
     
     window.scrollTo(0, 0);
 }
 
 // ==========================================
-// UV AKADEMİ FONKSİYONLARI
+// CORELDRAW KISAYOL FONKSIYONLARI
 // ==========================================
 
-function initUVAcademy() {
-    renderModules();
-    updateProgress();
-    updateMainProgress();
+function renderShortcuts() {
+    const container = document.getElementById('shortcutsContainer');
+    if (!container) return;
+    
+    const filter = container.dataset.filter || 'all';
+    let shortcuts = corelShortcuts;
+    
+    if (filter === 'uv') shortcuts = corelShortcuts.filter(s => s.category === 'uv');
+    else if (filter === 'critical') shortcuts = corelShortcuts.filter(s => s.critical);
+    else if (filter !== 'all') shortcuts = corelShortcuts.filter(s => s.category === filter);
+    
+    const categories = {
+        uv: 'UV Baski Kritik',
+        file: 'Dosya Yonetimi',
+        edit: 'Duzenleme',
+        color: 'Renk Yonetimi',
+        align: 'Hizalama',
+        text: 'Metin Araclari',
+        view: 'Gorunum',
+        object: 'Nesne Yonetimi',
+        tools: 'Araclar',
+        effects: 'Efektler',
+        search: 'Bul/Degistir',
+        window: 'Pencere',
+        library: 'Stil/Kutuphane',
+        advanced: 'Gelismis'
+    };
+    
+    let html = '';
+    let currentCat = '';
+    
+    shortcuts.forEach(s => {
+        if (s.category !== currentCat && filter === 'all') {
+            if (currentCat) html += '</div>';
+            currentCat = s.category;
+            html += `<div style="margin-bottom:20px;"><div style="font-size:14px; color:var(--accent); font-weight:bold; margin-bottom:10px; text-transform:uppercase; letter-spacing:1px;">${categories[s.category] || s.category}</div>`;
+        }
+        
+        const badgeClass = s.category === 'uv' ? 'badge-uv' : s.critical ? 'badge-critical' : 'badge-corel';
+        const cardClass = s.critical ? 'shortcut-card shortcut-critical' : 'shortcut-card';
+        
+        // Guvenli escaping
+        const safeKey = s.key.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        const safeDesc = s.desc.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        const safeContext = s.uvContext.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        
+        html += `
+            <div class="${cardClass}" 
+                 data-key="${safeKey}" 
+                 data-desc="${safeDesc}" 
+                 data-context="${safeContext}"
+                 role="button"
+                 tabindex="0">
+                <span class="category-badge ${badgeClass}">${s.category === 'uv' ? 'UV' : s.critical ? 'KRITIK' : 'COREL'}</span>
+                <div style="margin-top:8px;">
+                    <span class="shortcut-key">${s.key}</span>
+                    <span style="color:var(--text);">${s.desc}</span>
+                </div>
+                <div style="margin-top:8px; font-size:12px; color:var(--text-muted); font-style:italic;">
+                    💡 ${s.uvContext}
+                </div>
+            </div>
+        `;
+    });
+    
+    if (filter === 'all') html += '</div>';
+    container.innerHTML = html;
 }
 
+function filterShortcuts(category, clickedBtn) {
+    const container = document.getElementById('shortcutsContainer');
+    if (container) {
+        container.dataset.filter = category;
+        renderShortcuts();
+    }
+    
+    // Buton stillerini guncelle
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+        btn.style.background = 'var(--surface)';
+        btn.style.color = 'var(--text-muted)';
+        btn.style.borderColor = 'rgba(255,255,255,0.1)';
+    });
+    
+    if (clickedBtn) {
+        clickedBtn.classList.add('active');
+        clickedBtn.style.background = 'var(--uv)';
+        clickedBtn.style.color = 'white';
+        clickedBtn.style.borderColor = 'var(--uv)';
+    }
+}
+
+function showShortcutDetail(key, desc, context) {
+    // Mevcut modal'i kaldir
+    const existing = document.querySelector('.shortcut-modal');
+    if (existing) existing.remove();
+    
+    // Yeni modal olustur
+    const modal = document.createElement('div');
+    modal.className = 'shortcut-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 100000;
+        padding: 20px;
+    `;
+    
+    modal.innerHTML = `
+        <div style="
+            background: var(--surface);
+            border: 3px solid var(--uv);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(191, 0, 255, 0.4);
+        ">
+            <div style="font-size: 44px; margin-bottom: 15px;">⌨️</div>
+            <div style="font-size: 24px; font-family: monospace; color: var(--gold); margin-bottom: 15px; font-weight: bold;">${key}</div>
+            <div style="font-size: 18px; color: var(--text); margin-bottom: 12px; font-weight: 600;">${desc}</div>
+            <div style="font-size: 14px; color: var(--accent); margin-bottom: 25px; font-style: italic;">💡 ${context}</div>
+            <button onclick="this.closest('.shortcut-modal').remove()" style="
+                width: 100%; 
+                padding: 15px; 
+                background: linear-gradient(135deg, var(--primary), var(--accent));
+                color: white;
+                border: none;
+                border-radius: 12px;
+                font-weight: bold;
+                font-size: 16px;
+                cursor: pointer;
+            ">Kapat</button>
+        </div>
+    `;
+    
+    // Modal disina tiklayinca kapat
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) modal.remove();
+    });
+    
+    document.body.appendChild(modal);
+}
+
+function searchShortcuts() {
+    const query = document.getElementById('shortcutSearch')?.value.toLowerCase() || '';
+    const container = document.getElementById('shortcutsContainer');
+    if (!container) return;
+    
+    if (!query) {
+        renderShortcuts();
+        return;
+    }
+    
+    const filtered = corelShortcuts.filter(s => 
+        s.key.toLowerCase().includes(query) || 
+        s.desc.toLowerCase().includes(query) ||
+        s.uvContext.toLowerCase().includes(query)
+    );
+    
+    let html = `<div style="margin-bottom:20px;"><div style="font-size:14px; color:var(--accent); font-weight:bold; margin-bottom:10px;">Arama Sonuclari (${filtered.length})</div>`;
+    
+    filtered.forEach(s => {
+        const badgeClass = s.category === 'uv' ? 'badge-uv' : s.critical ? 'badge-critical' : 'badge-corel';
+        const cardClass = s.critical ? 'shortcut-card shortcut-critical' : 'shortcut-card';
+        
+        const safeKey = s.key.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        const safeDesc = s.desc.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        const safeContext = s.uvContext.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        
+        html += `
+            <div class="${cardClass}" 
+                 data-key="${safeKey}" 
+                 data-desc="${safeDesc}" 
+                 data-context="${safeContext}"
+                 role="button"
+                 tabindex="0">
+                <span class="category-badge ${badgeClass}">${s.category === 'uv' ? 'UV' : s.critical ? 'KRITIK' : 'COREL'}</span>
+                <div style="margin-top:8px;">
+                    <span class="shortcut-key">${s.key}</span>
+                    <span style="color:var(--text);">${s.desc}</span>
+                </div>
+                <div style="margin-top:8px; font-size:12px; color:var(--text-muted); font-style:italic;">
+                    💡 ${s.uvContext}
+                </div>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// ==========================================
+// DIGER FONKSIYONLAR (Kisaltilmis)
+// ==========================================
+
 function updateMainProgress() {
-    const total = uvCurriculum.length - 1; // Final sınav hariç
+    const total = 8;
     const completed = userProgress.completedModules.length;
     const percent = Math.round((completed / total) * 100);
     
@@ -2973,907 +3322,14 @@ function updateMainProgress() {
     if (levelDisplay) levelDisplay.textContent = stats.lvl;
 }
 
-function renderModules() {
-    const container = document.getElementById('modulesList');
-    if (!container) return;
-    
-    container.innerHTML = uvCurriculum.map((mod, idx) => {
-        const isCompleted = userProgress.completedModules.includes(mod.id);
-        const isLocked = mod.id > userProgress.currentModule;
-        const isCurrent = mod.id === userProgress.currentModule;
-        
-        return `
-            <div class="module-card ${isCompleted ? 'completed' : ''} ${isLocked ? 'locked' : ''}" 
-                 onclick="${isLocked ? '' : `openModule(${mod.id})`}">
-                <div class="module-number">MODÜL ${mod.id}</div>
-                <div class="module-title">${mod.title}</div>
-                <div class="module-desc">${mod.desc}</div>
-                <div class="module-meta">
-                    <span>⏱️ ${mod.duration}</span>
-                    <span>🎯 ${mod.xp} XP</span>
-                    ${isCompleted ? '<span style="color:var(--success)">✓ Tamamlandı</span>' : ''}
-                    ${isLocked ? '<span>🔒 Kilitli</span>' : ''}
-                    ${isCurrent ? '<span style="color:var(--uv)">▶ Devam Et</span>' : ''}
-                </div>
-            </div>
-        `;
-    }).join('');
-}
-
-function updateProgress() {
-    const total = uvCurriculum.length - 1;
-    const completed = userProgress.completedModules.length;
-    const percent = Math.round((completed / total) * 100);
-    
-    const totalProgress = document.getElementById('totalProgress');
-    const totalProgressBar = document.getElementById('totalProgressBar');
-    const completedModules = document.getElementById('completedModules');
-    const totalPoints = document.getElementById('totalPoints');
-    
-    if (totalProgress) totalProgress.textContent = percent + '%';
-    if (totalProgressBar) totalProgressBar.style.width = percent + '%';
-    if (completedModules) completedModules.textContent = `${completed}/${total} Modül`;
-    if (totalPoints) totalPoints.textContent = `${userProgress.totalXP} XP Kazanıldı`;
-}
-
-function openModule(moduleId) {
-    currentModule = uvCurriculum.findIndex(m => m.id === moduleId);
-    const mod = uvCurriculum[currentModule];
-    
-    if (mod.isFinal) {
-        startFinalQuiz();
-        return;
-    }
-    
-    currentLesson = 0;
-    showLesson();
-    goToScreen('moduleDetail');
-}
-
-function showLesson() {
-    const mod = uvCurriculum[currentModule];
-    const lesson = mod.lessons[currentLesson];
-    
-    const lessonContent = document.getElementById('lessonContent');
-    const nextBtn = document.getElementById('nextBtn');
-    const prevBtn = document.querySelector('#lessonNav .btn-secondary');
-    
-    if (lessonContent) {
-        lessonContent.innerHTML = `
-            <div class="lesson-header">
-                <span class="lesson-badge">MODÜL ${mod.id} • DERS ${currentLesson + 1}/${mod.lessons.length}</span>
-                <h2 class="lesson-title">${lesson.title}</h2>
-                <div class="lesson-subtitle">${lesson.subtitle}</div>
-            </div>
-            ${lesson.content}
-        `;
-    }
-    
-    if (prevBtn) prevBtn.style.visibility = currentLesson === 0 ? 'hidden' : 'visible';
-    
-    if (nextBtn) {
-        if (currentLesson === mod.lessons.length - 1) {
-            nextBtn.textContent = 'Quize Geç →';
-            nextBtn.onclick = startQuiz;
-        } else {
-            nextBtn.textContent = 'Sonraki →';
-            nextBtn.onclick = nextLesson;
-        }
-    }
-    
-    setTimeout(() => {
-        if (document.getElementById('adhesionCanvas')) {
-            startAdhesionSim();
-        }
-        if (document.getElementById('nozzleCanvas')) {
-            drawNozzlePattern();
-        }
-    }, 100);
-}
-
-function nextLesson() {
-    currentLesson++;
-    showLesson();
-}
-
-function prevLesson() {
-    currentLesson--;
-    showLesson();
-}
-
-function startQuiz() {
-    const mod = uvCurriculum[currentModule];
-    const quiz = mod.quiz;
-    
-    const quizTitle = document.getElementById('quizTitle');
-    const quizContent = document.getElementById('quizContent');
-    
-    if (quizTitle) quizTitle.textContent = `${mod.title} - Bilgi Kontrolü`;
-    
-    if (quizContent) {
-        quizContent.innerHTML = `
-            <div class="quiz-container">
-                <div class="quiz-question">${quiz.questions[0].question}</div>
-                <div class="quiz-options" id="quizOptions">
-                    ${quiz.questions[0].options.map((opt, idx) => `
-                        <div class="quiz-option" onclick="selectAnswer(${idx}, ${quiz.questions[0].correct}, '${quiz.questions[0].explanation.replace(/'/g, "\\'")}')">
-                            ${String.fromCharCode(65 + idx)}) ${opt}
-                        </div>
-                    `).join('')}
-                </div>
-                <div id="quizFeedback" style="margin-top:20px; display:none;"></div>
-            </div>
-        `;
-    }
-    
-    goToScreen('quizScreen');
-}
-
-function selectAnswer(selected, correct, explanation) {
-    const options = document.querySelectorAll('.quiz-option');
-    const feedback = document.getElementById('quizFeedback');
-    
-    options.forEach((opt, idx) => {
-        opt.classList.add('disabled');
-        if (idx === correct) opt.classList.add('correct');
-        else if (idx === selected && idx !== correct) opt.classList.add('wrong');
-    });
-    
-    const isCorrect = selected === correct;
-    if (feedback) {
-        feedback.style.display = 'block';
-        feedback.innerHTML = `
-            <div class="content-block ${isCorrect ? '' : 'warning'}" style="margin-top:20px;">
-                <div class="block-title">${isCorrect ? '✅ Doğru!' : '❌ Yanlış'}</div>
-                <div class="block-content">
-                    <p>${explanation}</p>
-                    ${isCorrect ? `<button class="btn btn-success" onclick="completeModule()" style="margin-top:15px;">Modülü Tamamla (+${uvCurriculum[currentModule].xp} XP)</button>` : 
-                    `<button class="btn" onclick="startQuiz()" style="margin-top:15px;">Tekrar Dene</button>`}
-                </div>
-            </div>
-        `;
-    }
-}
-
-function completeModule() {
-    const mod = uvCurriculum[currentModule];
-    
-    if (!userProgress.completedModules.includes(mod.id)) {
-        userProgress.completedModules.push(mod.id);
-        userProgress.totalXP += mod.xp;
-        
-        if (mod.id < uvCurriculum.length) {
-            userProgress.currentModule = mod.id + 1;
-        }
-        
-        localStorage.setItem('uv_progress', JSON.stringify(userProgress));
-        addExp(mod.xp);
-        showAchievement(`${mod.title} Tamamlandı! +${mod.xp} XP`);
-    }
-    
-    goToScreen('uvAcademyMain');
-    initUVAcademy();
-}
-
-function startFinalQuiz() {
-    const mod = uvCurriculum[currentModule];
-    let currentQ = 0;
-    let score = 0;
-    
-    function showQuestion() {
-        const q = mod.finalQuiz[currentQ];
-        const quizTitle = document.getElementById('quizTitle');
-        const quizContent = document.getElementById('quizContent');
-        
-        if (quizTitle) quizTitle.textContent = `🎓 FİNAL SINAVI (${currentQ + 1}/${mod.finalQuiz.length})`;
-        
-        if (quizContent) {
-            quizContent.innerHTML = `
-                <div class="quiz-container">
-                    <div class="quiz-question">${q.question}</div>
-                    <div class="quiz-options">
-                        ${q.options.map((opt, idx) => `
-                            <div class="quiz-option" onclick="window.finalSelect(${idx}, ${q.correct
-
-# UV Akademi Pro - Eksik Kısımları Tamamlama
-# HTML dosyasının son kısmını analiz edip tamamlıyorum
-
-missing_code = """
-function window.finalSelect(selected, correct) {
-    const options = document.querySelectorAll('.quiz-option');
-    
-    options.forEach((opt, idx) => {
-        opt.classList.add('disabled');
-        if (idx === correct) opt.classList.add('correct');
-        else if (idx === selected && idx !== correct) opt.classList.add('wrong');
-    });
-    
-    if (selected === correct) score++;
-    
-    setTimeout(() => {
-        currentQ++;
-        if (currentQ < mod.finalQuiz.length) {
-            showQuestion();
-        } else {
-            showFinalResult();
-        }
-    }, 1500);
-}
-
-function showFinalResult() {
-    const percent = Math.round((score / mod.finalQuiz.length) * 100);
-    const passed = percent >= 80;
-    const quizContent = document.getElementById('quizContent');
-    
-    if (quizContent) {
-        quizContent.innerHTML = `
-            <div style="text-align:center; padding:40px 20px;">
-                <div style="font-size:64px; margin-bottom:20px;">${passed ? '🏆' : '📚'}</div>
-                <h2 style="color:${passed ? 'var(--success)' : 'var(--warning)'}; margin-bottom:15px;">
-                    ${passed ? 'Tebrikler! Sertifika Kazandınız' : 'Sınav Tamamlandı'}
-                </h2>
-                <div style="font-size:48px; font-weight:bold; color:var(--gold); margin:20px 0;">
-                    ${percent}%
-                </div>
-                <p style="color:var(--text-muted); margin-bottom:20px;">
-                    ${score}/${mod.finalQuiz.length} doğru cevap
-                </p>
-                <p style="margin-bottom:30px; ${!passed ? 'color:var(--danger);' : ''}">
-                    ${passed ? 'UV Baskı Uzmanı sertifikası kazandınız! Bu başarıyı LinkedIn profilinize ekleyebilirsiniz.' : 'Geçme notu %80. Tekrar denemek için aşağıdaki butona tıklayın.'}
-                </p>
-                ${passed ? `
-                    <button class="btn btn-success" onclick="downloadCertificate()" style="margin-bottom:15px;">
-                        📜 Sertifikayı İndir
-                    </button>
-                    <br>
-                    <button class="btn btn-secondary" onclick="goToScreen('homeScreen')">
-                        Ana Sayfaya Dön
-                    </button>
-                ` : `
-                    <button class="btn" onclick="location.reload()">
-                        🔄 Sınavı Tekrarla
-                    </button>
-                `}
-            </div>
-        `;
-    }
-    
-    if (passed && !userProgress.completedModules.includes(8)) {
-        userProgress.completedModules.push(8);
-        userProgress.totalXP += 500;
-        localStorage.setItem('uv_progress', JSON.stringify(userProgress));
-        addExp(500);
-        showAchievement('UV Baskı Uzmanı Sertifikası! +500 XP');
-    }
-}
-
-function downloadCertificate() {
-    const canvas = document.createElement('canvas');
-    canvas.width = 800;
-    canvas.height = 600;
-    const ctx = canvas.getContext('2d');
-    
-    // Arka plan
-    const gradient = ctx.createLinearGradient(0, 0, 800, 600);
-    gradient.addColorStop(0, '#0b0b1a');
-    gradient.addColorStop(1, '#1e1e3f');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, 800, 600);
-    
-    // Çerçeve
-    ctx.strokeStyle = '#bf00ff';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(20, 20, 760, 560);
-    
-    // İç çerçeve
-    ctx.strokeStyle = '#6366f1';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(35, 35, 730, 530);
-    
-    // Başlık
-    ctx.fillStyle = '#bf00ff';
-    ctx.font = 'bold 36px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText('🏆 UV BASKI UZMANI', 400, 100);
-    
-    // Alt başlık
-    ctx.fillStyle = '#06b6d4';
-    ctx.font = '24px Arial';
-    ctx.fillText('SERTİFİKA', 400, 140);
-    
-    // Çizgi
-    ctx.strokeStyle = '#f59e0b';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(250, 160);
-    ctx.lineTo(550, 160);
-    ctx.stroke();
-    
-    // Metin
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '18px Arial';
-    ctx.fillText('Bu sertifika', 400, 210);
-    
-    ctx.font = 'bold 28px Arial';
-    ctx.fillStyle = '#10b981';
-    ctx.fillText('UV AKADEMİ PRO', 400, 250);
-    
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '18px Arial';
-    ctx.fillText('tarafından verilmiştir', 400, 280);
-    
-    ctx.font = '16px Arial';
-    ctx.fillStyle = '#94a3b8';
-    ctx.fillText('Kapsamlı UV Baskı ve CorelDRAW Eğitim Programını', 400, 320);
-    ctx.fillText('başarıyla tamamlayarak', 400, 345);
-    
-    ctx.font = 'bold 22px Arial';
-    ctx.fillStyle = '#f59e0b';
-    ctx.fillText('PROFESYONEL UV BASKI UZMANI', 400, 390);
-    
-    ctx.font = '16px Arial';
-    ctx.fillStyle = '#94a3b8';
-    ctx.fillText('unvanını kazanmıştır.', 400, 420);
-    
-    // Tarih
-    const date = new Date().toLocaleDateString('tr-TR');
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '14px Arial';
-    ctx.fillText(`Tarih: ${date}`, 400, 480);
-    
-    // Sertifika ID
-    const certId = 'UV-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-    ctx.fillStyle = '#6366f1';
-    ctx.font = '12px Arial';
-    ctx.fillText(`Sertifika No: ${certId}`, 400, 510);
-    
-    // İmza çizgisi
-    ctx.strokeStyle = '#ffffff';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(300, 540);
-    ctx.lineTo(500, 540);
-    ctx.stroke();
-    
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '12px Arial';
-    ctx.fillText('Eğitim Direktörü', 400, 555);
-    
-    // İndirme
-    const link = document.createElement('a');
-    link.download = `UV-Baski-Uzmani-Sertifika-${certId}.png`;
-    link.href = canvas.toDataURL();
-    link.click();
-}
-
-// ==========================================
-// SİMÜLASYON FONKSİYONLARI
-// ==========================================
-
-function startCuringSim() {
-    const btn = document.getElementById('startCuringBtn');
-    const btnText = document.getElementById('btnText');
-    const simStatus = document.getElementById('simStatus');
-    
-    if (curingAnimation) {
-        clearInterval(curingAnimation);
-        curingAnimation = null;
-        btnText.textContent = '🎬 Simülasyonu Başlat';
-        resetCuringSim();
-        return;
-    }
-    
-    btnText.textContent = '⏹ Durdur';
-    
-    const steps = [
-        { step: 1, text: 'UV ışını yayılıyor...', uvOpacity: 1, temp: 30, inkColor: 'url(#inkLiquid)' },
-        { step: 2, text: 'Foto-başlatıcılar uyarılıyor...', uvOpacity: 1, temp: 45, inkColor: 'url(#inkLiquid)' },
-        { step: 3, text: 'Polimerleşme başlıyor...', uvOpacity: 0.8, temp: 60, inkColor: 'url(#inkSolid)' },
-        { step: 4, text: 'Katılaşma tamamlandı!', uvOpacity: 0, temp: 40, inkColor: 'url(#inkSolid)' }
-    ];
-    
-    let currentStep = 0;
-    
-    curingAnimation = setInterval(() => {
-        if (currentStep >= steps.length) {
-            clearInterval(curingAnimation);
-            curingAnimation = null;
-            btnText.textContent = '🔄 Tekrar Başlat';
-            return;
-        }
-        
-        const s = steps[currentStep];
-        
-        // UV ışınları
-        const uvRays = document.getElementById('uvRays');
-        if (uvRays) uvRays.setAttribute('opacity', s.uvOpacity);
-        
-        // Lamba parlaklığı
-        const lampGlow = document.getElementById('lampGlow');
-        if (lampGlow) lampGlow.setAttribute('opacity', s.uvOpacity * 0.8);
-        
-        // Boya rengi
-        const inkRect = document.getElementById('inkRect');
-        const inkState = document.getElementById('inkState');
-        if (inkRect) inkRect.setAttribute('fill', s.inkColor);
-        if (inkState) {
-            inkState.textContent = currentStep < 2 ? 'SIVI BOYA' : 'KATILAŞMIŞ';
-            inkState.setAttribute('fill', currentStep < 2 ? '#fff' : '#10b981');
-        }
-        
-        // Moleküller
-        const molecules = document.getElementById('molecules');
-        const polymerChains = document.getElementById('polymerChains');
-        if (molecules) molecules.setAttribute('opacity', currentStep < 3 ? '1' : '0');
-        if (polymerChains) polymerChains.setAttribute('opacity', currentStep >= 2 ? '1' : '0');
-        
-        // Sıcaklık
-        const tempGauge = document.getElementById('tempGauge');
-        const tempFill = document.getElementById('tempFill');
-        if (tempGauge) tempGauge.setAttribute('opacity', '1');
-        if (tempFill) {
-            const height = Math.min(70, (s.temp / 80) * 70);
-            tempFill.setAttribute('y', 75 - height);
-            tempFill.setAttribute('height', height);
-        }
-        
-        // Durum metni
-        if (simStatus) {
-            simStatus.innerHTML = `<span class="status-dot" style="background:${currentStep < 2 ? '#bf00ff' : '#10b981'}; animation:pulse 1s infinite;"></span> ${s.text}`;
-        }
-        
-        // Adım vurgusu
-        for (let i = 1; i <= 4; i++) {
-            const stepEl = document.getElementById(`step${i}`);
-            if (stepEl) {
-                stepEl.style.opacity = i === s.step ? '1' : '0.4';
-                stepEl.style.color = i === s.step ? 'var(--accent)' : 'var(--text-muted)';
-                stepEl.style.fontWeight = i === s.step ? 'bold' : 'normal';
-            }
-        }
-        
-        currentStep++;
-    }, 2000);
-}
-
-function resetCuringSim() {
-    const elements = ['uvRays', 'polymerChains', 'tempGauge'];
-    elements.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.setAttribute('opacity', '0');
-    });
-    
-    const inkRect = document.getElementById('inkRect');
-    const inkState = document.getElementById('inkState');
-    if (inkRect) inkRect.setAttribute('fill', 'url(#inkLiquid)');
-    if (inkState) {
-        inkState.textContent = 'SIVI BOYA';
-        inkState.setAttribute('fill', '#fff');
-    }
-    
-    const molecules = document.getElementById('molecules');
-    if (molecules) molecules.setAttribute('opacity', '1');
-    
-    const simStatus = document.getElementById('simStatus');
-    if (simStatus) {
-        simStatus.innerHTML = '<span class="status-dot" style="background:#6366f1;"></span> Boya sıvı halde - UV ışını bekleniyor';
-    }
-    
-    for (let i = 1; i <= 4; i++) {
-        const stepEl = document.getElementById(`step${i}`);
-        if (stepEl) {
-            stepEl.style.opacity = i === 1 ? '1' : '0.4';
-        }
-    }
-}
-
-function startAdhesionSim() {
-    const canvas = document.getElementById('adhesionCanvas');
-    if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d');
-    let time = 0;
-    
-    if (adhesionAnimationId) cancelAnimationFrame(adhesionAnimationId);
-    
-    function draw() {
-        ctx.fillStyle = '#0d0d1f';
-        ctx.fillRect(0, 0, 400, 200);
-        
-        // Malzeme yüzeyi
-        ctx.fillStyle = currentMaterial.color;
-        ctx.fillRect(50, 150, 300, 40);
-        
-        // Yüzey enerjisi göstergesi
-        const barWidth = (currentMaterial.energy / 1000) * 300;
-        ctx.fillStyle = currentMaterial.energy > 40 ? '#10b981' : currentMaterial.energy > 30 ? '#f59e0b' : '#ef4444';
-        ctx.fillRect(50, 20, barWidth, 20);
-        
-        ctx.strokeStyle = '#fff';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(50, 20, 300, 20);
-        
-        // Boya damlaları
-        const dropCount = Math.floor(currentMaterial.adhesion / 10);
-        for (let i = 0; i < dropCount; i++) {
-            const x = 80 + i * 35;
-            const y = 120 + Math.sin(time * 0.05 + i) * 5;
-            
-            ctx.beginPath();
-            ctx.arc(x, y, 12, 0, Math.PI * 2);
-            const gradient = ctx.createRadialGradient(x - 3, y - 3, 0, x, y, 12);
-            gradient.addColorStop(0, '#6366f1');
-            gradient.addColorStop(1, '#4338ca');
-            ctx.fillStyle = gradient;
-            ctx.fill();
-            
-            // Parlaklık
-            ctx.beginPath();
-            ctx.arc(x - 4, y - 4, 3, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(255,255,255,0.6)';
-            ctx.fill();
-        }
-        
-        // Atan damlalar
-        const rejectedCount = 10 - dropCount;
-        for (let i = 0; i < rejectedCount; i++) {
-            const x = 80 + (dropCount + i) * 35 + Math.sin(time * 0.1 + i) * 10;
-            const y = 80 + Math.cos(time * 0.08 + i) * 15;
-            
-            ctx.beginPath();
-            ctx.arc(x, y, 8, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(239, 68, 68, 0.6)';
-            ctx.fill();
-            
-            ctx.strokeStyle = '#ef4444';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(x - 5, y - 5);
-            ctx.lineTo(x + 5, y + 5);
-            ctx.moveTo(x + 5, y - 5);
-            ctx.lineTo(x - 5, y + 5);
-            ctx.stroke();
-        }
-        
-        time++;
-        adhesionAnimationId = requestAnimationFrame(draw);
-    }
-    
-    draw();
-}
-
-function setMaterial(type) {
-    currentMaterial = materials[type];
-    const info = document.getElementById('adhesionInfo');
-    if (info) {
-        const status = currentMaterial.adhesion > 70 ? '✓ Mükemmel tutunma.' : 
-                      currentMaterial.adhesion > 40 ? '⚠️ Orta tutunma, primer önerilir.' : 
-                      '❌ Zayıf tutunma, primer şart!';
-        const color = currentMaterial.adhesion > 70 ? 'var(--success)' : 
-                     currentMaterial.adhesion > 40 ? 'var(--warning)' : 'var(--danger)';
-        info.innerHTML = `<strong style="color:var(--accent);">${currentMaterial.name}:</strong> <span style="color:${color};">${status}</span> ${currentMaterial.primer ? 'Primer/Corona treatment gerekli.' : 'Doğrudan baskı yapılabilir.'}`;
-    }
-}
-
-function drawNozzlePattern() {
-    const canvas = document.getElementById('nozzleCanvas');
-    if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d');
-    
-    function draw() {
-        ctx.fillStyle = '#0d0d1f';
-        ctx.fillRect(0, 0, 350, 120);
-        
-        // CMYK satırı
-        ctx.fillStyle = '#06b6d4';
-        ctx.font = '12px Arial';
-        ctx.fillText('CMYK', 10, 20);
-        
-        for (let i = 0; i < 180; i++) {
-            const x = 60 + (i % 30) * 9;
-            const y = 15 + Math.floor(i / 30) * 8;
-            
-            if (nozzleState.cmyk[i]) {
-                ctx.fillStyle = '#06b6d4';
-                ctx.fillRect(x, y, 6, 2);
-            } else {
-                ctx.fillStyle = '#ef4444';
-                ctx.fillRect(x, y, 6, 2);
-            }
-        }
-        
-        // White satırı
-        ctx.fillStyle = '#ffffff';
-        ctx.fillText('White', 10, 70);
-        
-        for (let i = 0; i < 180; i++) {
-            const x = 60 + (i % 30) * 9;
-            const y = 65 + Math.floor(i / 30) * 8;
-            
-            if (nozzleState.white[i]) {
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(x, y, 6, 2);
-            } else {
-                ctx.fillStyle = '#ef4444';
-                ctx.fillRect(x, y, 6, 2);
-            }
-        }
-        
-        if (nozzleAnimationId) requestAnimationFrame(draw);
-    }
-    
-    nozzleAnimationId = requestAnimationFrame(draw);
-}
-
-function simulateClog() {
-    nozzleState.clogged = true;
-    // Rastgele nozzle'ları kapat
-    for (let i = 0; i < 20; i++) {
-        const idx = Math.floor(Math.random() * 180);
-        nozzleState.cmyk[idx] = false;
-    }
-    for (let i = 0; i < 15; i++) {
-        const idx = Math.floor(Math.random() * 180);
-        nozzleState.white[idx] = false;
-    }
-    
-    document.getElementById('cmykStatus').textContent = '⚠️ Tıkanıklık';
-    document.getElementById('cmykStatus').style.color = 'var(--warning)';
-    document.getElementById('whiteStatus').textContent = '⚠️ Tıkanıklık';
-    document.getElementById('whiteStatus').style.color = 'var(--warning)';
-    
-    document.getElementById('nozzleDiagnosis').innerHTML = `
-        <strong style="color:var(--danger);">Tıkanıklık Tespit Edildi!</strong><br>
-        CMYK ve White kanallarında eksik nozzle'lar var. <strong>Light cleaning</strong> önerilir.
-    `;
-}
-
-function simulateMissing() {
-    // Ardışık eksik nozzle'lar
-    const startIdx = Math.floor(Math.random() * 150);
-    for (let i = 0; i < 8; i++) {
-        nozzleState.cmyk[startIdx + i] = false;
-    }
-    
-    document.getElementById('cmykStatus').textContent = '❌ Nozzle Kaybı';
-    document.getElementById('cmykStatus').style.color = 'var(--danger)';
-    
-    document.getElementById('nozzleDiagnosis').innerHTML = `
-        <strong style="color:var(--danger);">Ardışık Nozzle Kaybı!</strong><br>
-        Kafa hasarı veya ağır tıkanıklık belirtisi. <strong>Strong cleaning</strong> veya teknik servis gerekli.
-    `;
-}
-
-function runCleaning() {
-    // Tüm nozzle'ları aç
-    nozzleState.cmyk.fill(true);
-    nozzleState.white.fill(true);
-    nozzleState.clogged = false;
-    
-    document.getElementById('cmykStatus').textContent = '✓ Normal';
-    document.getElementById('cmykStatus').style.color = 'var(--success)';
-    document.getElementById('whiteStatus').textContent = '✓ Normal';
-    document.getElementById('whiteStatus').style.color = 'var(--success)';
-    
-    document.getElementById('nozzleDiagnosis').innerHTML = `
-        <strong style="color:var(--success);">Temizlik Tamamlandı!</strong><br>
-        Tüm nozullar aktif. Baskıya hazır.
-    `;
-}
-
-// ==========================================
-// CORELDRAW KISAYOL FONKSİYONLARI
-// ==========================================
-
-function renderShortcuts() {
-    const container = document.getElementById('shortcutsContainer');
-    if (!container) return;
-    
-    const filter = container.dataset.filter || 'all';
-    
-    let shortcuts = corelShortcuts;
-    if (filter === 'uv') shortcuts = corelShortcuts.filter(s => s.category === 'uv');
-    else if (filter === 'critical') shortcuts = corelShortcuts.filter(s => s.critical);
-    else if (filter !== 'all') shortcuts = corelShortcuts.filter(s => s.category === filter);
-    
-    const categories = {
-        uv: 'UV Baskı Kritik',
-        file: 'Dosya Yönetimi',
-        edit: 'Düzenleme',
-        color: 'Renk Yönetimi',
-        align: 'Hizalama',
-        text: 'Metin Araçları',
-        view: 'Görünüm',
-        object: 'Nesne Yönetimi',
-        tools: 'Araçlar',
-        effects: 'Efektler',
-        search: 'Bul/Değiştir',
-        window: 'Pencere',
-        library: 'Stil/Kütüphane',
-        advanced: 'Gelişmiş'
-    };
-    
-    let html = '';
-    let currentCat = '';
-    
-    shortcuts.forEach(s => {
-        if (s.category !== currentCat && filter === 'all') {
-            if (currentCat) html += '</div>';
-            currentCat = s.category;
-            html += `<div style="margin-bottom:20px;"><div style="font-size:14px; color:var(--accent); font-weight:bold; margin-bottom:10px; text-transform:uppercase; letter-spacing:1px;">${categories[s.category] || s.category}</div>`;
-        }
-        
-        const badgeClass = s.category === 'uv' ? 'badge-uv' : s.critical ? 'badge-critical' : 'badge-corel';
-        const cardClass = s.critical ? 'shortcut-card shortcut-critical' : 'shortcut-card';
-        
-        html += `
-            <div class="${cardClass}" onclick="showShortcutDetail('${s.key}', '${s.desc.replace(/'/g, "\\'")}', '${s.uvContext.replace(/'/g, "\\'")}')">
-                <span class="category-badge ${badgeClass}">${s.category === 'uv' ? 'UV' : s.critical ? 'KRİTİK' : 'COREL'}</span>
-                <div style="margin-top:8px;">
-                    <span class="shortcut-key">${s.key}</span>
-                    <span style="color:var(--text);">${s.desc}</span>
-                </div>
-                <div style="margin-top:8px; font-size:12px; color:var(--text-muted); font-style:italic;">
-                    💡 ${s.uvContext}
-                </div>
-            </div>
-        `;
-    });
-    
-    if (filter === 'all') html += '</div>';
-    
-    container.innerHTML = html;
-}
-
-function filterShortcuts(category, clickedBtn) {
-    const container = document.getElementById('shortcutsContainer');
-    if (container) {
-        container.dataset.filter = category;
-        renderShortcuts();
-    }
-    
-    // Tüm filtre butonlarını pasif yap
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.remove('active');
-        btn.style.background = 'var(--surface)';
-        btn.style.color = 'var(--text-muted)';
-        btn.style.borderColor = 'rgba(255,255,255,0.1)';
-    });
-    
-    // Tıklanan butonu aktif yap
-    if (clickedBtn) {
-        clickedBtn.classList.add('active');
-        clickedBtn.style.background = 'var(--uv)';
-        clickedBtn.style.color = 'white';
-        clickedBtn.style.borderColor = 'var(--uv)';
-    }
-}
-
-function searchShortcuts() {
-    const query = document.getElementById('shortcutSearch').value.toLowerCase();
-    const container = document.getElementById('shortcutsContainer');
-    if (!container) return;
-    
-    if (!query) {
-        renderShortcuts();
-        return;
-    }
-    
-    const filtered = corelShortcuts.filter(s => 
-        s.key.toLowerCase().includes(query) || 
-        s.desc.toLowerCase().includes(query) ||
-        s.uvContext.toLowerCase().includes(query)
-    );
-    
-    let html = '<div style="margin-bottom:20px;"><div style="font-size:14px; color:var(--accent); font-weight:bold; margin-bottom:10px;">Arama Sonuçları</div>';
-    
-    filtered.forEach(s => {
-        const badgeClass = s.category === 'uv' ? 'badge-uv' : s.critical ? 'badge-critical' : 'badge-corel';
-        const cardClass = s.critical ? 'shortcut-card shortcut-critical' : 'shortcut-card';
-        
-        html += `
-            <div class="${cardClass}">
-                <span class="category-badge ${badgeClass}">${s.category === 'uv' ? 'UV' : s.critical ? 'KRİTİK' : 'COREL'}</span>
-                <div style="margin-top:8px;">
-                    <span class="shortcut-key">${s.key}</span>
-                    <span style="color:var(--text);">${s.desc}</span>
-                </div>
-                <div style="margin-top:8px; font-size:12px; color:var(--text-muted); font-style:italic;">
-                    💡 ${s.uvContext}
-                </div>
-            </div>
-        `;
-    });
-    
-    html += '</div>';
-    container.innerHTML = html;
-}
-
-function showShortcutDetail(key, desc, context) {
-    alert(`${key}: ${desc}\\n\\nUV Bağlamı: ${context}`);
-}
-
-function startPracticeMode() {
-    practiceMode = true;
-    document.getElementById('practiceArea').classList.add('hidden');
-    document.getElementById('practiceGame').classList.remove('hidden');
-    nextPracticeQuestion();
-}
-
-function nextPracticeQuestion() {
-    const uvShortcuts = corelShortcuts.filter(s => s.category === 'uv' || s.critical);
-    currentPracticeQuestion = uvShortcuts[Math.floor(Math.random() * uvShortcuts.length)];
-    
-    document.getElementById('practiceKey').textContent = currentPracticeQuestion.key;
-    document.getElementById('practiceResult').innerHTML = '';
-    document.getElementById('nextPracticeBtn').style.display = 'none';
-    
-    // 4 seçenek oluştur (1 doğru, 3 yanlış)
-    const options = [currentPracticeQuestion];
-    while (options.length < 4) {
-        const random = corelShortcuts[Math.floor(Math.random() * corelShortcuts.length)];
-        if (!options.find(o => o.key === random.key)) {
-            options.push(random);
-        }
-    }
-    
-    // Karıştır
-    options.sort(() => Math.random() - 0.5);
-    
-    const optionsHtml = options.map((opt, idx) => {
-        // Escaping düzeltildi - &quot; kullanıldı
-        const safeDesc = opt.desc.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-        return `
-            <button class="btn btn-secondary" onclick="checkPracticeAnswer(${idx}, ${options.indexOf(currentPracticeQuestion)})" style="text-align:left; padding:15px; margin-bottom:8px;">
-                ${String.fromCharCode(65 + idx)}) ${opt.desc}
-            </button>
-        `;
-    }).join('');
-    
-    document.getElementById('practiceOptions').innerHTML = optionsHtml;
-}
-
-function checkPracticeAnswer(selected, correct) {
-    const buttons = document.querySelectorAll('#practiceOptions button');
-    const isCorrect = selected === correct;
-    
-    buttons.forEach((btn, idx) => {
-        btn.disabled = true;
-        if (idx === correct) {
-            btn.style.borderColor = 'var(--success)';
-            btn.style.background = 'rgba(16, 185, 129, 0.2)';
-        } else if (idx === selected && !isCorrect) {
-            btn.style.borderColor = 'var(--danger)';
-            btn.style.background = 'rgba(239, 68, 68, 0.2)';
-        }
-    });
-    
-    const resultDiv = document.getElementById('practiceResult');
-    if (isCorrect) {
-        resultDiv.innerHTML = '<span style="color:var(--success);">✅ Doğru! +10 XP</span>';
-        addExp(10);
-    } else {
-        resultDiv.innerHTML = `<span style="color:var(--danger);">❌ Yanlış! Doğru cevap: ${currentPracticeQuestion.desc}</span>`;
-    }
-    
-    document.getElementById('nextPracticeBtn').style.display = 'inline-block';
-}
-
-// ==========================================
-// YARDIMCI FONKSİYONLAR
-// ==========================================
-
 function addExp(amount) {
     stats.exp += amount;
     const nextLevel = stats.lvl * 100;
-    
     if (stats.exp >= nextLevel) {
         stats.lvl++;
         stats.exp = 0;
-        showAchievement(`Seviye Atlandı! ${stats.lvl}`);
+        showAchievement(`Seviye Atlandi! ${stats.lvl}`);
     }
-    
     localStorage.setItem('mf_stats', JSON.stringify(stats));
     updateMainProgress();
 }
@@ -3881,791 +3337,14 @@ function addExp(amount) {
 function showAchievement(text) {
     const popup = document.getElementById('achievementPopup');
     const achievementText = document.getElementById('achievementText');
-    
     if (achievementText) achievementText.textContent = text;
     if (popup) {
         popup.classList.add('show');
-        setTimeout(() => {
-            popup.classList.remove('show');
-        }, 3000);
+        setTimeout(() => popup.classList.remove('show'), 3000);
     }
 }
 
-// ==========================================
-// BAŞLATMA
-// ==========================================
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Navigasyon olayları
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', function() {
-            const screenId = this.getAttribute('data-screen');
-            goToScreen(screenId);
-        });
-    });
-    
-    // Başlangıç ekranı
-    updateMainProgress();
-    
-    // Kısayol render
-    if (document.getElementById('shortcutsContainer')) {
-        renderShortcuts();
-    }
-});
-"""
-
-print("Eksik JavaScript fonksiyonları tamamlandı!")
-print(f"Toplam {len(missing_code)} karakter eklenecek kod.")
-print("\nTamamlanan fonksiyonlar:")
-print("- window.finalSelect() - Final sınav cevap seçimi")
-print("- showFinalResult() - Sınav sonucu gösterimi")
-print("- downloadCertificate() - Sertifika indirme")
-print("- startCuringSim() - UV kürlenme simülasyonu")
-print("- startAdhesionSim() - Yüzey tutunma simülasyonu")
-print("- drawNozzlePattern() - Nozzle check görselleştirme")
-print("- simulateClog() / simulateMissing() / runCleaning() - Nozzle simülasyonu")
-print("- renderShortcuts() / filterShortcuts() / searchShortcuts() - Kısayol yönetimi")
-print("- startPracticeMode() / nextPracticeQuestion() / checkPracticeAnswer() - Pratik mod")
-print("- addExp() / showAchievement() - XP ve başarım sistemi")
-
-# Tamamlanmış HTML dosyasını oluştur
-# Orijinal dosyanın son kısmını kesip eksik fonksiyonları ekleyeceğim
-
-# Orijinal dosyanın son kısmını oku (kesilmiş kısım)
-original_end = """function window.finalSelect(selected, correct) {
-    const options = document.querySelectorAll('.quiz-option');
-    
-    options.forEach((opt, idx) => {
-        opt.classList.add('disabled');
-        if (idx === correct) opt.classList.add('correct');
-        else if (idx === selected && idx !== correct) opt.classList.add('wrong');
-    });
-    
-    if (selected === correct) score++;
-    
-    setTimeout(() => {
-        currentQ++;
-        if (currentQ < mod.finalQuiz.length) {
-            showQuestion();
-        } else {
-            showFinalResult();
-        }
-    }, 1500);
-}
-
-function showFinalResult() {
-    const percent = Math.round((score / mod.finalQuiz.length) * 100);
-    const passed = percent >= 80;
-    const quizContent = document.getElementById('quizContent');
-    
-    if (quizContent) {
-        quizContent.innerHTML = `
-            <div style="text-align:center; padding:40px 20px;">
-                <div style="font-size:64px; margin-bottom:20px;">${passed ? '🏆' : '📚'}</div>
-                <h2 style="color:${passed ? 'var(--success)' : 'var(--warning)'}; margin-bottom:15px;">
-                    ${passed ? 'Tebrikler! Sertifika Kazandınız' : 'Sınav Tamamlandı'}
-                </h2>
-                <div style="font-size:48px; font-weight:bold; color:var(--gold); margin:20px 0;">
-                    ${percent}%
-                </div>
-                <p style="color:var(--text-muted); margin-bottom:20px;">
-                    ${score}/${mod.finalQuiz.length} doğru cevap
-                </p>
-                <p style="margin-bottom:30px; ${!passed ? 'color:var(--danger);' : ''}">
-                    ${passed ? 'UV Baskı Uzmanı sertifikası kazandınız! Bu başarıyı LinkedIn profilinize ekleyebilirsiniz.' : 'Geçme notu %80. Tekrar denemek için aşağıdaki butona tıklayın.'}
-                </p>
-                ${passed ? `
-                    <button class="btn btn-success" onclick="downloadCertificate()" style="margin-bottom:15px;">
-                        📜 Sertifikayı İndir
-                    </button>
-                    <br>
-                    <button class="btn btn-secondary" onclick="goToScreen('homeScreen')">
-                        Ana Sayfaya Dön
-                    </button>
-                ` : `
-                    <button class="btn" onclick="location.reload()">
-                        🔄 Sınavı Tekrarla
-                    </button>
-                `}
-            </div>
-        `;
-    }
-    
-    if (passed && !userProgress.completedModules.includes(8)) {
-        userProgress.completedModules.push(8);
-        userProgress.totalXP += 500;
-        localStorage.setItem('uv_progress', JSON.stringify(userProgress));
-        addExp(500);
-        showAchievement('UV Baskı Uzmanı Sertifikası! +500 XP');
-    }
-}
-
-function downloadCertificate() {
-    const canvas = document.createElement('canvas');
-    canvas.width = 800;
-    canvas.height = 600;
-    const ctx = canvas.getContext('2d');
-    
-    // Arka plan
-    const gradient = ctx.createLinearGradient(0, 0, 800, 600);
-    gradient.addColorStop(0, '#0b0b1a');
-    gradient.addColorStop(1, '#1e1e3f');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, 800, 600);
-    
-    // Çerçeve
-    ctx.strokeStyle = '#bf00ff';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(20, 20, 760, 560);
-    
-    // İç çerçeve
-    ctx.strokeStyle = '#6366f1';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(35, 35, 730, 530);
-    
-    // Başlık
-    ctx.fillStyle = '#bf00ff';
-    ctx.font = 'bold 36px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText('🏆 UV BASKI UZMANI', 400, 100);
-    
-    // Alt başlık
-    ctx.fillStyle = '#06b6d4';
-    ctx.font = '24px Arial';
-    ctx.fillText('SERTİFİKA', 400, 140);
-    
-    // Çizgi
-    ctx.strokeStyle = '#f59e0b';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(250, 160);
-    ctx.lineTo(550, 160);
-    ctx.stroke();
-    
-    // Metin
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '18px Arial';
-    ctx.fillText('Bu sertifika', 400, 210);
-    
-    ctx.font = 'bold 28px Arial';
-    ctx.fillStyle = '#10b981';
-    ctx.fillText('UV AKADEMİ PRO', 400, 250);
-    
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '18px Arial';
-    ctx.fillText('tarafından verilmiştir', 400, 280);
-    
-    ctx.font = '16px Arial';
-    ctx.fillStyle = '#94a3b8';
-    ctx.fillText('Kapsamlı UV Baskı ve CorelDRAW Eğitim Programını', 400, 320);
-    ctx.fillText('başarıyla tamamlayarak', 400, 345);
-    
-    ctx.font = 'bold 22px Arial';
-    ctx.fillStyle = '#f59e0b';
-    ctx.fillText('PROFESYONEL UV BASKI UZMANI', 400, 390);
-    
-    ctx.font = '16px Arial';
-    ctx.fillStyle = '#94a3b8';
-    ctx.fillText('unvanını kazanmıştır.', 400, 420);
-    
-    // Tarih
-    const date = new Date().toLocaleDateString('tr-TR');
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '14px Arial';
-    ctx.fillText(`Tarih: ${date}`, 400, 480);
-    
-    // Sertifika ID
-    const certId = 'UV-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-    ctx.fillStyle = '#6366f1';
-    ctx.font = '12px Arial';
-    ctx.fillText(`Sertifika No: ${certId}`, 400, 510);
-    
-    // İmza çizgisi
-    ctx.strokeStyle = '#ffffff';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(300, 540);
-    ctx.lineTo(500, 540);
-    ctx.stroke();
-    
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '12px Arial';
-    ctx.fillText('Eğitim Direktörü', 400, 555);
-    
-    // İndirme
-    const link = document.createElement('a');
-    link.download = `UV-Baski-Uzmani-Sertifika-${certId}.png`;
-    link.href = canvas.toDataURL();
-    link.click();
-}
-
-// ==========================================
-// SİMÜLASYON FONKSİYONLARI
-// ==========================================
-
-function startCuringSim() {
-    const btn = document.getElementById('startCuringBtn');
-    const btnText = document.getElementById('btnText');
-    const simStatus = document.getElementById('simStatus');
-    
-    if (curingAnimation) {
-        clearInterval(curingAnimation);
-        curingAnimation = null;
-        btnText.textContent = '🎬 Simülasyonu Başlat';
-        resetCuringSim();
-        return;
-    }
-    
-    btnText.textContent = '⏹ Durdur';
-    
-    const steps = [
-        { step: 1, text: 'UV ışını yayılıyor...', uvOpacity: 1, temp: 30, inkColor: 'url(#inkLiquid)' },
-        { step: 2, text: 'Foto-başlatıcılar uyarılıyor...', uvOpacity: 1, temp: 45, inkColor: 'url(#inkLiquid)' },
-        { step: 3, text: 'Polimerleşme başlıyor...', uvOpacity: 0.8, temp: 60, inkColor: 'url(#inkSolid)' },
-        { step: 4, text: 'Katılaşma tamamlandı!', uvOpacity: 0, temp: 40, inkColor: 'url(#inkSolid)' }
-    ];
-    
-    let currentStep = 0;
-    
-    curingAnimation = setInterval(() => {
-        if (currentStep >= steps.length) {
-            clearInterval(curingAnimation);
-            curingAnimation = null;
-            btnText.textContent = '🔄 Tekrar Başlat';
-            return;
-        }
-        
-        const s = steps[currentStep];
-        
-        // UV ışınları
-        const uvRays = document.getElementById('uvRays');
-        if (uvRays) uvRays.setAttribute('opacity', s.uvOpacity);
-        
-        // Lamba parlaklığı
-        const lampGlow = document.getElementById('lampGlow');
-        if (lampGlow) lampGlow.setAttribute('opacity', s.uvOpacity * 0.8);
-        
-        // Boya rengi
-        const inkRect = document.getElementById('inkRect');
-        const inkState = document.getElementById('inkState');
-        if (inkRect) inkRect.setAttribute('fill', s.inkColor);
-        if (inkState) {
-            inkState.textContent = currentStep < 2 ? 'SIVI BOYA' : 'KATILAŞMIŞ';
-            inkState.setAttribute('fill', currentStep < 2 ? '#fff' : '#10b981');
-        }
-        
-        // Moleküller
-        const molecules = document.getElementById('molecules');
-        const polymerChains = document.getElementById('polymerChains');
-        if (molecules) molecules.setAttribute('opacity', currentStep < 3 ? '1' : '0');
-        if (polymerChains) polymerChains.setAttribute('opacity', currentStep >= 2 ? '1' : '0');
-        
-        // Sıcaklık
-        const tempGauge = document.getElementById('tempGauge');
-        const tempFill = document.getElementById('tempFill');
-        if (tempGauge) tempGauge.setAttribute('opacity', '1');
-        if (tempFill) {
-            const height = Math.min(70, (s.temp / 80) * 70);
-            tempFill.setAttribute('y', 75 - height);
-            tempFill.setAttribute('height', height);
-        }
-        
-        // Durum metni
-        if (simStatus) {
-            simStatus.innerHTML = `<span class="status-dot" style="background:${currentStep < 2 ? '#bf00ff' : '#10b981'}; animation:pulse 1s infinite;"></span> ${s.text}`;
-        }
-        
-        // Adım vurgusu
-        for (let i = 1; i <= 4; i++) {
-            const stepEl = document.getElementById(`step${i}`);
-            if (stepEl) {
-                stepEl.style.opacity = i === s.step ? '1' : '0.4';
-                stepEl.style.color = i === s.step ? 'var(--accent)' : 'var(--text-muted)';
-                stepEl.style.fontWeight = i === s.step ? 'bold' : 'normal';
-            }
-        }
-        
-        currentStep++;
-    }, 2000);
-}
-
-function resetCuringSim() {
-    const elements = ['uvRays', 'polymerChains', 'tempGauge'];
-    elements.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.setAttribute('opacity', '0');
-    });
-    
-    const inkRect = document.getElementById('inkRect');
-    const inkState = document.getElementById('inkState');
-    if (inkRect) inkRect.setAttribute('fill', 'url(#inkLiquid)');
-    if (inkState) {
-        inkState.textContent = 'SIVI BOYA';
-        inkState.setAttribute('fill', '#fff');
-    }
-    
-    const molecules = document.getElementById('molecules');
-    if (molecules) molecules.setAttribute('opacity', '1');
-    
-    const simStatus = document.getElementById('simStatus');
-    if (simStatus) {
-        simStatus.innerHTML = '<span class="status-dot" style="background:#6366f1;"></span> Boya sıvı halde - UV ışını bekleniyor';
-    }
-    
-    for (let i = 1; i <= 4; i++) {
-        const stepEl = document.getElementById(`step${i}`);
-        if (stepEl) {
-            stepEl.style.opacity = i === 1 ? '1' : '0.4';
-        }
-    }
-}
-
-function startAdhesionSim() {
-    const canvas = document.getElementById('adhesionCanvas');
-    if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d');
-    let time = 0;
-    
-    if (adhesionAnimationId) cancelAnimationFrame(adhesionAnimationId);
-    
-    function draw() {
-        ctx.fillStyle = '#0d0d1f';
-        ctx.fillRect(0, 0, 400, 200);
-        
-        // Malzeme yüzeyi
-        ctx.fillStyle = currentMaterial.color;
-        ctx.fillRect(50, 150, 300, 40);
-        
-        // Yüzey enerjisi göstergesi
-        const barWidth = (currentMaterial.energy / 1000) * 300;
-        ctx.fillStyle = currentMaterial.energy > 40 ? '#10b981' : currentMaterial.energy > 30 ? '#f59e0b' : '#ef4444';
-        ctx.fillRect(50, 20, barWidth, 20);
-        
-        ctx.strokeStyle = '#fff';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(50, 20, 300, 20);
-        
-        // Boya damlaları
-        const dropCount = Math.floor(currentMaterial.adhesion / 10);
-        for (let i = 0; i < dropCount; i++) {
-            const x = 80 + i * 35;
-            const y = 120 + Math.sin(time * 0.05 + i) * 5;
-            
-            ctx.beginPath();
-            ctx.arc(x, y, 12, 0, Math.PI * 2);
-            const gradient = ctx.createRadialGradient(x - 3, y - 3, 0, x, y, 12);
-            gradient.addColorStop(0, '#6366f1');
-            gradient.addColorStop(1, '#4338ca');
-            ctx.fillStyle = gradient;
-            ctx.fill();
-            
-            // Parlaklık
-            ctx.beginPath();
-            ctx.arc(x - 4, y - 4, 3, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(255,255,255,0.6)';
-            ctx.fill();
-        }
-        
-        // Atan damlalar
-        const rejectedCount = 10 - dropCount;
-        for (let i = 0; i < rejectedCount; i++) {
-            const x = 80 + (dropCount + i) * 35 + Math.sin(time * 0.1 + i) * 10;
-            const y = 80 + Math.cos(time * 0.08 + i) * 15;
-            
-            ctx.beginPath();
-            ctx.arc(x, y, 8, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(239, 68, 68, 0.6)';
-            ctx.fill();
-            
-            ctx.strokeStyle = '#ef4444';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(x - 5, y - 5);
-            ctx.lineTo(x + 5, y + 5);
-            ctx.moveTo(x + 5, y - 5);
-            ctx.lineTo(x - 5, y + 5);
-            ctx.stroke();
-        }
-        
-        time++;
-        adhesionAnimationId = requestAnimationFrame(draw);
-    }
-    
-    draw();
-}
-
-function setMaterial(type) {
-    currentMaterial = materials[type];
-    const info = document.getElementById('adhesionInfo');
-    if (info) {
-        const status = currentMaterial.adhesion > 70 ? '✓ Mükemmel tutunma.' : 
-                      currentMaterial.adhesion > 40 ? '⚠️ Orta tutunma, primer önerilir.' : 
-                      '❌ Zayıf tutunma, primer şart!';
-        const color = currentMaterial.adhesion > 70 ? 'var(--success)' : 
-                     currentMaterial.adhesion > 40 ? 'var(--warning)' : 'var(--danger)';
-        info.innerHTML = `<strong style="color:var(--accent);">${currentMaterial.name}:</strong> <span style="color:${color};">${status}</span> ${currentMaterial.primer ? 'Primer/Corona treatment gerekli.' : 'Doğrudan baskı yapılabilir.'}`;
-    }
-}
-
-function drawNozzlePattern() {
-    const canvas = document.getElementById('nozzleCanvas');
-    if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d');
-    
-    function draw() {
-        ctx.fillStyle = '#0d0d1f';
-        ctx.fillRect(0, 0, 350, 120);
-        
-        // CMYK satırı
-        ctx.fillStyle = '#06b6d4';
-        ctx.font = '12px Arial';
-        ctx.fillText('CMYK', 10, 20);
-        
-        for (let i = 0; i < 180; i++) {
-            const x = 60 + (i % 30) * 9;
-            const y = 15 + Math.floor(i / 30) * 8;
-            
-            if (nozzleState.cmyk[i]) {
-                ctx.fillStyle = '#06b6d4';
-                ctx.fillRect(x, y, 6, 2);
-            } else {
-                ctx.fillStyle = '#ef4444';
-                ctx.fillRect(x, y, 6, 2);
-            }
-        }
-        
-        // White satırı
-        ctx.fillStyle = '#ffffff';
-        ctx.fillText('White', 10, 70);
-        
-        for (let i = 0; i < 180; i++) {
-            const x = 60 + (i % 30) * 9;
-            const y = 65 + Math.floor(i / 30) * 8;
-            
-            if (nozzleState.white[i]) {
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(x, y, 6, 2);
-            } else {
-                ctx.fillStyle = '#ef4444';
-                ctx.fillRect(x, y, 6, 2);
-            }
-        }
-        
-        if (nozzleAnimationId) requestAnimationFrame(draw);
-    }
-    
-    nozzleAnimationId = requestAnimationFrame(draw);
-}
-
-function simulateClog() {
-    nozzleState.clogged = true;
-    // Rastgele nozzle'ları kapat
-    for (let i = 0; i < 20; i++) {
-        const idx = Math.floor(Math.random() * 180);
-        nozzleState.cmyk[idx] = false;
-    }
-    for (let i = 0; i < 15; i++) {
-        const idx = Math.floor(Math.random() * 180);
-        nozzleState.white[idx] = false;
-    }
-    
-    document.getElementById('cmykStatus').textContent = '⚠️ Tıkanıklık';
-    document.getElementById('cmykStatus').style.color = 'var(--warning)';
-    document.getElementById('whiteStatus').textContent = '⚠️ Tıkanıklık';
-    document.getElementById('whiteStatus').style.color = 'var(--warning)';
-    
-    document.getElementById('nozzleDiagnosis').innerHTML = `
-        <strong style="color:var(--danger);">Tıkanıklık Tespit Edildi!</strong><br>
-        CMYK ve White kanallarında eksik nozzle'lar var. <strong>Light cleaning</strong> önerilir.
-    `;
-}
-
-function simulateMissing() {
-    // Ardışık eksik nozzle'lar
-    const startIdx = Math.floor(Math.random() * 150);
-    for (let i = 0; i < 8; i++) {
-        nozzleState.cmyk[startIdx + i] = false;
-    }
-    
-    document.getElementById('cmykStatus').textContent = '❌ Nozzle Kaybı';
-    document.getElementById('cmykStatus').style.color = 'var(--danger)';
-    
-    document.getElementById('nozzleDiagnosis').innerHTML = `
-        <strong style="color:var(--danger);">Ardışık Nozzle Kaybı!</strong><br>
-        Kafa hasarı veya ağır tıkanıklık belirtisi. <strong>Strong cleaning</strong> veya teknik servis gerekli.
-    `;
-}
-
-function runCleaning() {
-    // Tüm nozzle'ları aç
-    nozzleState.cmyk.fill(true);
-    nozzleState.white.fill(true);
-    nozzleState.clogged = false;
-    
-    document.getElementById('cmykStatus').textContent = '✓ Normal';
-    document.getElementById('cmykStatus').style.color = 'var(--success)';
-    document.getElementById('whiteStatus').textContent = '✓ Normal';
-    document.getElementById('whiteStatus').style.color = 'var(--success)';
-    
-    document.getElementById('nozzleDiagnosis').innerHTML = `
-        <strong style="color:var(--success);">Temizlik Tamamlandı!</strong><br>
-        Tüm nozullar aktif. Baskıya hazır.
-    `;
-}
-
-// ==========================================
-// CORELDRAW KISAYOL FONKSİYONLARI
-// ==========================================
-
-function renderShortcuts() {
-    const container = document.getElementById('shortcutsContainer');
-    if (!container) return;
-    
-    const filter = container.dataset.filter || 'all';
-    
-    let shortcuts = corelShortcuts;
-    if (filter === 'uv') shortcuts = corelShortcuts.filter(s => s.category === 'uv');
-    else if (filter === 'critical') shortcuts = corelShortcuts.filter(s => s.critical);
-    else if (filter !== 'all') shortcuts = corelShortcuts.filter(s => s.category === filter);
-    
-    const categories = {
-        uv: 'UV Baskı Kritik',
-        file: 'Dosya Yönetimi',
-        edit: 'Düzenleme',
-        color: 'Renk Yönetimi',
-        align: 'Hizalama',
-        text: 'Metin Araçları',
-        view: 'Görünüm',
-        object: 'Nesne Yönetimi',
-        tools: 'Araçlar',
-        effects: 'Efektler',
-        search: 'Bul/Değiştir',
-        window: 'Pencere',
-        library: 'Stil/Kütüphane',
-        advanced: 'Gelişmiş'
-    };
-    
-    let html = '';
-    let currentCat = '';
-    
-    shortcuts.forEach(s => {
-        if (s.category !== currentCat && filter === 'all') {
-            if (currentCat) html += '</div>';
-            currentCat = s.category;
-            html += `<div style="margin-bottom:20px;"><div style="font-size:14px; color:var(--accent); font-weight:bold; margin-bottom:10px; text-transform:uppercase; letter-spacing:1px;">${categories[s.category] || s.category}</div>`;
-        }
-        
-        const badgeClass = s.category === 'uv' ? 'badge-uv' : s.critical ? 'badge-critical' : 'badge-corel';
-        const cardClass = s.critical ? 'shortcut-card shortcut-critical' : 'shortcut-card';
-        
-        // onclick handler düzeltildi - doğru escaping
-        const safeDesc = s.desc.replace(/'/g, "\\'").replace(/"/g, '\\"');
-        const safeContext = s.uvContext.replace(/'/g, "\\'").replace(/"/g, '\\"');
-        
-        html += `
-            <div class="${cardClass}" onclick="showShortcutDetail('${s.key}', '${safeDesc}', '${safeContext}')">
-                <span class="category-badge ${badgeClass}">${s.category === 'uv' ? 'UV' : s.critical ? 'KRİTİK' : 'COREL'}</span>
-                <div style="margin-top:8px;">
-                    <span class="shortcut-key">${s.key}</span>
-                    <span style="color:var(--text);">${s.desc}</span>
-                </div>
-                <div style="margin-top:8px; font-size:12px; color:var(--text-muted); font-style:italic;">
-                    💡 ${s.uvContext}
-                </div>
-            </div>
-        `;
-    });
-    
-    if (filter === 'all') html += '</div>';
-    
-    container.innerHTML = html;
-}
-
-function filterShortcuts(category) {
-    const container = document.getElementById('shortcutsContainer');
-    if (container) {
-        container.dataset.filter = category;
-        renderShortcuts();
-    }
-    
-    // Buton aktifliğini güncelle
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    event.target.classList.add('active');
-}
-
-function searchShortcuts() {
-    const query = document.getElementById('shortcutSearch').value.toLowerCase();
-    const container = document.getElementById('shortcutsContainer');
-    if (!container) return;
-    
-    if (!query) {
-        renderShortcuts();
-        return;
-    }
-    
-    const filtered = corelShortcuts.filter(s => 
-        s.key.toLowerCase().includes(query) || 
-        s.desc.toLowerCase().includes(query) ||
-        s.uvContext.toLowerCase().includes(query)
-    );
-    
-    let html = '<div style="margin-bottom:20px;"><div style="font-size:14px; color:var(--accent); font-weight:bold; margin-bottom:10px;">Arama Sonuçları</div>';
-    
-    filtered.forEach(s => {
-        const badgeClass = s.category === 'uv' ? 'badge-uv' : s.critical ? 'badge-critical' : 'badge-corel';
-        const cardClass = s.critical ? 'shortcut-card shortcut-critical' : 'shortcut-card';
-        
-        const safeDesc = s.desc.replace(/'/g, "\\'").replace(/"/g, '\\"');
-        const safeContext = s.uvContext.replace(/'/g, "\\'").replace(/"/g, '\\"');
-        
-        html += `
-            <div class="${cardClass}" onclick="showShortcutDetail('${s.key}', '${safeDesc}', '${safeContext}')">
-                <span class="category-badge ${badgeClass}">${s.category === 'uv' ? 'UV' : s.critical ? 'KRİTİK' : 'COREL'}</span>
-                <div style="margin-top:8px;">
-                    <span class="shortcut-key">${s.key}</span>
-                    <span style="color:var(--text);">${s.desc}</span>
-                </div>
-                <div style="margin-top:8px; font-size:12px; color:var(--text-muted); font-style:italic;">
-                    💡 ${s.uvContext}
-                </div>
-            </div>
-        `;
-    });
-    
-    html += '</div>';
-    container.innerHTML = html;
-}
-
-function showShortcutDetail(key, desc, context) {
-    // Mevcut modal varsa kaldır
-    const existingModal = document.querySelector('.shortcut-modal');
-    if (existingModal) existingModal.remove();
-    
-    // Yeni modal oluştur
-    const modal = document.createElement('div');
-    modal.className = 'shortcut-modal';
-    modal.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0,0,0,0.85);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 10000;
-        padding: 20px;
-        animation: fadeIn 0.3s ease;
-    `;
-    
-    modal.innerHTML = `
-        <div style="
-            background: var(--surface);
-            border: 3px solid var(--uv);
-            border-radius: 20px;
-            padding: 35px;
-            max-width: 420px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(191, 0, 255, 0.3);
-        ">
-            <div style="font-size: 48px; margin-bottom: 20px;">⌨️</div>
-            <div style="font-size: 28px; font-family: monospace; color: var(--gold); margin-bottom: 20px; font-weight: bold;">${key}</div>
-            <div style="font-size: 20px; color: var(--text); margin-bottom: 15px; font-weight: 600;">${desc}</div>
-            <div style="font-size: 15px; color: var(--accent); margin-bottom: 30px; font-style: italic; line-height: 1.5;">💡 ${context}</div>
-            <button onclick="this.closest('.shortcut-modal').remove()" class="btn" style="width: 100%; padding: 15px;">Kapat</button>
-        </div>
-    `;
-    
-    // Modal dışına tıklayınca kapat
-    modal.onclick = (e) => {
-        if (e.target === modal) modal.remove();
-    };
-    
-    document.body.appendChild(modal);
-}
-function checkPracticeAnswer(selected, correct) {
-    const buttons = document.querySelectorAll('#practiceOptions button');
-    const isCorrect = selected === correct;
-    
-    buttons.forEach((btn, idx) => {
-        btn.disabled = true;
-        if (idx === correct) {
-            btn.style.borderColor = 'var(--success)';
-            btn.style.background = 'rgba(16, 185, 129, 0.2)';
-        } else if (idx === selected && !isCorrect) {
-            btn.style.borderColor = 'var(--danger)';
-            btn.style.background = 'rgba(239, 68, 68, 0.2)';
-        }
-    });
-    
-    const resultDiv = document.getElementById('practiceResult');
-    if (isCorrect) {
-        resultDiv.innerHTML = '<span style="color:var(--success);">✅ Doğru! +10 XP</span>';
-        addExp(10);
-    } else {
-        resultDiv.innerHTML = `<span style="color:var(--danger);">❌ Yanlış! Doğru cevap: ${currentPracticeQuestion.desc}</span>`;
-    }
-    
-    document.getElementById('nextPracticeBtn').style.display = 'inline-block';
-}
-
-// ==========================================
-// YARDIMCI FONKSİYONLAR
-// ==========================================
-
-function addExp(amount) {
-    stats.exp += amount;
-    const nextLevel = stats.lvl * 100;
-    
-    if (stats.exp >= nextLevel) {
-        stats.lvl++;
-        stats.exp = 0;
-        showAchievement(`Seviye Atlandı! ${stats.lvl}`);
-    }
-    
-    localStorage.setItem('mf_stats', JSON.stringify(stats));
-    updateMainProgress();
-}
-
-function showAchievement(text) {
-    const popup = document.getElementById('achievementPopup');
-    const achievementText = document.getElementById('achievementText');
-    
-    if (achievementText) achievementText.textContent = text;
-    if (popup) {
-        popup.classList.add('show');
-        setTimeout(() => {
-            popup.classList.remove('show');
-        }, 3000);
-    }
-}
-
-// ==========================================
-// BAŞLATMA
-// ==========================================
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Navigasyon olayları
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', function() {
-            const screenId = this.getAttribute('data-screen');
-            goToScreen(screenId);
-        });
-    });
-    
-    // Başlangıç ekranı
-    updateMainProgress();
-    
-    // Kısayol render
-    if (document.getElementById('shortcutsContainer')) {
-        renderShortcuts();
-    }
+// ... Diger fonksiyonlar (initUVAcademy, renderModules, vb.) buraya eklenecek
 });
 </script>
 </body>
