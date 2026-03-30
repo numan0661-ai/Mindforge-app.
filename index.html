@@ -1,13 +1,12 @@
-
-# Tüm içerikleri ekleyerek tam kod
-# Önceki sade yapıyı koruyup, tüm modülleri ve içerikleri ekliyorum
-
-full_app_code = '''<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>UV Akademi Pro - Tam Versiyon</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>UV Akademi Pro - Profesyonel Eğitim Platformu</title>
+    
     <style>
         :root {
             --primary: #6366f1; --accent: #06b6d4; --bg: #0b0b1a;
@@ -16,111 +15,347 @@ full_app_code = '''<!DOCTYPE html>
             --purple: #a855f7; --uv: #bf00ff; --danger: #ef4444;
             --warning: #f59e0b; --info: #3b82f6;
         }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 100px; line-height: 1.6; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background: var(--bg); color: var(--text); margin: 0; 
+            padding: 0 0 100px 0; overflow-x: hidden; line-height: 1.6;
+        }
         .app-container { max-width: 900px; margin: 0 auto; padding: 15px; }
-        .screen { display: none; }
-        .screen.active { display: block; }
+        .screen { display: none; min-height: 100vh; opacity: 0; transition: opacity 0.3s ease; }
+        .screen.active { display: block; opacity: 1; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         
-        .header { background: linear-gradient(135deg, var(--surface), var(--surface-light)); border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(191, 0, 255, 0.3); }
-        .progress-bar { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; margin-top: 10px; }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--uv), var(--purple)); width: 0%; transition: width 0.8s ease; }
+        .header {
+            background: linear-gradient(135deg, var(--surface), var(--surface-light));
+            border-radius: 16px; padding: 20px; margin-bottom: 20px;
+            border: 1px solid rgba(191, 0, 255, 0.3);
+        }
         
-        .btn { display: inline-block; padding: 14px 24px; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 15px; text-align: center; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
-        .btn:active { transform: scale(0.95); }
-        .btn-secondary { background: var(--surface-light); border: 1px solid rgba(255,255,255,0.1); }
-        .btn-success { background: linear-gradient(135deg, var(--success), #059669); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .progress-header {
+            background: linear-gradient(135deg, var(--surface), var(--surface-light));
+            border-radius: 16px; padding: 20px; margin-bottom: 20px;
+            border: 1px solid rgba(191, 0, 255, 0.2);
+        }
+        .progress-bar {
+            width: 100%; height: 8px; background: rgba(255,255,255,0.1);
+            border-radius: 4px; overflow: hidden; margin-top: 10px;
+        }
+        .progress-fill {
+            height: 100%; background: linear-gradient(90deg, var(--uv), var(--purple));
+            width: 0%; transition: width 0.8s ease; border-radius: 4px;
+        }
         
-        .module-card { background: var(--surface); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: all 0.3s; position: relative; }
-        .module-card:active { transform: scale(0.98); border-color: var(--uv); }
+        .module-card {
+            background: var(--surface); border-radius: 20px; padding: 20px;
+            margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer; transition: all 0.3s ease; position: relative;
+            overflow: hidden;
+        }
+        .module-card:hover { transform: translateY(-2px); border-color: var(--uv); }
         .module-card.locked { opacity: 0.5; pointer-events: none; filter: grayscale(0.8); }
         .module-card.completed { border-color: var(--success); }
-        .module-card.completed::after { content: '✓'; position: absolute; top: 15px; right: 15px; background: var(--success); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold; }
-        .module-number { display: inline-block; background: var(--uv); color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; margin-bottom: 8px; }
-        .module-title { font-size: 18px; font-weight: bold; margin: 5px 0; }
-        .module-desc { font-size: 13px; color: var(--text-muted); }
-        .module-meta { display: flex; gap: 15px; margin-top: 12px; font-size: 12px; color: var(--text-muted); }
+        .module-card.completed::after {
+            content: '✓'; position: absolute; top: 15px; right: 15px;
+            background: var(--success); width: 24px; height: 24px;
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-size: 14px; font-weight: bold;
+        }
         
-        .lesson-container { background: var(--surface); border-radius: 20px; padding: 25px; margin-bottom: 20px; }
-        .lesson-header { border-bottom: 2px solid rgba(191, 0, 255, 0.3); padding-bottom: 15px; margin-bottom: 20px; }
-        .lesson-badge { display: inline-block; background: rgba(191, 0, 255, 0.2); color: var(--uv); padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: bold; margin-bottom: 8px; }
-        .lesson-title { font-size: 22px; margin: 0 0 10px 0; }
-        .lesson-subtitle { color: var(--text-muted); font-size: 14px; }
+        /* Mobil optimizasyon - Birleştirilmiş ve düzeltilmiş */
+        .filter-btn {
+            flex: 0 0 auto;
+            white-space: nowrap;
+            font-size: 12px;
+            padding: 10px 16px;
+            background: var(--surface);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-muted);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            min-height: 44px;
+            font-weight: 500;
+        }
+
+        .filter-btn.active {
+            background: var(--uv) !important;
+            color: white !important;
+            border-color: var(--uv) !important;
+        }
+
+        .filter-btn[data-category="critical"] {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .filter-btn[data-category="uv"] {
+            border-color: var(--uv);
+            color: var(--uv);
+        }
+
+        .filter-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Buton basma efekti */
+        .filter-btn:active,
+        .shortcut-card:active,
+        .nav-item:active {
+            transform: scale(0.95);
+            opacity: 0.8;
+        }
+
+        /* Modal z-index düzeltmesi */
+        .shortcut-modal {
+            z-index: 100000 !important;
+        }
         
-        .content-block { background: rgba(255,255,255,0.03); border-radius: 12px; padding: 20px; margin-bottom: 15px; border-left: 4px solid var(--uv); }
+        .lesson-container {
+            background: var(--surface); border-radius: 20px;
+            padding: 25px; margin-bottom: 20px;
+        }
+        .lesson-header {
+            border-bottom: 2px solid rgba(191, 0, 255, 0.3);
+            padding-bottom: 15px; margin-bottom: 20px;
+        }
+        .lesson-badge {
+            display: inline-block; background: rgba(191, 0, 255, 0.2);
+            color: var(--uv); padding: 4px 12px; border-radius: 12px;
+            font-size: 11px; font-weight: bold; margin-bottom: 8px;
+        }
+        
+        .content-block {
+            background: rgba(255,255,255,0.03); border-radius: 12px;
+            padding: 20px; margin-bottom: 15px; border-left: 4px solid var(--uv);
+        }
         .content-block.warning { border-left-color: var(--warning); background: rgba(245, 158, 11, 0.05); }
         .content-block.danger { border-left-color: var(--danger); background: rgba(239, 68, 68, 0.05); }
         .content-block.info { border-left-color: var(--info); background: rgba(59, 130, 246, 0.05); }
         .content-block.success { border-left-color: var(--success); background: rgba(16, 185, 129, 0.05); }
         
-        .block-title { color: var(--gold); font-size: 14px; font-weight: bold; margin-bottom: 10px; }
-        .block-content { font-size: 14px; color: var(--text-muted); line-height: 1.8; }
-        .block-content strong { color: var(--text); }
-        .block-content ul { padding-left: 20px; margin: 10px 0; }
-        .block-content li { margin-bottom: 8px; }
+        .block-title {
+            color: var(--gold); font-size: 14px; font-weight: bold;
+            margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+        }
         
-        .interactive-demo { background: linear-gradient(135deg, rgba(191, 0, 255, 0.1), rgba(168, 85, 247, 0.1)); border: 2px dashed var(--uv); border-radius: 16px; padding: 25px; text-align: center; margin: 20px 0; }
-        .demo-title { color: var(--uv); font-weight: bold; margin-bottom: 15px; font-size: 16px; }
+        .nav-buttons {
+            display: flex; gap: 10px; margin-top: 30px;
+        }
+        .btn {
+            flex: 1; background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white; border: none; padding: 16px; border-radius: 14px;
+            font-weight: bold; cursor: pointer; transition: all 0.2s;
+            font-size: 14px; text-align: center;
+            min-height: 48px;
+            touch-action: manipulation;
+        }
+        .btn:active { transform: scale(0.98); }
+        .btn-secondary { background: var(--surface-light); border: 1px solid rgba(255,255,255,0.1); }
+        .btn-success { background: linear-gradient(135deg, var(--success), #059669); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-outline { 
+            background: transparent; border: 2px solid var(--uv); 
+            color: var(--uv); margin-top: 10px;
+        }
         
-        .quiz-container { margin-top: 25px; }
-        .quiz-question { background: var(--surface-light); padding: 20px; border-radius: 12px; font-weight: bold; margin-bottom: 15px; font-size: 15px; }
-        .quiz-options { display: flex; flex-direction: column; gap: 10px; }
-        .quiz-option { background: rgba(255,255,255,0.05); border: 2px solid transparent; padding: 15px; border-radius: 12px; cursor: pointer; transition: all 0.2s; font-size: 14px; }
-        .quiz-option:active { transform: scale(0.98); }
-        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.2); }
-        .quiz-option.wrong { border-color: var(--danger); background: rgba(239, 68, 68, 0.2); }
-        .quiz-option.disabled { pointer-events: none; opacity: 0.6; }
+        .code-block {
+            background: #0d0d1f; border: 1px solid #2d2d44; border-radius: 8px;
+            padding: 15px; font-family: 'Courier New', monospace; font-size: 13px;
+            color: #a5b4fc; overflow-x: auto; margin: 10px 0;
+        }
         
-        .step-guide { counter-reset: step; }
-        .step-item { position: relative; padding-left: 50px; margin-bottom: 25px; padding-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .step-item:last-child { border-bottom: none; }
-        .step-number { position: absolute; left: 0; top: 0; width: 35px; height: 35px; background: var(--uv); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
-        .step-title { font-weight: bold; color: var(--gold); margin-bottom: 8px; }
-        .step-content { font-size: 14px; color: var(--text-muted); }
+        .data-table {
+            width: 100%; border-collapse: collapse; margin: 15px 0;
+            font-size: 13px;
+        }
+        .data-table th {
+            background: rgba(191, 0, 255, 0.2); color: var(--uv);
+            padding: 12px; text-align: left; font-weight: bold;
+        }
+        .data-table td {
+            padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: var(--text-muted);
+        }
         
-        .nav-buttons { display: flex; gap: 10px; margin-top: 30px; }
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(22, 22, 45, 0.98);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 15px 0 25px;
+            backdrop-filter: blur(10px);
+            border-top: 1px solid #2d2d44;
+            z-index: 999999;
+        }
         
-        .code-block { background: #0d0d1f; border: 1px solid #2d2d44; border-radius: 8px; padding: 15px; font-family: 'Courier New', monospace; font-size: 13px; color: #a5b4fc; overflow-x: auto; margin: 10px 0; }
+        .nav-item {
+            font-size: 24px;
+            cursor: pointer;
+            opacity: 0.4;
+            transition: all 0.3s;
+            position: relative;
+            padding: 15px 25px;
+            min-width: 70px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            outline: none;
+            user-select: none;
+            touch-action: manipulation;
+        }
         
-        .data-table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 13px; }
-        .data-table th { background: rgba(191, 0, 255, 0.2); color: var(--uv); padding: 12px; text-align: left; font-weight: bold; }
-        .data-table td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--text-muted); }
+        .nav-item:active { transform: scale(0.9); opacity: 0.8; }
+        .nav-item.active { opacity: 1; color: var(--accent); transform: scale(1.1); }
         
-        .filter-btn { display: inline-block; padding: 10px 16px; margin: 4px; background: var(--surface); border: 2px solid rgba(255,255,255,0.1); color: var(--text-muted); border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
-        .filter-btn:active { transform: scale(0.92); }
-        .filter-btn.active { background: var(--uv) !important; color: white !important; border-color: var(--uv) !important; }
-        
-        .shortcut-card { background: var(--surface); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.08); cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
-        .shortcut-card:active { transform: scale(0.98); border-color: var(--accent); }
-        .shortcut-key { display: inline-block; background: var(--bg); padding: 6px 12px; border-radius: 6px; font-family: monospace; font-size: 14px; color: var(--gold); border: 1px solid var(--gold); margin-right: 10px; }
-        .category-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; margin-bottom: 8px; }
-        .badge-uv { background: rgba(191, 0, 255, 0.2); color: var(--uv); }
-        .badge-critical { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
-        .badge-corel { background: rgba(99, 102, 241, 0.2); color: var(--primary); }
-        
-        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(22, 22, 45, 0.98); display: flex; justify-content: space-around; padding: 15px 0 25px; border-top: 1px solid #2d2d44; z-index: 1000; }
-        .nav-item { font-size: 28px; padding: 10px 30px; cursor: pointer; opacity: 0.5; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
-        .nav-item:active { transform: scale(0.85); opacity: 0.8; }
-        .nav-item.active { opacity: 1; color: var(--accent); }
-        
-        .achievement-popup { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: linear-gradient(135deg, var(--gold), #d97706); color: white; padding: 15px 25px; border-radius: 12px; box-shadow: 0 10px 40px rgba(245, 158, 11, 0.3); z-index: 2000; transition: transform 0.5s ease; display: flex; align-items: center; gap: 10px; font-weight: bold; }
+        .achievement-popup {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: linear-gradient(135deg, var(--gold), #d97706);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(245, 158, 11, 0.3);
+            z-index: 2000;
+            transition: transform 0.5s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            pointer-events: none;
+        }
         .achievement-popup.show { transform: translateX(-50%) translateY(0); }
         
-        input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #2d2d44; background: var(--bg); color: white; font-size: 15px; }
-        input:focus { outline: none; border-color: var(--uv); }
+        /* CorelDRAW Kısayol Stilleri */
+        .shortcut-card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+        .shortcut-card:hover {
+            border-color: var(--accent);
+            transform: translateX(5px);
+        }
+        .shortcut-key {
+            display: inline-block;
+            background: var(--bg);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 14px;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            margin-right: 10px;
+        }
+        .shortcut-critical {
+            border: 2px solid var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+        .shortcut-critical .shortcut-key {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+        .category-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .badge-uv { background: rgba(191, 0, 255, 0.2); color: var(--uv); }
+        .badge-corel { background: rgba(99, 102, 241, 0.2); color: var(--primary); }
+        .badge-critical { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        
+        .practice-area {
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px dashed var(--success);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .tab-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
         
         .hidden { display: none !important; }
-        .flex-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
         
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 10000; padding: 20px; }
-        .modal-content { background: var(--surface); border: 3px solid var(--uv); border-radius: 20px; padding: 30px; max-width: 400px; width: 100%; text-align: center; }
+        /* Filtre container */
+        .filter-container {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .filter-container::-webkit-scrollbar {
+            display: none;
+        }
         
-        .checklist { list-style: none; padding: 0; }
-        .checklist li { padding: 12px 0 12px 35px; position: relative; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .checklist li::before { content: '○'; position: absolute; left: 0; color: var(--uv); font-size: 20px; font-weight: bold; }
-        .checklist li.checked::before { content: '✓'; color: var(--success); }
-        .checklist li.checked { color: var(--text-muted); text-decoration: line-through; }
+        /* Shortcut kartı cursor pointer */
+        .shortcut-card {
+            cursor: pointer;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 14px;
+            margin: 8px 0;
+            border-radius: 12px;
+            border: 1px solid #2d2d44;
+            background: var(--bg);
+            color: white;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--uv);
+            box-shadow: 0 0 0 3px rgba(191, 0, 255, 0.1);
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .sim-svg {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            background: rgba(11, 11, 26, 0.5);
+            border-radius: 12px;
+            margin: 0 auto;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -130,18 +365,18 @@ full_app_code = '''<!DOCTYPE html>
     <!-- ANA EKRAN -->
     <div class="screen active" id="homeScreen">
         <div class="header">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
                 <div>
-                    <h2 style="color:var(--uv); margin-bottom:5px;">🎓 UV Akademi Pro</h2>
-                    <p style="color:var(--text-muted); font-size:14px;">Profesyonel UV Baskı & CorelDRAW Eğitimi</p>
+                    <h2 style="margin:0; color:var(--uv); font-size:24px;">🎓 UV Akademi Pro</h2>
+                    <p style="margin:5px 0 0 0; color:var(--text-muted); font-size:14px;">Profesyonel UV Baskı & CorelDRAW Eğitimi</p>
                 </div>
                 <div style="text-align:right;">
-                    <div id="levelDisplay" style="font-size:32px; font-weight:bold; color:var(--gold);">1</div>
+                    <div style="font-size:32px; font-weight:bold; color:var(--gold);" id="levelDisplay">1</div>
                     <div style="font-size:12px; color:var(--text-muted);">Seviye</div>
                 </div>
             </div>
             <div class="progress-bar" style="margin-top:15px;">
-                <div id="mainProgress" class="progress-fill" style="width:0%;"></div>
+                <div class="progress-fill" id="mainProgress" style="width:0%;"></div>
             </div>
             <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:12px; color:var(--text-muted);">
                 <span>Toplam İlerleme</span>
@@ -150,40 +385,40 @@ full_app_code = '''<!DOCTYPE html>
         </div>
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px;">
-            <div id="btnUvAkademi" style="background:linear-gradient(135deg, #16162d, #3b0066); border:2px solid var(--uv); border-radius:20px; padding:30px 20px; text-align:center; cursor:pointer;">
+            <div class="module-card" onclick="goToScreen('uvAcademyMain')" style="background:linear-gradient(135deg, #16162d, #3b0066); border:2px solid var(--uv); text-align:center; padding:30px 20px;">
                 <div style="font-size:48px; margin-bottom:10px;">🧪</div>
-                <div style="font-size:18px; font-weight:bold; margin-bottom:5px;">UV AKADEMİ</div>
+                <div style="font-size:18px; font-weight:bold; color:white; margin-bottom:5px;">UV AKADEMİ</div>
                 <div style="font-size:12px; color:var(--text-muted);">8 Modül • Sertifikalı</div>
             </div>
-            <div id="btnCorelDraw" style="background:linear-gradient(135deg, #16162d, #1e1b4b); border:2px solid var(--primary); border-radius:20px; padding:30px 20px; text-align:center; cursor:pointer;">
+            <div class="module-card" onclick="goToScreen('corelReferenceScreen')" style="background:linear-gradient(135deg, #16162d, #1e1b4b); border:2px solid var(--primary); text-align:center; padding:30px 20px;">
                 <div style="font-size:48px; margin-bottom:10px;">⌨️</div>
-                <div style="font-size:18px; font-weight:bold; margin-bottom:5px;">CORELDRAW</div>
+                <div style="font-size:18px; font-weight:bold; color:white; margin-bottom:5px;">CORELDRAW</div>
                 <div style="font-size:12px; color:var(--text-muted);">95+ Kısayol • Pratik</div>
             </div>
         </div>
 
         <div class="lesson-container">
             <h3 style="margin-top:0; color:var(--accent);">📋 Eğitim Yol Haritası</h3>
-            <div class="step-guide" style="margin-top:15px;">
-                <div class="step-item" style="padding-bottom:15px; margin-bottom:15px;">
-                    <div class="step-number" style="background:var(--success);">1</div>
-                    <div class="step-title">Temel Bilgiler</div>
-                    <div class="step-content">UV teknolojisi, kimyasal süreçler, malzeme bilimi</div>
+            <div style="margin-top:15px;">
+                <div style="position: relative; padding-left: 50px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <div style="position: absolute; left: 0; top: 0; width: 35px; height: 35px; background: var(--success); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">1</div>
+                    <div style="font-weight: bold; color: var(--gold); margin-bottom: 8px;">Temel Bilgiler</div>
+                    <div style="font-size: 14px; color: var(--text-muted);">UV teknolojisi, kimyasal süreçler, malzeme bilimi</div>
                 </div>
-                <div class="step-item" style="padding-bottom:15px; margin-bottom:15px;">
-                    <div class="step-number" style="background:var(--success);">2</div>
-                    <div class="step-title">Dosya Hazırlama</div>
-                    <div class="step-content">CorelDRAW'da spot renkler, katman yönetimi</div>
+                <div style="position: relative; padding-left: 50px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <div style="position: absolute; left: 0; top: 0; width: 35px; height: 35px; background: var(--success); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">2</div>
+                    <div style="font-weight: bold; color: var(--gold); margin-bottom: 8px;">Dosya Hazırlama</div>
+                    <div style="font-size: 14px; color: var(--text-muted);">CorelDRAW'da spot renkler, katman yönetimi, RIP hazırlık</div>
                 </div>
-                <div class="step-item" style="padding-bottom:15px; margin-bottom:15px;">
-                    <div class="step-number">3</div>
-                    <div class="step-title">Uygulamalı Eğitim</div>
-                    <div class="step-content">Makine operasyonu, arıza giderme</div>
+                <div style="position: relative; padding-left: 50px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <div style="position: absolute; left: 0; top: 0; width: 35px; height: 35px; background: var(--uv); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">3</div>
+                    <div style="font-weight: bold; color: var(--gold); margin-bottom: 8px;">Uygulamalı Eğitim</div>
+                    <div style="font-size: 14px; color: var(--text-muted);">Makine operasyonu, arıza giderme, ileri teknikler</div>
                 </div>
-                <div class="step-item" style="border-bottom:none; padding-bottom:0; margin-bottom:0;">
-                    <div class="step-number">4</div>
-                    <div class="step-title">Sertifikasyon</div>
-                    <div class="step-content">Final sınavı ve profesyonel sertifika</div>
+                <div style="position: relative; padding-left: 50px; padding-bottom: 0; margin-bottom: 0;">
+                    <div style="position: absolute; left: 0; top: 0; width: 35px; height: 35px; background: var(--uv); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">4</div>
+                    <div style="font-weight: bold; color: var(--gold); margin-bottom: 8px;">Sertifikasyon</div>
+                    <div style="font-size: 14px; color: var(--text-muted);">Final sınavı ve profesyonel sertifika</div>
                 </div>
             </div>
         </div>
@@ -192,33 +427,39 @@ full_app_code = '''<!DOCTYPE html>
     <!-- UV AKADEMİ ANA EKRAN -->
     <div class="screen" id="uvAcademyMain">
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
-            <button id="btnBackHome" class="btn btn-secondary" style="padding:12px 16px;">←</button>
-            <h2 style="margin:0; color:var(--uv);">🧪 UV Akademi</h2>
+            <button class="btn btn-secondary" style="flex:0; padding:12px 16px;" onclick="goToScreen('homeScreen')">←</button>
+            <h2 style="margin:0; color:var(--uv)">🧪 UV Akademi</h2>
         </div>
         
-        <div class="header" style="border-color:rgba(191,0,255,0.2);">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
-                <span style="font-size:14px; font-weight:bold;">Toplam İlerleme</span>
-                <span id="totalProgress" style="color:var(--uv); font-weight:bold;">0%</span>
-            </div>
-            <div class="progress-bar">
-                <div id="totalProgressBar" class="progress-fill" style="width:0%;"></div>
-            </div>
-            <div style="display:flex; justify-content:space-between; margin-top:10px; font-size:12px; color:var(--text-muted);">
-                <span id="completedModules">0/8 Modül</span>
-                <span id="totalPoints">0 XP Kazanıldı</span>
+        <div class="progress-header">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <span style="font-size:14px; font-weight:bold;">Modüller</span>
+                <span style="color:var(--uv); font-size:12px;">8 Modül</span>
             </div>
         </div>
         
-        <div id="modulesList"></div>
+        <!-- DÜZELTİLMİŞ FİLTRE BUTONLARI - data-category kullanıyor, inline onclick YOK -->
+        <div class="filter-container">
+            <button class="filter-btn active" data-category="all">Tümü</button>
+            <button class="filter-btn" data-category="uv">UV Özel</button>
+            <button class="filter-btn" data-category="critical">Kritik</button>
+            <button class="filter-btn" data-category="file">Dosya</button>
+            <button class="filter-btn" data-category="edit">Düzenle</button>
+            <button class="filter-btn" data-category="color">Renk</button>
+            <button class="filter-btn" data-category="align">Hizalama</button>
+        </div>
+        
+        <div id="modulesContainer">
+            <!-- Modüller buraya gelecek -->
+        </div>
     </div>
 
     <!-- MODÜL DETAY EKRANI -->
     <div class="screen" id="moduleDetail">
         <div class="lesson-container" id="lessonContent"></div>
         <div class="nav-buttons" id="lessonNav">
-            <button id="btnPrevLesson" class="btn btn-secondary">← Önceki</button>
-            <button id="btnNextLesson" class="btn">Sonraki →</button>
+            <button class="btn btn-secondary" onclick="prevLesson()">← Önceki</button>
+            <button class="btn" id="nextBtn" onclick="nextLesson()">Sonraki →</button>
         </div>
     </div>
 
@@ -236,38 +477,67 @@ full_app_code = '''<!DOCTYPE html>
     <!-- CORELDRAW REFERANS EKRANI -->
     <div class="screen" id="corelReferenceScreen">
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
-            <button id="btnBackFromCorel" class="btn btn-secondary" style="padding:12px 16px;">←</button>
-            <h2 style="margin:0; color:var(--accent);">⌨️ CorelDRAW Kısayolları</h2>
+            <button class="btn btn-secondary" style="flex:0; padding:12px 16px;" onclick="goToScreen('homeScreen')">←</button>
+            <h2 style="margin:0; color:var(--accent)">⌨️ CorelDRAW Kısayolları</h2>
         </div>
         
-        <div class="header" style="border-color:var(--info);">
+        <div class="progress-header" style="border-color:var(--info);">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                 <span style="font-size:14px; font-weight:bold;">Hızlı Erişim</span>
                 <span style="color:var(--info); font-size:12px;">95 Kısayol</span>
             </div>
-            <input type="text" id="shortcutSearch" placeholder="🔍 Kısayol ara...">
+            <input type="text" id="shortcutSearch" placeholder="🔍 Kısayol ara..." 
+                   style="width:100%; padding:12px; border-radius:8px; border:1px solid #2d2d44; background:var(--bg); color:white;">
         </div>
         
-        <div class="flex-wrap" style="margin-bottom:15px;">
-            <button class="filter-btn active" data-filter="all">Tümü</button>
-            <button class="filter-btn" data-filter="uv" style="border-color:var(--uv); color:var(--uv);">UV Özel</button>
-            <button class="filter-btn" data-filter="critical" style="border-color:var(--danger); color:var(--danger);">Kritik</button>
-            <button class="filter-btn" data-filter="file">Dosya</button>
-            <button class="filter-btn" data-filter="edit">Düzenle</button>
-            <button class="filter-btn" data-filter="color">Renk</button>
-            <button class="filter-btn" data-filter="align">Hizalama</button>
+        <!-- DÜZELTİLMİŞ KATEGORİ FİLTRELERİ -->
+        <div class="filter-container" id="corelFilters">
+            <button class="filter-btn active" data-category="all">Tümü</button>
+            <button class="filter-btn" data-category="uv">UV Özel</button>
+            <button class="filter-btn" data-category="critical">Kritik</button>
+            <button class="filter-btn" data-category="file">Dosya</button>
+            <button class="filter-btn" data-category="edit">Düzenle</button>
+            <button class="filter-btn" data-category="color">Renk</button>
+            <button class="filter-btn" data-category="align">Hizalama</button>
         </div>
         
-        <div id="shortcutsContainer"></div>
+        <!-- Pratik Alıştırma Bölümü -->
+        <div class="practice-area" id="practiceArea">
+            <div style="font-size:24px; margin-bottom:10px;">🎯</div>
+            <div style="font-weight:bold; color:var(--success); margin-bottom:10px;">Pratik Alıştırma Modu</div>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px;">
+                Kısayolları ezberlemek için pratik yapın. Rastgele bir kısayol gösterilecek.
+            </p>
+            <button class="btn btn-success" onclick="startPracticeMode()" style="max-width:200px;">
+                Alıştırmaya Başla
+            </button>
+        </div>
+
+        <!-- Alıştırma Ekranı (Başlangıçta gizli) -->
+        <div id="practiceGame" class="hidden" style="background:var(--surface); border-radius:16px; padding:20px; margin-bottom:20px; text-align:center;">
+            <div style="font-size:14px; color:var(--text-muted); margin-bottom:10px;">Bu kısayol ne işe yarar?</div>
+            <div style="font-size:32px; font-family:monospace; color:var(--gold); margin:20px 0; padding:20px; background:var(--bg); border-radius:12px;" id="practiceKey">Ctrl + ?</div>
+            <div id="practiceOptions" style="display:flex; flex-direction:column; gap:10px; margin-top:20px;">
+                <!-- Seçenekler JS ile doldurulacak -->
+            </div>
+            <div id="practiceResult" style="margin-top:20px; font-weight:bold;"></div>
+            <button class="btn btn-secondary" onclick="nextPracticeQuestion()" id="nextPracticeBtn" style="display:none; margin-top:15px;">
+                Sonraki Soru →
+            </button>
+        </div>
+        
+        <div id="shortcutsContainer" style="max-height:60vh; overflow-y:auto;">
+            <!-- Kısayollar JS ile doldurulacak -->
+        </div>
     </div>
 
-</div>
+</div> <!-- app-container sonu -->
 
 <!-- NAV BAR -->
-<div class="nav-bar">
-    <div class="nav-item active" data-nav="homeScreen">🏠</div>
-    <div class="nav-item" data-nav="uvAcademyMain">🧪</div>
-    <div class="nav-item" data-nav="corelReferenceScreen">⌨️</div>
+<div class="nav-bar" id="mainNavBar">
+    <button class="nav-item active" data-screen="homeScreen">🏠</button>
+    <button class="nav-item" data-screen="uvAcademyMain">🧪</button>
+    <button class="nav-item" data-screen="corelReferenceScreen">⌨️</button>
 </div>
 
 <!-- Achievement Popup -->
@@ -277,683 +547,274 @@ full_app_code = '''<!DOCTYPE html>
 </div>
 
 <script>
-'''
-
-print("HTML yapısı oluşturuldu, şimdi JavaScript içerikleri ekleniyor...")
-print(f"Şu ana kadar: {len(full_app_code)} karakter")
 // ==========================================
-// VERİLER - Tüm Modüller ve İçerikler
+// CORELDRAW KISAYOLLARI VERİTABANI
 // ==========================================
-
-const uvCurriculum = [
-    {
-        id: 1,
-        title: "UV Baskı Temelleri ve Kimyasal Süreçler",
-        desc: "Teknolojinin temel prensipleri, fotopolimerizasyon ve endüstriyel uygulamalar",
-        duration: "60 dk",
-        xp: 150,
-        locked: false,
-        lessons: [
-            {
-                title: "UV Baskı Nedir ve Nasıl Çalışır?",
-                subtitle: "Temel prensipler ve tarihsel gelişim",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">📖 Teknoloji Tanımı</div>
-                        <div class="block-content">
-                            <strong>UV Baskı (Ultraviolet Printing)</strong>, mürekkebin anında kuruması için ultraviyole (UV) ışınları kullanan dijital baskı teknolojisidir.
-                            <br><br>
-                            <strong>Tarihsel Evrim:</strong>
-                            <ul>
-                                <li><strong>1970'ler:</strong> UV mürekkeplerinin icadı</li>
-                                <li><strong>1990'lar:</strong> Dijital UV plotterların doğuşu</li>
-                                <li><strong>2000'ler:</strong> Flatbed UV teknolojisi</li>
-                                <li><strong>2010+:</strong> LED-UV sistemler</li>
-                                <li><strong>2020+:</strong> 3D kabartma, yapay zeka</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="content-block info">
-                        <div class="block-title">💡 10 Kritik Avantaj</div>
-                        <div class="block-content">
-                            <ol>
-                                <li><strong>Anında Kuruma:</strong> 0.1-3 saniye</li>
-                                <li><strong>Yüksek Çözünürlük:</strong> 1440x1440 dpi</li>
-                                <li><strong>Çok Yönlülük:</strong> 100+ malzeme</li>
-                                <li><strong>Dayanıklılık:</strong> Çizilmez, suya dayanıklı</li>
-                                <li><strong>Çevre Dostu:</strong> VOC salınımı yok</li>
-                                <li><strong>Verimlilik:</strong> Islak üzerine ıslak</li>
-                                <li><strong>3D Efektler:</strong> Kabartma baskı</li>
-                                <li><strong>Beyaz Mürekkep:</strong> Şeffaf zeminler</li>
-                                <li><strong>Değişken Veri:</strong> Her baskı farklı</li>
-                                <li><strong>Düşük Fire:</strong> Min test maliyeti</li>
-                            </ol>
-                        </div>
-                    </div>
-
-                    <div class="content-block">
-                        <div class="block-title">⚗️ Fotopolimerizasyon Mekanizması</div>
-                        <div class="block-content">
-                            <table class="data-table">
-                                <tr><th>Bileşen</th><th>Oran</th><th>Görevi</th></tr>
-                                <tr><td><strong>Monomerler</strong></td><td>40-60%</td><td>Sıvı haldeki temel yapı taşları</td></tr>
-                                <tr><td><strong>Oligomerler</strong></td><td>20-40%</td><td>Ağ yapısını oluşturan zincirler</td></tr>
-                                <tr><td><strong>Foto-başlatıcılar</strong></td><td>3-8%</td><td>UV ışığıyla reaksiyonu başlatır</td></tr>
-                                <tr><td><strong>Pigmentler</strong></td><td>5-15%</td><td>Renk veren partiküller</td></tr>
-                                <tr><td><strong>Additifler</strong></td><td>1-5%</td><td>Akışkanlık düzenleyicileri</td></tr>
-                            </table>
-                        </div>
-                    </div>
-                    
-                    <div class="interactive-demo">
-                        <div class="demo-title">⚗️ Simülasyon: UV Kürlenme</div>
-                        <p style="color:var(--text-muted); font-size:14px; margin-bottom:15px;">
-                            UV ışını → Foto-başlatıcı uyarılır → Polimerleşme → Katılaşma
-                        </p>
-                        <button class="btn" onclick="alert('Simülasyon: Sıvı boya UV ışını ile 0.5 saniyede katılaşır!')">
-                            ▶ Kürlenmeyi Başlat
-                        </button>
-                    </div>
-
-                    <div class="content-block warning">
-                        <div class="block-title">⚠️ UV Işığı Güvenliği</div>
-                        <div class="block-content">
-                            <ul>
-                                <li><strong>Göz:</strong> UV ışığı katarakt ve retina hasarına yol açabilir</li>
-                                <li><strong>Cilt:</strong> UV-B ve UV-C yanıklara neden olur</li>
-                                <li><strong>Ozon:</strong> Bazı lambalar ozon üretir</li>
-                                <li><strong>Koruma:</strong> UV filtreli gözlük, uzun kollu giysi</li>
-                            </ul>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "Mürekkep Türleri ve Özellikleri",
-                subtitle: "CMYK, White, Varnish ve Primer detaylı analiz",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">🎨 Ana Mürekkep Türleri</div>
-                        <div class="block-content">
-                            <table class="data-table">
-                                <tr><th>Tür</th><th>Kompozisyon</th><th>Viskozite</th><th>Kullanım</th></tr>
-                                <tr><td><strong>CMYK</strong></td><td>Cyan, Magenta, Yellow, Black</td><td>8-12 cps</td><td>Temel renk baskısı</td></tr>
-                                <tr><td><strong>White</strong></td><td>%35-50 TiO₂</td><td>15-25 cps</td><td>Opak zemin</td></tr>
-                                <tr><td><strong>Varnish</strong></td><td>Şeffaf polimer</td><td>10-18 cps</td><td>3D kabartma</td></tr>
-                                <tr><td><strong>Primer</strong></td><td>Yapıştırıcı katman</td><td>5-10 cps</td><td>PP, PE için</td></tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="content-block warning">
-                        <div class="block-title">⚠️ Beyaz Mürekkep - Kritik Bilgiler</div>
-                        <div class="block-content">
-                            <p>Beyaz mürekkep <strong>en kritik</strong> bileşendir:</p>
-                            <ul>
-                                <li>Şeffaf pleksiye baskıda renklerin görünmesini sağlar</li>
-                                <li>Cam üzerine beyaz zemin oluşturur</li>
-                                <li>Renkli metaller üzerinde gerçek renkleri verir</li>
-                                <li>Double-hit ile daha opak sonuç verir</li>
-                            </ul>
-                            <br>
-                            <strong>Beyaz Mürekkep Yönetimi:</strong>
-                            <ul>
-                                <li>Her gün 10-15 saniye çalkalayın</li>
-                                <li>Sıcaklık 20-25°C arasında tutun</li>
-                                <li>Nozzle check'te beyaz kanalı mutlaka kontrol edin</li>
-                            </ul>
-                        </div>
-                    </div>
-                `
-            }
-        ],
-        quiz: {
-            questions: [
-                {
-                    question: "Şeffaf pleksi üzerine renkli baskı yaparken beyaz katmanı nereye basmalısınız?",
-                    options: ["Sadece üste", "Sadece alta", "Hem alta hem üste", "Hiçbir yere"],
-                    correct: 1,
-                    explanation: "Renklerin canlı görünmesi için beyaz zemin şarttır. Önce beyaz (alta), üzerine CMYK basılır."
-                },
-                {
-                    question: "UV baskının en büyük avantajı nedir?",
-                    options: ["Ucuz maliyet", "Anında kuruma", "Sadece kağıda basılması", "Solvent kokusu"],
-                    correct: 1,
-                    explanation: "UV baskı 0.1-3 saniyede kurur, laminasyon gerektirmez."
-                }
-            ]
-        }
-    },
-    {
-        id: 2,
-        title: "Yüzey Hazırlığı ve Adhezyon Bilimi",
-        desc: "Malzeme bilimi, temizlik protokolleri ve tutunma prensipleri",
-        duration: "70 dk",
-        xp: 180,
-        locked: true,
-        lessons: [
-            {
-                title: "Yüzey Enerjisi ve Tutunma Mekaniği",
-                subtitle: "Boya neden atar? Bilimsel temeller",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">🔬 Bilimsel Temel: Yüzey Enerjisi</div>
-                        <div class="block-content">
-                            <p>Her malzemenin bir <strong>yüzey enerjisi</strong> vardır (dyn/cm). Boya tutunması için:</p>
-                            <div class="code-block">Boya Yüzey Gerilimi < Malzeme Yüzey Enerjisi</div>
-                            <table class="data-table" style="margin-top:15px;">
-                                <tr><th>Malzeme</th><th>Yüzey Enerjisi</th><th>Tutunma</th></tr>
-                                <tr><td>Paslanmaz Çelik</td><td>700-1000 dyn/cm</td><td>✅ Mükemmel</td></tr>
-                                <tr><td>Alüminyum</td><td>500-800 dyn/cm</td><td>✅ İyi</td></tr>
-                                <tr><td>PVC</td><td>39 dyn/cm</td><td>⚠️ Orta</td></tr>
-                                <tr><td>PP (Polipropilen)</td><td>29 dyn/cm</td><td>❌ Zayıf</td></tr>
-                                <tr><td>PE (Polietilen)</td><td>31 dyn/cm</td><td>❌ Zayıf</td></tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="interactive-demo">
-                        <div class="demo-title">🔬 Yüzey Enerjisi Simülasyonu</div>
-                        <p style="color:var(--text-muted); font-size:14px; margin-bottom:15px;">
-                            Malzeme seçin ve boya tutunmasını görün
-                        </p>
-                        <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:15px;">
-                            <button class="btn btn-secondary" onclick="alert('Metal: 850 dyn/cm - Mükemmel tutunma!')">🔩 Metal</button>
-                            <button class="btn btn-secondary" onclick="alert('PVC: 39 dyn/cm - Orta tutunma, primer önerilir')">🧴 PVC</button>
-                            <button class="btn btn-secondary" onclick="alert('PP: 29 dyn/cm - Zayıf! Corona treatment şart!')">🥡 PP</button>
-                        </div>
-                    </div>
-                `
-            }
-        ],
-        quiz: {
-            questions: [
-                {
-                    question: "PP malzemeye baskı yapmadan önce ne yapılmalıdır?",
-                    options: ["Sadece silmek", "Primer veya Corona treatment", "Sıcak tutmak", "Hiçbir şey"],
-                    correct: 1,
-                    explanation: "PP düşük yüzey enerjili (29 dyn/cm) malzemedir. Corona veya primer şarttır."
-                }
-            ]
-        }
-    },
-    // Modül 3-8 kısaltılmış olarak devam eder...
-    {
-        id: 3,
-        title: "CorelDRAW ile UV Dosya Hazırlama",
-        desc: "Profesyonel dosya hazırlama, RIP ayarları ve renk yönetimi",
-        duration: "80 dk",
-        xp: 200,
-        locked: true,
-        lessons: [
-            {
-                title: "Spot Renkler ve Kanal Yönetimi",
-                subtitle: "White, Varnish ve Primer katmanları",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">🎯 RIP Yazılımı ve Spot Renkler</div>
-                        <div class="block-content">
-                            <table class="data-table">
-                                <tr><th>Spot Renk</th><th>Kanal</th><th>Kullanım</th></tr>
-                                <tr><td><strong>RD_WHITE</strong></td><td>Beyaz mürekkep</td><td>Opak zemin</td></tr>
-                                <tr><td><strong>RD_VARNISH</strong></td><td>Vernik</td><td>3D kabartma</td></tr>
-                                <tr><td><strong>RD_PRIMER</strong></td><td>Astar</td><td>PP, silikon</td></tr>
-                                <tr><td><strong>CutContour</strong></td><td>Kesim</td><td>Contour cut</td></tr>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="content-block warning">
-                        <div class="block-title">⚠️ Sık Yapılan Hatalar</div>
-                        <div class="block-content">
-                            <ul>
-                                <li><strong>"White" yazmak yerine "RD_WHITE":</strong> RIP tanımaz!</li>
-                                <li><strong>Spot renk işaretini unutmak:</strong> CMYK'ya çevrilir</li>
-                                <li><strong>Beyazı üste koymak:</strong> Renkler soluk görünür</li>
-                                <li><strong>Fontları eğriye çevirmemek:</strong> RIP'te font kaybı</li>
-                            </ul>
-                        </div>
-                    </div>
-                `
-            }
-        ],
-        quiz: {
-            questions: [
-                {
-                    question: "CorelDRAW'de beyaz katmanı nasıl tanımlamalısınız?",
-                    options: ["Sadece beyaz renk yap", "Spot renk adı 'RD_WHITE'", "Sadece alt katmana koy", "RIP'te sonradan ayarla"],
-                    correct: 1,
-                    explanation: "RIP yazılımı 'RD_WHITE' spot renk adını otomatik beyaz kanalına yönlendirir."
-                }
-            ]
-        }
-    },
-    // Modüller 4-7 benzer yapıda...
-    {
-        id: 8,
-        title: "🎓 Sertifika Sınavı",
-        desc: "Tüm modüllerin kapsamlı final değerlendirmesi",
-        duration: "60 dk",
-        xp: 500,
-        locked: true,
-        isFinal: true,
-        lessons: [
-            {
-                title: "Sınava Hazırlık",
-                subtitle: "Önemli konuların özeti",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">📚 Sınav Kapsamı</div>
-                        <div class="block-content">
-                            <ul>
-                                <li><strong>Modül 1:</strong> UV teknolojisi, fotopolimerizasyon</li>
-                                <li><strong>Modül 2:</strong> Yüzey enerjisi, temizlik, primer</li>
-                                <li><strong>Modül 3:</strong> CorelDRAW spot renkler</li>
-                                <li><strong>Modül 4-7:</strong> Operasyon, arıza, ileri teknikler</li>
-                            </ul>
-                            <br>
-                            <p><strong>Geçme notu: %80 (12 doğru)</strong></p>
-                        </div>
-                    </div>
-                `
-            }
-        ],
-        finalQuiz: [
-            { question: "UV baskının en büyük avantajı?", options: ["Ucuz maliyet", "Anında kuruma", "Sadece kağıt", "Solvent kokusu"], correct: 1 },
-            { question: "PP malzemeye baskı için?", options: ["Yüksek ısı", "Primer/Corona", "Su bazlı", "Hiçbir şey"], correct: 1 },
-            { question: "Beyaz mürekkep neden çalkalanır?", options: ["Hava için", "Pigment çökelmesi", "Rengi açmak", "Karıncalanma"], correct: 1 },
-            { question: "Mirror print'te katman sırası?", options: ["Beyaz altta", "Renk altta", "Sadece beyaz", "Sadece renk"], correct: 1 },
-            { question: "LED-UV lambaların ömrü?", options: ["1000 saat", "5000 saat", "20,000+ saat", "1 yıl"], correct: 2 }
-        ]
-    }
-];
 
 const corelShortcuts = [
-    { key: "Ctrl+Q", desc: "Eğriye Çevir", category: "uv", uvContext: "Fontları vektöre çevirme (font kaybı önleme)", critical: true },
-    { key: "Shift+F11", desc: "Tek Renk Dolgu", category: "uv", uvContext: "RD_WHITE spot rengi atama", critical: true },
-    { key: "Ctrl+F9", desc: "Kontur Efekti", category: "uv", uvContext: "Kesme çizgisi (CutContour) oluşturma", critical: true },
-    { key: "Ctrl+End", desc: "En Alta Gönder", category: "uv", uvContext: "Beyaz katmanı en alta yerleştirme", critical: true },
-    { key: "Ctrl+Home", desc: "En Üste Getir", category: "uv", uvContext: "Varnish katmanını en üste alma", critical: true },
-    { key: "Ctrl+PgDn", desc: "Bir Alta Gönder", category: "uv", uvContext: "Katman sırası ayarı", critical: true },
-    { key: "Ctrl+PgUp", desc: "Bir Üste Getir", category: "uv", uvContext: "Katman sırası ayarı", critical: true },
-    { key: "Ctrl+E", desc: "Dışa Aktar", category: "uv", uvContext: "PDF/X-4 formatında RIP'e gönderme", critical: true },
-    { key: "Ctrl+G", desc: "Grupla", category: "uv", uvContext: "Beyaz+renk katmanlarını birlikte taşıma", critical: true },
-    { key: "Ctrl+U", desc: "Grubu Çöz", category: "uv", uvContext: "Katmanları ayrı ayrı düzenleme", critical: true },
-    { key: "Ctrl+7", desc: "PowerClip", category: "uv", uvContext: "Görseli maske içine alma", critical: false },
-    { key: "F12", desc: "Anahat Pençeresi", category: "uv", uvContext: "Kesme çizgisi kalınlığı (0.25pt)", critical: true },
-    { key: "Ctrl+M", desc: "Yatay Çevir", category: "uv", uvContext: "Mirror print için görseli çevirme", critical: true },
-    { key: "Ctrl+N", desc: "Yeni Belge", category: "file", uvContext: "Her baskı işi için temiz sayfa" },
-    { key: "Ctrl+O", desc: "Aç", category: "file", uvContext: "Müşteri dosyalarını içe aktarma" },
-    { key: "Ctrl+S", desc: "Kaydet", category: "file", uvContext: "Sık kaydetme alışkanlığı" },
-    { key: "Ctrl+Shift+S", desc: "Farklı Kaydet", category: "file", uvContext: "Revizyonları versiyonlayarak saklama" },
-    { key: "Ctrl+I", desc: "İçe Aktar", category: "file", uvContext: "JPG/PNG/PDF logoları ekleme" },
-    { key: "Ctrl+Z", desc: "Geri Al", category: "edit", uvContext: "Hatalı işlemleri geri alma" },
-    { key: "Ctrl+Y", desc: "Yinele", category: "edit", uvContext: "Geri alınanı tekrarlama" },
-    { key: "Ctrl+X", desc: "Kes", category: "edit", uvContext: "Nesneleri taşıma" },
-    { key: "Ctrl+C", desc: "Kopyala", category: "edit", uvContext: "Tekrar eden elemanlar" },
-    { key: "Ctrl+V", desc: "Yapıştır", category: "edit", uvContext: "Kopyalanan nesneyi yerleştirme" },
-    { key: "Ctrl+D", desc: "Çoğalt", category: "edit", uvContext: "Seri üretim için kopya" },
-    { key: "Ctrl+L", desc: "Birleştir", category: "edit", uvContext: "Kesme çizgilerini tek nesne yapma" },
-    { key: "Ctrl+K", desc: "Ayır", category: "edit", uvContext: "Birleştirilmiş nesneleri ayırma" },
-    { key: "F11", desc: "Degrade Dolgu", category: "color", uvContext: "Gradyan efektleri" },
-    { key: "Shift+F11", desc: "Tek Renk Dolgu", category: "color", uvContext: "Düz renk atama" },
-    { key: "F12", desc: "Anahat", category: "color", uvContext: "Çizgi kalınlığı ve rengi" },
-    { key: "P", desc: "Sayfaya Ortala", category: "align", uvContext: "Hızlı merkezleme" },
-    { key: "Ctrl+Shift+C", desc: "Merkeze Hizala", category: "align", uvContext: "Yatay ve dikey ortalama" },
-    { key: "Ctrl+Shift+L", desc: "Sola Hizala", category: "align", uvContext: "Sol kenara yasla" },
-    { key: "Ctrl+Shift+R", desc: "Sağa Hizala", category: "align", uvContext: "Sağ kenara yasla" },
-    { key: "F8", desc: "Metin Aracı", category: "text", uvContext: "Yazı ekleme" },
-    { key: "Ctrl+T", desc: "Paragraf Formatı", category: "text", uvContext: "Hizalama, satır aralığı" },
-    { key: "F9", desc: "Tam Ekran Önizleme", category: "view", uvContext: "Müşteri sunumu" },
-    { key: "F3", desc: "Yakınlaştır", category: "view", uvContext: "Detay görme" },
-    { key: "F4", desc: "Tümünü Göster", category: "view", uvContext: "Genel bakış" },
-    { key: "Tab", desc: "Sonraki Nesne", category: "object", uvContext: "Sırayla seçim" },
-    { key: "F10", desc: "Kalem Aracı", category: "tools", uvContext: "Vektör çizim" },
-    { key: "F6", desc: "Dikdörtgen", category: "tools", uvContext: "Baskı alanı çerçevesi" },
-    { key: "Ctrl+F11", desc: "Sembol Yöneticisi", category: "library", uvContext: "Sık kullanılan logolar" }
+    // UV BASKIYA ÖZEL KRİTİK KISAYOLLAR
+    {key: "Shift + F11", desc: "Tek Renk Dolgu", category: "uv", uvContext: "RD_WHITE spot rengi atama", critical: true},
+    {key: "Ctrl + F9", desc: "Kontur Efekti", category: "uv", uvContext: "Kesme çizgisi (CutContour) oluşturma", critical: true},
+    {key: "Ctrl + Q", desc: "Eğriye Çevir", category: "uv", uvContext: "Fontları vektöre çevirme (font kaybı önleme)", critical: true},
+    {key: "Ctrl + End", desc: "En Alta Gönder", category: "uv", uvContext: "Beyaz katmanı en alta yerleştirme", critical: true},
+    {key: "Ctrl + Home", desc: "En Üste Getir", category: "uv", uvContext: "Varnish katmanını en üste alma", critical: true},
+    {key: "Ctrl + PgDn", desc: "Bir Alta Gönder", category: "uv", uvContext: "Katman sırası ayarı (Beyaz > Renk)", critical: true},
+    {key: "Ctrl + PgUp", desc: "Bir Üste Getir", category: "uv", uvContext: "Katman sırası ayarı (Renk > Beyaz)", critical: true},
+    {key: "Ctrl + E", desc: "Dışa Aktar", category: "uv", uvContext: "PDF/X-4 formatında RIP'e gönderme", critical: true},
+    {key: "Ctrl + Shift + A", desc: "Hizalama ve Dağıtım", category: "uv", uvContext: "Çoklu nesne düzeni (ganged printing)", critical: false},
+    {key: "Ctrl + G", desc: "Grupla", category: "uv", uvContext: "Beyaz+renk katmanlarını birlikte taşıma", critical: true},
+    {key: "Ctrl + U", desc: "Grubu Çöz", category: "uv", uvContext: "Katmanları ayrı ayrı düzenleme", critical: true},
+    {key: "Ctrl + 7", desc: "PowerClip", category: "uv", uvContext: "Görseli maske içine alma (bleed kontrolü)", critical: false},
+    {key: "F12", desc: "Anahat Pençeresi", category: "uv", uvContext: "Kesme çizgisi kalınlığı (0.25pt ayarı)", critical: true},
+    {key: "Ctrl + Shift + >", desc: "Büyüt", category: "uv", uvContext: "Bleed alanı ekleme (%10 ölçek)", critical: false},
+    {key: "Ctrl + M", desc: "Yatay Çevir", category: "uv", uvContext: "Mirror print için görseli çevirme", critical: true},
+    
+    // DOSYA YÖNETİMİ
+    {key: "Ctrl + N", desc: "Yeni Belge", category: "file", uvContext: "Her baskı işi için temiz sayfa"},
+    {key: "Ctrl + O", desc: "Aç", category: "file", uvContext: "Müşteri dosyalarını içe aktarma"},
+    {key: "Ctrl + S", desc: "Kaydet", category: "file", uvContext: "Sık kaydetme (Ctrl+S alışkanlığı)"},
+    {key: "Ctrl + Shift + S", desc: "Farklı Kaydet", category: "file", uvContext: "Revizyonları versiyonlayarak saklama (v1, v2...)"},
+    {key: "Ctrl + I", desc: "İçe Aktar", category: "file", uvContext: "JPG/PNG/PDF logoları ekleme"},
+    {key: "Ctrl + Shift + I", desc: "İçe Aktar (Alternatif)", category: "file", uvContext: "Birden fazla dosya toplu import"},
+    {key: "Ctrl + J", desc: "Seçenekler", category: "file", uvContext: "Birim ayarı (mm), varsayılan font"},
+    {key: "Ctrl + F4", desc: "Pencereyi Kapat", category: "file", uvContext: "Dosyayı kapatma"},
+    {key: "Alt + F4", desc: "Programdan Çık", category: "file", uvContext: "CorelDRAW'ı kapatma"},
+    
+    // DÜZENLEME TEMELLERİ
+    {key: "Ctrl + Z", desc: "Geri Al", category: "edit", uvContext: "Hatalı işlemleri geri alma (20+ adım)"},
+    {key: "Ctrl + Y", desc: "Yinele", category: "edit", uvContext: "Geri alınanı tekrarlama"},
+    {key: "Ctrl + X", desc: "Kes", category: "edit", uvContext: "Nesneleri taşıma"},
+    {key: "Ctrl + C", desc: "Kopyala", category: "edit", uvContext: "Tekrar eden elemanlar"},
+    {key: "Ctrl + V", desc: "Yapıştır", category: "edit", uvContext: "Kopyalanan nesneyi yerleştirme"},
+    {key: "Ctrl + Shift + V", desc: "Özel Yapıştır", category: "edit", uvContext: "Pozisyon koruyarak yapıştırma"},
+    {key: "Ctrl + D", desc: "Çoğalt (Duplicate)", category: "edit", uvContext: "Seri üretim için kopya (offset korur)"},
+    {key: "Ctrl + R", desc: "Tekrarla", category: "edit", uvContext: "Son hareketi tekrar et (step and repeat)"},
+    {key: "Ctrl + Shift + D", desc: "Klon Oluştur", category: "edit", uvContext: "Bağlı kopya (ana nesne değişince klon da değişir)"},
+    {key: "Delete", desc: "Sil", category: "edit", uvContext: "Seçili nesneyi kaldırma"},
+    {key: "Ctrl + A", desc: "Tümünü Seç", category: "edit", uvContext: "Sayfadaki her şeyi seçme"},
+    
+    // VEKTÖR İŞLEMLERİ
+    {key: "Ctrl + L", desc: "Birleştir (Combine)", category: "edit", uvContext: "Kesme çizgilerini tek nesne yapma"},
+    {key: "Ctrl + K", desc: "Ayır (Break Apart)", category: "edit", uvContext: "Birleştirilmiş nesneleri ayırma"},
+    {key: "Ctrl + Shift + Q", desc: "Anahattı Dönüştür", category: "edit", uvContext: "Stroke'u dolgu haline getirme"},
+    {key: "Ctrl + Shift + E", desc: "Düğüm Düzenleme", category: "edit", uvContext: "Vektör noktalarını düzenleme (node editing)"},
+    {key: "Ctrl + Shift + C", desc: "Eğrilik Kopyala", category: "edit", uvContext: "Eğri özelliklerini kopyalama"},
+    
+    // RENK YÖNETİMİ
+    {key: "F11", desc: "Degrade Dolgu", category: "color", uvContext: "Gradyan efektleri"},
+    {key: "Shift + F11", desc: "Tek Renk Dolgu", category: "color", uvContext: "Düz renk atama (spot renkler için)"},
+    {key: "F12", desc: "Anahat (Outline)", category: "color", uvContext: "Çizgi kalınlığı ve rengi"},
+    {key: "Shift + F12", desc: "Renk Paleti", category: "color", uvContext: "Hızlı renk seçimi"},
+    {key: "Ctrl + Shift + F12", desc: "Yazı Tipi Gözden Geçir", category: "color", uvContext: "Font sorunlarını tespit"},
+    {key: "Window + Ctrl + P", desc: "Palet Yöneticisi", category: "color", uvContext: "Spot renk paleti yükleme (PANTONE)"},
+    
+    // HİZALAMA VE DÜZEN
+    {key: "P", desc: "Sayfaya Ortala", category: "align", uvContext: "Hızlı merkezleme"},
+    {key: "Ctrl + Shift + P", desc: "Sayfaya Hizala", category: "align", uvContext: "Detaylı sayfa hizalama"},
+    {key: "Ctrl + Shift + C", desc: "Merkeze Hizala", category: "align", uvContext: "Yatay ve dikey ortalama"},
+    {key: "Ctrl + Shift + L", desc: "Sola Hizala", category: "align", uvContext: "Sol kenara yasla"},
+    {key: "Ctrl + Shift + R", desc: "Sağa Hizala", category: "align", uvContext: "Sağ kenara yasla"},
+    {key: "Ctrl + Shift + T", desc: "Üste Hizala", category: "align", uvContext: "Üst kenara yasla"},
+    {key: "Ctrl + Shift + B", desc: "Alta Hizala", category: "align", uvContext: "Alt kenara yasla"},
+    {key: "Ctrl + .", desc: "Noktalı Kılavuz", category: "align", uvContext: "Hassas hizalama (snap to point)"},
+    {key: "Ctrl + Y", desc: "Dinamik Kılavuzlar", category: "align", uvContext: "Otomatik hizalama çizgileri"}
 ];
 
 // ==========================================
-// DURUM DEĞİŞKENLERİ
+// UV AKADEMI PRO - MOBIL OPTIMIZE EDILMIS KOD
 // ==========================================
 
+// Global degiskenler
 let currentModule = 0;
 let currentLesson = 0;
-let currentFilter = 'all';
 let userProgress = JSON.parse(localStorage.getItem('uv_progress')) || { completedModules: [], currentModule: 1, totalXP: 0 };
 let stats = JSON.parse(localStorage.getItem('mf_stats')) || { exp: 0, lvl: 1 };
+let currentFilter = 'all';
 
 // ==========================================
-// TEMEL FONKSİYONLAR
+// EVENT DELEGATION SETUP - DOMContentLoaded
 // ==========================================
 
-function showScreen(screenId) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    const target = document.getElementById(screenId);
-    if (target) target.classList.add('active');
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('UV Akademi Pro - Baslatildi');
     
-    document.querySelectorAll('.nav-item').forEach(nav => {
-        nav.classList.remove('active');
-        if (nav.dataset.nav === screenId) nav.classList.add('active');
+    // Event delegation setup
+    setupEventDelegation();
+    
+    // Baslangic render
+    updateMainProgress();
+    renderShortcuts();
+    renderModules();
+    
+    // Search input listener
+    const searchInput = document.getElementById('shortcutSearch');
+    if (searchInput) {
+        searchInput.addEventListener('input', searchShortcuts);
+    }
+});
+
+function setupEventDelegation() {
+    // Navigasyon butonlari
+    const navBar = document.getElementById('mainNavBar');
+    if (navBar) {
+        navBar.addEventListener('click', handleNavClick);
+    }
+    
+    // Filtre butonlari - UV Akademi ekrani
+    const uvFilters = document.querySelector('#uvAcademyMain .filter-container');
+    if (uvFilters) {
+        uvFilters.addEventListener('click', handleFilterClick);
+    }
+    
+    // Filtre butonlari - CorelDRAW ekrani
+    const corelFilters = document.getElementById('corelFilters');
+    if (corelFilters) {
+        corelFilters.addEventListener('click', handleFilterClick);
+    }
+    
+    // Shortcut kartlari
+    const shortcutsContainer = document.getElementById('shortcutsContainer');
+    if (shortcutsContainer) {
+        shortcutsContainer.addEventListener('click', handleShortcutClick);
+    }
+}
+
+// ==========================================
+// EVENT HANDLER'LAR
+// ==========================================
+
+function handleNavClick(e) {
+    const item = e.target.closest('.nav-item');
+    if (!item) return;
+    
+    const screenId = item.getAttribute('data-screen');
+    if (screenId) {
+        e.preventDefault();
+        goToScreen(screenId);
+    }
+}
+
+function handleFilterClick(e) {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const category = btn.getAttribute('data-category');
+    if (category) {
+        // Aktif butonu guncelle
+        const container = btn.closest('.filter-container');
+        container.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Filtreyi uygula
+        currentFilter = category;
+        renderShortcuts();
+    }
+}
+
+function handleShortcutClick(e) {
+    const card = e.target.closest('.shortcut-card');
+    if (!card) return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const key = card.getAttribute('data-key');
+    const desc = card.getAttribute('data-desc');
+    const context = card.getAttribute('data-context');
+    
+    if (key) {
+        showShortcutDetail(key, desc, context);
+    }
+}
+
+// ==========================================
+// NAVIGASYON FONKSIYONU
+// ==========================================
+
+function goToScreen(screenId) {
+    console.log('Navigating to:', screenId);
+    
+    const allScreens = document.querySelectorAll('.screen');
+    allScreens.forEach(screen => {
+        screen.classList.remove('active');
+        screen.style.display = 'none';
+        screen.style.opacity = '0';
+    });
+    
+    const target = document.getElementById(screenId);
+    if (!target) {
+        console.error('Ekran bulunamadi:', screenId);
+        return;
+    }
+    
+    target.style.display = 'block';
+    setTimeout(() => {
+        target.classList.add('active');
+        target.style.opacity = '1';
+    }, 10);
+    
+    // Nav aktifligini guncelle
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('data-screen') === screenId) {
+            item.classList.add('active');
+        }
     });
     
     window.scrollTo(0, 0);
 }
 
-function updateMainProgress() {
-    const total = uvCurriculum.length - 1;
-    const completed = userProgress.completedModules.length;
-    const percent = Math.round((completed / total) * 100) || 0;
-    
-    const mainProgress = document.getElementById('mainProgress');
-    const progressText = document.getElementById('progressText');
-    const levelDisplay = document.getElementById('levelDisplay');
-    const totalProgress = document.getElementById('totalProgress');
-    const totalProgressBar = document.getElementById('totalProgressBar');
-    const completedModules = document.getElementById('completedModules');
-    const totalPoints = document.getElementById('totalPoints');
-    
-    if (mainProgress) mainProgress.style.width = percent + '%';
-    if (progressText) progressText.textContent = percent + '%';
-    if (levelDisplay) levelDisplay.textContent = stats.lvl;
-    if (totalProgress) totalProgress.textContent = percent + '%';
-    if (totalProgressBar) totalProgressBar.style.width = percent + '%';
-    if (completedModules) completedModules.textContent = `${completed}/${total} Modül`;
-    if (totalPoints) totalPoints.textContent = `${userProgress.totalXP} XP Kazanıldı`;
-}
-
-function renderModules() {
-    const container = document.getElementById('modulesList');
-    if (!container) return;
-    
-    container.innerHTML = uvCurriculum.map((mod, idx) => {
-        const isCompleted = userProgress.completedModules.includes(mod.id);
-        const isLocked = mod.id > userProgress.currentModule;
-        const isCurrent = mod.id === userProgress.currentModule;
-        
-        return `
-            <div class="module-card ${isCompleted ? 'completed' : ''} ${isLocked ? 'locked' : ''}" data-module="${mod.id}">
-                <div class="module-number">MODÜL ${mod.id}</div>
-                <div class="module-title">${mod.title}</div>
-                <div class="module-desc">${mod.desc}</div>
-                <div class="module-meta">
-                    <span>⏱️ ${mod.duration}</span>
-                    <span>🎯 ${mod.xp} XP</span>
-                    ${isCompleted ? '<span style="color:var(--success)">✓ Tamamlandı</span>' : ''}
-                    ${isLocked ? '<span>🔒 Kilitli</span>' : ''}
-                    ${isCurrent ? '<span style="color:var(--uv)">▶ Devam Et</span>' : ''}
-                </div>
-            </div>
-        `;
-    }).join('');
-}
-
-function openModule(moduleId) {
-    const index = uvCurriculum.findIndex(m => m.id === moduleId);
-    if (index === -1) return;
-    
-    const mod = uvCurriculum[index];
-    if (mod.id > userProgress.currentModule) {
-        alert('Bu modül kilitli! Önceki modülleri tamamlayın.');
-        return;
-    }
-    
-    currentModule = index;
-    currentLesson = 0;
-    showLesson();
-    showScreen('moduleDetail');
-}
-
-function showLesson() {
-    const mod = uvCurriculum[currentModule];
-    const lesson = mod.lessons[currentLesson];
-    
-    const lessonContent = document.getElementById('lessonContent');
-    const btnPrev = document.getElementById('btnPrevLesson');
-    const btnNext = document.getElementById('btnNextLesson');
-    
-    if (lessonContent) {
-        lessonContent.innerHTML = `
-            <div class="lesson-header">
-                <span class="lesson-badge">MODÜL ${mod.id} • DERS ${currentLesson + 1}/${mod.lessons.length}</span>
-                <h2 class="lesson-title">${lesson.title}</h2>
-                <div class="lesson-subtitle">${lesson.subtitle}</div>
-            </div>
-            ${lesson.content}
-        `;
-    }
-    
-    if (btnPrev) btnPrev.style.visibility = currentLesson === 0 ? 'hidden' : 'visible';
-    
-    if (btnNext) {
-        if (currentLesson === mod.lessons.length - 1) {
-            btnNext.textContent = 'Quize Geç →';
-            btnNext.onclick = startQuiz;
-        } else {
-            btnNext.textContent = 'Sonraki →';
-            btnNext.onclick = nextLesson;
-        }
-    }
-}
-
-function nextLesson() {
-    currentLesson++;
-    showLesson();
-}
-
-function prevLesson() {
-    if (currentLesson > 0) {
-        currentLesson--;
-        showLesson();
-    }
-}
-
-function startQuiz() {
-    const mod = uvCurriculum[currentModule];
-    const quiz = mod.quiz || mod.finalQuiz;
-    
-    if (!quiz) {
-        completeModule();
-        return;
-    }
-    
-    const quizTitle = document.getElementById('quizTitle');
-    const quizContent = document.getElementById('quizContent');
-    
-    if (quizTitle) quizTitle.textContent = mod.isFinal ? '🎓 Final Sınavı' : `${mod.title} - Bilgi Kontrolü`;
-    
-    let currentQ = 0;
-    let score = 0;
-    const questions = mod.isFinal ? mod.finalQuiz : quiz.questions;
-    
-    function showQuestion() {
-        if (currentQ >= questions.length) {
-            showResult();
-            return;
-        }
-        
-        const q = questions[currentQ];
-        
-        if (quizContent) {
-            quizContent.innerHTML = `
-                <div class="quiz-container">
-                    <div class="quiz-question">${currentQ + 1}. ${q.question}</div>
-                    <div class="quiz-options" id="quizOptions">
-                        ${q.options.map((opt, idx) => `
-                            <div class="quiz-option" data-answer="${idx}">${String.fromCharCode(65 + idx)}) ${opt}</div>
-                        `).join('')}
-                    </div>
-                    <div id="quizFeedback" style="margin-top:20px; display:none;"></div>
-                </div>
-            `;
-        }
-        
-        // Quiz seçenekleri için event delegation
-        const optionsContainer = document.getElementById('quizOptions');
-        if (optionsContainer) {
-            optionsContainer.querySelectorAll('.quiz-option').forEach(opt => {
-                opt.addEventListener('click', function() {
-                    const selected = parseInt(this.dataset.answer);
-                    const correct = q.correct;
-                    const isCorrect = selected === correct;
-                    
-                    if (isCorrect) score++;
-                    
-                    // Tüm seçenekleri göster
-                    optionsContainer.querySelectorAll('.quiz-option').forEach((el, idx) => {
-                        el.classList.add('disabled');
-                        if (idx === correct) el.classList.add('correct');
-                        else if (idx === selected && !isCorrect) el.classList.add('wrong');
-                    });
-                    
-                    // Feedback göster
-                    const feedback = document.getElementById('quizFeedback');
-                    if (feedback) {
-                        feedback.style.display = 'block';
-                        feedback.innerHTML = `
-                            <div class="content-block ${isCorrect ? 'success' : 'warning'}">
-                                <div class="block-title">${isCorrect ? '✅ Doğru!' : '❌ Yanlış'}</div>
-                                <div class="block-content">${q.explanation || 'Cevap: ' + q.options[correct]}</div>
-                                <button class="btn btn-success" style="margin-top:15px; width:100%;" id="btnNextQ">Sonraki →</button>
-                            </div>
-                        `;
-                        
-                        document.getElementById('btnNextQ')?.addEventListener('click', () => {
-                            currentQ++;
-                            showQuestion();
-                        });
-                    }
-                });
-            });
-        }
-    }
-    
-    function showResult() {
-        const percent = Math.round((score / questions.length) * 100);
-        const passed = percent >= 80;
-        
-        if (quizContent) {
-            quizContent.innerHTML = `
-                <div style="text-align:center; padding:40px 20px;">
-                    <div style="font-size:64px; margin-bottom:20px;">${passed ? '🏆' : '📚'}</div>
-                    <h2 style="color:${passed ? 'var(--success)' : 'var(--warning)'}; margin-bottom:15px;">
-                        ${passed ? 'Tebrikler!' : 'Sınav Tamamlandı'}
-                    </h2>
-                    <div style="font-size:48px; font-weight:bold; color:var(--gold); margin:20px 0;">${percent}%</div>
-                    <p style="color:var(--text-muted); margin-bottom:20px;">${score}/${questions.length} doğru</p>
-                    ${passed ? 
-                        `<button class="btn btn-success" id="btnCompleteModul" style="width:100%; margin-bottom:10px;">Modülü Tamamla (+${mod.xp} XP)</button>` : 
-                        `<button class="btn" id="btnRetryQuiz" style="width:100%; margin-bottom:10px;">🔄 Tekrar Dene</button>`
-                    }
-                    <button class="btn btn-secondary" id="btnBackAcademy" style="width:100%;">Akademiye Dön</button>
-                </div>
-            `;
-            
-            document.getElementById('btnCompleteModul')?.addEventListener('click', completeModule);
-            document.getElementById('btnRetryQuiz')?.addEventListener('click', startQuiz);
-            document.getElementById('btnBackAcademy')?.addEventListener('click', () => {
-                showScreen('uvAcademyMain');
-                renderModules();
-            });
-        }
-    }
-    
-    showQuestion();
-    showScreen('quizScreen');
-}
-
-function completeModule() {
-    const mod = uvCurriculum[currentModule];
-    
-    if (!userProgress.completedModules.includes(mod.id)) {
-        userProgress.completedModules.push(mod.id);
-        userProgress.totalXP += mod.xp;
-        
-        if (mod.id < uvCurriculum.length && !mod.isFinal) {
-            userProgress.currentModule = mod.id + 1;
-        }
-        
-        localStorage.setItem('uv_progress', JSON.stringify(userProgress));
-        addExp(mod.xp);
-        showAchievement(`${mod.title} Tamamlandı! +${mod.xp} XP`);
-    }
-    
-    showScreen('uvAcademyMain');
-    renderModules();
-    updateMainProgress();
-}
-
-function addExp(amount) {
-    stats.exp += amount;
-    const nextLevel = stats.lvl * 100;
-    
-    if (stats.exp >= nextLevel) {
-        stats.lvl++;
-        stats.exp = 0;
-        showAchievement(`Seviye Atlandı! ${stats.lvl}`);
-    }
-    
-    localStorage.setItem('mf_stats', JSON.stringify(stats));
-    updateMainProgress();
-}
-
-function showAchievement(text) {
-    const popup = document.getElementById('achievementPopup');
-    const achievementText = document.getElementById('achievementText');
-    
-    if (achievementText) achievementText.textContent = text;
-    if (popup) {
-        popup.classList.add('show');
-        setTimeout(() => popup.classList.remove('show'), 3000);
-    }
-}
-
 // ==========================================
-// CORELDRAW FONKSİYONLARI
+// CORELDRAW KISAYOL FONKSIYONLARI
 // ==========================================
 
 function renderShortcuts() {
     const container = document.getElementById('shortcutsContainer');
     if (!container) return;
     
-    let filtered = corelShortcuts;
-    if (currentFilter === 'uv') filtered = corelShortcuts.filter(s => s.category === 'uv');
-    else if (currentFilter === 'critical') filtered = corelShortcuts.filter(s => s.critical);
-    else if (currentFilter !== 'all') filtered = corelShortcuts.filter(s => s.category === currentFilter);
+    let shortcuts = corelShortcuts;
     
-    const search = document.getElementById('shortcutSearch')?.value.toLowerCase() || '';
-    if (search) {
-        filtered = filtered.filter(s => 
-            s.key.toLowerCase().includes(search) || 
-            s.desc.toLowerCase().includes(search) ||
-            s.uvContext.toLowerCase().includes(search)
-        );
-    }
+    if (currentFilter === 'uv') shortcuts = corelShortcuts.filter(s => s.category === 'uv');
+    else if (currentFilter === 'critical') shortcuts = corelShortcuts.filter(s => s.critical);
+    else if (currentFilter !== 'all') shortcuts = corelShortcuts.filter(s => s.category === currentFilter);
     
     const categories = {
-        uv: 'UV Baskı Kritik', file: 'Dosya Yönetimi', edit: 'Düzenleme',
-        color: 'Renk Yönetimi', align: 'Hizalama', text: 'Metin Araçları',
-        view: 'Görünüm', object: 'Nesne Yönetimi', tools: 'Araçlar',
-        effects: 'Efektler', search: 'Bul/Değiştir', window: 'Pencere',
-        library: 'Stil/Kütüphane', advanced: 'Gelişmiş'
+        uv: 'UV Baski Kritik',
+        file: 'Dosya Yonetimi',
+        edit: 'Duzenleme',
+        color: 'Renk Yonetimi',
+        align: 'Hizalama'
     };
     
     let html = '';
     let currentCat = '';
     
-    filtered.forEach(s => {
+    shortcuts.forEach(s => {
         if (s.category !== currentCat && currentFilter === 'all') {
             if (currentCat) html += '</div>';
             currentCat = s.category;
-            html += `<div style="margin-bottom:20px;"><div style="font-size:14px; color:var(--accent); font-weight:bold; margin-bottom:10px; text-transform:uppercase;">${categories[s.category] || s.category}</div>`;
+            html += `<div style="margin-bottom:20px;"><div style="font-size:14px; color:var(--accent); font-weight:bold; margin-bottom:10px; text-transform:uppercase; letter-spacing:1px;">${categories[s.category] || s.category}</div>`;
         }
         
         const badgeClass = s.category === 'uv' ? 'badge-uv' : s.critical ? 'badge-critical' : 'badge-corel';
-        const badgeText = s.category === 'uv' ? 'UV' : s.critical ? 'KRİTİK' : 'COREL';
+        const cardClass = s.critical ? 'shortcut-card shortcut-critical' : 'shortcut-card';
+        
+        // Guvenli escaping
+        const safeKey = s.key.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        const safeDesc = s.desc.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        const safeContext = s.uvContext.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         
         html += `
-            <div class="shortcut-card" data-key="${s.key}" data-desc="${s.desc}" data-context="${s.uvContext}">
-                <span class="category-badge ${badgeClass}">${badgeText}</span>
+            <div class="${cardClass}" 
+                 data-key="${safeKey}" 
+                 data-desc="${safeDesc}" 
+                 data-context="${safeContext}"
+                 role="button"
+                 tabindex="0">
+                <span class="category-badge ${badgeClass}">${s.category === 'uv' ? 'UV' : s.critical ? 'KRITIK' : 'COREL'}</span>
                 <div style="margin-top:8px;">
                     <span class="shortcut-key">${s.key}</span>
                     <span style="color:var(--text);">${s.desc}</span>
@@ -966,104 +827,306 @@ function renderShortcuts() {
     });
     
     if (currentFilter === 'all') html += '</div>';
-    container.innerHTML = html || '<p style="text-align:center; color:var(--text-muted); padding:40px;">Sonuç bulunamadı</p>';
+    container.innerHTML = html;
 }
 
-function showShortcutModal(key, desc, context) {
-    const old = document.querySelector('.modal-overlay');
-    if (old) old.remove();
+function searchShortcuts() {
+    const query = document.getElementById('shortcutSearch')?.value.toLowerCase() || '';
+    const container = document.getElementById('shortcutsContainer');
+    if (!container) return;
     
+    if (!query) {
+        renderShortcuts();
+        return;
+    }
+    
+    const filtered = corelShortcuts.filter(s => 
+        s.key.toLowerCase().includes(query) || 
+        s.desc.toLowerCase().includes(query) ||
+        s.uvContext.toLowerCase().includes(query)
+    );
+    
+    let html = `<div style="margin-bottom:20px;"><div style="font-size:14px; color:var(--accent); font-weight:bold; margin-bottom:10px;">Arama Sonuclari (${filtered.length})</div>`;
+    
+    filtered.forEach(s => {
+        const badgeClass = s.category === 'uv' ? 'badge-uv' : s.critical ? 'badge-critical' : 'badge-corel';
+        const cardClass = s.critical ? 'shortcut-card shortcut-critical' : 'shortcut-card';
+        
+        const safeKey = s.key.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        const safeDesc = s.desc.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        const safeContext = s.uvContext.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        
+        html += `
+            <div class="${cardClass}" 
+                 data-key="${safeKey}" 
+                 data-desc="${safeDesc}" 
+                 data-context="${safeContext}"
+                 role="button"
+                 tabindex="0">
+                <span class="category-badge ${badgeClass}">${s.category === 'uv' ? 'UV' : s.critical ? 'KRITIK' : 'COREL'}</span>
+                <div style="margin-top:8px;">
+                    <span class="shortcut-key">${s.key}</span>
+                    <span style="color:var(--text);">${s.desc}</span>
+                </div>
+                <div style="margin-top:8px; font-size:12px; color:var(--text-muted); font-style:italic;">
+                    💡 ${s.uvContext}
+                </div>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+function showShortcutDetail(key, desc, context) {
+    // Mevcut modal'i kaldir
+    const existing = document.querySelector('.shortcut-modal');
+    if (existing) existing.remove();
+    
+    // Yeni modal olustur
     const modal = document.createElement('div');
-    modal.className = 'modal-overlay';
+    modal.className = 'shortcut-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 100000;
+        padding: 20px;
+    `;
+    
     modal.innerHTML = `
-        <div class="modal-content">
-            <div style="font-size:48px; margin-bottom:15px;">⌨️</div>
-            <div style="font-size:28px; font-family:monospace; color:var(--gold); margin-bottom:15px; font-weight:bold;">${key}</div>
-            <div style="font-size:20px; color:var(--text); margin-bottom:10px; font-weight:600;">${desc}</div>
-            <div style="font-size:14px; color:var(--accent); margin-bottom:25px; font-style:italic;">💡 ${context}</div>
-            <button class="btn" id="btnCloseShortcutModal" style="width:100%;">Kapat</button>
+        <div style="
+            background: var(--surface);
+            border: 3px solid var(--uv);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(191, 0, 255, 0.4);
+        ">
+            <div style="font-size: 44px; margin-bottom: 15px;">⌨️</div>
+            <div style="font-size: 24px; font-family: monospace; color: var(--gold); margin-bottom: 15px; font-weight: bold;">${key}</div>
+            <div style="font-size: 18px; color: var(--text); margin-bottom: 12px; font-weight: 600;">${desc}</div>
+            <div style="font-size: 14px; color: var(--accent); margin-bottom: 25px; font-style: italic;">💡 ${context}</div>
+            <button onclick="this.closest('.shortcut-modal').remove()" style="
+                width: 100%; 
+                padding: 15px; 
+                background: linear-gradient(135deg, var(--primary), var(--accent));
+                color: white;
+                border: none;
+                border-radius: 12px;
+                font-weight: bold;
+                font-size: 16px;
+                cursor: pointer;
+            ">Kapat</button>
         </div>
     `;
     
-    document.body.appendChild(modal);
+    // Modal disina tiklayinca kapat
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) modal.remove();
+    });
     
-    document.getElementById('btnCloseShortcutModal')?.addEventListener('click', () => modal.remove());
-    modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+    document.body.appendChild(modal);
 }
 
 // ==========================================
-// EVENT LİSTENER'LAR - TEK NOKTADA
+// UV AKADEMI MODUL FONKSIYONLARI
 // ==========================================
 
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('UV Akademi Pro - Sistem Başlatılıyor');
-    
-    // Başlangıç güncellemesi
-    updateMainProgress();
-    
-    // 1. ANA EKRAN
-    document.getElementById('btnUvAkademi')?.addEventListener('click', () => {
-        showScreen('uvAcademyMain');
-        renderModules();
-    });
-    
-    document.getElementById('btnCorelDraw')?.addEventListener('click', () => {
-        showScreen('corelReferenceScreen');
-        renderShortcuts();
-    });
-    
-    // 2. NAVİGASYON
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', function() {
-            const screen = this.dataset.nav;
-            showScreen(screen);
-            if (screen === 'uvAcademyMain') renderModules();
-            if (screen === 'corelReferenceScreen') renderShortcuts();
-        });
-    });
-    
-    // 3. GERİ BUTONLARI
-    document.getElementById('btnBackHome')?.addEventListener('click', () => showScreen('homeScreen'));
-    document.getElementById('btnBackFromCorel')?.addEventListener('click', () => showScreen('homeScreen'));
-    
-    // 4. MODÜL KARTLARI - Event Delegation
-    document.getElementById('modulesList')?.addEventListener('click', function(e) {
-        const card = e.target.closest('.module-card');
-        if (!card) return;
-        
-        const moduleId = parseInt(card.dataset.module);
-        openModule(moduleId);
-    });
-    
-    // 5. DERS NAVİGASYONU
-    document.getElementById('btnPrevLesson')?.addEventListener('click', prevLesson);
-    // btnNextLesson dinamik olarak değişiyor, showLesson içinde atanır
-    
-    // 6. FİLTRE BUTONLARI
-    document.querySelector('.flex-wrap')?.addEventListener('click', function(e) {
-        const btn = e.target.closest('.filter-btn');
-        if (!btn) return;
-        
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentFilter = btn.dataset.filter || 'all';
-        renderShortcuts();
-    });
-    
-    // 7. ARAMA
-    document.getElementById('shortcutSearch')?.addEventListener('input', renderShortcuts);
-    
-    // 8. SHORTCUT KARTLARI
-    document.getElementById('shortcutsContainer')?.addEventListener('click', function(e) {
-        const card = e.target.closest('.shortcut-card');
-        if (!card) return;
-        
-        showShortcutModal(card.dataset.key, card.dataset.desc, card.dataset.context);
-    });
-    
-    console.log('UV Akademi Pro - Hazır');
-});
-</script>
+const uvModules = [
+    {
+        id: 1,
+        title: "UV Baskı Temelleri",
+        desc: "Teknoloji, mürekkepler ve fotopolimerizasyon",
+        duration: "60 dk",
+        locked: false,
+        completed: false
+    },
+    {
+        id: 2,
+        title: "Yüzey Hazırlığı",
+        desc: "Malzeme bilimi ve tutunma prensipleri",
+        duration: "70 dk",
+        locked: true,
+        completed: false
+    },
+    {
+        id: 3,
+        title: "CorelDRAW Dosya Hazırlama",
+        desc: "Spot renkler ve RIP ayarları",
+        duration: "80 dk",
+        locked: true,
+        completed: false
+    },
+    {
+        id: 4,
+        title: "Makine Operasyonu",
+        desc: "Günlük bakım ve operasyon",
+        duration: "75 dk",
+        locked: true,
+        completed: false
+    }
+];
 
+function renderModules() {
+    const container = document.getElementById('modulesContainer');
+    if (!container) return;
+    
+    let html = '';
+    uvModules.forEach(mod => {
+        const lockedClass = mod.locked ? 'locked' : '';
+        const completedClass = mod.completed ? 'completed' : '';
+        
+        html += `
+            <div class="module-card ${lockedClass} ${completedClass}" onclick="openModule(${mod.id})">
+                <div style="display:inline-block; background: var(--uv); color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; margin-bottom: 8px;">MODÜL ${mod.id}</div>
+                <div style="font-size: 18px; font-weight: bold; margin: 5px 0;">${mod.title}</div>
+                <div style="font-size: 13px; color: var(--text-muted);">${mod.desc}</div>
+                <div style="display: flex; gap: 15px; margin-top: 12px; font-size: 12px; color: var(--text-muted);">
+                    <span>⏱️ ${mod.duration}</span>
+                    ${mod.locked ? '<span>🔒 Kilitli</span>' : '<span>▶️ Başla</span>'}
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+function openModule(id) {
+    const mod = uvModules.find(m => m.id === id);
+    if (!mod || mod.locked) return;
+    
+    currentModule = id;
+    goToScreen('moduleDetail');
+    // Ders içeriği burada yüklenecek
+    document.getElementById('lessonContent').innerHTML = `
+        <div class="lesson-header">
+            <span class="lesson-badge">MODÜL ${mod.id}</span>
+            <h2 class="lesson-title" style="margin: 10px 0;">${mod.title}</h2>
+            <p style="color: var(--text-muted);">${mod.desc}</p>
+        </div>
+        <div class="content-block">
+            <div class="block-title">📖 Modül İçeriği</div>
+            <div style="color: var(--text-muted);">
+                Bu modül hazırlanıyor. Lütfen CorelDRAW kısayolları bölümünü keşfedin.
+            </div>
+        </div>
+    `;
+}
+
+function nextLesson() {
+    // Sonraki ders fonksiyonu
+    showAchievement('Ders tamamlandı! +50 XP');
+    addExp(50);
+}
+
+function prevLesson() {
+    goToScreen('uvAcademyMain');
+}
+
+// ==========================================
+// DIGER FONKSIYONLAR
+// ==========================================
+
+function updateMainProgress() {
+    const total = uvModules.length;
+    const completed = uvModules.filter(m => m.completed).length;
+    const percent = Math.round((completed / total) * 100);
+    
+    const mainProgress = document.getElementById('mainProgress');
+    const progressText = document.getElementById('progressText');
+    const levelDisplay = document.getElementById('levelDisplay');
+    
+    if (mainProgress) mainProgress.style.width = percent + '%';
+    if (progressText) progressText.textContent = percent + '%';
+    if (levelDisplay) levelDisplay.textContent = stats.lvl;
+}
+
+function addExp(amount) {
+    stats.exp += amount;
+    const nextLevel = stats.lvl * 100;
+    if (stats.exp >= nextLevel) {
+        stats.lvl++;
+        stats.exp = 0;
+        showAchievement(`Seviye Atlandi! ${stats.lvl}`);
+    }
+    localStorage.setItem('mf_stats', JSON.stringify(stats));
+    updateMainProgress();
+}
+
+function showAchievement(text) {
+    const popup = document.getElementById('achievementPopup');
+    const achievementText = document.getElementById('achievementText');
+    if (achievementText) achievementText.textContent = text;
+    if (popup) {
+        popup.classList.add('show');
+        setTimeout(() => popup.classList.remove('show'), 3000);
+    }
+}
+
+function startPracticeMode() {
+    document.getElementById('practiceArea').classList.add('hidden');
+    document.getElementById('practiceGame').classList.remove('hidden');
+    nextPracticeQuestion();
+}
+
+function nextPracticeQuestion() {
+    // Rastgele kısayol seç
+    const random = corelShortcuts[Math.floor(Math.random() * corelShortcuts.length)];
+    document.getElementById('practiceKey').textContent = random.key;
+    
+    // 3 yanlış seçenek oluştur
+    const wrongOptions = corelShortcuts
+        .filter(s => s.key !== random.key)
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 3);
+    
+    const options = [...wrongOptions, random].sort(() => 0.5 - Math.random());
+    
+    let html = '';
+    options.forEach(opt => {
+        html += `<button class="btn btn-secondary" onclick="checkPracticeAnswer(this, '${opt.desc}', '${random.desc}')">${opt.desc}</button>`;
+    });
+    
+    document.getElementById('practiceOptions').innerHTML = html;
+    document.getElementById('practiceResult').innerHTML = '';
+    document.getElementById('nextPracticeBtn').style.display = 'none';
+}
+
+function checkPracticeAnswer(btn, selected, correct) {
+    const resultDiv = document.getElementById('practiceResult');
+    const buttons = document.getElementById('practiceOptions').querySelectorAll('button');
+    
+    buttons.forEach(b => b.disabled = true);
+    
+    if (selected === correct) {
+        btn.style.background = 'var(--success)';
+        btn.style.borderColor = 'var(--success)';
+        resultDiv.innerHTML = '<span style="color: var(--success);">✓ Doğru! +10 XP</span>';
+        addExp(10);
+    } else {
+        btn.style.background = 'var(--danger)';
+        btn.style.borderColor = 'var(--danger)';
+        resultDiv.innerHTML = `<span style="color: var(--danger);">✗ Yanlış! Doğru cevap: ${correct}</span>`;
+        
+        // Doğru cevabı yeşil yap
+        buttons.forEach(b => {
+            if (b.textContent === correct) {
+                b.style.background = 'var(--success)';
+                b.style.borderColor = 'var(--success)';
+            }
+        });
+    }
+    
+    document.getElementById('nextPracticeBtn').style.display = 'inline-block';
+}
+</script>
 </body>
 </html>
