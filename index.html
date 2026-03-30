@@ -3,422 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <title>UV Akademi Pro - Profesyonel Eğitim Platformu</title>
-/* Mobil optimizasyon */
-.filter-btn {
-    flex: 0;
-    white-space: nowrap;
-    font-size: 12px;
-    padding: 8px 12px;
-    background: var(--surface);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: var(--text-muted);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s;
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-    min-height: 44px; /* Mobil erişilebilirlik */
-}
-
-.filter-btn.active {
-    background: var(--uv) !important;
-    color: white !important;
-    border-color: var(--uv) !important;
-}
-
-.shortcut-card {
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-}
-
-/* Buton basma efekti */
-.filter-btn:active,
-.shortcut-card:active,
-.nav-item:active {
-    transform: scale(0.95);
-    opacity: 0.8;
-}
-
-/* Modal z-index düzeltmesi */
-.shortcut-modal {
-    z-index: 100000 !important;
-}
+    <title>UV Akademi Pro</title>
     <style>
         :root {
-            --primary: #6366f1; --accent: #06b6d4; --bg: #0b0b1a;
-            --surface: #16162d; --surface-light: #1e1e3f; --text: #ffffff;
-            --text-muted: #94a3b8; --success: #10b981; --gold: #f59e0b;
-            --purple: #a855f7; --uv: #bf00ff; --danger: #ef4444;
-            --warning: #f59e0b; --info: #3b82f6;
+            --primary: #6366f1;
+            --accent: #06b6d4;
+            --bg: #0b0b1a;
+            --surface: #16162d;
+            --surface-light: #1e1e3f;
+            --text: #ffffff;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --gold: #f59e0b;
+            --purple: #a855f7;
+            --uv: #bf00ff;
+            --danger: #ef4444;
         }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+        
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-            background: var(--bg); color: var(--text); margin: 0; 
-            padding: 0 0 100px 0; overflow-x: hidden; line-height: 1.6;
+            background: var(--bg); 
+            color: var(--text); 
+            padding-bottom: 100px;
+            line-height: 1.6;
         }
-        .app-container { max-width: 900px; margin: 0 auto; padding: 15px; }
-        .screen { display: none; min-height: 100vh; opacity: 0; transition: opacity 0.3s ease; }
-        .screen.active { display: block; opacity: 1; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .app-container { 
+            max-width: 900px; 
+            margin: 0 auto; 
+            padding: 15px; 
+        }
+        
+        .screen { display: none; }
+        .screen.active { display: block; }
         
         .header {
             background: linear-gradient(135deg, var(--surface), var(--surface-light));
-            border-radius: 16px; padding: 20px; margin-bottom: 20px;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
             border: 1px solid rgba(191, 0, 255, 0.3);
         }
         
-        .progress-header {
-            background: linear-gradient(135deg, var(--surface), var(--surface-light));
-            border-radius: 16px; padding: 20px; margin-bottom: 20px;
-            border: 1px solid rgba(191, 0, 255, 0.2);
-        }
-        .progress-bar {
-            width: 100%; height: 8px; background: rgba(255,255,255,0.1);
-            border-radius: 4px; overflow: hidden; margin-top: 10px;
-        }
-        .progress-fill {
-            height: 100%; background: linear-gradient(90deg, var(--uv), var(--purple));
-            width: 0%; transition: width 0.8s ease; border-radius: 4px;
-        }
-        
-        .module-card {
-            background: var(--surface); border-radius: 20px; padding: 20px;
-            margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05);
-            cursor: pointer; transition: all 0.3s ease; position: relative;
-            overflow: hidden;
-        }
-        .module-card:hover { transform: translateY(-2px); border-color: var(--uv); }
-        .module-card.locked { opacity: 0.5; pointer-events: none; filter: grayscale(0.8); }
-        .module-card.completed { border-color: var(--success); }
-        .module-card.completed::after {
-            content: '✓'; position: absolute; top: 15px; right: 15px;
-            background: var(--success); width: 24px; height: 24px;
-            border-radius: 50%; display: flex; align-items: center;
-            justify-content: center; font-size: 14px; font-weight: bold;
-        }
-        .module-number {
-            display: inline-block; background: var(--uv); color: white;
-            padding: 4px 12px; border-radius: 20px; font-size: 11px;
-            font-weight: bold; margin-bottom: 8px;
-        }
-        .module-title { font-size: 18px; font-weight: bold; margin: 5px 0; }
-        .module-desc { font-size: 13px; color: var(--text-muted); }
-        .module-meta {
-            display: flex; gap: 15px; margin-top: 12px; font-size: 12px;
-            color: var(--text-muted);
-        }
-        
-        .lesson-container {
-            background: var(--surface); border-radius: 20px;
-            padding: 25px; margin-bottom: 20px;
-        }
-        .lesson-header {
-            border-bottom: 2px solid rgba(191, 0, 255, 0.3);
-            padding-bottom: 15px; margin-bottom: 20px;
-        }
-        .lesson-badge {
-            display: inline-block; background: rgba(191, 0, 255, 0.2);
-            color: var(--uv); padding: 4px 12px; border-radius: 12px;
-            font-size: 11px; font-weight: bold; margin-bottom: 8px;
-        }
-        .lesson-title { font-size: 22px; margin: 0 0 10px 0; }
-        .lesson-subtitle { color: var(--text-muted); font-size: 14px; }
-        
-        .content-block {
-            background: rgba(255,255,255,0.03); border-radius: 12px;
-            padding: 20px; margin-bottom: 15px; border-left: 4px solid var(--uv);
-        }
-        .content-block.warning { border-left-color: var(--warning); background: rgba(245, 158, 11, 0.05); }
-        .content-block.danger { border-left-color: var(--danger); background: rgba(239, 68, 68, 0.05); }
-        .content-block.info { border-left-color: var(--info); background: rgba(59, 130, 246, 0.05); }
-        .content-block.success { border-left-color: var(--success); background: rgba(16, 185, 129, 0.05); }
-        
-        .block-title {
-            color: var(--gold); font-size: 14px; font-weight: bold;
-            margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
-        }
-        .block-content { font-size: 14px; color: var(--text-muted); line-height: 1.8; }
-        .block-content strong { color: var(--text); }
-        .block-content ul { padding-left: 20px; margin: 10px 0; }
-        .block-content li { margin-bottom: 8px; }
-        
-        .interactive-demo {
-            background: linear-gradient(135deg, rgba(191, 0, 255, 0.1), rgba(168, 85, 247, 0.1));
-            border: 2px dashed var(--uv); border-radius: 16px;
-            padding: 25px; text-align: center; margin: 20px 0;
-        }
-        .demo-title { color: var(--uv); font-weight: bold; margin-bottom: 15px; }
-        
-        .quiz-container { margin-top: 25px; }
-        .quiz-question {
-            background: var(--surface-light); padding: 20px; border-radius: 12px;
-            font-weight: bold; margin-bottom: 15px; font-size: 15px;
-        }
-        .quiz-options { display: flex; flex-direction: column; gap: 10px; }
-        .quiz-option {
-            background: rgba(255,255,255,0.05); border: 2px solid transparent;
-            padding: 15px; border-radius: 12px; cursor: pointer;
-            transition: all 0.2s; font-size: 14px;
-        }
-        .quiz-option:hover { border-color: var(--uv); background: rgba(191, 0, 255, 0.1); }
-        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.2); }
-        .quiz-option.wrong { border-color: var(--danger); background: rgba(239, 68, 68, 0.2); }
-        .quiz-option.disabled { pointer-events: none; opacity: 0.6; }
-        
-        .step-guide { counter-reset: step; }
-        .step-item {
-            position: relative; padding-left: 50px; margin-bottom: 25px;
-            padding-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .step-item:last-child { border-bottom: none; }
-        .step-number {
-            position: absolute; left: 0; top: 0;
-            width: 35px; height: 35px; background: var(--uv);
-            border-radius: 50%; display: flex; align-items: center;
-            justify-content: center; font-weight: bold; font-size: 14px;
-        }
-        .step-title { font-weight: bold; color: var(--gold); margin-bottom: 8px; }
-        .step-content { font-size: 14px; color: var(--text-muted); }
-        
-        .nav-buttons {
-            display: flex; gap: 10px; margin-top: 30px;
-        }
         .btn {
-            flex: 1; background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white; border: none; padding: 16px; border-radius: 14px;
-            font-weight: bold; cursor: pointer; transition: all 0.2s;
-            font-size: 14px; text-align: center;
-        }
-        .btn:active { transform: scale(0.98); }
-        .btn-secondary { background: var(--surface-light); border: 1px solid rgba(255,255,255,0.1); }
-        .btn-success { background: linear-gradient(135deg, var(--success), #059669); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn-outline { 
-            background: transparent; border: 2px solid var(--uv); 
-            color: var(--uv); margin-top: 10px;
-        }
-        
-        .code-block {
-            background: #0d0d1f; border: 1px solid #2d2d44; border-radius: 8px;
-            padding: 15px; font-family: 'Courier New', monospace; font-size: 13px;
-            color: #a5b4fc; overflow-x: auto; margin: 10px 0;
-        }
-        
-        .data-table {
-            width: 100%; border-collapse: collapse; margin: 15px 0;
-            font-size: 13px;
-        }
-        .data-table th {
-            background: rgba(191, 0, 255, 0.2); color: var(--uv);
-            padding: 12px; text-align: left; font-weight: bold;
-        }
-        .data-table td {
-            padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05);
-            color: var(--text-muted);
-        }
-        .data-table tr:hover td { background: rgba(255,255,255,0.02); color: var(--text); }
-        
-        .nav-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(22, 22, 45, 0.98);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 15px 0 25px;
-            backdrop-filter: blur(10px);
-            border-top: 1px solid #2d2d44;
-            z-index: 999999;
-        }
-        
-        .nav-item {
-            font-size: 24px;
-            cursor: pointer;
-            opacity: 0.4;
-            transition: all 0.3s;
-            position: relative;
-            padding: 15px 25px;
-            min-width: 70px;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: none;
+            display: inline-block;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
             border: none;
-            outline: none;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+            text-align: center;
             user-select: none;
+            -webkit-user-select: none;
             touch-action: manipulation;
         }
         
-        .nav-item:active { transform: scale(0.9); opacity: 0.8; }
-        .nav-item.active { opacity: 1; color: var(--accent); transform: scale(1.1); }
+        .btn:active { transform: scale(0.95); opacity: 0.9; }
+        .btn-secondary { background: var(--surface-light); border: 1px solid rgba(255,255,255,0.1); }
+        .btn-success { background: linear-gradient(135deg, var(--success), #059669); }
         
-        .achievement-popup {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-100px);
-            background: linear-gradient(135deg, var(--gold), #d97706);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(245, 158, 11, 0.3);
-            z-index: 2000;
-            transition: transform 0.5s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: bold;
-            pointer-events: none;
-        }
-        .achievement-popup.show { transform: translateX(-50%) translateY(0); }
-        
-        .tooltip {
-            position: relative;
+        .filter-btn {
             display: inline-block;
-            border-bottom: 2px dotted var(--uv);
-            cursor: help;
-        }
-        .tooltip-text {
-            visibility: hidden;
-            width: 200px;
-            background: var(--surface-light);
-            color: var(--text);
-            text-align: center;
-            padding: 10px;
-            border-radius: 8px;
-            position: absolute;
-            z-index: 100;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -100px;
-            font-size: 12px;
-            border: 1px solid var(--uv);
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-        }
-        .tooltip:hover .tooltip-text { visibility: visible; opacity: 1; }
-        
-        .checklist { list-f: none; padding: 0; }
-        .checklist li {
-            padding: 12px 0 12px 35px;
-            position: relative;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .checklist li::before {
-            content: '○';
-            position: absolute;
-            left: 0;
-            color: var(--uv);
-            font-size: 20px;
-            font-weight: bold;
-        }
-        .checklist li.checked::before { content: '✓'; color: var(--success); }
-        .checklist li.checked { color: var(--text-muted); text-decoration: line-through; }
-        
-        input, select {
-            width: 100%;
-            padding: 14px;
-            margin: 8px 0;
-            border-radius: 12px;
-            border: 1px solid #2d2d44;
-            background: var(--bg);
-            color: white;
-            font-size: 15px;
-            box-sizing: border-box;
-        }
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--uv);
-            box-shadow: 0 0 0 3px rgba(191, 0, 255, 0.1);
-        }
-        
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        
-        .sim-svg {
-            width: 100%;
-            max-width: 400px;
-            height: auto;
-            background: rgba(11, 11, 26, 0.5);
-            border-radius: 12px;
-            margin: 0 auto;
-            display: block;
-        }
-        
-        .sim-controls {
-            margin-top: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            align-items: center;
-        }
-        
-        .sim-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
+            padding: 10px 16px;
+            margin: 4px;
+            background: var(--surface);
+            border: 2px solid rgba(255,255,255,0.1);
             color: var(--text-muted);
-            background: rgba(255,255,255,0.05);
-            padding: 8px 16px;
             border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
         }
         
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
+        .filter-btn:active { transform: scale(0.92); }
+        .filter-btn.active { background: var(--uv) !important; color: white !important; border-color: var(--uv) !important; }
         
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        
-        .molecule { animation: float 3s ease-in-out infinite; }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
-        }
-        
-        @keyframes vibrate {
-            0%, 100% { transform: translate(0,0); }
-            25% { transform: translate(-1px, 1px); }
-            50% { transform: translate(1px, -1px); }
-            75% { transform: translate(-1px, -1px); }
-        }
-
-        /* CorelDRAW Kısayol Stilleri */
         .shortcut-card {
             background: var(--surface);
             border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 10px;
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: all 0.3s;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
         }
-        .shortcut-card:hover {
-            border-color: var(--accent);
-            transform: translateX(5px);
-        }
+        
+        .shortcut-card:active { transform: scale(0.98); border-color: var(--accent); }
+        
         .shortcut-key {
             display: inline-block;
             background: var(--bg);
@@ -430,85 +116,81 @@
             border: 1px solid var(--gold);
             margin-right: 10px;
         }
-        .shortcut-critical {
-            border: 2px solid var(--danger);
-            background: rgba(239, 68, 68, 0.1);
-        }
-        .shortcut-critical .shortcut-key {
-            border-color: var(--danger);
-            color: var(--danger);
-        }
+        
         .category-badge {
             display: inline-block;
-            padding: 4px 10px;
+            padding: 3px 10px;
             border-radius: 20px;
             font-size: 11px;
             font-weight: bold;
             margin-bottom: 8px;
         }
+        
         .badge-uv { background: rgba(191, 0, 255, 0.2); color: var(--uv); }
-        .badge-corel { background: rgba(99, 102, 241, 0.2); color: var(--primary); }
         .badge-critical { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .badge-corel { background: rgba(99, 102, 241, 0.2); color: var(--primary); }
         
-        .practice-area {
-            background: rgba(16, 185, 129, 0.1);
-            border: 2px dashed var(--success);
-            border-radius: 12px;
-            padding: 20px;
-            margin: 15px 0;
-            text-align: center;
-        }
-        
-        .tab-container {
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(22, 22, 45, 0.98);
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            overflow-x: auto;
-            padding-bottom: 10px;
+            justify-content: space-around;
+            padding: 15px 0 25px;
+            border-top: 1px solid #2d2d44;
+            z-index: 1000;
         }
-        .tab-btn {
-            padding: 10px 20px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: var(--surface);
-            color: var(--text-muted);
+        
+        .nav-item {
+            font-size: 28px;
+            padding: 10px 30px;
             cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.3s;
+            opacity: 0.5;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
         }
-        .tab-btn.active {
-            background: var(--uv);
+        
+        .nav-item:active { transform: scale(0.85); opacity: 0.8; }
+        .nav-item.active { opacity: 1; color: var(--accent); }
+        
+        input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid #2d2d44;
+            background: var(--bg);
             color: white;
-            border-color: var(--uv);
+            font-size: 15px;
         }
+        
+        input:focus { outline: none; border-color: var(--uv); }
         
         .hidden { display: none !important; }
-/* Filtre butonları için ek stiller */
-.filter-btn {
-    flex: 0;
-    white-space: nowrap;
-    font-size: 12px;
-    padding: 8px 12px;
-    background: var(--surface);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: var(--text-muted);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-.filter-btn.active {
-    background: var(--uv);
-    color: white;
-    border-color: var(--uv);
-}
-.filter-btn:hover {
-    border-color: var(--accent);
-}
-
-/* Shortcut kartı cursor pointer */
-.shortcut-card {
-    cursor: pointer;
-}
+        .flex-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: var(--surface);
+            border: 3px solid var(--uv);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -518,2834 +200,185 @@
     <!-- ANA EKRAN -->
     <div class="screen active" id="homeScreen">
         <div class="header">
-            <div style="display:flex; align-items:center; justify-content:space-between;">
-                <div>
-                    <h2 style="margin:0; color:var(--uv); font-size:24px;">🎓 UV Akademi Pro</h2>
-                    <p style="margin:5px 0 0 0; color:var(--text-muted); font-size:14px;">Profesyonel UV Baskı & CorelDRAW Eğitimi</p>
-                </div>
-                <div style="text-align:right;">
-                    <div style="font-size:32px; font-weight:bold; color:var(--gold);" id="levelDisplay">1</div>
-                    <div style="font-size:12px; color:var(--text-muted);">Seviye</div>
-                </div>
-            </div>
-            <div class="progress-bar" style="margin-top:15px;">
-                <div class="progress-fill" id="mainProgress" style="width:0%;"></div>
-            </div>
-            <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:12px; color:var(--text-muted);">
-                <span>Toplam İlerleme</span>
-                <span id="progressText">0%</span>
-            </div>
+            <h2 style="color:var(--uv); margin-bottom:10px;">🎓 UV Akademi Pro</h2>
+            <p style="color:var(--text-muted); font-size:14px;">Profesyonel UV Baskı & CorelDRAW Eğitimi</p>
         </div>
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px;">
-            <div class="module-card" onclick="goToScreen('uvAcademyMain')" style="background:linear-gradient(135deg, #16162d, #3b0066); border:2px solid var(--uv); text-align:center; padding:30px 20px;">
+            <div id="btnUvAkademi" style="background:linear-gradient(135deg, #16162d, #3b0066); border:2px solid var(--uv); border-radius:20px; padding:30px; text-align:center; cursor:pointer;">
                 <div style="font-size:48px; margin-bottom:10px;">🧪</div>
-                <div style="font-size:18px; font-weight:bold; color:white; margin-bottom:5px;">UV AKADEMİ</div>
+                <div style="font-size:18px; font-weight:bold;">UV AKADEMİ</div>
                 <div style="font-size:12px; color:var(--text-muted);">8 Modül • Sertifikalı</div>
             </div>
-            <div class="module-card" onclick="goToScreen('corelReferenceScreen')" style="background:linear-gradient(135deg, #16162d, #1e1b4b); border:2px solid var(--primary); text-align:center; padding:30px 20px;">
+            <div id="btnCorelDraw" style="background:linear-gradient(135deg, #16162d, #1e1b4b); border:2px solid var(--primary); border-radius:20px; padding:30px; text-align:center; cursor:pointer;">
                 <div style="font-size:48px; margin-bottom:10px;">⌨️</div>
-                <div style="font-size:18px; font-weight:bold; color:white; margin-bottom:5px;">CORELDRAW</div>
-                <div style="font-size:12px; color:var(--text-muted);">95+ Kısayol • Pratik</div>
-            </div>
-        </div>
-
-        <div class="lesson-container">
-            <h3 style="margin-top:0; color:var(--accent);">📋 Eğitim Yol Haritası</h3>
-            <div class="step-guide" style="margin-top:15px;">
-                <div class="step-item" style="padding-bottom:15px; margin-bottom:15px;">
-                    <div class="step-number" style="background:var(--success);">1</div>
-                    <div class="step-title">Temel Bilgiler</div>
-                    <div class="step-content">UV teknolojisi, kimyasal süreçler, malzeme bilimi</div>
-                </div>
-                <div class="step-item" style="padding-bottom:15px; margin-bottom:15px;">
-                    <div class="step-number" style="background:var(--success);">2</div>
-                    <div class="step-title">Dosya Hazırlama</div>
-                    <div class="step-content">CorelDRAW'da spot renkler, katman yönetimi, RIP hazırlık</div>
-                </div>
-                <div class="step-item" style="padding-bottom:15px; margin-bottom:15px;">
-                    <div class="step-number">3</div>
-                    <div class="step-title">Uygulamalı Eğitim</div>
-                    <div class="step-content">Makine operasyonu, arıza giderme, ileri teknikler</div>
-                </div>
-                <div class="step-item" style="border-bottom:none; padding-bottom:0; margin-bottom:0;">
-                    <div class="step-number">4</div>
-                    <div class="step-title">Sertifikasyon</div>
-                    <div class="step-content">Final sınavı ve profesyonel sertifika</div>
-                </div>
+                <div style="font-size:18px; font-weight:bold;">CORELDRAW</div>
+                <div style="font-size:12px; color:var(--text-muted);">95+ Kısayol</div>
             </div>
         </div>
     </div>
 
-    <!-- UV AKADEMİ ANA EKRAN -->
-   <!-- YENİ - BUNLARI YAPIŞTIRIN -->
-<!-- BUNLARI YAPIŞTIRIN -->
-<div style="display:flex; gap:8px; overflow-x:auto; padding-bottom:10px; margin-bottom:15px;">
-    <button class="filter-btn active" data-category="all">Tümü</button>
-    <button class="filter-btn" data-category="uv" style="border-color:var(--uv); color:var(--uv);">UV Özel</button>
-    <button class="filter-btn" data-category="critical" style="border-color:var(--danger); color:var(--danger);">Kritik</button>
-    <button class="filter-btn" data-category="file">Dosya</button>
-    <button class="filter-btn" data-category="edit">Düzenle</button>
-    <button class="filter-btn" data-category="color">Renk</button>
-    <button class="filter-btn" data-category="align">Hizalama</button>
-</div>
-    <button class="filter-btn" onclick="filterShortcuts('critical', this)" style="border-color:var(--danger); color:var(--danger);">Kritik</button>
-    <button class="filter-btn" onclick="filterShortcuts('file', this)">Dosya</button>
-    <button class="filter-btn" onclick="filterShortcuts('edit', this)">Düzenle</button>
-    <button class="filter-btn" onclick="filterShortcuts('color', this)">Renk</button>
-    <button class="filter-btn" onclick="filterShortcuts('align', this)">Hizalama</button>
-</div>
-
-    <!-- MODÜL DETAY EKRANI -->
-    <div class="screen" id="moduleDetail">
-        <div class="lesson-container" id="lessonContent"></div>
-        <div class="nav-buttons" id="lessonNav">
-            <button class="btn btn-secondary" onclick="prevLesson()">← Önceki</button>
-            <button class="btn" id="nextBtn" onclick="nextLesson()">Sonraki →</button>
-        </div>
-    </div>
-
-    <!-- QUIZ EKRANI -->
-    <div class="screen" id="quizScreen">
-        <div class="lesson-container">
-            <div class="lesson-header">
-                <span class="lesson-badge">MODÜL SONU SINAVI</span>
-                <h2 class="lesson-title" id="quizTitle">Bilgi Kontrolü</h2>
-            </div>
-            <div id="quizContent"></div>
-        </div>
-    </div>
-
-    <!-- CORELDRAW REFERANS EKRANI -->
-    <div class="screen" id="corelReferenceScreen">
+    <!-- CORELDRAW EKRANI -->
+    <div class="screen" id="corelScreen">
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
-            <button class="btn btn-secondary" style="flex:0; padding:12px 16px;" onclick="goToScreen('homeScreen')">←</button>
-            <h2 style="margin:0; color:var(--accent)">⌨️ CorelDRAW Kısayolları</h2>
+            <button id="btnBack" class="btn btn-secondary">← Geri</button>
+            <h2 style="color:var(--accent); margin:0;">⌨️ CorelDRAW Kısayolları</h2>
         </div>
         
-        <div class="progress-header" style="border-color:var(--info);">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <span style="font-size:14px; font-weight:bold;">Hızlı Erişim</span>
-                <span style="color:var(--info); font-size:12px;">95 Kısayol</span>
-            </div>
-            <input type="text" id="shortcutSearch" placeholder="🔍 Kısayol ara..." onkeyup="searchShortcuts()" 
-                   style="width:100%; padding:12px; border-radius:8px; border:1px solid #2d2d44; background:var(--bg); color:white;">
+        <input type="text" id="searchInput" placeholder="🔍 Kısayol ara..." style="margin-bottom:15px;">
+        
+        <div class="flex-wrap" style="margin-bottom:20px;">
+            <button class="filter-btn active" data-filter="all">Tümü</button>
+            <button class="filter-btn" data-filter="uv" style="border-color:var(--uv); color:var(--uv);">UV Özel</button>
+            <button class="filter-btn" data-filter="critical" style="border-color:var(--danger); color:var(--danger);">Kritik</button>
+            <button class="filter-btn" data-filter="file">Dosya</button>
+            <button class="filter-btn" data-filter="edit">Düzenle</button>
         </div>
         
-        <!-- Kategori Filtreleri -->
-        <div style="display:flex; gap:8px; overflow-x:auto; padding-bottom:10px; margin-bottom:15px;">
-            <button class="btn btn-secondary" onclick="filterShortcuts('all')" style="flex:0; white-space:nowrap; font-size:12px; padding:8px 12px;">Tümü</button>
-            <button class="btn btn-secondary" onclick="filterShortcuts('uv')" style="flex:0; white-space:nowrap; font-size:12px; padding:8px 12px; border-color:var(--uv); color:var(--uv);">UV Özel</button>
-            <button class="btn btn-secondary" onclick="filterShortcuts('critical')" style="flex:0; white-space:nowrap; font-size:12px; padding:8px 12px; border-color:var(--danger); color:var(--danger);">Kritik</button>
-            <button class="btn btn-secondary" onclick="filterShortcuts('file')" style="flex:0; white-space:nowrap; font-size:12px; padding:8px 12px;">Dosya</button>
-            <button class="btn btn-secondary" onclick="filterShortcuts('edit')" style="flex:0; white-space:nowrap; font-size:12px; padding:8px 12px;">Düzenle</button>
-            <button class="btn btn-secondary" onclick="filterShortcuts('color')" style="flex:0; white-space:nowrap; font-size:12px; padding:8px 12px;">Renk</button>
-            <button class="btn btn-secondary" onclick="filterShortcuts('align')" style="flex:0; white-space:nowrap; font-size:12px; padding:8px 12px;">Hizalama</button>
-        </div>
-        
-        <!-- Pratik Alıştırma Bölümü -->
-        <div class="practice-area" id="practiceArea">
-            <div style="font-size:24px; margin-bottom:10px;">🎯</div>
-            <div style="font-weight:bold; color:var(--success); margin-bottom:10px;">Pratik Alıştırma Modu</div>
-            <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px;">
-                Kısayolları ezberlemek için pratik yapın. Rastgele bir kısayol gösterilecek.
-            </p>
-            <button class="btn btn-success" onclick="startPracticeMode()" style="max-width:200px;">
-                Alıştırmaya Başla
-            </button>
-        </div>
-
-        <!-- Alıştırma Ekranı (Başlangıçta gizli) -->
-        <div id="practiceGame" class="hidden" style="background:var(--surface); border-radius:16px; padding:20px; margin-bottom:20px; text-align:center;">
-            <div style="font-size:14px; color:var(--text-muted); margin-bottom:10px;">Bu kısayol ne işe yarar?</div>
-            <div style="font-size:32px; font-family:monospace; color:var(--gold); margin:20px 0; padding:20px; background:var(--bg); border-radius:12px;" id="practiceKey">Ctrl + ?</div>
-            <div id="practiceOptions" style="display:flex; flex-direction:column; gap:10px; margin-top:20px;">
-                <!-- Seçenekler JS ile doldurulacak -->
-            </div>
-            <div id="practiceResult" style="margin-top:20px; font-weight:bold;"></div>
-            <button class="btn btn-secondary" onclick="nextPracticeQuestion()" id="nextPracticeBtn" style="display:none; margin-top:15px;">
-                Sonraki Soru →
-            </button>
-        </div>
-        
-        <div id="shortcutsContainer" style="max-height:60vh; overflow-y:auto;">
-            <!-- Kısayollar JS ile doldurulacak -->
-        </div>
+        <div id="shortcutsList"></div>
     </div>
 
-</div> <!-- app-container sonu -->
-
-<!-- NAV BAR -->
-<div class="nav-bar" id="mainNavBar">
-    <div class="nav-item active" data-screen="homeScreen">🏠</div>
-    <div class="nav-item" data-screen="uvAcademyMain">🧪</div>
-    <div class="nav-item" data-screen="corelReferenceScreen">⌨️</div>
 </div>
 
-<!-- Achievement Popup -->
-<div class="achievement-popup" id="achievementPopup">
-    <span style="font-size:24px;">🏆</span>
-    <span id="achievementText">Başarım Kazanıldı!</span>
+<div class="nav-bar">
+    <div class="nav-item active" data-nav="homeScreen">🏠</div>
+    <div class="nav-item" data-nav="corelScreen">⌨️</div>
 </div>
 
 <script>
-// ==========================================
-// KAPSAMLI UV AKADEMİ MÜFREDATI
-// ==========================================
-
-const uvCurriculum = [
-    {
-        id: 1,
-        title: "UV Baskı Temelleri ve Kimyasal Süreçler",
-        desc: "Teknolojinin temel prensipleri, fotopolimerizasyon ve endüstriyel uygulamalar",
-        duration: "60 dk",
-        xp: 150,
-        locked: false,
-        lessons: [
-            {
-                title: "UV Baskı Nedir ve Nasıl Çalışır?",
-                subtitle: "Temel prensipler ve tarihsel gelişim",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">📖 Teknoloji Tanımı</div>
-                        <div class="block-content">
-                            <strong>UV Baskı (Ultraviolet Printing)</strong>, mürekkebin anında kuruması için ultraviyole (UV) ışınları kullanan dijital baskı teknolojisidir. Geleneksel baskıda mürekkep havayla temas ederek kururken, UV baskıda kimyasal reaksiyonla anında katılaşır.
-                            <br><br>
-                            <strong>Tarihsel Evrim:</strong>
-                            <ul>
-                                <li><strong>1970'ler:</strong> UV mürekkeplerinin icadı (ofset baskı için)</li>
-                                <li><strong>1990'lar:</strong> Dijital UV plotterların doğuşu</li>
-                                <li><strong>2000'ler:</strong> Flatbed UV teknolojisi yaygınlaşması</li>
-                                <li><strong>2010+:</strong> LED-UV sistemler (düşük ısı, uzun ömür)</li>
-                                <li><strong>2020+:</strong> 3D kabartma, yapay zeka optimizasyonu</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="content-block info">
-                        <div class="block-title">💡 10 Kritik Avantaj</div>
-                        <div class="block-content">
-                            <ol>
-                                <li><strong>Anında Kuruma:</strong> 0.1-3 saniye içinde dokunulabilir</li>
-                                <li><strong>Yüksek Çözünürlük:</strong> 1440x1440 dpi'ye varan detay</li>
-                                <li><strong>Çok Yönlülük:</strong> 100+ farklı malzeme üzerine baskı</li>
-                                <li><strong>Dayanıklılık:</strong> Çizilmez, suya, UV ışığına dayanıklı</li>
-                                <li><strong>Çevre Dostu:</strong> VOC salınımı yok, solvent içermez</li>
-                                <li><strong>Verimlilik:</strong> Islak üzerine ıslak baskı (lamine gerekmez)</li>
-                                <li><strong>3D Efektler:</strong> Kabartma (emboss) baskı imkanı</li>
-                                <li><strong>Beyaz Mürekkep:</strong> Şeffaf/renkli zeminlerde canlı renkler</li>
-                                <li><strong>Değişken Veri:</strong> Her baskı farklı olabilir</li>
-                                <li><strong>Düşük Fire:</strong> Test baskısı maliyeti minimum</li>
-                            </ol>
-                        </div>
-                    </div>
-
-                    <div class="content-block">
-                        <div class="block-title">⚗️ Fotopolimerizasyon Mekanizması</div>
-                        <div class="block-content">
-                            <p>UV boyaları üç temel bileşen içerir:</p>
-                            <table class="data-table">
-                                <tr><th>Bileşen</th><th>Oran</th><th>Görevi</th></tr>
-                                <tr><td><strong>Monomerler</strong></td><td>40-60%</td><td>Sıvı haldeki temel yapı taşları, kürlenince polimerleşir</td></tr>
-                                <tr><td><strong>Oligomerler</strong></td><td>20-40%</td><td>Ağ yapısını oluşturan zincirler, dayanıklılık sağlar</td></tr>
-                                <tr><td><strong>Foto-başlatıcılar</strong></td><td>3-8%</td><td>UV ışığıyla reaksiyonu başlatan kimyasal tetikleyiciler</td></tr>
-                                <tr><td><strong>Pigmentler</strong></td><td>5-15%</td><td>Renk veren partiküller (titanyum dioksit vb.)</td></tr>
-                                <tr><td><strong>Additifler</strong></td><td>1-5%</td><td>Akışkanlık, ıslatma, stabilite düzenleyicileri</td></tr>
-                            </table>
-                            <br>
-                            <p><strong>Kürlenme Adımları:</strong></p>
-                            <ol>
-                                <li>UV lambadan 365-405nm dalga boyu ışın yayılır</li>
-                                <li>Foto-başlatıcılar bu enerjiyi absorbe eder</li>
-                                <li>Serbest radikaller oluşur (kimyasal zincirleme tepkime)</li>
-                                <li>Monomerler birleşerek uzun polimer zincirleri oluşturur</li>
-                                <li>Sıvı katılaşır, 0.1-3 saniyede dokunulabilir hale gelir</li>
-                            </ol>
-                        </div>
-                    </div>
-                    
-                    <div class="interactive-demo" id="curingSimulation">
-                        <div class="demo-title">⚗️ Fotopolimerizasyon Simülasyonu</div>
-                        
-                        <svg viewBox="0 0 400 250" class="sim-svg" id="curingSvg">
-                            <defs>
-                                <linearGradient id="uvGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                    <stop offset="0%" style="stop-color:#bf00ff;stop-opacity:1" />
-                                    <stop offset="100%" style="stop-color:#bf00ff;stop-opacity:0" />
-                                </linearGradient>
-                                <linearGradient id="inkLiquid" x1="0%" y1="0%" x2="0%" y2="100%">
-                                    <stop offset="0%" style="stop-color:#6366f1;stop-opacity:0.9" />
-                                    <stop offset="100%" style="stop-color:#4338ca;stop-opacity:0.9" />
-                                </linearGradient>
-                                <linearGradient id="inkSolid" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
-                                    <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
-                                </linearGradient>
-                                <filter id="glow">
-                                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                                    <feMerge>
-                                        <feMergeNode in="coloredBlur"/>
-                                        <feMergeNode in="SourceGraphic"/>
-                                    </feMerge>
-                                </filter>
-                            </defs>
-                            
-                            <g id="uvLamp" transform="translate(150, 10)">
-                                <rect x="0" y="0" width="100" height="30" rx="5" fill="#1e1e3f" stroke="#6366f1" stroke-width="2"/>
-                                <rect x="10" y="25" width="80" height="5" fill="#bf00ff" filter="url(#glow)" opacity="0.8" id="lampGlow"/>
-                                <text x="50" y="20" text-anchor="middle" fill="#fff" font-size="10">UV LED</text>
-                            </g>
-                            
-                            <g id="uvRays" opacity="0">
-                                <line x1="170" y1="35" x2="140" y2="120" stroke="url(#uvGradient)" stroke-width="3" filter="url(#glow)"/>
-                                <line x1="200" y1="35" x2="200" y2="120" stroke="url(#uvGradient)" stroke-width="4" filter="url(#glow)"/>
-                                <line x1="230" y1="35" x2="260" y2="120" stroke="url(#uvGradient)" stroke-width="3" filter="url(#glow)"/>
-                            </g>
-                            
-                            <rect x="50" y="180" width="300" height="40" fill="#16162d" stroke="#2d2d44" stroke-width="2" rx="3"/>
-                            <text x="200" y="205" text-anchor="middle" fill="#64748b" font-size="12">Baskı Malzemesi (Pleksi/Metal)</text>
-                            
-                            <g id="inkLayer">
-                                <rect id="inkRect" x="100" y="140" width="200" height="40" fill="url(#inkLiquid)" rx="2"/>
-                                <text id="inkState" x="200" y="165" text-anchor="middle" fill="#fff" font-size="11" opacity="0.9">SIVI BOYA</text>
-                            </g>
-                            
-                            <g id="molecules">
-                                <circle class="molecule" cx="120" cy="150" r="3" fill="#a5b4fc" opacity="0.6"/>
-                                <circle class="molecule" cx="150" cy="160" r="3" fill="#a5b4fc" opacity="0.6"/>
-                                <circle class="molecule" cx="180" cy="155" r="3" fill="#a5b4fc" opacity="0.6"/>
-                                <circle class="molecule" cx="210" cy="165" r="3" fill="#a5b4fc" opacity="0.6"/>
-                                <circle class="molecule" cx="240" cy="150" r="3" fill="#a5b4fc" opacity="0.6"/>
-                                <circle class="molecule" cx="270" cy="160" r="3" fill="#a5b4fc" opacity="0.6"/>
-                            </g>
-                            
-                            <g id="polymerChains" opacity="0">
-                                <path d="M 110 150 Q 130 140 150 160 T 190 150" stroke="#10b981" stroke-width="2" fill="none" opacity="0.7"/>
-                                <path d="M 160 170 Q 180 150 200 165 T 240 155" stroke="#10b981" stroke-width="2" fill="none" opacity="0.7"/>
-                                <path d="M 210 145 Q 230 160 250 150 T 290 165" stroke="#10b981" stroke-width="2" fill="none" opacity="0.7"/>
-                            </g>
-                            
-                            <g id="tempGauge" transform="translate(360, 80)" opacity="0">
-                                <rect x="0" y="0" width="30" height="80" fill="#16162d" stroke="#2d2d44" rx="3"/>
-                                <rect id="tempFill" x="5" y="70" width="20" height="5" fill="#ef4444"/>
-                                <text x="15" y="95" text-anchor="middle" fill="#94a3b8" font-size="9">°C</text>
-                            </g>
-                        </svg>
-                        
-                        <div class="sim-controls">
-                            <button class="btn" id="startCuringBtn" onclick="startCuringSim()">
-                                <span id="btnText">🎬 Simülasyonu Başlat</span>
-                            </button>
-                            <div class="sim-status" id="simStatus">
-                                <span class="status-dot" style="background:#6366f1;"></span>
-                                Boya sıvı halde - UV ışını bekleniyor
-                            </div>
-                        </div>
-                        
-                        <div class="sim-info" style="margin-top:15px; font-size:12px; color:var(--text-muted); text-align:left; padding:0 10px;">
-                            <strong>Adımlar:</strong>
-                            <ol style="margin:5px 0; padding-left:20px;">
-                                <li id="step1">Sıvı monomerler serbest hareket eder</li>
-                                <li id="step2" style="opacity:0.4;">UV ışını foto-başlatıcıları uyarır</li>
-                                <li id="step3" style="opacity:0.4;">Polimerleşme başlar (zincirleme tepkime)</li>
-                                <li id="step4" style="opacity:0.4;">Katı, dayanıklı tabaka oluşur</li>
-                            </ol>
-                        </div>
-                    </div>
-
-                    <div class="content-block warning">
-                        <div class="block-title">⚠️ UV Işığı Güvenliği</div>
-                        <div class="block-content">
-                            <ul>
-                                <li><strong>Göz:</strong> UV ışığı katarakt ve retina hasarına yol açabilir. Asla doğrudan bakmayın.</li>
-                                <li><strong>Cilt:</strong> UV-B ve UV-C yanıklara, erken yaşlanmaya neden olur.</li>
-                                <li><strong>Ozon:</strong> Bazı UV lambalar ozon üretir, havalandırma şart.</li>
-                                <li><strong>Koruma:</strong> UV filtreli gözlük, uzun kollu giysi, eldiven kullanın.</li>
-                            </ul>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "Mürekkep Türleri ve Özellikleri",
-                subtitle: "CMYK, White, Varnish ve Primer detaylı analiz",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">🎨 Ana Mürekkep Türleri</div>
-                        <div class="block-content">
-                            <table class="data-table">
-                                <tr>
-                                    <th>Tür</th>
-                                    <th>Kompozisyon</th>
-                                    <th>Viskozite</th>
-                                    <th>Kullanım</th>
-                                    <th>Maliyet</th>
-                                </tr>
-                                <tr>
-                                    <td><strong>CMYK</strong></td>
-                                    <td>Cyan, Magenta, Yellow, Black pigmentler</td>
-                                    <td>8-12 cps</td>
-                                    <td>Temel renk baskısı, fotoğraf, grafik</td>
-                                    <td>Orta</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>White (Beyaz)</strong></td>
-                                    <td>%35-50 TiO₂ (titanyum dioksit)</td>
-                                    <td>15-25 cps</td>
-                                    <td>Opak zemin, şeffaf malzemeler</td>
-                                    <td>Yüksek (+40%)</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Varnish (Vernik)</strong></td>
-                                    <td>Şeffaf polimer, mat/parlak seçenekler</td>
-                                    <td>10-18 cps</td>
-                                    <td>3D kabartma, koruma, selektif parlaklık</td>
-                                    <td>Orta</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Primer (Astar)</strong></td>
-                                    <td>Yapıştırıcı katman, korona öncesi</td>
-                                    <td>5-10 cps</td>
-                                    <td>PP, PE, silikonlu yüzeyler</td>
-                                    <td>Düşük</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Metallic</strong></td>
-                                    <td>Alüminyum pigmentli</td>
-                                    <td>12-18 cps</td>
-                                    <td>Lüks ambalaj, dekorasyon</td>
-                                    <td>Çok Yüksek</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="content-block warning">
-                        <div class="block-title">⚠️ Beyaz Mürekkep - Kritik Bilgiler</div>
-                        <div class="block-content">
-                            <p>Beyaz mürekkep <strong>en kritik</strong> bileşendir çünkü:</p>
-                            <ul>
-                                <li>Şeffaf pleksiye baskı yaparken renklerin görünmesini sağlar (yoksa soluk çıkar)</li>
-                                <li>Cam üzerine beyaz zemin oluşturur (arkadan aydınlatmalı uygulamalar)</li>
-                                <li>Renkli metaller üzerinde gerçek renkleri verir (alüminyum, paslanmaz)</li>
-                                <li>Double-hit (çift vuruş) ile daha opak sonuç verir</li>
-                            </ul>
-                            <br>
-                            <strong>Beyaz Mürekkep Kullanılmazsa:</strong>
-                            <ul>
-                                <li>Renkler soluk, cansız ve şeffaf çıkar</li>
-                                <li>Mavi → açık mavi, Kırmızı → pembe, Siyah → gri olur</li>
-                                <li>Cam/pleksi üzerine baskı tamamen başarısız olur</li>
-                            </ul>
-                            <br>
-                            <strong>Beyaz Mürekkep Yönetimi:</strong>
-                            <ul>
-                                <li>Her gün 10-15 saniye çalkalayın (pigment çökmesini önler)</li>
-                                <li>Sıcaklık 20-25°C arasında tutun (düşük ısı viskozite artırır)</li>
-                                <li>Damper (mürekkep pompası) kontrolü yapın</li>
-                                <li>Nozzle check'te beyaz kanalı mutlaka kontrol edin</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="content-block info">
-                        <div class="block-title">🔬 LED-UV vs. Gel-UV Lambalar</div>
-                        <div class="block-content">
-                            <table class="data-table">
-                                <tr><th>Özellik</th><th>Geleneksel Gel-UV</th><th>LED-UV (Modern)</th></tr>
-                                <tr><td>Isı Yayılımı</td><td>Yüksek (60-80°C)</td><td>Düşük (30-40°C)</td></tr>
-                                <tr><td>Enerji Tüketimi</td><td>Yüksek (3-5 kW)</td><td>Düşük (0.5-1 kW)</td></tr>
-                                <tr><td>Ömür</td><td>1000-2000 saat</td><td>20,000+ saat</td></tr>
-                                <tr><td>Anında Açılma</td><td>2-5 dk ısınma</td><td>Anında</td></tr>
-                                <tr><td>Ozon Üretimi</td><td>Var (havalandırma şart)</td><td>Yok</td></tr>
-                                <tr><td>Bakım</td><td>Sık değişim</td><td>Nadiren</td></tr>
-                                <tr><td>Maliyet</td><td>Düşük başlangıç</td><td>Yüksek başlangıç, düşük işletme</td></tr>
-                            </table>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "Makine Tipleri ve Baskı Kafaları",
-                subtitle: "Flatbed, roll-to-roll ve kafa teknolojileri",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">🖨️ Makine Kategorileri</div>
-                        <div class="block-content">
-                            <p><strong>1. Flatbed (Düz Yataklı):</strong></p>
-                            <ul>
-                                <li>Rijit malzemeler üzerine baskı (pleksi, MDF, cam, metal)</li>
-                                <li>Malzeme kalınlığı: 1-50mm (bazı modeller 100mm+)</li>
-                                <li>Vakum masası sayesinde malzeme sabitleme</li>
-                                <li>Çoklu kafa seçenekleri (4-16 kafa)</li>
-                            </ul>
-                            <br>
-                            <p><strong>2. Roll-to-Roll (Rulo Beslemeli):</strong></p>
-                            <ul>
-                                <li>Esnek malzemeler (vinil, folyo, kumaş, kağıt)</li>
-                                <li>Sürekli üretim için ideal</li>
-                                <li>Tension control (gerilim kontrolü) kritik</li>
-                            </ul>
-                            <br>
-                            <p><strong>3. Hibrid (Hibrit):</strong></p>
-                            <ul>
-                                <li>Hem flatbed hem roll-to-roll kapasitesi</li>
-                                <li>Çok yönlü üretim hatları için</li>
-                                <li>Daha yüksek yatırım maliyeti</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="content-block info">
-                        <div class="block-title">📊 Popüler Kafa Teknolojileri</div>
-                        <div class="block-content">
-                            <table class="data-table">
-                                <tr><th>Üretici</th><th>Model</th><th>Nozzle Sayısı</th><th>Drop Boyutu</th><th>Özellik</th></tr>
-                                <tr><td>Ricoh</td><td>Gen6</td><td>1280</td><td>5-7 pL</td><td>Hız odaklı</td></tr>
-                                <tr><td>Konica Minolta</td><td>KM1024i</td><td>1024</td><td>6-13 pL</td><td>Endüstriyel dayanıklılık</td></tr>
-                                <tr><td>Seiko</td><td>RC1536</td><td>1536</td><td>4-6 pL</td><td>Yüksek çözünürlük</td></tr>
-                                <tr><td>Epson</td><td>PrecisionCore</td><td>800</td><td>3.5 pL</td><td>Fotoğraf kalitesi</td></tr>
-                                <tr><td>Xaar</td><td>1003</td><td>1000</td><td>6-42 pL</td><td>Ağır mürekkep uyumlu</td></tr>
-                            </table>
-                            <br>
-                            <p><strong>Drop Boyutu (pL - pikolitre):</strong> Küçük damla = daha yüksek çözünürlük ama daha yavaş. Büyük damla = daha hızlı ama daha az detay.</p>
-                        </div>
-                    </div>
-                `
-            }
-        ],
-        quiz: {
-            questions: [
-                {
-                    question: "Şeffaf pleksi üzerine renkli baskı yaparken beyaz katmanı nereye basmalısınız?",
-                    options: ["Sadece üste", "Sadece alta (altta)", "Hem alta hem üste", "Hiçbir yere"],
-                    correct: 1,
-                    explanation: "Renklerin canlı görünmesi için beyaz zemin şarttır. Bu yüzden önce beyaz (alta), üzerine CMYK basılır."
-                },
-                {
-                    question: "UV baskının geleneksel solvent baskıya göre en büyük avantajı nedir?",
-                    options: ["Daha ucuz malzeme maliyeti", "Anında kuruma ve üretime hazır olma", "Daha geniş renk gamı", "Daha yavaş üretim hızı"],
-                    correct: 1,
-                    explanation: "UV baskı 0.1-3 saniyede kurur, laminasyon veya bekleme gerektirmez. Bu üretim hızını katlar."
-                },
-                {
-                    question: "Beyaz mürekkep neden her gün çalkalanmalıdır?",
-                    options: ["Hava kabarcığı için", "Titanyum dioksit pigment çökelmesini önlemek", "Kokusunu gidermek", "Rengini açmak"],
-                    correct: 1,
-                    explanation: "Beyaz mürekkep %35-50 TiO₂ içerir. Ağır pigment çöker ve tıkanıklık yapar. Çalkalamak homojen dağılımı sağlar."
-                },
-                {
-                    question: "LED-UV lambaların geleneksel gel-UV lambalara göre hangi avantajı YANLIŞTIR?",
-                    options: ["Daha uzun ömür (20,000+ saat)", "Daha düşük ısı yayılımı", "Daha yüksek enerji tüketimi", "Anında açılma (ısınma yok)"],
-                    correct: 2,
-                    explanation: "LED-UV'ler %80 daha az enerji tüketir. Düşük ısı, uzun ömür ve anında açılma avantajları vardır."
-                },
-                {
-                    question: "Fotopolimerizasyon sürecinde hangi dalga boyu aralığı kullanılır?",
-                    options: ["200-300nm (UV-C)", "365-405nm (UV-A / Mor ötesi)", "500-600nm (Görünür ışık)", "800-1000nm (Kızılötesi)"],
-                    correct: 1,
-                    explanation: "UV baskıda 365-405nm (UV-A) kullanılır. Bu aralık foto-başlatıcıları uyarmak için idealdir."
-                }
-            ]
-        }
-    },
-    {
-        id: 2,
-        title: "Yüzey Hazırlığı ve Adhezyon Bilimi",
-        desc: "Malzeme bilimi, temizlik protokolleri ve tutunma prensipleri",
-        duration: "70 dk",
-        xp: 180,
-        locked: true,
-        lessons: [
-            {
-                title: "Yüzey Enerjisi ve Tutunma Mekaniği",
-                subtitle: "Boya neden atar? Bilimsel temeller",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">🔬 Bilimsel Temel: Yüzey Enerjisi</div>
-                        <div class="block-content">
-                            <p>Her malzemenin bir <span class="tooltip">yüzey enerjisi<span class="tooltip-text">Malzeme yüzeyinin moleküler çekim gücü, dyn/cm cinsinden ölçülür</span></span> vardır. Boya tutunması için:</p>
-                            <br>
-                            <div class="code-block">
-Boya Yüzey Gerilimi < Malzeme Yüzey Enerjisi
-                            </div>
-                            <br>
-                            <table class="data-table">
-                                <tr><th>Malzeme</th><th>Yüzey Enerjisi (dyn/cm)</th><th>Tutunma</th><th>Primer Gerekli?</th></tr>
-                                <tr><td>Paslanmaz Çelik (304)</td><td>700-1000</td><td>✅ Mükemmel</td><td>Hayır</td></tr>
-                                <tr><td>Alüminyum (Alodine)</td><td>500-800</td><td>✅ İyi</td><td>Hayır</td></tr>
-                                <tr><td>PVC (Sert)</td><td>39</td><td>⚠️ Orta</td><td>Önerilir</td></tr>
-                                <tr><td>Akrilik (Pleksi)</td><td>38</td><td>✅ İyi</td><td>Hayır</td></tr>
-                                <tr><td>Polikarbonat</td><td>34</td><td>⚠️ Orta</td><td>Test edin</td></tr>
-                                <tr><td>PP (Polipropilen)</td><td>29</td><td>❌ Zayıf</td><td>Evet (Corona/Primer)</td></tr>
-                                <tr><td>PE (Polietilen)</td><td>31</td><td>❌ Zayıf</td><td>Evet (Corona/Plazma)</td></tr>
-                                <tr><td>PTFE (Teflon)</td><td>18</td><td>❌ İmkansız</td><td>Özel işlem gerekli</td></tr>
-                                <tr><td>Silikon</td><td>24</td><td>❌ İmkansız</td><td>Özel primer şart</td></tr>
-                            </table>
-                            <br>
-                            <p><strong>Kritik Eşik:</strong> 38-40 dyn/cm üzeri yüzeyler UV boyası için idealdir. Altındakiler ön işlem gerektirir.</p>
-                        </div>
-                    </div>
-
-                    <div class="interactive-demo" id="adhesionSim">
-                        <div class="demo-title">🔬 Yüzey Enerjisi Simülasyonu</div>
-                        
-                        <div style="display:flex; gap:10px; margin-bottom:15px; overflow-x:auto; padding-bottom:5px;">
-                            <button class="btn btn-secondary" onclick="setMaterial('metal')" style="font-size:11px; padding:8px 12px; white-space:nowrap;">
-                                🔩 Metal<br><small>700-1000 dyn/cm</small>
-                            </button>
-                            <button class="btn btn-secondary" onclick="setMaterial('pvc')" style="font-size:11px; padding:8px 12px; white-space:nowrap;">
-                                🧴 PVC<br><small>39 dyn/cm</small>
-                            </button>
-                            <button class="btn btn-secondary" onclick="setMaterial('pp')" style="font-size:11px; padding:8px 12px; white-space:nowrap;">
-                                🥡 PP<br><small>29 dyn/cm</small>
-                            </button>
-                            <button class="btn btn-secondary" onclick="setMaterial('ptfe')" style="font-size:11px; padding:8px 12px; white-space:nowrap;">
-                                🍳 Teflon<br><small>18 dyn/cm</small>
-                            </button>
-                        </div>
-                        
-                        <canvas id="adhesionCanvas" width="400" height="200" style="width:100%; height:auto; background:linear-gradient(180deg, #0d0d1f 0%, #16162d 100%); border-radius:8px;"></canvas>
-                        
-                        <div id="adhesionInfo" style="margin-top:15px; padding:12px; background:rgba(255,255,255,0.03); border-radius:8px; font-size:13px;">
-                            <strong style="color:var(--accent);">Paslanmaz Çelik:</strong> 
-                            <span style="color:var(--success);">✓ Mükemmel tutunma.</span> 
-                            UV boyası doğrudan yapışır, primer gerekmez.
-                        </div>
-                        
-                        <div style="margin-top:10px; display:flex; gap:10px; align-items:center; font-size:12px; color:var(--text-muted);">
-                            <span style="display:flex; align-items:center; gap:5px;">
-                                <span style="width:12px; height:12px; background:var(--success); border-radius:50%;"></span> İyi (>40)
-                            </span>
-                            <span style="display:flex; align-items:center; gap:5px;">
-                                <span style="width:12px; height:12px; background:var(--warning); border-radius:50%;"></span> Orta (30-40)
-                            </span>
-                            <span style="display:flex; align-items:center; gap:5px;">
-                                <span style="width:12px; height:12px; background:var(--danger); border-radius:50%;"></span> Zayıf (<30)
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="content-block info">
-                        <div class="block-title">💡 Tutunma Mekanizması</div>
-                        <div class="block-content">
-                            <p><strong>1. Mekanik Tutunma:</strong> Boya malzeme gözeneklerine girer (pürüzlü yüzeylerde artar)</p>
-                            <p><strong>2. Kimyasal Tutunma:</strong> Boya ile yüzey arasında kovalent bağ oluşur (en güçlü)</p>
-                            <p><strong>3. Fiziksel Tutunma:</strong> Van der Waals kuvvetleri (zayıf ama yaygın)</p>
-                            <br>
-                            <p>UV boyaları genellikle <strong>fiziksel + mekanik</strong> tutunma sağlar. Kimyasal tutunma için özel primerler gerekir.</p>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "Profesyonel Temizlik Protokolleri",
-                subtitle: "Adım adım profesyonel hazırlık",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">🧼 Standart Temizlik Prosedürü</div>
-                        <div class="block-content">
-                            <div class="step-guide">
-                                <div class="step-item">
-                                    <div class="step-number">1</div>
-                                    <div class="step-title">Görsel Kontrol</div>
-                                    <div class="step-content">Yüzeyde yağ, toz, parmak izi, korozyon veya eski baskı kalıntısı olup olmadığını kontrol edin.</div>
-                                </div>
-                                <div class="step-item">
-                                    <div class="step-number">2</div>
-                                    <div class="step-title">Toz Alma</div>
-                                    <div class="step-content">Mikrofiber bez veya hava tabancası ile yüzey tozunu temizleyin. Statik elektrik varsa iyonize hava kullanın.</div>
-                                </div>
-                                <div class="step-item">
-                                    <div class="step-number">3</div>
-                                    <div class="step-title">Yağ/Gres Temizliği</div>
-                                    <div class="step-content">Isopropil alkol (IPA) %70-99 veya özel yüzey temizleyici ile silin. Metal yüzeylerde aseton kullanılabilir.</div>
-                                </div>
-                                <div class="step-item">
-                                    <div class="step-number">4</div>
-                                    <div class="step-title">Yıkama (Gerekirse)</div>
-                                    <div class="step-content">Kirli malzemeler için su + hafif deterjan, ardından tam kuruma. Nem tutunmayı engeller.</div>
-                                </div>
-                                <div class="step-item">
-                                    <div class="step-number">5</div>
-                                    <div class="step-title">Son Kontrol - Su Testi</div>
-                                    <div class="step-content">Su damlası yüzeyde tabakalanıyorsa yağ vardır. Homojen yayılıyorsa temizdir.</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                                <div class="step-item">
-                                    <div class="step-number">5</div>
-                                    <div class="step-title">Son Kontrol - Su Testi</div>
-                                    <div class="step-content">Su damlası yüzeyde tabakalanıyorsa yağ vardır. Homojen yayılıyorsa temizdir.</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="content-block warning">
-                        <div class="block-title">⚠️ Malzeme Özel Uyarıları</div>
-                        <div class="block-content">
-                            <p><strong>Pleksi/Akrilik:</strong></p>
-                            <ul>
-                                <li>Aseton kullanmayın (yüzey çatlar - stress cracking)</li>
-                                <li>Statik elektrik toz çeker, iyonize hava kullanın</li>
-                                <li>Koruyucu film varsa baskıdan hemen önce çıkarın</li>
-                                <li>Mikrofiber bez ile dairesel hareketle silin</li>
-                            </ul>
-                            <br>
-                            <p><strong>Alüminyum:</strong></p>
-                            <ul>
-                                <li>Oksit tabakası tutunmayı engeller</li>
-                                <li>Alodine veya light sanding önerilir</li>
-                                <li>Yağlı pres kalıntılarına dikkat</li>
-                                <li>IPA ile son temizlik şart</li>
-                            </ul>
-                            <br>
-                            <p><strong>Cam:</strong></p>
-                            <ul>
-                                <li>Silikon temizleyici kalıntılarına dikkat (fazla kalırsa tutunmaz)</li>
-                                <li>Alkol ile son temizlik şart</li>
-                                <li>Beyaz zemin şart (yoksa renkler soluk)</li>
-                                <li>Camın arkasına baskı yapılacaksa mirror print kullanın</li>
-                            </ul>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "Primer ve Ön İşlem Teknikleri",
-                subtitle: "Düşük enerjili yüzeyler için çözümler",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">🧪 Primer Türleri ve Uygulama</div>
-                        <div class="block-content">
-                            <table class="data-table">
-                                <tr><th>Primer</th><th>Uygulama</th><th>Kuruma</th><th>Etkinlik</th></tr>
-                                <tr><td>Sprey Astar</td><td>Manuel sprey</td><td>5-10 dk</td><td>Orta</td></tr>
-                                <tr><td>UV Primer (Clear)</td><td>Makineyle baskı</td><td>Anında</td><td>İyi</td></tr>
-                                <tr><td>Korona Treatment</td><td>Elektrik arkı</td><td>Anında</td><td>Çok İyi</td></tr>
-                                <tr><td>Plazma Treatment</td><td>Vakum altında iyon</td><td>Anında</td><td>Mükemmel</td></tr>
-                                <tr><td>Alev Treatment</td><td>Oksijen alev</td><td>Anında</td><td>İyi</td></tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="content-block info">
-                        <div class="block-title">⚡ Korona Treatment Detayları</div>
-                        <div class="block-content">
-                            <p><strong>Prensip:</strong> Yüksek voltajlı elektrotlar (10-20kV) hava moleküllerini iyonlaştırır. Bu iyonlar yüzeyi okside ederek polar gruplar ekler.</p>
-                            <br>
-                            <p><strong>Sonuç:</strong> PP/PE yüzey enerjisi 29→45+ dyn/cm'a çıkar.</p>
-                            <br>
-                            <p><strong>Ayarlama:</strong></p>
-                            <ul>
-                                <li>Wattage: Malzeme kalınlığına göre 300-1000W</li>
-                                <li>Hız: 1-5 m/dk (yavaş = daha etkili)</li>
-                                <li>Mesafe: 1-3mm (elektrod-yüzey)</li>
-                            </ul>
-                            <br>
-                            <p><strong>⚠️ Önemli:</strong> Korona etkisi geçicidir (24-48 saat). İşlem sonrası hemen baskı yapın!</p>
-                        </div>
-                    </div>
-
-                    <div class="content-block">
-                        <div class="block-title">📋 Primer Seçim Rehberi</div>
-                        <div class="block-content">
-                            <ul>
-                                <li><strong>PP/PE:</strong> Korona + UV primer (clear)</li>
-                                <li><strong>Silikon:</strong> Özel silikon primer (sadece sprey)</li>
-                                <li><strong>Teflon:</strong> Plazma treatment + özel yapıştırıcı</li>
-                                <li><strong>Naylon:</strong> Korona treatment</li>
-                                <li><strong>Karbon fiber:</strong> Light sanding + UV primer</li>
-                                <li><strong>Cam (özel):</strong> Silane primer (kimyasal tutunma)</li>
-                            </ul>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "Kalite Kontrol ve Test Yöntemleri",
-                subtitle: "Tutunma testleri ve sorun giderme",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">🔍 Standart Tutunma Testleri</div>
-                        <div class="block-content">
-                            <p><strong>1. Çapraz Kesme Testi (Cross-cut Test):</strong></p>
-                            <ul>
-                                <li>Baskı yüzeyine 1mm aralıklı çizgiler çizin (10x10 grid = 100 kare)</li>
-                                <li>3M 610 bant yapıştırıp sertçe çekin</li>
-                                <li>0-5 sınıflandırma: 0 = hiç kopma, 5 = tamamen koptu</li>
-                                <li>Kabul kriteri: 0-1 sınıf (ISO 2409 standardı)</li>
-                            </ul>
-                            <br>
-                            <p><strong>2. Su Testi (Immersion Test):</strong></p>
-                            <ul>
-                                <li>Baskıyı 24 saat suda bekletin (oda sıcaklığında)</li>
-                                <li>Kabarma, soyulma, renk değişimi varsa tutunma yetersiz</li>
-                                <li>Endüstriyel uygulamalarda 48-72 saat test önerilir</li>
-                            </ul>
-                            <br>
-                            <p><strong>3. Bant Testi (Tape Test):</strong></p>
-                            <ul>
-                                <li>3M 610 veya 3M 898 bant kullanın</li>
-                                <li>180° geriye doğru çekin (hızlı, tek hareket)</li>
-                                <li>Boya kalmamalı (ASTM D3359)</li>
-                            </ul>
-                            <br>
-                            <p><strong>4. Çizik Testi (Scratch Test):</strong></p>
-                            <ul>
-                                <li>Tırnak veya sert uçlu kalemle çizin</li>
-                                <li>Boya soyulmamalı</li>
-                                <li>Kabuklaşma varsa yetersiz kürlenme</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="content-block warning">
-                        <div class="block-title">🚨 Yaygın Tutunma Sorunları ve Çözümler</div>
-                        <div class="block-content">
-                            <table class="data-table">
-                                <tr><th>Sorun</th><th>Neden</th><th>Çözüm</th></tr>
-                                <tr><td>Köşelerden soyulma</td><td>Yetersiz temizlik, yağ kalıntısı</td><td>IPA ile tekrar sil, primer kullan</td></tr>
-                                <tr><td>Tamamen atmak</td><td>PP/PE yüzey, yanlış malzeme</td><td>Korona treatment şart</td></tr>
-                                <tr><td>Pürtüklü/kabarcıklı</td><td>Nem/yağ altında baskı</td><td>Kurut, temizle, tekrar bas</td></tr>
-                                <tr><td>Soluk renk</td><td>Beyaz zemin yok</td><td>Önce beyaz mürekkep bas</td></tr>
-                                <tr><td>Yer yer tutunmama</td><td>Statik/toz</td><td>İyonize hava, temiz ortam</td></tr>
-                                <tr><td>Kürlenme sonrası soyulma</td><td>UV gücü düşük veya hız yüksek</td><td>UV gücü artır, hız düşür</td></tr>
-                            </table>
-                        </div>
-                    </div>
-                `
-            }
-        ],
-        quiz: {
-            questions: [
-                {
-                    question: "PP (Polipropilen) malzemeye baskı yapmadan önce ne yapılmalıdır?",
-                    options: ["Sadece silmek", "Primer veya Corona treatment", "Sıcak tutmak", "Hiçbir şey yapmadan basmak"],
-                    correct: 1,
-                    explanation: "PP düşük yüzey enerjili (29 dyn/cm) malzemedir. UV boyası tutunamaz. Corona treatment veya özel primer şarttır."
-                },
-                {
-                    question: "Korona treatment etkisi ne kadar süre kalıcıdır?",
-                    options: ["Kalıcı (sınırsız)", "24-48 saat", "1 hafta", "1 ay"],
-                    correct: 1,
-                    explanation: "Korona etkisi geçicidir. 24-48 saat içinde baskı yapılmalıdır, yoksa yüzey enerjisi düşer."
-                },
-                {
-                    question: "Pleksi (akrilik) temizliğinde hangi solvent KULLANILMAMALIDIR?",
-                    options: ["İzopropil alkol (IPA)", "Aseton", "Su + deterjan", "Özel pleksi temizleyici"],
-                    correct: 1,
-                    explanation: "Aseton pleksi yüzeyini çatlatır (stress cracking). IPA %70-99 veya özel temizleyici kullanın."
-                },
-                {
-                    question: "Çapraz kesme testinde kabul edilebilir sınıf nedir?",
-                    options: ["0-1", "2-3", "4-5", "Herhangi biri"],
-                    correct: 0,
-                    explanation: "0-1 sınıf (hiç kopma veya çok az) kabul edilebilir. 2 ve üstü yetersiz tutunma demektir."
-                },
-                {
-                    question: "Yüzey enerjisi 38-40 dyn/cm üzeri malzemeler için ne gerekir?",
-                    options: ["Her zaman primer", "Genellikle doğrudan baskı yapılabilir", "Sadece korona", "Sadece plazma"],
-                    correct: 1,
-                    explanation: "38-40 dyn/cm UV boyası için ideal eşiktir. Üzerindekiler genellikle doğrudan baskıya uygundur."
-                }
-            ]
-        }
-    },
-    {
-        id: 3,
-        title: "CorelDRAW ile UV Dosya Hazırlama",
-        desc: "Profesyonel dosya hazırlama, RIP ayarları ve renk yönetimi",
-        duration: "80 dk",
-        xp: 200,
-        locked: true,
-        lessons: [
-            {
-                title: "Spot Renkler ve Kanal Yönetimi",
-                subtitle: "White, Varnish ve Primer katmanları",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">🎯 RIP Yazılımı ve Spot Renkler</div>
-                        <div class="block-content">
-                            <p>RIP yazılımı (PrintForge, Caldera, Onyx, vb.) <strong>spot renkleri</strong> özel kanallar olarak tanır:</p>
-                            <table class="data-table">
-                                <tr><th>Spot Renk Adı</th><th>Kanal</th><th>Kullanım</th><th>CorelDRAW'da Tanım</th></tr>
-                                <tr><td><strong>RD_WHITE</strong></td><td>Beyaz mürekkep</td><td>Opak zemin, şeffaf malzemeler</td><td>Spot renk, adı RD_WHITE</td></tr>
-                                <tr><td><strong>RD_VARNISH</strong></td><td>Vernik</td><td>3D kabartma, parlaklık</td><td>Spot renk, adı RD_VARNISH</td></tr>
-                                <tr><td><strong>RD_PRIMER</strong></td><td>Astar</td><td>PP, silikon, zor tutunan</td><td>Spot renk, adı RD_PRIMER</td></tr>
-                                <tr><td><strong>CutContour</strong></td><td>Kesim</td><td>Contour cut (kesme çizgisi)</td><td>Stroke 0.25pt, RGB 255-0-0</td></tr>
-                            </table>
-                            <br>
-                            <p><strong>CorelDRAW'da Spot Renk Atama Adımları:</strong></p>
-                            <ol>
-                                <li>Nesneyi seçin (beyaz basılacak alan)</li>
-                                <li>Dolgu aracını açın (Shift+F11) veya sağ tık → "Dolgu özellikleri"</li>
-                                <li>"Spot renk" seçeneğini işaretleyin (önemli!)</li>
-                                <li>Renk adını <strong>RD_WHITE</strong> olarak yazın (büyük harf, alt çizgi)</li>
-                                <li>CMYK değerleri önemli değil (RIP tarafından eşleştirilir)</li>
-                                <li>Renk paletinde "RD_WHITE" olarak görünecektir</li>
-                            </ol>
-                        </div>
-                    </div>
-
-                    <div class="content-block warning">
-                        <div class="block-title">⚠️ Sık Yapılan Hatalar ve Çözümler</div>
-                        <div class="block-content">
-                            <table class="data-table">
-                                <tr><th>Hata</th><th>Sonuç</th><th>Doğrusu</th></tr>
-                                <tr><td>"White" yazmak yerine "RD_WHITE"</td><td>RIP tanımaz, beyaz basılmaz</td><td>Kesinlikle RD_WHITE kullanın</td></tr>
-                                <tr><td>Spot renk işaretini unutmak</td><td>CMYK'ya çevrilir, yanlış kanal</td><td>"Spot renk" kutusu işaretli olmalı</td></tr>
-                                <tr><td>Beyazı üste koymak (normal baskıda)</td><td>Renklerin altında kalır, soluk görünür</td><td>Beyaz ALT katman olmalı</td></tr>
-                                <tr><td>Mirror print'te unutmak</td><td>Katman sırası ters, renkler görünmez</td><td>Mirror'da renk altta, beyaz üstte</td></tr>
-                                <tr><td>Fontları eğriye çevirmemek</td><td>RIP'te font kaybı, bozuk metin</td><td>Ctrl+Q ile tüm metinleri eğriye çevirin</td></tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="content-block info">
-                        <div class="block-title">💡 Pro İpucu: Hızlı Spot Renk Atama</div>
-                        <div class="block-content">
-                            <p>Sık kullanılan spot renkler için <strong>renk paleti oluşturun</strong>:</p>
-                            <ol>
-                                <li>Window → Color Palettes → Create Palette from Selection</li>
-                                <li>RD_WHITE, RD_VARNISH, RD_PRIMER objelerini seçin</li>
-                                <li>Paleti kaydedin (.cpl dosyası)</li>
-                                <li>Her yeni dosyada Window → Color Palettes → Open Palette ile yükleyin</li>
-                            </ol>
-                            <p>Bu sayede tek tıkla spot renk atayabilirsiniz.</p>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "Katman Sıralaması ve Z-Order",
-                subtitle: "Doğru katman düzeni için rehber",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">📚 Standart Katman Sıralaması (Z-Order)</div>
-                        <div class="block-content">
-                            <p><strong>Normal Baskı (Cam/Pleksi üzerine - önden görünür):</strong></p>
-                            <div class="code-block">
-Z-SIRASI (Alttan Üste):
-1. RD_WHITE (Beyaz zemin - en alt)
-2. CMYK (Renkli görsel - orta)
-3. RD_VARNISH (Vernik - en üst, opsiyonel)
-                            </div>
-                            <br>
-                            <p><strong>Mirror Print (Cam üzerine - arkadan görünür):</strong></p>
-                            <div class="code-block">
-Z-SIRASI (Alttan Üste):
-1. CMYK (Renk - en alt, ters çevrilmiş görsel)
-2. RD_WHITE (Beyaz - orta, üzerine yansıtır)
-3. RD_VARNISH (Vernik - en üst, opsiyonel)
-                            </div>
-                            <br>
-                            <p><strong>Double White (Ekstra opaklık):</strong></p>
-                            <div class="code-block">
-Z-SIRASI:
-1. RD_WHITE (düşük pass, zemin)
-2. CMYK
-3. RD_WHITE (tekrar, üstte, tam opaklık)
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="content-block">
-                        <div class="block-title">🎨 CorelDRAW Layer Yönetimi</div>
-                        <div class="block-content">
-                            <p><strong>Profesyonel Layer Yapısı:</strong></p>
-                            <ul>
-                                <li><strong>Layer 1 - WHITE:</strong> Tüm beyaz basılacak alanlar (RD_WHITE spot)</li>
-                                <li><strong>Layer 2 - CMYK:</strong> Tüm renkli görseller ve metinler</li>
-                                <li><strong>Layer 3 - VARNISH:</strong> Kabartma veya selektif vernik alanları</li>
-                                <li><strong>Layer 4 - CUT:</strong> Kesme çizgileri (CutContour)</li>
-                                <li><strong>Layer 5 - GUIDE:</strong> Kılavuz çizgiler, bleed işaretleri (baskıya çıkmaz)</li>
-                            </ul>
-                            <br>
-                            <p><strong>Katman Sırası Değiştirme (Z-Order):</strong></p>
-                            <ul>
-                                <li><strong>Ctrl+End:</strong> Seçili nesneyi en alta gönder (Beyaz için)</li>
-                                <li><strong>Ctrl+Home:</strong> Seçili nesneyi en üste getir (Varnish için)</li>
-                                <li><strong>Ctrl+PgDn:</strong> Bir alt katmana indir</li>
-                                <li><strong>Ctrl+PgUp:</strong> Bir üst katmana çıkar</li>
-                            </ul>
-                            <br>
-                            <p><strong>Layer Properties:</strong> "Print color as spot" seçeneğini işaretleyin</p>
-                        </div>
-                    </div>
-
-                    <div class="content-block info">
-                        <div class="block-title">🔍 Mirror Print Kontrol Listesi</div>
-                        <div class="block-content">
-                            <ul class="checklist">
-                                <li>Görsel yatay çevrildi mi? (Mirror/Flip Horizontal)</li>
-                                <li>Metinler de çevrildi mi? (Unutulan en yaygın hata!)</li>
-                                <li>Katman sırası: Renk altta, beyaz üstte mi?</li>
-                                <li>Beyaz alanda "RD_WHITE" spot renk olarak tanımlı mı?</li>
-                                <li>Fontlar eğriye çevrildi mi? (Ctrl+Q)</li>
-                                <li>Bleed alanı eklendi mi? (2-3mm taşma)</li>
-                            </ul>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "Bleed, Kesme Çizgileri ve Teknik Ayarlar",
-                subtitle: "Profesyonel dosya hazırlama standartları",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">📐 Teknik Parametreler ve Standartlar</div>
-                        <div class="block-content">
-                            <table class="data-table">
-                                <tr><th>Parametre</th><th>Değer</th><th>Açıklama</th></tr>
-                                <tr><td>Çözünürlük (DPI)</td><td>150-300 dpi</td><td>Görsel kalitesi (baskı boyutuna göre)</td></tr>
-                                <tr><td>Bleed (taşma payı)</td><td>2-3 mm</td><td>Kesim payı, beyaz alan bırakmayın</td></tr>
-                                <tr><td>Kesme çizgisi (CutContour)</td><td>0.25 pt, RGB 255-0-0</td><td>Contour cut için işaret</td></tr>
-                                <tr><td>Güvenli alan</td><td>5-10 mm içerden</td><td>Önemli içerik kenara yakın olmasın</td></tr>
-                                <tr><td>Font outline</td><td>Convert to curves</td><td>Font kaybını önle (Ctrl+Q)</td></tr>
-                                <tr><td>PDF standardı</td><td>PDF/X-4</td><td>Spot renkleri korur, transparanlık destekler</td></tr>
-                            </table>
-                            <br>
-                            <p><strong>Baskı Boyutuna Göre DPI Tavsiyesi:</strong></p>
-                            <ul>
-                                <li><strong>Küçük (10x10cm):</strong> 300 dpi (fotoğraf kalitesi)</li>
-                                <li><strong>Orta (50x70cm):</strong> 150-200 dpi (standart)</li>
-                                <li><strong>Büyük (1x2m):</strong> 100-150 dpi (afiş)</li>
-                                <li><strong>Dev ebat (3m+):</strong> 72-100 dpi (billboard)</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="content-block">
-                        <div class="block-title">✂️ Kesme Çizgisi (Cut Contour) Hazırlama</div>
-                        <div class="block-content">
-                            <p><strong>Adım Adım Prosedür:</strong></p>
-                            <ol>
-                                <li>Nesneyi seçin, "Contour" efekti uygulayın (Ctrl+F9)</li>
-                                <li>Offset: 0 (dış hat için)</li>
-                                <li>Contour'u ayrı nesneye ayırın: Ctrl+K (Break Apart)</li>
-                                <li>Stroke ayarları: 0.25 pt kalınlık, renk: Spot "CutContour" veya RGB 255-0-0</li>
-                                <li>Fill: None (dolgu yok)</li>
-                                <li>Layer: "CUT" layer'ına taşıyın</li>
-                            </ol>
-                            <br>
-                            <p><strong>RIP Yazılımı Ayarı:</strong></p>
-                            <ul>
-                                <li>CutContour kanalı "Cut" olarak işaretlenir</li>
-                                <li>Baskı yapılmaz, sadece kesim makinesine (cutting plotter) gönderilir</li>
-                                <li>Summa, Graphtec, Roland vb. cutter'larla uyumlu</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="content-block warning">
-                        <div class="block-title">⚠️ Bleed (Taşma Payı) Kritik Önemi</div>
-                        <div class="block-content">
-                            <p><strong>Bleed olmadan kesim yapılırsa:</strong></p>
-                            <ul>
-                                <li>Kenarlarda beyaz çizgi kalır (beyaz zemin görünür)</li>
-                                <li>Kesim hatası varsa renkli alan eksik kalır</li>
-                                <li>Profesyonel görünüm kaybolur</li>
-                            </ul>
-                            <br>
-                            <p><strong>Bleed Ekleme Yöntemleri:</strong></p>
-                            <ul>
-                                <li><strong>Manuel:</strong> Görseli %102-105 ölçeklendir (Ctrl+Shift+>)</li>
-                                <li><strong>PowerClip:</strong> Görseli bleed dahil alana maskele (Ctrl+7)</li>
-                                <li><strong>Contour:</strong> Görsele 2-3mm contour ekle, arka plan renginde</li>
-                            </ul>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "PDF Export ve RIP İletimi",
-                subtitle: "Doğru format ve ayarlar",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">📤 PDF Export Ayarları (Ctrl+E)</div>
-                        <div class="block-content">
-                            <p><strong>PDF/X-4 Standardı (Önerilen):</strong></p>
-                            <ul>
-                                <li>Spot renkleri korur (RD_WHITE, RD_VARNISH vb.)</li>
-                                <li>Transparanlık desteği (gölgeler, efektler bozulmaz)</li>
-                                <li>Font gömme (embed) otomatik</li>
-                                <li>CMYK + Spot renk çıktısı</li>
-                            </ul>
-                            <br>
-                            <p><strong>Export Ayarları Detayı:</strong></p>
-                            <table class="data-table">
-                                <tr><th>Ayar</th><th>Değer</th><th>Neden</th></tr>
-                                <tr><td>Color</td><td>Composite CMYK + Spot</td><td>Spot renkler ayrı kanal olarak çıkar</td></tr>
-                                <tr><td>Compatibility</td><td>Acrobat 5.0+</td><td>Geri uyumluluk</td></tr>
-                                <tr><td>Compress</td><td>ZIP/LZW</td><td>Kayıpsız sıkıştırma (JPEG kullanmayın!)</td></tr>
-                                <tr><td>Bleed</td><td>Include</td><td>Taşma payı korunur</td></tr>
-                                <tr><td>Marks</td><td>Registration marks (opsiyonel)</td><td>Hizalama için</td></tr>
-                                <tr><td>Output Intent</td><td>ISO Coated v2</td><td>Renk tutarlılığı</td></tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="content-block info">
-                        <div class="block-title">🖥️ RIP Yazılımı İçe Aktarma ve Kontrol</div>
-                        <div class="block-content">
-                            <p><strong>PrintForge / Caldera / Onyx / Ergosoft:</strong></p>
-                            <ol>
-                                <li>PDF'i hot folder'a atın veya import edin</li>
-                                <li>Spot renkler otomatik kanallara ayrılır (Preview'de görünür)</li>
-                                <li>White ve Varnish önizlemesi gri tonlamalı veya renkli görünür</li>
-                                <li>Pass sayısı, hız, drop size ayarlanır</li>
-                                <li>Test strip (küçük baskı) mutlaka yapın</li>
-                                <li>ICC profili seçimi (malzeme+mürekkep+kafa kombinasyonuna göre)</li>
-                            </ol>
-                            <br>
-                            <p><strong>RIP'te Kanal Kontrolü:</strong></p>
-                            <ul>
-                                <li>CMYK: Görsel renkler</li>
-                                <li>White: Opak zemin (şeffaf malzemeler için zorunlu)</li>
-                                <li>Varnish: Kabartma/koruma alanları</li>
-                                <li>Cut: Kesme çizgileri (baskı yapılmaz)</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="content-block success">
-                        <div class="block-title">✅ Dosya Göndermeden Önce Son Kontrol</div>
-                        <div class="block-content">
-                            <ul class="checklist">
-                                <li>Tüm fontlar eğriye çevrildi mi? (Ctrl+A, Ctrl+Q)</li>
-                                <li>Beyaz alanlar RD_WHITE spot renk mi?</li>
-                                <li>Katman sırası doğru mu? (Beyaz altta, renk üstte - normal baskı)</li>
-                                <li>Bleed eklendi mi? (2-3mm)</li>
-                                <li>Kesme çizgileri var mı? (0.25pt, kırmızı)</li>
-                                <li>Dosya boyutu uygun mu? (Çok büyük dosyalar RIP'leme sorunu)</li>
-                                <li>PDF/X-4 formatında mı?</li>
-                            </ul>
-                        </div>
-                    </div>
-                `
-            }
-        ],
-        quiz: {
-            questions: [
-                {
-                    question: "CorelDRAW'de beyaz katmanı nasıl tanımlamalısınız?",
-                    options: ["Sadece beyaz renk yap", "Spot renk adı 'RD_WHITE' olmalı", "Sadece alt katmana koy", "RIP'te sonradan ayarla"],
-                    correct: 1,
-                    explanation: "RIP yazılımı 'RD_WHITE' spot renk adını otomatik beyaz kanalına yönlendirir. Sadece beyaz renk yetmez, spot renk işaretli olmalıdır."
-                },
-                {
-                    question: "Mirror print'te (cam üzerine) katman sırası nasıldır?",
-                    options: ["Beyaz altta, renk üstte", "Renk altta, beyaz üstte", "Sadece beyaz", "Sadece renk"],
-                    correct: 1,
-                    explanation: "Mirror print'te camın arkasına bakılır. Önce renk (ters çevrilmiş), üzerine beyaz basılır. Böylece camdan bakınca renk önde görünür."
-                },
-                {
-                    question: "Büyük format baskı (1x2m) için ideal DPI nedir?",
-                    options: ["300 dpi", "150-200 dpi", "72 dpi", "600 dpi"],
-                    correct: 1,
-                    explanation: "Büyük formatlarda 150-200 dpi yeterlidir. 300 dpi dosya boyutunu şişirir, baskı hızını yavaşlatır, fark görülmez."
-                },
-                {
-                    question: "Kesme çizgisi (cut contour) hangi renkte olmalıdır?",
-                    options: ["Siyah", "Kırmızı (RGB 255-0-0)", "Mavi", "Yeşil"],
-                    correct: 1,
-                    explanation: "Kesme çizgileri standart olarak kırmızı (RGB 255-0-0) veya 'CutContour' spot rengi ile tanımlanır. 0.25pt kalınlık şarttır."
-                },
-                {
-                    question: "PDF export'ta hangi sıkıştırma kullanılmalıdır?",
-                    options: ["JPEG (küçük dosya)", "ZIP/LZW (kayıpsız)", "RAR", "Hiçbiri"],
-                    correct: 1,
-                    explanation: "JPEG kayıplı sıkıştırma yapar, detay kaybı olur. ZIP/LZW kayıpsızdır, spot renkleri korur. PDF/X-4 standardı önerilir."
-                }
-            ]
-        }
-    },
-    {
-        id: 4,
-        title: "Makine Operasyonu ve Günlük Bakım",
-        desc: "Günlük rutinler, kalibrasyon ve arıza önleme",
-        duration: "75 dk",
-        xp: 220,
-        locked: true,
-        lessons: [
-            {
-                title: "Günlük Başlangıç Prosedürü",
-                subtitle: "Sabit kalite için sabit rutin",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">☀️ Sabah Rutini (Her Gün!)</div>
-                        <div class="block-content">
-                            <ul class="checklist">
-                                <li>Makineyi aç, ısınmasını bekle (5 dk - LED için gerekmez)</li>
-                                <li>Beyaz mürekkep şişesini çalkala (10-15 saniye)</li>
-                                <li>Nozzle check yap (tüm kanallar açık mı?)</li>
-                                <li>Kafa temizliği (light cleaning)</li>
-                                <li>Test baskısı yap (A4/Letter boyut)</li>
-                                <li>Malzeme yüzeyini kontrol et (temizlik)</li>
-                                <li>Kafa yüksekliğini ayarla (1.5-2mm)</li>
-                                <li>UV lamba kontrolü (anında açılıyor mu?)</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="content-block warning">
-                        <div class="block-title">⏰ Zamanlama Önerisi</div>
-                        <div class="block-content">
-                            <table class="data-table">
-                                <tr><th>İşlem</th><th>Süre</th><th>Sıklık</th></tr>
-                                <tr><td>Beyaz çalkalama</td><td>15 sn</td><td>Her gün</td></tr>
-                                <tr><td>Nozzle check</td><td>2 dk</td><td>Her gün</td></tr>
-                                <tr><td>Light cleaning</td><td>3 dk</td><td>Her gün / gerekirse</td></tr>
-                                <tr><td>Medium cleaning</td><td>10 dk</td><td>Haftada 1-2</td></tr>
-                                <tr><td>Strong cleaning</td><td>20 dk</td><td>Ayda 1 veya sorun varsa</td></tr>
-                                <tr><td>Kafa değişimi</td><td>30-60 dk</td><td>5000-10000 saatte</td></tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="content-block info">
-                        <div class="block-title">📝 Günlük Log Tutma</div>
-                        <div class="block-content">
-                            <p>Profesyonel işletmelerde günlük log şarttır:</p>
-                            <ul>
-                                <li>Nozzle check sonuçları (fotoğraf)</li>
-                                <li>Temizlik işlemleri ve saati</li>
-                                <li>Baskı sayısı ve metrekare</li>
-                                <li>Mürekkep seviyeleri</li>
-                                <li>Ortam sıcaklığı ve nem</li>
-                                <li>Arıza veya uyarılar</li>
-                            </ul>
-                            <p>Bu loglar garanti talepleri ve verimlilik analizi için kritiktir.</p>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "Kafa Yüksekliği ve Mesafe Ayarı",
-                subtitle: "Doğru yükseklik = kaliteli baskı",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">📏 Optimal Mesafe ve Ayar</div>
-                        <div class="block-content">
-                            <p><strong>Standart Mesafe:</strong> 1.5-2.0 mm (kafa ile malzeme arası)</p>
-                            <br>
-                            <p><strong>Malzemeye Göre Ayar:</strong></p>
-                            <table class="data-table">
-                                <tr><th>Malzeme</th><th>Mesafe</th><th>Neden</th></tr>
-                                <tr><td>Düz pleksi/metal</td><td>1.5 mm</td><td>Optimal drop yerleşimi</td></tr>
-                                <tr><td>Kabartmalı/3D</td><td>2.0-2.5 mm</td><td>Çarpmamak için güvenlik mesafesi</td></tr>
-                                <tr><td>Yumuşak/esnek</td><td>2.0 mm</td><td>Malzeme hareketine tolerans</td></tr>
-                                <tr><td>Çok ince kağıt</td><td>1.2-1.5 mm</td><td>Daha yakın, daha keskin</td></tr>
-                                <tr><td>Kavisli yüzey</td><td>2.5-3.0 mm</td><td>Tepe noktasına göre ayar</td></tr>
-                            </table>
-                            <br>
-                            <p><strong>Yanlış Mesafenin Etkileri:</strong></p>
-                            <table class="data-table">
-                                <tr><th>Çok Yakın (<1mm)</th><th>Çok Uzak (>3mm)</th></tr>
-                                <tr><td>Kafa çarpması riski</td><td>Drop uçuşu, bulanıklık</td></tr>
-                                <tr><td>Mürekkep birikimi</td><td>Düşük çözünürlük</td></tr>
-                                <tr><td>Kafa hasarı (pahalı!)</td><td>Tozlanma, kirlenme</td></tr>
-                                <tr><td>Çift hat (ghosting)</td><td>Boya israfı</td></tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="content-block warning">
-                        <div class="block-title">⚠️ Kafa Çarpması Önleme</div>
-                        <div class="block-content">
-                            <p><strong>Kafa çarpması en pahalı arızadır!</strong> Önlemler:</p>
-                            <ul>
-                                <li>Her baskı öncesi malzeme kalınlığını kontrol edin</li>
-                                <li>Kavisli malzemelerde "height sense" özelliğini kullanın</li>
-                                <li>Manuel ayarda çift kontrol yapın</li>
-                                <li>Baskı başlamadan önce "dry run" yapın (kafa hareket etmeden)</li>
-                                <li>Vakumun yeterli olduğundan emin olun (malzeme kalkmasın)</li>
-                            </ul>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "Nozzle Check ve Temizlik Prosedürleri",
-                subtitle: "Tıkanıklık tespiti ve çözümü",
-                content: `
-                    <div class="interactive-demo" id="nozzleCheck">
-                        <div class="demo-title">🔍 Nozzle Check Simülasyonu</div>
-                        
-                        <div style="display:flex; gap:20px; flex-wrap:wrap; justify-content:center; margin-bottom:15px;">
-                            <div style="text-align:center;">
-                                <div style="font-size:32px; margin-bottom:5px;">🎨</div>
-                                <div style="font-size:12px; color:var(--text-muted);">CMYK</div>
-                                <div id="cmykStatus" style="font-size:11px; color:var(--success);">✓ Normal</div>
-                            </div>
-                            <div style="text-align:center;">
-                                <div style="font-size:32px; margin-bottom:5px;">⚪</div>
-                                <div style="font-size:12px; color:var(--text-muted);">White</div>
-                                <div id="whiteStatus" style="font-size:11px; color:var(--success);">✓ Normal</div>
-                            </div>
-                        </div>
-                        
-                        <div style="background:#0d0d1f; border-radius:8px; padding:15px; position:relative; overflow:hidden;">
-                            <canvas id="nozzleCanvas" width="350" height="120" style="width:100%; height:auto;"></canvas>
-                            
-                            <div style="display:flex; gap:10px; margin-top:15px; justify-content:center; flex-wrap:wrap;">
-                                <button class="btn btn-secondary" onclick="simulateClog()" style="font-size:12px; padding:8px 12px;">
-                                    🚫 Tıkanıklık Simüle Et
-                                </button>
-                                <button class="btn btn-secondary" onclick="simulateMissing()" style="font-size:12px; padding:8px 12px;">
-                                    ⚠️ Eksik Nozzle
-                                </button>
-                                <button class="btn" onclick="runCleaning()" style="font-size:12px; padding:8px 12px;">
-                                    🧼 Temizlik Başlat
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div id="nozzleDiagnosis" style="margin-top:15px; padding:12px; background:rgba(255,255,255,0.03); border-radius:8px; font-size:13px; min-height:60px;">
-                            <strong style="color:var(--accent);">Durum:</strong> Tüm nozullar aktif. Baskıya hazır.
-                        </div>
-                    </div>
-
-                    <div class="content-block">
-                        <div class="block-title">🧽 Temizlik Seviyeleri ve Kullanım</div>
-                        <div class="block-content">
-                            <table class="data-table">
-                                <tr><th>Seviye</th><th>Süre</th><th>Kullanım Durumu</th><th>İşlem</th></tr>
-                                <tr><td>Light</td><td>3 dk</td><td>Günlük rutin, hafif eksik nozzle</td><td>Yüzey temizliği, hafif vakum</td></tr>
-                                <tr><td>Medium</td><td>10 dk</td><td>Haftalık bakım, belirgin tıkanıklık</td><td>Güçlü vakum, hafif sünger teması</td></tr>
-                                <tr><td>Strong</td><td>20 dk</td><td>Ciddi tıkanıklık, ardışık nozzle kaybı</td><td>Agresif vakum, sünger ıslatma</td></tr>
-                                <tr><td>Power</td><td>30+ dk</td><td>Ağır tıkanıklık, son çare</td><td>Mürekkep doldurma, uzun vakum</td></tr>
-                            </table>
-                            <br>
-                            <p><strong>Temizlik Sıklığı:</strong></p>
-                            <ul>
-                                <li>Light: Her gün veya her baskı öncesi</li>
-                                <li>Medium: Haftada 1-2 veya nozzle check'te sorun görülünce</li>
-                                <li>Strong: Ayda 1 veya ciddi banding varsa</li>
-                                <li>Power: Son çare, teknik servis önerisiyle</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="content-block info">
-                        <div class="block-title">💡 Nozzle Check Yorumlama</div>
-                        <div class="block-content">
-                            <p><strong>Normal Desen:</strong> Düzgün, eşit aralıklı çizgiler (her kanal için)</p>
-                            <p><strong>Düzensiz Eksikler:</strong> Damperde hava kabarcığı veya mürekkep akış problemi</p>
-                            <p><strong>Ardışık Eksikler:</strong> Kafa hasarı veya ağır tıkanıklık (strong cleaning gerekir)</p>
-                            <p><strong>Tamamen Boş:</strong> Elektrik bağlantısı, kafa arızası veya mürekkep bitmiş</p>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "UV Lamba Bakımı ve Optimizasyon",
-                subtitle: "Ömür uzatma ve performans",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">💡 LED-UV Bakımı ve Kontrol</div>
-                        <div class="block-content">
-                            <ul>
-                                <li><strong>Temizlik:</strong> Haftada bir mikrofiber bezle silin (kapalıyken, soğukken)</li>
-                                <li><strong>Soğutma:</strong> Fan filtresini aylık temizleyin (toz birikimi ısıyı artırır)</li>
-                                <li><strong>Ömür:</strong> 20,000 saat (2-3 yıl yoğun kullanım)</li>
-                                <li><strong>Güç kontrolü:</strong> %100, %75, %50 ayarlarını kullanın</li>
-                            </ul>
-                            <br>
-                            <p><strong>Güç Ayarı ve Kullanım:</strong></p>
-                            <table class="data-table">
-                                <tr><th>Güç</th><th>Kullanım</th><th>Avantaj</th></tr>
-                                <tr><td>%100</td><td>Yüksek hız, tam kürlenme gerekli</td><td>En hızlı üretim</td></tr>
-                                <tr><td>%75</td><td>Standart baskı</td><td>Enerji tasarrufu, uzun lamba ömrü</td></tr>
-                                <tr><td>%50</td><td>Isı hassas malzemeler (PVC, ince pleksi)</td><td>Deformasyonu önler</td></tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="content-block warning">
-                        <div class="block-title">⚠️ Lamba Değişim İşaretleri</div>
-                        <div class="block-content">
-                            <p><strong>Değişim zamanı geldiğini gösteren belirtiler:</strong></p>
-                            <ul>
-                                <li>Boya tam kurumuyor (yapışkan kalıyor, bant testi başarısız)</li>
-                                <li>Baskı hızında düşüş (kürlenme için bekleme gerekiyor)</li>
-                                <li>Lamba üzerinde kararma, leke veya deformasyon</li>
-                                <li>5000+ saat kullanım süresi (log kontrolü)</li>
-                                <li>Enerji tüketiminde artış (verimlilik düşüklüğü)</li>
-                            </ul>
-                            <br>
-                            <p><strong>Değişim Prosedürü:</strong></p>
-                            <ol>
-                                <li>Makineyi tamamen kapatın, fişi çekin</li>
-                                <li>Soğuma süresi bekleyin (30 dk)</li>
-                                <li>Üretici kılavuzuna göre değişim yapın</li>
-                                <li>Yeni lamba kalibrasyonu yapın</li>
-                                <li>Test baskısı ile doğrulama</li>
-                            </ol>
-                        </div>
-                    </div>
-                `
-            }
-        ],
-        quiz: {
-            questions: [
-                {
-                    question: "Beyaz mürekkep neden her sabah çalkalanmalıdır?",
-                    options: ["Hava kabarcığı için", "Pigment çökelmesini önlemek", "Kokusunu gidermek", "Rengini açmak"],
-                    correct: 1,
-                    explanation: "Beyaz mürekkep titanyum dioksit pigmenti içerir. Çökelir ve tıkanıklık yapar. Çalkalamak homojen dağılımı sağlar."
-                },
-                {
-                    question: "Kafa ile malzeme arası ideal mesafe nedir?",
-                    options: ["0.5 mm", "1.5-2.0 mm", "5 mm", "10 mm"],
-                    correct: 1,
-                    explanation: "1.5-2.0 mm standart mesafedir. Çok yakın çarpma riski, çok uzak bulanıklık ve israf yapar."
-                },
-                {
-                    question: "Nozzle check'te düzensiz aralıklarla eksik nozzle görülüyor. Sebep?",
-                    options: ["Kafa hasarı", "Encoder strip kirlenmesi", "Damper hava kabarcığı", "UV lamba arızası"],
-                    correct: 2,
-                    explanation: "Düzensiz eksik nozzle'lar genellikle damperdeki hava kabarcığı veya mürekkep akış problemi gösterir."
-                },
-                {
-                    question: "LED-UV lambaların beklenen ömrü nedir?",
-                    options: ["1000 saat", "5000 saat", "20,000+ saat", "Sınırsız"],
-                    correct: 2,
-                    explanation: "LED-UV lambalar 20,000+ saat ömür sunar. Geleneksel gel-UV ise 1000-2000 saat ömürlüdür."
-                },
-                {
-                    question: "Isı hassas malzeme (ince PVC) için UV güç ayarı ne olmalı?",
-                    options: ["%100", "%75", "%50", "Kapalı"],
-                    correct: 2,
-                    explanation: "Isı hassas malzemelerde %50 güç kullanılır. Bu malzeme deformasyonunu önler, yeterli kürlenme sağlar."
-                }
-            ]
-        }
-    },
-    {
-        id: 5,
-        title: "Arıza Tespiti ve Giderme",
-        desc: "Banding, renk sapması ve mekanik sorunlar",
-        duration: "70 dk",
-        xp: 200,
-        locked: true,
-        lessons: [
-            {
-                title: "Banding (Çizgili Baskı) Analizi",
-                subtitle: "Yatay çizgilerin nedenleri ve çözümleri",
-                content: `
-                    <div class="content-block danger">
-                        <div class="block-title">🚨 Banding Tipleri ve Çözümler</div>
-                        <div class="block-content">
-                            <p><strong>1. Ink Starvation (Mürekkep Açlığı):</strong></p>
-                            <ul>
-                                <li><strong>Belirti:</strong> Düzensiz hafif çizgiler, renk solması, özellikle geniş alanlarda</li>
-                                <li><strong>Neden:</strong> Mürekkep yetmezliği, damper problemi, hava kabarcığı</li>
-                                <li><strong>Çözüm:</strong> Damper kontrolü, mürekkep seviyesi, hattı havalandırma, medium cleaning</li>
-                            </ul>
-                            <br>
-                            <p><strong>2. Pass Kayması (Pass Misalignment):</strong></p>
-                            <ul>
-                                <li><strong>Belirti:</strong> Düzenli aralıklarla koyu çizgiler, bidirectional baskıda belirgin</li>
-                                <li><strong>Neden:</strong> Bidirectional hizalama bozukluğu, encoder sorunu</li>
-                                <li><strong>Çözüm:</strong> Calibration wizard çalıştırın, encoder strip temizliği</li>
-                            </ul>
-                            <br>
-                            <p><strong>3. Encoder Strip Sorunu:</strong></p>
-                            <ul>
-                                <li><strong>Belirti:</strong> Düzenli aralıklarla tekrar eden hafif banding, genellikle sabit aralıklı</li>
-                                <li><strong>Neden:</strong> Encoder strip kirli, çizik veya gevşek</li>
-                                <li><strong>Çözüm:</strong> IPA ile temizleyin, gevşekse gerdirin, çizikse değiştirin</li>
-                            </ul>
-                            <br>
-                            <p><strong>4. Kafa Hizalama Bozukluğu:</strong></p>
-                            <ul>
-                                <li><strong>Belirti:</strong> Renk kayması (özellikle tek yönlü baskıda)</li>
-                                <li><strong>Neden:</strong> Kafalar arası hizalama kaçmış</li>
-                                <li><strong>Çözüm:</strong> Calibration yapın, gerekirse kafa değişimi</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="content-block">
-                        <div class="block-title">🔧 Calibration Prosedürü</div>
-                        <div class="block-content">
-                            <ol>
-                                <li>Makineyi sıfırlayın (homing) - tüm eksenler başa döner</li>
-                                <li>Kafa temizliği yapın (light veya medium)</li>
-                                <li>Calibration pattern basın (RIP'ten veya makine menüsünden)</li>
-                                <li>Pattern'i inceleyin: en iyi hizalamayı seçin (genellikle 0 veya +1/-1)</li>
-                                <li>Değeri RIP'e veya makineye kaydedin</li>
-                                <li>Test baskısı ile doğrulayın</li>
-                                <li>Gerekirse bidirectional ayarını da yapın</li>
-                            </ol>
-                            <br>
-                            <p><strong>Önemli:</strong> Kafa değişimi, encoder değişimi veya büyük çarpma sonrası mutlaka calibration yapın!</p>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "Renk Yönetimi ve Profil Ayarları",
-                subtitle: "ICC profilleri ve renk tutarlılığı",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">🎨 Renk Yönetimi ve Sorunlar</div>
-                        <div class="block-content">
-                            <table class="data-table">
-                                <tr><th>Sorun</th><th>Neden</th><th>Çözüm</th></tr>
-                                <tr><td>Renkler soluk</td><td>UV güçü düşük / hız yüksek / profil uyumsuz</td><td>UV gücü artır, hız düşür, doğru profil seç</td></tr>
-                                <tr><td>Renkler koyu</td><td>UV güçü yüksek / hız düşük / aşırı mürekkep</td><td>UV gücü azalt, hız artır, pass sayısı düşür</td></tr>
-                                <tr><td>Sarımsı/kahverengi ton</td><td>UV sarartıyor (bazı malzemeler) / aşırı kürlenme</td><td>Düşük UV güç, özel profil, malzeme değiştir</td></tr>
-                                <tr><td>Mavi/yeşil kayma</td><td>Kafa hizalama bozuk / bidirectional hatası</td><td>Calibration yap, bidirectional ayarla</td></tr>
-                                <tr><td>Tutarsız renk (batchler arası)</td><td>Sıcaklık değişimi / mürekkep değişimi / profil kaybı</td><td>Ortam sabit tut, mürekkep standardize et, profil yedekle</td></tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="content-block info">
-                        <div class="block-title">📊 ICC Profil Oluşturma ve Yönetimi</div>
-                        <div class="block-content">
-                            <p><strong>Profil Oluşturma Adımları:</strong></p>
-                            <ol>
-                                <li>Colorimeter (X-Rite i1, Barbieri) ile ölçüm yapın</li>
-                                <li>Test chart basın (200+ renk yaması, IT8.7/4 veya ECI2002)</li>
-                                <li>Her yamayı ölçün (en az 3 ölçüm ortalaması)</li>
-                                <li>Profil yazılımında (ProfileMaker, i1Profiler, Onyx) işleyin</li>
-                                <li>ICC profilini RIP'e yükleyin (.icc veya .icm)</li>
-                                <li>Doğrulama baskısı yapın (delta E < 3 hedef)</li>
-                            </ol>
-                            <br>
-                            <p><strong>Profil Yönetimi:</strong></p>
-                            <ul>
-                                <li>Her malzeme+mürekkep+kafa kombinasyonu için ayrı profil</li>
-                                <li>Profilleri yedekleyin (aylık arşiv)</li>
-                                <li>Müşteri onaylı profilleri işaretleyin</li>
-                                <li>Periyodik profil güncellemesi (mürekkep değişimi sonrası)</li>
-                            </ul>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "Mekanik Sorunlar ve Bakım",
-                subtitle: "Motor, kayış ve sensör arızaları",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">⚙️ Mekanik Arıza Belirtileri ve Çözümler</div>
-                        <div class="block-content">
-                            <table class="data-table">
-                                <tr><th>Sorun</th><th>Belirti</th><th>Çözüm</th><th>Öncelik</th></tr>
-                                <tr><td>Kayış gevşek</td><td>Adım kayması, bulanıklık, düzensiz hareket</td><td>Gerdirme veya değiştirme</td><td>Yüksek</td></tr>
-                                <tr><td>Ray kirlenmesi</td><td>Titreşim, ses, düzensiz hareket, aşınma</td><td>Temizle ve yağla (LMG Grease)</td><td>Orta</td></tr>
-                                <tr><td>Vakum zayıf</td><td>Malzeme kayması, baskı hatası</td><td>Filtre temizliği, pompa kontrolü, contalar</td><td>Yüksek</td></tr>
-                                <tr><td>Limit switch arızası</td><td>Hata kodu, sıfırlanamama, eksen hatası</td><td>Temizle veya değiştir</td><td>Kritik</td></tr>
-                                <tr><td>Motor ısınması</td><td>Koku, yavaşlama, durma, aşırı ısı</td><td>Soğutma kontrolü, sürücü kontrolü</td><td>Kritik</td></tr>
-                                <tr><td>Encoder strip kirliliği</td><td>Banding, hizalama hatası</td><td>IPA ile temizle</td><td>Orta</td></tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="content-block warning">
-                        <div class="block-title">🚨 Acil Durumlar - Makineyi Hemen Durdurun!</div>
-                        <div class="block-content">
-                            <ul>
-                                <li>🔥 <strong>Yangın dumanı veya koku:</strong> Elektrik kesin, yangın söndürücü kullanın</li>
-                                <li>🔊 <strong>Anormal ses (metal çarpma):</strong> Acil stop, kafa kontrolü</li>
-                                <li>💧 <strong>Mürekkep sızıntısı:</strong> Elektrik kaçağı riski, temizlik ve kontrol</li>
-                                <li>💥 <strong>Kafa çarpması:</strong> Malzeme yüksek, kalibrasyon hatası</li>
-                                <li>⚡ <strong>Elektrik kaçağı:</strong> Tüm gücü kesin, teknik servis çağırın</li>
-                            </ul>
-                            <br>
-                            <p><strong>Acil Stop Prosedürü:</strong></p>
-                            <ol>
-                                <li>E-stop butonuna basın veya gücü kesin</li>
-                                <li>Makine durana kadar bekleyin</li>
-                                <li>Durumu değerlendirin (güvenlik öncelikli)</li>
-                                <li>Log kaydı tutun (fotoğraf, video)</li>
-                                <li>Teknik servise bildirin</li>
-                            </ol>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "Yazılım ve Bağlantı Sorunları",
-                subtitle: "RIP, sürücü ve iletişim hataları",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">💻 Yaygın Yazılım Sorunları</div>
-                        <div class="block-content">
-                            <p><strong>RIP Donma/Kilitlenme:</strong></p>
-                            <ul>
-                                <li><strong>Neden:</strong> Büyük dosya (>500MB), yetersiz RAM, ekran kartı sorunu</li>
-                                <li><strong>Çözüm:</strong> Dosyayı optimize edin (dpi düşürün), RAM artırın (min 16GB önerilir), sürücü güncelleyin</li>
-                            </ul>
-                            <br>
-                            <p><strong>Bağlantı Kopması:</strong></p>
-                            <ul>
-                                <li>USB kablosu max 3m (uzunsa aktif USB hub kullanın)</li>
-                                <li>Ethernet bağlantısı daha stabil (Cat6 kablo önerilir)</li>
-                                <li>Firewall/antivirüs engellemesi kontrolü (port 9100 vb.)</li>
-                                <li>IP çakışması kontrolü (sabit IP önerilir)</li>
-                            </ul>
-                            <br>
-                            <p><strong>RIP Hata Kodları:</strong></p>
-                            <table class="data-table">
-                                <tr><th>Hata</th><th>Anlamı</th><th>Çözüm</th></tr>
-                                <tr><td>"Media Size Error"</td><td>Malzeme boyutu tanımlanmamış</td><td>RIP'te media size ayarla</td></tr>
-                                <tr><td>"Ink Out"</td><td>Mürekkep bitmiş veya sensör hatası</td><td>Mürekkep doldur, sensörü temizle</td></tr>
-                                <tr><td>"Head Error"</td><td>Kafa iletişim hatası</td><td>Bağlantıları kontrol et, resetle</td></tr>
-                                <tr><td>"Cure Error"</td><td>UV lamba arızası</td><td>Lamba kontrolü, soğutma kontrolü</td></tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="content-block info">
-                        <div class="block-title">🛡️ Önleyici Bakım Takvimi</div>
-                        <div class="block-content">
-                            <table class="data-table">
-                                <tr><th>Periyot</th><th>İşlem</th></tr>
-                                <tr><td>Günlük</td><td>Çalkalama, nozzle check, temizlik, log</td></tr>
-                                <tr><td>Haftalık</td><td>Deep cleaning, ray yağlama, lamba temizliği</td></tr>
-                                <tr><td>Aylık</td><td>Filtre değişimi, vakum kontrolü, yazılım yedek</td></tr>
-                                <tr><td>3 Aylık</td><td>Kalibrasyon kontrolü, profil doğrulama</td></tr>
-                                <tr><td>6 Aylık</td><td>Kafa değerlendirmesi, lamba ömrü kontrolü</td></tr>
-                                <tr><td>Yıllık</td><td>Komple bakım, yedek parça stoğu kontrolü</td></tr>
-                            </table>
-                        </div>
-                    </div>
-                `
-            }
-        ],
-        quiz: {
-            questions: [
-                {
-                    question: "Düzenli aralıklarla tekrar eden hafif çizgilerin sebebi nedir?",
-                    options: ["Nozzle tıkanıklığı", "Encoder strip kirlenmesi", "Yanlış ICC profili", "Düşük UV gücü"],
-                    correct: 1,
-                    explanation: "Encoder strip (şerit sensör) kirliyse kafa pozisyonunu yanlış okur ve düzenli aralıklarla hizalama hatası oluşur."
-                },
-                {
-                    question: "Renkler soluk çıkıyor, UV gücü yeterli. Sorun ne olabilir?",
-                    options: ["Hız çok düşük", "Hız çok yüksek", "Beyaz mürekkep eksik", "Kafa çok yakın"],
-                    correct: 1,
-                    explanation: "Hız çok yüksekse UV ışını yeterince kürlenme sağlayamaz veya mürekkep yetersiz atılır. Hızı düşürün veya pass sayısını artırın."
-                },
-                {
-                    question: "Bidirectional
-                {
-                    question: "Bidirectional baskıda pass kayması var. Ne yapılmalı?",
-                    options: ["Kafa değiştir", "Calibration yap", "Mürekkep değiştir", "UV gücü artır"],
-                    correct: 1,
-                    explanation: "Bidirectional hizalama calibration wizard ile düzeltilir. Kafa değişimi sonrası mutlaka yapılmalıdır."
-                },
-                {
-                    question: "Malzeme baskı sırasında kayıyor. Çözüm?",
-                    options: ["Kafa yüksekliğini artır", "Vakum gücünü kontrol et", "Hızı artır", "UV gücü azalt"],
-                    correct: 1,
-                    explanation: "Vakum zayıfsa malzeme sabitlenemez. Vakum filtresi temizliği, pompa kontrolü ve contaları kontrol edin."
-                },
-                {
-                    question: "Baskıda mavi renk yeşile kayıyor. Sebep?",
-                    options: ["UV fazla", "Kafa hizalama bozuk", "Mürekkep bitti", "Malzeme kirli"],
-                    correct: 1,
-                    explanation: "Renk kayması (özellikle tek kanalda) kafa hizalama bozukluğunu gösterir. Calibration şarttır."
-                }
-            ]
-        }
-    },
-    {
-        id: 6,
-        title: "İleri UV Teknikleri",
-        desc: "Double pass, mirror print, 3D efektler ve özel uygulamalar",
-        duration: "65 dk",
-        xp: 180,
-        locked: true,
-        lessons: [
-            {
-                title: "Mirror Print (Ayna Baskı) Tekniği",
-                subtitle: "Cam ve pleksi için ters baskı",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">🪞 Mirror Print Mantığı ve Uygulama</div>
-                        <div class="block-content">
-                            <p>Cam üzerine baskıda görsel <strong>camın arkasından</strong> izlenir. Bu yüzden:</p>
-                            <ol>
-                                <li>Görseli yatay çevir (Mirror/Flip Horizontal - CorelDRAW'da Ctrl+M)</li>
-                                <li>Metinleri de çevirmeyi unutmayın! (En yaygın hata)</li>
-                                <li>Önce renkli katmanı bas (normalde altta kalır)</li>
-                                <li>Üzerine beyaz bas (normalde üstte kalır)</li>
-                                <li>Sonuç: Camın önü pürüzsüz, arka taraf baskılı</li>
-                            </ol>
-                            <br>
-                            <p><strong>Avantajları:</strong></p>
-                            <ul>
-                                <li>Baskı tamamen korunmuş (çizilmez, solmaz)</li>
-                                <li>Cam parlaklığı korunur</li>
-                                <li>Arkadan aydınlatma (backlight) mümkün</li>
-                                <li>UV ışınına direkt maruz kalmaz (daha dayanıklı)</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="content-block warning">
-                        <div class="block-title">⚠️ Mirror Print Hataları ve Önlemler</div>
-                        <div class="block-content">
-                            <table class="data-table">
-                                <tr><th>Hata</th><th>Sonuç</th><th>Önlem</th></tr>
-                                <tr><td>Metin unutulması</td><td>Ters okunur, müşteri reddeder</td><td>Metinleri de çevirin, kontrol listesi kullanın</td></tr>
-                                <tr><td>Katman sırası yanlış</td><td>Beyaz altta kalırsa renkler soluk</td><td>Renk altta, beyaz üstte olmalı</td></tr>
-                                <tr><td>Çok kalın cam</td><td>Renkler derinde görünür, soluk</td><td>Max 8-10mm cam için ideal</td></tr>
-                                <tr><td>Beyaz yetersiz</td><td>Işıık geçişi var, opaklık az</td><td>Double white veya daha yüksek pass</td></tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="content-block info">
-                        <div class="block-title">💡 Mirror Print Kontrol Listesi</div>
-                        <div class="block-content">
-                            <ul class="checklist">
-                                <li>Görsel yatay çevrildi (Flip Horizontal)</li>
-                                <li>Tüm metinler de çevrildi</li>
-                                <li>Katman sırası: Renk altta, Beyaz üstte</li>
-                                <li>Beyaz alanlar RD_WHITE spot renk</li>
-                                <li>Fontlar eğriye çevrildi (Ctrl+Q)</li>
-                                <li>Bleed eklendi (2-3mm)</li>
-                                <li>Cam kalınlığı kontrol edildi (max 10mm önerilir)</li>
-                            </ul>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "Double Pass ve Multi-Layer Teknikleri",
-                subtitle: "Yüksek opaklık ve özel efektler",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">🎯 Double White Tekniği</div>
-                        <div class="block-content">
-                            <p>Ekstra opaklık ve dayanıklılık için:</p>
-                            <div class="code-block">
-KATMAN SIRASI (Double White):
-1. RD_WHITE (düşük pass, zemin oluşturur)
-2. CMYK görsel
-3. RD_WHITE (tekrar, üstte, tam opaklık sağlar)
-                            </div>
-                            <br>
-                            <p><strong>Kullanım Alanları:</strong></p>
-                            <ul>
-                                <li>Arkadan aydınlatmalı tabelalar (ışık dağılımı)</li>
-                                <li>Gece görünürlüğü yüksek işaretler</li>
-                                <li>Çok şeffaf pleksiler (6mm+)</li>
-                                <li>Yüksek dayanıklılık gereken dış mekan uygulamaları</li>
-                            </ul>
-                            <br>
-                            <p><strong>Pass Ayarı:</strong></p>
-                            <ul>
-                                <li>Alt beyaz: 2-3 pass (zemin)</li>
-                                <li>Üst beyaz: 4-6 pass (opaklık)</li>
-                                <li>Toplam mürekkep tüketimi artar (maliyet +%60)</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="content-block info">
-                        <div class="block-title">🥪 Sandwich Baskı (Laminasyon)</div>
-                        <div class="block-content">
-                            <p>İki pleksi arasına baskı (en korunaklı yöntem):</p>
-                            <ol>
-                                <li>Alt pleksi üzerine normal baskı (beyaz+renk)</li>
-                                <li>Üzerine optik yapıştırıcı (OCA - optical clear adhesive)</li>
-                                <li>Üst pleksi laminasyon (pres veya rulolu)</li>
-                                <li>Kenarları temizle ve polish yap</li>
-                            </ol>
-                            <br>
-                            <p><strong>Sonuç:</strong> Baskı tamamen korunmuş, 3D efektli, çizilmez, su geçirmez.</p>
-                            <br>
-                            <p><strong>Malzeme:</strong></p>
-                            <ul>
-                                <li>Alt pleksi: 3-5mm opak veya şeffaf</li>
-                                <li>Üst pleksi: 2-3mm şeffaf (koruma)</li>
-                                <li>Yapıştırıcı: OCA film veya UV yapıştırıcı</li>
-                            </ul>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "3D Kabartma ve Varnish Efektleri",
-                subtitle: "Relief baskı ve selektif vernik",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">📐 3D Kabartma Teknikleri</div>
-                        <div class="block-content">
-                            <p><strong>1. Basit Kabartma (Low Relief):</strong></p>
-                            <ul>
-                                <li>Varnish kanalında sadece kabartılacak alanlar</li>
-                                <li>2-3 pass varnish = hafif kabartma (0.1-0.2mm)</li>
-                                <li>Logo, metin vurgusu için ideal</li>
-                            </ul>
-                            <br>
-                            <p><strong>2. Orta Kabartma (Medium Relief):</strong></p>
-                            <ul>
-                                <li>5-8 pass varnish = belirgin 3D efekt (0.3-0.5mm)</li>
-                                <li>Her pass arası kısa UV patlaması (tack cure)</li>
-                                <li>Dokunsal hissedilir</li>
-                            </ul>
-                            <br>
-                            <p><strong>3. Yüksek Kabartma (High Relief):</strong></p>
-                            <ul>
-                                <li>10+ pass varnish = 1mm+ kabartma</li>
-                                <li>Çok katmanlı UV patlaması şart</li>
-                                <li>Braille (kabartma alfabe) için ideal</li>
-                                <li>Süre uzar, maliyet artar</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="content-block">
-                        <div class="block-title">🎨 Selektif Vernik ve Özel Efektler</div>
-                        <div class="block-content">
-                            <p><strong>Selektif Vernik:</strong></p>
-                            <ul>
-                                <li>Sadece belirli alanlarda parlaklık/matlık</li>
-                                <li>Spot UV efekti (lüks ambalaj, kapaklar)</li>
-                                <li>Mat/gloss kontrastı</li>
-                            </ul>
-                            <br>
-                            <p><strong>Glitter/Metalik Efekt:</strong></p>
-                            <ul>
-                                <li>Metalik mürekkep + selektif varnish</li>
-                                <li>Parlak zemin üzerine metalik baskı</li>
-                                <li>Lüks davetiye, özel ambalaj</li>
-                            </ul>
-                            <br>
-                            <p><strong>Braille Baskı:</strong></p>
-                            <ul>
-                                <li>Yüksek kabartma (10+ pass)</li>
-                                <li>Standart dot boyutu: 1.5mm çap, 0.5mm yükseklik</li>
-                                <li>Aralık: 2.5mm merkezden merkeze</li>
-                                <li>ISO 17351 standardına uygun</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="content-block info">
-                        <div class="block-title">⚙️ Varnish Baskı Ayarları</div>
-                        <div class="block-content">
-                            <table class="data-table">
-                                <tr><th>Parametre</th><th>Değer</th><th>Açıklama</th></tr>
-                                <tr><td>Drop size</td><td>Büyük (12-18 pL)</td><td>Daha kalın katman</td></tr>
-                                <tr><td>Pass sayısı</td><td>2-15 arası</td><td>Efekte göre değişir</td></tr>
-                                <tr><td>UV gücü</td><td>%50-75</td><td>Aşırı kürlenme çatlak yapar</td></tr>
-                                <tr><td>Hız</td><td>Düşük</td><td>Daha kalın atım</td></tr>
-                                <tr><td>Inter-pass delay</td><td>1-3 sn</td><td>Her pass arası kısmen kürlenme</td></tr>
-                            </table>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "Değişken Veri ve Kişiselleştirme",
-                subtitle: "Seri numara, barkod, kişiselleştirme",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">🔢 Değişken Veri Entegrasyonu</div>
-                        <div class="block-content">
-                            <p><strong>Excel/CSV Entegrasyonu:</strong></p>
-                            <ol>
-                                <li>Veri dosyasını hazırla: Numara, İsim, Barkod, QR sütunları</li>
-                                <li>RIP'te "Variable Data" veya "VDP" modülünü aç</li>
-                                <li>Excel/CSV dosyasını import et</li>
-                                <li>Alanları tasarımdaki metin kutularına bağla (mapping)</li>
-                                <li>Her baskıda otomatik değişim, preview kontrolü</li>
-                            </ol>
-                            <br>
-                            <p><strong>Uygulama Alanları:</strong></p>
-                            <ul>
-                                <li>Seri numaralı plaketler, ödüller</li>
-                                <li>Kişiselleştirilmiş promosyonlar (isimli kalem, kupa)</li>
-                                <li>Barkod/QR kod etiketleri (stok yönetimi)</li>
-                                <li>Sınav optik formları (aday numarası)</li>
-                                <li>Değişken görsel (fotoğraf baskısı)</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="content-block info">
-                        <div class="block-title">📱 QR Kod ve Barkod Baskı</div>
-                        <div class="block-content">
-                            <p><strong>Baskı Ayarları:</strong></p>
-                            <ul>
-                                <li>Minimum modül boyutu: 0.5mm (okunabilirlik için kritik)</li>
-                                <li>Yüksek pass sayısı (kenar netliği için)</li>
-                                <li>Kontrast için beyaz zemin şart (şeffaf malzemede)</li>
-                                <li>Test edin: Telefonla okunabilmeli</li>
-                                <li>Quiet zone (boş alan): En az 4 modül genişliğinde</li>
-                            </ul>
-                            <br>
-                            <p><strong>QR Kod Türleri:</strong></p>
-                            <table class="data-table">
-                                <tr><th>Tür</th><th>Kapasite</th><th>Kullanım</th></tr>
-                                <tr><td>QR Code Model 2</td><td>7,089 sayı</td><td>Genel kullanım</td></tr>
-                                <tr><td>Micro QR</td><td>35 sayı</td><td>Küçük alanlar</td></tr>
-                                <tr><td>iQR</td><td>40,000+ sayı</td><td>Büyük veri</td></tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="content-block">
-                        <div class="block-title">🎨 Kişiselleştirilmiş Baskı Örnekleri</div>
-                        <div class="block-content">
-                            <p><strong>VDP (Variable Data Printing) Projeleri:</strong></p>
-                            <ul>
-                                <li><strong>Fuar Standı:</strong> Ziyaretçi isimli hoşgeldiniz panosu (anlık baskı)</li>
-                                <li><strong>Mağaza:</strong> Anlık kampanya görselleri (saat bazlı değişim)</li>
-                                <li><strong>Fabrika:</strong> Seri numaralı ürün etiketleri</li>
-                                <li><strong>Eğitim:</strong> Sınav kağıtları (her öğrenci farklı)</li>
-                                <li><strong>Event:</strong> Katılımcı isimli yaka kartları, sertifikalar</li>
-                            </ul>
-                        </div>
-                    </div>
-                `
-            }
-        ],
-        quiz: {
-            questions: [
-                {
-                    question: "Mirror print'te katman sırası nasıldır?",
-                    options: ["Beyaz altta, renk üstte", "Renk altta, beyaz üstte", "Sadece beyaz", "Sadece renk"],
-                    correct: 1,
-                    explanation: "Mirror print'te camın arkasına bakılır. Önce renk (ters çevrilmiş), üzerine beyaz basılır. Böylece camdan bakınca renk önde görünür."
-                },
-                {
-                    question: "3D kabartma için kaç pass varnish gerekir?",
-                    options: ["1 pass", "2-3 pass (hafif)", "5-8 pass (belirgin)", "50+ pass"],
-                    correct: 2,
-                    explanation: "2-3 pass hafif kabartma, 5-8 pass belirgin 3D efekt verir. Her pass arası UV kürlenmesi (tack cure) şarttır."
-                },
-                {
-                    question: "Double white tekniğinde beyaz katmanları nerededir?",
-                    options: ["Sadece altta", "Sadece üstte", "Hem altta hem üstte", "Arada"],
-                    correct: 2,
-                    explanation: "Double white'te alt beyaz zemin, üst beyaz ekstra opaklık sağlar. Arada CMYK vardır. Işık geçişini tamamen engeller."
-                },
-                {
-                    question: "Değişken veri baskısında veri kaynağı nedir?",
-                    options: ["Sadece manuel giriş", "Excel/CSV dosyası", "Sadece barkod", "Sadece QR kod"],
-                    correct: 1,
-                    explanation: "Değişken veri için Excel veya CSV dosyası RIP'e bağlanır. Her satır bir baskı olur, sütunlar değişken alanlardır."
-                },
-                {
-                    question: "Mirror print'te metinleri unutulan işlem nedir?",
-                    options: ["Kalınlaştırmak", "Ters çevirmek (flip horizontal)", "Rengini değiştirmek", "Boyutunu küçültmek"],
-                    correct: 1,
-                    explanation: "Mirror print'te metinler de ters çevrilmelidir (flip horizontal). Unutulursa arkadan okunamaz, müşteri reddeder."
-                }
-            ]
-        }
-    },
-    {
-        id: 7,
-        title: "Kalite Kontrol ve Profesyonel İş Süreçleri",
-        desc: "Standartlar, müşteri yönetimi ve sürekli iyileştirme",
-        duration: "55 dk",
-        xp: 150,
-        locked: true,
-        lessons: [
-            {
-                title: "Kalite Kontrol ve Test Standartları",
-                subtitle: "ISO standartları ve ölçüm",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">📊 Kalite Kontrol Prosedürleri</div>
-                        <div class="block-content">
-                            <p><strong>Baskı Öncesi Kontrol:</strong></p>
-                            <ul class="checklist">
-                                <li>Dosya kontrolü: Spot renkler, fontlar, çözünürlük</li>
-                                <li>Malzeme kontrolü: Temizlik, yüzey enerjisi, düzlük</li>
-                                <li>Makine kontrolü: Nozzle check, kalibrasyon, mürekkep seviyesi</li>
-                                <li>Test baskısı: A4/Letter boyut, müşteri onayı için</li>
-                            </ul>
-                            <br>
-                            <p><strong>Baskı Sonrası Kontrol:</strong></p>
-                            <ul class="checklist">
-                                <li>Görsel kontrol: Renk, keskinlik, kırık hat</li>
-                                <li>Tutunma testi: Bant testi, çapraz kesme (ISO 2409)</li>
-                                <li>Kürlenme kontrolü: Yapışkanlık, çizik testi</li>
-                                <li>Ölçü kontrolü: Boyut doğruluğu, shrinkage</li>
-                                <li>Paketleme: Koruyucu film, köşe koruyucu, etiket</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="content-block info">
-                        <div class="block-title">📏 ISO Standartları ve Renk Ölçüm</div>
-                        <div class="block-content">
-                            <table class="data-table">
-                                <tr><th>Standart</th><th>Kapsam</th><th>Uygulama</th></tr>
-                                <tr><td>ISO 2409</td><td>Çapraz kesme testi</td><td>Tutunma değerlendirmesi</td></tr>
-                                <tr><td>ISO 2813</td><td>Gloss ölçümü</td><td>Vernik kalitesi</td></tr>
-                                <tr><td>ISO 7724</td><td>Renk ölçümü</td><td>Spectrophotometer ile delta E</td></tr>
-                                <tr><td>ASTM D3359</td><td>Bant testi</td><td>Tutunma (ABD standardı)</td></tr>
-                            </table>
-                            <br>
-                            <p><strong>Delta E (ΔE) Değerleri:</strong></p>
-                            <ul>
-                                <li>ΔE < 1: Gözle fark edilemez (mükemmel)</li>
-                                <li>ΔE 1-2: Gözle zor fark edilir (kabul edilebilir)</li>
-                                <li>ΔE 2-3.5: Fark edilir ama kabul edilebilir (standart)</li>
-                                <li>ΔE > 3.5: Kabul edilemez, renk iadesi</li>
-                            </ul>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "Müşteri İlişkileri ve Onay Süreçleri",
-                subtitle: "Profesyonel iş akışı",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">🤝 Profesyonel Onay Süreci</div>
-                        <div class="block-content">
-                            <p><strong>1. Teklif Aşaması:</strong></p>
-                            <ul>
-                                <li>Müşteri ihtiyacı analizi (malzeme, ebat, adet, kullanım alanı)</li>
-                                <li>Malzeme önerisi ve örnek gösterimi</li>
-                                <li>Fiyatlandırma (malzeme + mürekkep + işçilik + kar)</li>
-                                <li>Teslim süresi ve koşulları</li>
-                            </ul>
-                            <br>
-                            <p><strong>2. Tasarım Onayı:</strong></p>
-                            <ul>
-                                <li>Digital proof (PDF) - ücretsiz</li>
-                                <li>Fiziksel test baskısı - malzeme bedeli alınır</li>
-                                <li>Müşteri imzalı onay formu (revizyon sonrası tekrar)</li>
-                                <li>Renk onayı: Pantone kodu veya fiziksel örnek</li>
-                            </ul>
-                            <br>
-                            <p><strong>3. Üretim ve Teslimat:</strong></p>
-                            <ul>
-                                <li>Onaylı proof'a sadık kalma</li>
-                                <li>Ara kontrol (uzun baskılarda)</li>
-                                <li>Kalite kontrol ve paketleme</li>
-                                <li>Teslimat formu ve garanti belgesi</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="content-block warning">
-                        <div class="block-title">⚠️ Sık Yaşanan Sorunlar ve Önlemler</div>
-                        <div class="block-content">
-                            <table class="data-table">
-                                <tr><th>Sorun</th><th>Neden</th><th>Önlem</th></tr>
-                                <tr><td>Renk şikayeti</td><td>Ekran-görsel farkı, beklenti farkı</td><td>Fiziksel proof, Pantone eşleşmesi, imzalı onay</td></tr>
-                                <tr><td>Tutunma şikayeti</td><td>Yanlış malzeme, temizlik eksikliği</td><td>Malzeme testi, tutunma raporu, garanti koşulları</td></tr>
-                                <tr><td>Ölçü hatası</td><td>Shrinkage, kalibrasyon kayması</td><td>Test baskısı ölçümü, tolerans belirleme</td></tr>
-                                <tr><td>Geç teslimat</td><td>Makine arızası, iş yoğunluğu</td><td>Rezerv kapasite, gerçekçi süre, erken iletişim</td></tr>
-                            </table>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "Sürekli İyileştirme ve Verimlilik",
-                subtitle: "İşletme yönetimi",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">📈 Verimlilik Metrikleri</div>
-                        <div class="block-content">
-                            <table class="data-table">
-                                <tr><th>Metrik</th><th>Hedef</th><th>Ölçüm</th></tr>
-                                <tr><td>OEE (Overall Equipment Effectiveness)</td><td>%75+</td><td>Kullanılabilirlik × Performans × Kalite</td></tr>
-                                <tr><td>Fire Oranı</td><td>%5 altı</td><td>Hatalı baskı / Toplam baskı</td></tr>
-                                <tr><td>Mürekkep Verimliliği</td><td>12-15 ml/m²</td><td>Toplam mürekkep / Toplam alan</td></tr>
-                                <tr><td>Müşteri Memnuniyeti</td><td>%95+</td><td>Anket, şikayet oranı</td></tr>
-                                <tr><td>Ortalama Tamir Süresi (MTTR)</td><td><2 saat</td><td>Arıza süresi / Arıza sayısı</td></tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="content-block info">
-                        <div class="block-title">🔄 Sürekli İyileştirme Döngüsü (PDCA)</div>
-                        <div class="block-content">
-                            <ol>
-                                <li><strong>Plan (Planla):</strong> Hedef belirle, mevcut durum analizi</li>
-                                <li><strong>Do (Uygula):</strong> Yeni prosedürü test et, küçük ölçekli</li>
-                                <li><strong>Check (Kontrol Et):</strong> Sonuçları ölç, karşılaştır</li>
-                                <li><strong>Act (Harekete Geç):</strong> Standardize et veya düzelt</li>
-                            </ol>
-                            <br>
-                            <p><strong>İyileştirme Alanları:</strong></p>
-                            <ul>
-                                <li>Makine kullanım süresi (setup süresini azaltma)</li>
-                                <li>Mürekkep israfı (pass optimizasyonu)</li>
-                                <li>Enerji tüketimi (LED-UV geçişi, otomatik bekleme)</li>
-                                <li>Personel eğitimi (bu uygulama gibi!)</li>
-                            </ul>
-                        </div>
-                    </div>
-                `
-            }
-        ],
-        quiz: {
-            questions: [
-                {
-                    question: "Delta E (ΔE) değeri kaçın altında kabul edilebilir?",
-                    options: ["1", "2", "3.5", "5"],
-                    correct: 2,
-                    explanation: "ΔE < 3.5 standart kabul sınırıdır. <1 mükemmel, 1-2 iyi, 2-3.5 kabul edilebilir, >3.5 kabul edilemez."
-                },
-                {
-                    question: "Müşteri renk şikayetinde ilk yapılması gereken?",
-                    options: ["Yeniden baskı yap", "Pantone eşleşmesini ve onaylı proof'u kontrol et", "Mürekkep değiştir", "Makineyi kalibre et"],
-                    correct: 1,
-                    explanation: "Önce imzalı proof ve Pantone eşleşmesi kontrol edilir. Hata bizdeyse düzeltme, müşteri beklentisindeyse iletişim."
-                },
-                {
-                    question: "Fire oranı hedefi nedir?",
-                    options: ["%25", "%15", "%5 altı", "%50"],
-                    correct: 2,
-                    explanation: "Profesyonel üretimde fire oranı %5 hedeflenir. %10 üstü verimsizlik, %3 altı mükemmeldir."
-                },
-                {
-                    question: "Test baskısı maliyeti nasıl karşılanır?",
-                    options: ["Her zaman ücretsiz", "Müşteri malzeme bedeli öder", "Üretici karşılar", "Fiyata dahil edilmez"],
-                    correct: 1,
-                    explanation: "Test baskısı malzeme bedeli müşteriden alınır. Onay sonrası ana üretimde düşülebilir veya iade edilebilir."
-                },
-                {
-                    question: "OEE (Overall Equipment Effectiveness) hedefi nedir?",
-                    options: ["%50", "%60", "%75+", "%100"],
-                    correct: 2,
-                    explanation: "OEE hedefi %75+ olarak kabul edilir. %85 dünya klasıdır. %60 altı verimsizlik gösterir."
-                }
-            ]
-        }
-    },
-    {
-        id: 8,
-        title: "🎓 Sertifika Sınavı",
-        desc: "Tüm modüllerin kapsamlı final değerlendirmesi",
-        duration: "60 dk",
-        xp: 500,
-        locked: true,
-        isFinal: true,
-        lessons: [
-            {
-                title: "Sınava Hazırlık",
-                subtitle: "Önemli konuların özeti",
-                content: `
-                    <div class="content-block">
-                        <div class="block-title">📚 Sınav Kapsamı (8 Modül)</div>
-                        <div class="block-content">
-                            <p>Bu final sınavı tüm öğrenilenleri kapsar:</p>
-                            <ul>
-                                <li><strong>Modül 1:</strong> UV teknolojisi, fotopolimerizasyon, mürekkep türleri</li>
-                                <li><strong>Modül 2:</strong> Yüzey enerjisi, temizlik, primer, tutunma testleri</li>
-                                <li><strong>Modül 3:</strong> CorelDRAW spot renkler, katman yönetimi, PDF export</li>
-                                <li><strong>Modül 4:</strong> Makine operasyonu, bakım, nozzle check</li>
-                                <li><strong>Modül 5:</strong> Arıza tespiti, banding, renk yönetimi, mekanik sorunlar</li>
-                                <li><strong>Modül 6:</strong> Mirror print, double white, 3D kabartma, değişken veri</li>
-                                <li><strong>Modül 7:</strong> Kalite kontrol, müşteri yönetimi, verimlilik</li>
-                            </ul>
-                            <br>
-                            <p><strong>Sınav Formatı:</strong></p>
-                            <ul>
-                                <li>15 çoktan seçmeli soru (her modülden)</li>
-                                <li>Geçme notu: %80 (12 doğru)</li>
-                                <li>Süre sınırı yok, kaynak kullanılabilir</li>
-                                <li>Tekrar hakları sınırsız</li>
-                                <li>Başarılı olanlara dijital sertifika</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="content-block info">
-                        <div class="block-title">🎯 Başarı İpuçları</div>
-                        <div class="block-content">
-                            <ul>
-                                <li>Her modülün quiz sorularını tekrar edin</li>
-                                <li>Simülasyonları pratik yapın (özellikle curing ve adhesion)</li>
-                                <li>CorelDRAW kısayollarını pratik modda çalışın</li>
-                                <li>Formülleri ezberlemeyin, mantığını anlayın</li>
-                                <li>Şüpheli sorularda ilk sezginize güvenin</li>
-                                <li>Zorlandığınız konulara modülde geri dönün</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="content-block success">
-                        <div class="block-title">🏆 Sertifika Kazanımı</div>
-                        <div class="block-content">
-                            <p>Başarılı olan katılımcılar:</p>
-                            <ul>
-                                <li>UV Baskı Uzmanı dijital sertifikası alır</li>
-                                <li>LinkedIn profiline ekleyebilir</li>
-                                <li>İş başvurularında referans gösterebilir</li>
-                                <li>Sürekli eğitim kredisü alır (CEU)</li>
-                            </ul>
-                            <br>
-                            <p><strong>Sertifika geçerliliği:</strong> 2 yıl (yenileme eğitimi ile uzatılır)</p>
-                        </div>
-                    </div>
-                `
-            }
-        ],
-        finalQuiz: [
-            {
-                question: "UV baskının en büyük avantajı nedir?",
-                options: ["Ucuz maliyet", "Anında kuruma", "Sadece kağıda basılması", "Solvent kokusu"],
-                correct: 1
-            },
-            {
-                question: "PP malzemeye baskı için ne şarttır?",
-                options: ["Yüksek ısı", "Primer/Corona", "Sadece su bazlı boya", "Hiçbir şey"],
-                correct: 1
-            },
-            {
-                question: "Beyaz mürekkep neden çalkalanır?",
-                options: ["Hava için", "Pigment çökelmesi", "Rengi açmak", "Karıncalanmayı önlemek"],
-                correct: 1
-            },
-            {
-                question: "Mirror print'te hangi katman altta kalır?",
-                options: ["Beyaz", "Renk (CMYK)", "Varnish", "Hiçbiri"],
-                correct: 1
-            },
-            {
-                question: "LED-UV lambaların ömrü nedir?",
-                options: ["1000 saat", "5000 saat", "20,000+ saat", "1 yıl"],
-                correct: 2
-            },
-            {
-                question: "Nozzle check'te düzenli çizgilerin sebebi?",
-                options: ["Kafa arızası", "Encoder strip", "Mürekkep bitmesi", "UV lambası"],
-                correct: 1
-            },
-            {
-                question: "10m²'ye 3 pass white kaç ml gider?",
-                options: ["300ml", "450ml", "600ml", "150ml"],
-                correct: 1
-            },
-            {
-                question: "Kafa mesafesi ne olmalı?",
-                options: ["0.5mm", "1.5-2mm", "5mm", "10mm"],
-                correct: 1
-            },
-            {
-                question: "CorelDRAW'de beyaz nasıl tanımlanır?",
-                options: ["Beyaz renk", "RD_WHITE spot", "Sadece layer", "RIP'te manuel"],
-                correct: 1
-            },
-            {
-                question: "Kabul edilebilir fire oranı?",
-                options: ["%25", "%15", "%5 altı", "%50"],
-                correct: 2
-            },
-            {
-                question: "3D kabartma için kaç pass gerekir?",
-                options: ["1", "2-3", "5-8", "50"],
-                correct: 2
-            },
-            {
-                question: "Pleksi temizliğinde kullanılmaması gereken?",
-                options: ["IPA", "Aseton", "Su", "Özel temizleyici"],
-                correct: 1
-            },
-            {
-                question: "Delta E kabul sınırı?",
-                options: ["1", "2", "3.5", "10"],
-                correct: 2
-            },
-            {
-                question: "Vakum zayıf olunca ne olur?",
-                options: ["Renk soluk", "Malzeme kayar", "UV arızalanır", "Hiçbiri"],
-                correct: 1
-            },
-            {
-                question: "Fotopolimerizasyon dalga boyu?",
-                options: ["200-300nm", "365-405nm", "500-600nm", "800-1000nm"],
-                correct: 1
-            }
-        ]
-    }
+const shortcuts = [
+    { key: "Ctrl+Q", desc: "Eğriye Çevir", category: "uv", context: "Fontları vektöre çevirme", critical: true },
+    { key: "Ctrl+End", desc: "En Alta Gönder", category: "uv", context: "Beyaz katmanı en alta", critical: true },
+    { key: "Ctrl+Home", desc: "En Üste Getir", category: "uv", context: "Varnish katmanını üste", critical: true },
+    { key: "Shift+F11", desc: "Tek Renk Dolgu", category: "uv", context: "RD_WHITE spot rengi", critical: true },
+    { key: "Ctrl+E", desc: "Dışa Aktar", category: "uv", context: "PDF/X-4 export", critical: true },
+    { key: "Ctrl+N", desc: "Yeni Belge", category: "file", context: "Yeni dosya açma" },
+    { key: "Ctrl+S", desc: "Kaydet", category: "file", context: "Dosyayı kaydetme" },
+    { key: "Ctrl+O", desc: "Aç", category: "file", context: "Dosya açma" },
+    { key: "Ctrl+Z", desc: "Geri Al", category: "edit", context: "Son işlemi geri alma" },
+    { key: "Ctrl+C", desc: "Kopyala", category: "edit", context: "Seçili nesneyi kopyalama" },
+    { key: "Ctrl+V", desc: "Yapıştır", category: "edit", context: "Kopyalananı yapıştırma" },
 ];
 
-// ==========================================
-// CORELDRAW KISAYOLLARI VERİTABANI
-// ==========================================
+let currentFilter = 'all';
 
-const corelShortcuts = [
-    // UV BASKIYA ÖZEL KRİTİK KISAYOLLAR
-    {key: "Shift + F11", desc: "Tek Renk Dolgu", category: "uv", uvContext: "RD_WHITE spot rengi atama", critical: true},
-    {key: "Ctrl + F9", desc: "Kontur Efekti", category: "uv", uvContext: "Kesme çizgisi (CutContour) oluşturma", critical: true},
-    {key: "Ctrl + Q", desc: "Eğriye Çevir", category: "uv", uvContext: "Fontları vektöre çevirme (font kaybı önleme)", critical: true},
-    {key: "Ctrl + End", desc: "En Alta Gönder", category: "uv", uvContext: "Beyaz katmanı en alta yerleştirme", critical: true},
-    {key: "Ctrl + Home", desc: "En Üste Getir", category: "uv", uvContext: "Varnish katmanını en üste alma", critical: true},
-    {key: "Ctrl + PgDn", desc: "Bir Alta Gönder", category: "uv", uvContext: "Katman sırası ayarı (Beyaz > Renk)", critical: true},
-    {key: "Ctrl + PgUp", desc: "Bir Üste Getir", category: "uv", uvContext: "Katman sırası ayarı (Renk > Beyaz)", critical: true},
-    {key: "Ctrl + E", desc: "Dışa Aktar", category: "uv", uvContext: "PDF/X-4 formatında RIP'e gönderme", critical: true},
-    {key: "Ctrl + Shift + A", desc: "Hizalama ve Dağıtım", category: "uv", uvContext: "Çoklu nesne düzeni (ganged printing)", critical: false},
-    {key: "Ctrl + G", desc: "Grupla", category: "uv", uvContext: "Beyaz+renk katmanlarını birlikte taşıma", critical: true},
-    {key: "Ctrl + U", desc: "Grubu Çöz", category: "uv", uvContext: "Katmanları ayrı ayrı düzenleme", critical: true},
-    {key: "Ctrl + 7", desc: "PowerClip", category: "uv", uvContext: "Görseli maske içine alma (bleed kontrolü)", critical: false},
-    {key: "F12", desc: "Anahat Pençeresi", category: "uv", uvContext: "Kesme çizgisi kalınlığı (0.25pt ayarı)", critical: true},
-    {key: "Ctrl + Shift + >", desc: "Büyüt", category: "uv", uvContext: "Bleed alanı ekleme (%10 ölçek)", critical: false},
-    {key: "Ctrl + M", desc: "Yatay Çevir", category: "uv", uvContext: "Mirror print için görseli çevirme", critical: true},
-    
-    // DOSYA YÖNETİMİ
-    {key: "Ctrl + N", desc: "Yeni Belge", category: "file", uvContext: "Her baskı işi için temiz sayfa"},
-    {key: "Ctrl + O", desc: "Aç", category: "file", uvContext: "Müşteri dosyalarını içe aktarma"},
-    {key: "Ctrl + S", desc: "Kaydet", category: "file", uvContext: "Sık kaydetme (Ctrl+S alışkanlığı)"},
-    {key: "Ctrl + Shift + S", desc: "Farklı Kaydet", category: "file", uvContext: "Revizyonları versiyonlayarak saklama (v1, v2...)"},
-    {key: "Ctrl + I", desc: "İçe Aktar", category: "file", uvContext: "JPG/PNG/PDF logoları ekleme"},
-    {key: "Ctrl + Shift + I", desc: "İçe Aktar (Alternatif)", category: "file", uvContext: "Birden fazla dosya toplu import"},
-    {key: "Ctrl + J", desc: "Seçenekler", category: "file", uvContext: "Birim ayarı (mm), varsayılan font"},
-    {key: "Ctrl + F4", desc: "Pencereyi Kapat", category: "file", uvContext: "Dosyayı kapatma"},
-    {key: "Alt + F4", desc: "Programdan Çık", category: "file", uvContext: "CorelDRAW'ı kapatma"},
-    
-    // DÜZENLEME TEMELLERİ
-    {key: "Ctrl + Z", desc: "Geri Al", category: "edit", uvContext: "Hatalı işlemleri geri alma (20+ adım)"},
-    {key: "Ctrl + Y", desc: "Yinele", category: "edit", uvContext: "Geri alınanı tekrarlama"},
-    {key: "Ctrl + X", desc: "Kes", category: "edit", uvContext: "Nesneleri taşıma"},
-    {key: "Ctrl + C", desc: "Kopyala", category: "edit", uvContext: "Tekrar eden elemanlar"},
-    {key: "Ctrl + V", desc: "Yapıştır", category: "edit", uvContext: "Kopyalanan nesneyi yerleştirme"},
-    {key: "Ctrl + Shift + V", desc: "Özel Yapıştır", category: "edit", uvContext: "Pozisyon koruyarak yapıştırma"},
-    {key: "Ctrl + D", desc: "Çoğalt (Duplicate)", category: "edit", uvContext: "Seri üretim için kopya (offset korur)"},
-    {key: "Ctrl + R", desc: "Tekrarla", category: "edit", uvContext: "Son hareketi tekrar et (step and repeat)"},
-    {key: "Ctrl + Shift + D", desc: "Klon Oluştur", category: "edit", uvContext: "Bağlı kopya (ana nesne değişince klon da değişir)"},
-    {key: "Delete", desc: "Sil", category: "edit", uvContext: "Seçili nesneyi kaldırma"},
-    {key: "Ctrl + A", desc: "Tümünü Seç", category: "edit", uvContext: "Sayfadaki her şeyi seçme"},
-    {key: "Ctrl + Shift + A", desc: "Hizalama/Dağıtım", category: "edit", uvContext: "Nesneleri düzenli sıralama"},
-    
-    // VEKTÖR İŞLEMLERİ
-    {key: "Ctrl + L", desc: "Birleştir (Combine)", category: "edit", uvContext: "Kesme çizgilerini tek nesne yapma"},
-    {key: "Ctrl + K", desc: "Ayır (Break Apart)", category: "edit", uvContext: "Birleştirilmiş nesneleri ayırma"},
-    {key: "Ctrl + Shift + Q", desc: "Anahattı Dönüştür", category: "edit", uvContext: "Stroke'u dolgu haline getirme"},
-    {key: "Ctrl + Shift + E", desc: "Düğüm Düzenleme", category: "edit", uvContext: "Vektör noktalarını düzenleme (node editing)"},
-    {key: "Ctrl + Shift + C", desc: "Eğrilik Kopyala", category: "edit", uvContext: "Eğri özelliklerini kopyalama"},
-    
-    // RENK YÖNETİMİ
-    {key: "F11", desc: "Degrade Dolgu", category: "color", uvContext: "Gradyan efektleri"},
-    {key: "Shift + F11", desc: "Tek Renk Dolgu", category: "color", uvContext: "Düz renk atama (spot renkler için)"},
-    {key: "F12", desc: "Anahat (Outline)", category: "color", uvContext: "Çizgi kalınlığı ve rengi"},
-    {key: "Shift + F12", desc: "Renk Paleti", category: "color", uvContext: "Hızlı renk seçimi"},
-    {key: "Ctrl + Shift + F12", desc: "Yazı Tipi Gözden Geçir", category: "color", uvContext: "Font sorunlarını tespit"},
-    {key: "Window + Ctrl + P", desc: "Palet Yöneticisi", category: "color", uvContext: "Spot renk paleti yükleme (PANTONE)"},
-    
-    // HİZALAMA VE DÜZEN
-    {key: "P", desc: "Sayfaya Ortala", category: "align", uvContext: "Hızlı merkezleme"},
-    {key: "Ctrl + Shift + P", desc: "Sayfaya Hizala", category: "align", uvContext: "Detaylı sayfa hizalama"},
-    {key: "Ctrl + Shift + C", desc: "Merkeze Hizala", category: "align", uvContext: "Yatay ve dikey ortalama"},
-    {key: "Ctrl + Shift + L", desc: "Sola Hizala", category: "align", uvContext: "Sol kenara yasla"},
-    {key: "Ctrl + Shift + R", desc: "Sağa Hizala", category: "align", uvContext: "Sağ kenara yasla"},
-    {key: "Ctrl + Shift + T", desc: "Üste Hizala", category: "align", uvContext: "Üst kenara yasla"},
-    {key: "Ctrl + Shift + B", desc: "Alta Hizala", category: "align", uvContext: "Alt kenara yasla"},
-    {key: "Ctrl + .", desc: "Noktalı Kılavuz", category: "align", uvContext: "Hassas hizalama (snap to point)"},
-    {key: "Ctrl + Y", desc: "Dinamik Kılavuzlar", category: "align", uvContext: "Otomatik hizalama çizgileri"},
-    
-    // METİN ARAÇLARI
-    {key: "F8", desc: "Metin Aracı", category: "text", uvContext: "Yazı ekleme"},
-    {key: "Ctrl + F8", desc: "Artistic/Paragraph", category: "text", uvContext: "Metin türünü değiştirme"},
-    {key: "Ctrl + Shift + T", desc: "Karakter Formatı", category: "text", uvContext: "Font, boyut, aralık"},
-    {key: "Ctrl + T", desc: "Paragraf Formatı", category: "text", uvContext: "Hizalama, satır aralığı"},
-    {key: "Ctrl + Shift + K", desc: "Metni Kırp", category: "text", uvContext: "Yola göre metin şekillendirme"},
-    {key: "Ctrl + B", desc: "Karakterleri Birleştir", category: "text", uvContext: "Metni tek nesne yapma"},
-    
-    // GÖRÜNÜM MODLARI
-    {key: "F9", desc: "Tam Ekran Önizleme", category: "view", uvContext: "Müşteri sunumu, final kontrol"},
-    {key: "F3", desc: "Yakınlaştır", category: "view", uvContext: "Detay görme"},
-    {key: "F4", desc: "Tümünü Göster", category: "view", uvContext: "Genel bakış"},
-    {key: "Shift + F4", desc: "Sayfayı Göster", category: "view", uvContext: "Sayfa sınırlarını görme"},
-    {key: "Ctrl + W", desc: "Tel Çerçeve", category: "view", uvContext: "Hızlı görünüm (karmaşık dosyalarda)"},
-    {key: "Ctrl + Y", desc: "Anahtar Çizgisi", category: "view", uvContext: "Sadece vektör hatları"},
-    {key: "Ctrl + 0", desc: "Sayfa Genişliği", category: "view", uvContext: "Sığdırma"},
-    {key: "Ctrl + 1", desc: "100% Görünüm", category: "view", uvContext: "Gerçek boyut"},
-    {key: "Ctrl + 2", desc: "200% Görünüm", category: "view", uvContext: "Detay kontrolü"},
-    {key: "Ctrl + 9", desc: "Seçili Alan", category: "view", uvContext: "Seçili nesneye zoom"},
-    {key: "Alt + Z", desc: "Yakınlaştırma Modu", category: "view", uvContext: "Hızlı zoom in/out"},
-    {key: "Ctrl + Space", desc: "Yakınlaştır Aracı", category: "view", uvContext: "Büyüteç"},
-    {key: "Shift + Space", desc: "Uzaklaştır Aracı", category: "view", uvContext: "Küçültme"},
-    
-    // NESNE YÖNETİMİ
-    {key: "Tab", desc: "Sonraki Nesne", category: "object", uvContext: "Sırayla seçim"},
-    {key: "Shift + Tab", desc: "Önceki Nesne", category: "object", uvContext: "Geri seçim"},
-    {key: "Ctrl + M", desc: "Nesne Özellikleri", category: "object", uvContext: "Boyut, pozisyon bilgisi"},
-    {key: "Alt + Enter", desc: "Özellikler", category: "object", uvContext: "Detaylı bilgi"},
-    {key: "Space", desc: "Seçim Aracı", category: "object", uvContext: "Hızlı araç değişimi"},
-    
-    // ARAÇLAR
-    {key: "F10", desc: "Kalem Aracı", category: "tools", uvContext: "Vektör çizim (Bezier)"},
-    {key: "F6", desc: "Dikdörtgen", category: "tools", uvContext: "Baskı alanı çerçevesi"},
-    {key: "F7", desc: "Elips", category: "tools", uvContext: "Yuvarlak kesim hatları"},
-    {key: "Y", desc: "Çokgen", category: "tools", uvContext: "Özel şekiller (yıldız, vs.)"},
-    {key: "H", desc: "El Aracı", category: "tools", uvContext: "Sayfayı kaydırma"},
-    
-    // EFEKTLER
-    {key: "Ctrl + F9", desc: "Kontur", category: "effects", uvContext: "Offset path oluşturma"},
-    {key: "Ctrl + Shift + F9", desc: "Kesme Çizgisi", category: "effects", uvContext: "Contour cut hazırlığı"},
-    {key: "Alt + F2", desc: "Lens Docker", category: "effects", uvContext: "Özel efektler"},
-    {key: "Ctrl + 7", desc: "PowerClip", category: "effects", uvContext: "Maskeleme"},
-    {key: "Ctrl + Alt + 7", desc: "PowerClip Düzenle", category: "effects", uvContext: "Maske içeriğini değiştir"},
-    {key: "Ctrl + Shift + 7", desc: "PowerClip Sonlandır", category: "effects", uvContext: "Maskeyi kaldır"},
-    
-    // BUL/DEĞİŞTİR
-    {key: "Ctrl + F", desc: "Bul", category: "search", uvContext: "Renk/obje bulma"},
-    {key: "Ctrl + H", desc: "Değiştir", category: "search", uvContext: "Toplu renk değiştirme"},
-    {key: "Ctrl + Alt + F", desc: "Bul ve Değiştir", category: "search", uvContext: "Gelişmiş arama"},
-    
-    // PENCERE YÖNETİMİ
-    {key: "Ctrl + Tab", desc: "Sonraki Pencere", category: "window", uvContext: "Açık dosyalar arası"},
-    {key: "Ctrl + Shift + Tab", desc: "Önceki Pencere", category: "window", uvContext: "Geri dönüş"},
-    {key: "Shift + F9", desc: "Yönetici Görünümü", category: "window", uvContext: "Tüm sayfaları görme"},
-    
-    // STİL ve KÜTÜPHANE
-    {key: "Ctrl + F11", desc: "Sembol Yöneticisi", category: "library", uvContext: "Sık kullanılan logolar"},
-    {key: "Ctrl + Shift + F11", desc: "Stiller", category: "library", uvContext: "Kaydedilmiş stiller"},
-    {key: "Ctrl + Shift + Alt + S", desc: "Stil Uygula", category: "library", uvContext: "Hızlı stil atama"},
-    
-    // GELİŞMİŞ
-    {key: "Alt + F11", desc: "Script Yöneticisi", category: "advanced", uvContext: "Makroları çalıştırma (otomasyon)"},
-    {key: "Ctrl + Shift + S", desc: "Görsel Hassasiyet", category: "advanced", uvContext: "Snap ayarları"},
-    {key: "Ctrl + Alt + O", desc: "Seçenekleri Sıfırla", category: "advanced", uvContext: "Varsayılana dönme"},
-    {key: "F1", desc: "Yardım", category: "advanced", uvContext: "Dokümantasyon"}
-];
-
-// ==========================================
-// UV AKADEMI PRO - MOBIL OPTIMIZE EDILMIS KOD
-// ==========================================
-
-// Global degiskenler
-let currentModule = 0;
-let currentLesson = 0;
-let curingAnimation = null;
-let adhesionAnimationId = null;
-let nozzleAnimationId = null;
-let practiceMode = false;
-let currentPracticeQuestion = null;
-
-const nozzleState = {
-    cmyk: Array(180).fill(true),
-    white: Array(180).fill(true),
-    clogged: false
-};
-
-const materials = {
-    metal: { name: 'Paslanmaz Celik', energy: 850, color: '#10b981', adhesion: 95, primer: false },
-    pvc: { name: 'PVC', energy: 39, color: '#f59e0b', adhesion: 60, primer: false },
-    pp: { name: 'Polipropilen (PP)', energy: 29, color: '#ef4444', adhesion: 20, primer: true },
-    ptfe: { name: 'PTFE (Teflon)', energy: 18, color: '#64748b', adhesion: 5, primer: true }
-};
-
-let currentMaterial = materials.metal;
-let userProgress = JSON.parse(localStorage.getItem('uv_progress')) || { completedModules: [], currentModule: 1, totalXP: 0 };
-let stats = JSON.parse(localStorage.getItem('mf_stats')) || { exp: 0, lvl: 1 };
-
-// ==========================================
-// EVENT DELEGATION SETUP - DOMContentLoaded
-// ==========================================
-
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('UV Akademi Pro - Baslatildi');
-    
-    // Event delegation setup
-    setupEventDelegation();
-    
-    // Baslangic render
-    updateMainProgress();
-    if (document.getElementById('shortcutsContainer')) {
-        renderShortcuts();
-    }
-});
-
-function setupEventDelegation() {
-    // Navigasyon butonlari
-    const navBar = document.getElementById('mainNavBar');
-    if (navBar) {
-        navBar.addEventListener('click', handleNavClick);
-        navBar.addEventListener('touchend', handleNavTouch);
-    }
-    
-    // Filtre butonlari - CorelDRAW ekrani
-    const corelScreen = document.getElementById('corelReferenceScreen');
-    if (corelScreen) {
-        corelScreen.addEventListener('click', handleFilterClick);
-        corelScreen.addEventListener('touchend', handleFilterTouch);
-    }
-    
-    // Shortcut kartlari
-    const shortcutsContainer = document.getElementById('shortcutsContainer');
-    if (shortcutsContainer) {
-        shortcutsContainer.addEventListener('click', handleShortcutClick);
-        shortcutsContainer.addEventListener('touchend', handleShortcutTouch);
-    }
-}
-
-// ==========================================
-// EVENT HANDLER'LAR
-// ==========================================
-
-function handleNavClick(e) {
-    const item = e.target.closest('.nav-item');
-    if (!item) return;
-    
-    const screenId = item.getAttribute('data-screen');
-    if (screenId) {
-        e.preventDefault();
-        goToScreen(screenId);
-    }
-}
-
-function handleNavTouch(e) {
-    const item = e.target.closest('.nav-item');
-    if (!item) return;
-    
-    e.preventDefault();
-    const screenId = item.getAttribute('data-screen');
-    if (screenId) {
-        goToScreen(screenId);
-    }
-}
-
-function handleFilterClick(e) {
-    const btn = e.target.closest('.filter-btn');
-    if (!btn) return;
-    
-    e.preventDefault();
-    e.stopPropagation();
-    
-    const category = btn.getAttribute('data-category');
-    if (category) {
-        filterShortcuts(category, btn);
-    }
-}
-
-function handleFilterTouch(e) {
-    const btn = e.target.closest('.filter-btn');
-    if (!btn) return;
-    
-    e.preventDefault();
-    const category = btn.getAttribute('data-category');
-    if (category) {
-        filterShortcuts(category, btn);
-    }
-}
-
-function handleShortcutClick(e) {
-    const card = e.target.closest('.shortcut-card');
-    if (!card) return;
-    
-    e.preventDefault();
-    e.stopPropagation();
-    
-    const key = card.getAttribute('data-key');
-    const desc = card.getAttribute('data-desc');
-    const context = card.getAttribute('data-context');
-    
-    if (key) {
-        showShortcutDetail(key, desc, context);
-    }
-}
-
-function handleShortcutTouch(e) {
-    const card = e.target.closest('.shortcut-card');
-    if (!card) return;
-    
-    e.preventDefault();
-    const key = card.getAttribute('data-key');
-    const desc = card.getAttribute('data-desc');
-    const context = card.getAttribute('data-context');
-    
-    if (key) {
-        showShortcutDetail(key, desc, context);
-    }
-}
-
-// ==========================================
-// NAVIGASYON FONKSIYONU
-// ==========================================
-
-function goToScreen(screenId) {
-    console.log('Navigating to:', screenId);
-    
-    const allScreens = document.querySelectorAll('.screen');
-    allScreens.forEach(screen => {
-        screen.classList.remove('active');
-        screen.style.display = 'none';
-        screen.style.opacity = '0';
-    });
-    
+function showScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     const target = document.getElementById(screenId);
-    if (!target) {
-        console.error('Ekran bulunamadi:', screenId);
-        return;
-    }
+    if (target) target.classList.add('active');
     
-    target.style.display = 'block';
-    setTimeout(() => {
-        target.classList.add('active');
-        target.style.opacity = '1';
-    }, 10);
-    
-    // Nav aktifligini guncelle
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
-        if (item.getAttribute('data-screen') === screenId) {
-            item.classList.add('active');
-        }
+    document.querySelectorAll('.nav-item').forEach(nav => {
+        nav.classList.remove('active');
+        if (nav.dataset.nav === screenId) nav.classList.add('active');
     });
-    
-    window.scrollTo(0, 0);
 }
-
-// ==========================================
-// CORELDRAW KISAYOL FONKSIYONLARI
-// ==========================================
 
 function renderShortcuts() {
-    const container = document.getElementById('shortcutsContainer');
-    if (!container) return;
+    const list = document.getElementById('shortcutsList');
+    if (!list) return;
     
-    const filter = container.dataset.filter || 'all';
-    let shortcuts = corelShortcuts;
+    let filtered = shortcuts;
+    if (currentFilter !== 'all') {
+        if (currentFilter === 'critical') filtered = shortcuts.filter(s => s.critical);
+        else if (currentFilter === 'uv') filtered = shortcuts.filter(s => s.category === 'uv');
+        else filtered = shortcuts.filter(s => s.category === currentFilter);
+    }
     
-    if (filter === 'uv') shortcuts = corelShortcuts.filter(s => s.category === 'uv');
-    else if (filter === 'critical') shortcuts = corelShortcuts.filter(s => s.critical);
-    else if (filter !== 'all') shortcuts = corelShortcuts.filter(s => s.category === filter);
-    
-    const categories = {
-        uv: 'UV Baski Kritik',
-        file: 'Dosya Yonetimi',
-        edit: 'Duzenleme',
-        color: 'Renk Yonetimi',
-        align: 'Hizalama',
-        text: 'Metin Araclari',
-        view: 'Gorunum',
-        object: 'Nesne Yonetimi',
-        tools: 'Araclar',
-        effects: 'Efektler',
-        search: 'Bul/Degistir',
-        window: 'Pencere',
-        library: 'Stil/Kutuphane',
-        advanced: 'Gelismis'
-    };
+    const search = document.getElementById('searchInput')?.value.toLowerCase() || '';
+    if (search) {
+        filtered = filtered.filter(s => 
+            s.key.toLowerCase().includes(search) || 
+            s.desc.toLowerCase().includes(search)
+        );
+    }
     
     let html = '';
-    let currentCat = '';
-    
-    shortcuts.forEach(s => {
-        if (s.category !== currentCat && filter === 'all') {
-            if (currentCat) html += '</div>';
-            currentCat = s.category;
-            html += `<div style="margin-bottom:20px;"><div style="font-size:14px; color:var(--accent); font-weight:bold; margin-bottom:10px; text-transform:uppercase; letter-spacing:1px;">${categories[s.category] || s.category}</div>`;
-        }
-        
+    filtered.forEach(s => {
         const badgeClass = s.category === 'uv' ? 'badge-uv' : s.critical ? 'badge-critical' : 'badge-corel';
-        const cardClass = s.critical ? 'shortcut-card shortcut-critical' : 'shortcut-card';
-        
-        // Guvenli escaping
-        const safeKey = s.key.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-        const safeDesc = s.desc.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-        const safeContext = s.uvContext.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        const badgeText = s.category === 'uv' ? 'UV' : s.critical ? 'KRİTİK' : 'COREL';
         
         html += `
-            <div class="${cardClass}" 
-                 data-key="${safeKey}" 
-                 data-desc="${safeDesc}" 
-                 data-context="${safeContext}"
-                 role="button"
-                 tabindex="0">
-                <span class="category-badge ${badgeClass}">${s.category === 'uv' ? 'UV' : s.critical ? 'KRITIK' : 'COREL'}</span>
+            <div class="shortcut-card" data-key="${s.key}" data-desc="${s.desc}" data-context="${s.context}">
+                <span class="category-badge ${badgeClass}">${badgeText}</span>
                 <div style="margin-top:8px;">
                     <span class="shortcut-key">${s.key}</span>
                     <span style="color:var(--text);">${s.desc}</span>
                 </div>
                 <div style="margin-top:8px; font-size:12px; color:var(--text-muted); font-style:italic;">
-                    💡 ${s.uvContext}
+                    💡 ${s.context}
                 </div>
             </div>
         `;
     });
     
-    if (filter === 'all') html += '</div>';
-    container.innerHTML = html;
+    list.innerHTML = html || '<p style="text-align:center; color:var(--text-muted); padding:40px;">Sonuç bulunamadı</p>';
 }
 
-function filterShortcuts(category, clickedBtn) {
-    const container = document.getElementById('shortcutsContainer');
-    if (container) {
-        container.dataset.filter = category;
-        renderShortcuts();
-    }
+function showModal(key, desc, context) {
+    const old = document.querySelector('.modal-overlay');
+    if (old) old.remove();
     
-    // Buton stillerini guncelle
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.remove('active');
-        btn.style.background = 'var(--surface)';
-        btn.style.color = 'var(--text-muted)';
-        btn.style.borderColor = 'rgba(255,255,255,0.1)';
-    });
-    
-    if (clickedBtn) {
-        clickedBtn.classList.add('active');
-        clickedBtn.style.background = 'var(--uv)';
-        clickedBtn.style.color = 'white';
-        clickedBtn.style.borderColor = 'var(--uv)';
-    }
-}
-
-function showShortcutDetail(key, desc, context) {
-    // Mevcut modal'i kaldir
-    const existing = document.querySelector('.shortcut-modal');
-    if (existing) existing.remove();
-    
-    // Yeni modal olustur
     const modal = document.createElement('div');
-    modal.className = 'shortcut-modal';
-    modal.style.cssText = `
-        position: fixed;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0,0,0,0.9);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 100000;
-        padding: 20px;
-    `;
-    
+    modal.className = 'modal-overlay';
     modal.innerHTML = `
-        <div style="
-            background: var(--surface);
-            border: 3px solid var(--uv);
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(191, 0, 255, 0.4);
-        ">
-            <div style="font-size: 44px; margin-bottom: 15px;">⌨️</div>
-            <div style="font-size: 24px; font-family: monospace; color: var(--gold); margin-bottom: 15px; font-weight: bold;">${key}</div>
-            <div style="font-size: 18px; color: var(--text); margin-bottom: 12px; font-weight: 600;">${desc}</div>
-            <div style="font-size: 14px; color: var(--accent); margin-bottom: 25px; font-style: italic;">💡 ${context}</div>
-            <button onclick="this.closest('.shortcut-modal').remove()" style="
-                width: 100%; 
-                padding: 15px; 
-                background: linear-gradient(135deg, var(--primary), var(--accent));
-                color: white;
-                border: none;
-                border-radius: 12px;
-                font-weight: bold;
-                font-size: 16px;
-                cursor: pointer;
-            ">Kapat</button>
+        <div class="modal-content">
+            <div style="font-size:48px; margin-bottom:15px;">⌨️</div>
+            <div style="font-size:28px; font-family:monospace; color:var(--gold); margin-bottom:15px; font-weight:bold;">${key}</div>
+            <div style="font-size:20px; color:var(--text); margin-bottom:10px; font-weight:600;">${desc}</div>
+            <div style="font-size:14px; color:var(--accent); margin-bottom:25px; font-style:italic;">💡 ${context}</div>
+            <button id="btnCloseModal" class="btn" style="width:100%;">Kapat</button>
         </div>
     `;
-    
-    // Modal disina tiklayinca kapat
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) modal.remove();
-    });
-    
     document.body.appendChild(modal);
 }
 
-function searchShortcuts() {
-    const query = document.getElementById('shortcutSearch')?.value.toLowerCase() || '';
-    const container = document.getElementById('shortcutsContainer');
-    if (!container) return;
+document.addEventListener('DOMContentLoaded', function() {
     
-    if (!query) {
-        renderShortcuts();
-        return;
-    }
+    // Ana ekran butonları
+    document.getElementById('btnUvAkademi')?.addEventListener('click', () => alert('UV Akademi yapım aşamasında'));
+    document.getElementById('btnCorelDraw')?.addEventListener('click', () => { showScreen('corelScreen'); renderShortcuts(); });
+    document.getElementById('btnBack')?.addEventListener('click', () => showScreen('homeScreen'));
     
-    const filtered = corelShortcuts.filter(s => 
-        s.key.toLowerCase().includes(query) || 
-        s.desc.toLowerCase().includes(query) ||
-        s.uvContext.toLowerCase().includes(query)
-    );
-    
-    let html = `<div style="margin-bottom:20px;"><div style="font-size:14px; color:var(--accent); font-weight:bold; margin-bottom:10px;">Arama Sonuclari (${filtered.length})</div>`;
-    
-    filtered.forEach(s => {
-        const badgeClass = s.category === 'uv' ? 'badge-uv' : s.critical ? 'badge-critical' : 'badge-corel';
-        const cardClass = s.critical ? 'shortcut-card shortcut-critical' : 'shortcut-card';
-        
-        const safeKey = s.key.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-        const safeDesc = s.desc.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-        const safeContext = s.uvContext.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-        
-        html += `
-            <div class="${cardClass}" 
-                 data-key="${safeKey}" 
-                 data-desc="${safeDesc}" 
-                 data-context="${safeContext}"
-                 role="button"
-                 tabindex="0">
-                <span class="category-badge ${badgeClass}">${s.category === 'uv' ? 'UV' : s.critical ? 'KRITIK' : 'COREL'}</span>
-                <div style="margin-top:8px;">
-                    <span class="shortcut-key">${s.key}</span>
-                    <span style="color:var(--text);">${s.desc}</span>
-                </div>
-                <div style="margin-top:8px; font-size:12px; color:var(--text-muted); font-style:italic;">
-                    💡 ${s.uvContext}
-                </div>
-            </div>
-        `;
+    // Navigasyon
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const screen = this.dataset.nav;
+            showScreen(screen);
+            if (screen === 'corelScreen') renderShortcuts();
+        });
     });
     
-    html += '</div>';
-    container.innerHTML = html;
-}
-
-// ==========================================
-// DIGER FONKSIYONLAR (Kisaltilmis)
-// ==========================================
-
-function updateMainProgress() {
-    const total = 8;
-    const completed = userProgress.completedModules.length;
-    const percent = Math.round((completed / total) * 100);
+    // Filtre butonları - Event Delegation
+    document.querySelector('.flex-wrap')?.addEventListener('click', function(e) {
+        const btn = e.target.closest('.filter-btn');
+        if (!btn) return;
+        
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter || 'all';
+        renderShortcuts();
+    });
     
-    const mainProgress = document.getElementById('mainProgress');
-    const progressText = document.getElementById('progressText');
-    const levelDisplay = document.getElementById('levelDisplay');
+    // Arama
+    document.getElementById('searchInput')?.addEventListener('input', renderShortcuts);
     
-    if (mainProgress) mainProgress.style.width = percent + '%';
-    if (progressText) progressText.textContent = percent + '%';
-    if (levelDisplay) levelDisplay.textContent = stats.lvl;
-}
-
-function addExp(amount) {
-    stats.exp += amount;
-    const nextLevel = stats.lvl * 100;
-    if (stats.exp >= nextLevel) {
-        stats.lvl++;
-        stats.exp = 0;
-        showAchievement(`Seviye Atlandi! ${stats.lvl}`);
-    }
-    localStorage.setItem('mf_stats', JSON.stringify(stats));
-    updateMainProgress();
-}
-
-function showAchievement(text) {
-    const popup = document.getElementById('achievementPopup');
-    const achievementText = document.getElementById('achievementText');
-    if (achievementText) achievementText.textContent = text;
-    if (popup) {
-        popup.classList.add('show');
-        setTimeout(() => popup.classList.remove('show'), 3000);
-    }
-}
-
-// ... Diger fonksiyonlar (initUVAcademy, renderModules, vb.) buraya eklenecek
+    // Shortcut kartları - Event Delegation
+    document.getElementById('shortcutsList')?.addEventListener('click', function(e) {
+        const card = e.target.closest('.shortcut-card');
+        if (!card) return;
+        showModal(card.dataset.key, card.dataset.desc, card.dataset.context);
+    });
+    
+    // Modal kapatma - Event Delegation
+    document.addEventListener('click', function(e) {
+        if (e.target.id === 'btnCloseModal' || e.target.classList.contains('modal-overlay')) {
+            document.querySelector('.modal-overlay')?.remove();
+        }
+    });
+    
+    console.log('UV Akademi Pro - Hazır');
 });
 </script>
+
 </body>
 </html>
