@@ -295,14 +295,6 @@
             text-align: center;
         }
         
-        .tab-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-        }
-        
         .hidden { display: none !important; }
         
         /* Filtre container */
@@ -433,12 +425,12 @@
         
         <div class="progress-header">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <span style="font-size:14px; font-weight:bold;">Modüller</span>
-                <span style="color:var(--uv); font-size:12px;">8 Modül</span>
+                <span style="font-size:14px; font-weight:bold;">8 Modül</span>
+                <span style="color:var(--uv); font-size:12px;" id="completedCount">0/8 Tamamlandı</span>
             </div>
         </div>
         
-        <!-- DÜZELTİLMİŞ FİLTRE BUTONLARI - data-category kullanıyor, inline onclick YOK -->
+        <!-- FİLTRE BUTONLARI -->
         <div class="filter-container">
             <button class="filter-btn active" data-category="all">Tümü</button>
             <button class="filter-btn" data-category="uv">UV Özel</button>
@@ -450,7 +442,7 @@
         </div>
         
         <div id="modulesContainer">
-            <!-- Modüller buraya gelecek -->
+            <!-- 8 Modül buraya gelecek -->
         </div>
     </div>
 
@@ -490,7 +482,7 @@
                    style="width:100%; padding:12px; border-radius:8px; border:1px solid #2d2d44; background:var(--bg); color:white;">
         </div>
         
-        <!-- DÜZELTİLMİŞ KATEGORİ FİLTRELERİ -->
+        <!-- KATEGORİ FİLTRELERİ -->
         <div class="filter-container" id="corelFilters">
             <button class="filter-btn active" data-category="all">Tümü</button>
             <button class="filter-btn" data-category="uv">UV Özel</button>
@@ -621,6 +613,94 @@ const corelShortcuts = [
 ];
 
 // ==========================================
+// 8 MODÜL VERİTABANI
+// ==========================================
+
+const uvModules = [
+    {
+        id: 1,
+        title: "UV Baskı Temelleri ve Kimyasal Süreçler",
+        desc: "Teknolojinin temel prensipleri, fotopolimerizasyon ve endüstriyel uygulamalar",
+        duration: "60 dk",
+        xp: 150,
+        locked: false,
+        completed: false,
+        lessons: 3
+    },
+    {
+        id: 2,
+        title: "Yüzey Hazırlığı ve Adhezyon Bilimi",
+        desc: "Malzeme bilimi, temizlik protokolleri ve tutunma prensipleri",
+        duration: "70 dk",
+        xp: 180,
+        locked: true,
+        completed: false,
+        lessons: 4
+    },
+    {
+        id: 3,
+        title: "CorelDRAW ile UV Dosya Hazırlama",
+        desc: "Profesyonel dosya hazırlama, RIP ayarları ve renk yönetimi",
+        duration: "80 dk",
+        xp: 200,
+        locked: true,
+        completed: false,
+        lessons: 4
+    },
+    {
+        id: 4,
+        title: "Makine Operasyonu ve Günlük Bakım",
+        desc: "Günlük rutinler, kalibrasyon ve arıza önleme",
+        duration: "75 dk",
+        xp: 220,
+        locked: true,
+        completed: false,
+        lessons: 4
+    },
+    {
+        id: 5,
+        title: "Arıza Tespiti ve Giderme",
+        desc: "Banding, renk sapması ve mekanik sorunlar",
+        duration: "70 dk",
+        xp: 200,
+        locked: true,
+        completed: false,
+        lessons: 4
+    },
+    {
+        id: 6,
+        title: "İleri UV Teknikleri",
+        desc: "Double pass, mirror print, 3D efektler ve özel uygulamalar",
+        duration: "65 dk",
+        xp: 180,
+        locked: true,
+        completed: false,
+        lessons: 4
+    },
+    {
+        id: 7,
+        title: "Kalite Kontrol ve Profesyonel İş Süreçleri",
+        desc: "Standartlar, müşteri yönetimi ve sürekli iyileştirme",
+        duration: "55 dk",
+        xp: 150,
+        locked: true,
+        completed: false,
+        lessons: 3
+    },
+    {
+        id: 8,
+        title: "🎓 Sertifika Sınavi",
+        desc: "Tüm modüllerin kapsamlı final değerlendirmesi",
+        duration: "60 dk",
+        xp: 500,
+        locked: true,
+        completed: false,
+        isFinal: true,
+        lessons: 1
+    }
+];
+
+// ==========================================
 // UV AKADEMI PRO - MOBIL OPTIMIZE EDILMIS KOD
 // ==========================================
 
@@ -645,6 +725,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateMainProgress();
     renderShortcuts();
     renderModules();
+    updateCompletedCount();
     
     // Search input listener
     const searchInput = document.getElementById('shortcutSearch');
@@ -936,43 +1017,8 @@ function showShortcutDetail(key, desc, context) {
 }
 
 // ==========================================
-// UV AKADEMI MODUL FONKSIYONLARI
+// UV AKADEMI MODUL FONKSIYONLARI - 8 MODÜL
 // ==========================================
-
-const uvModules = [
-    {
-        id: 1,
-        title: "UV Baskı Temelleri",
-        desc: "Teknoloji, mürekkepler ve fotopolimerizasyon",
-        duration: "60 dk",
-        locked: false,
-        completed: false
-    },
-    {
-        id: 2,
-        title: "Yüzey Hazırlığı",
-        desc: "Malzeme bilimi ve tutunma prensipleri",
-        duration: "70 dk",
-        locked: true,
-        completed: false
-    },
-    {
-        id: 3,
-        title: "CorelDRAW Dosya Hazırlama",
-        desc: "Spot renkler ve RIP ayarları",
-        duration: "80 dk",
-        locked: true,
-        completed: false
-    },
-    {
-        id: 4,
-        title: "Makine Operasyonu",
-        desc: "Günlük bakım ve operasyon",
-        duration: "75 dk",
-        locked: true,
-        completed: false
-    }
-];
 
 function renderModules() {
     const container = document.getElementById('modulesContainer');
@@ -982,15 +1028,22 @@ function renderModules() {
     uvModules.forEach(mod => {
         const lockedClass = mod.locked ? 'locked' : '';
         const completedClass = mod.completed ? 'completed' : '';
+        const finalClass = mod.isFinal ? 'style="background:linear-gradient(135deg, #16162d, #3b0066); border:2px solid var(--gold);"' : '';
         
         html += `
-            <div class="module-card ${lockedClass} ${completedClass}" onclick="openModule(${mod.id})">
-                <div style="display:inline-block; background: var(--uv); color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; margin-bottom: 8px;">MODÜL ${mod.id}</div>
+            <div class="module-card ${lockedClass} ${completedClass}" ${finalClass} onclick="openModule(${mod.id})">
+                <div style="display:inline-block; background: ${mod.isFinal ? 'var(--gold)' : 'var(--uv)'}; color: ${mod.isFinal ? '#000' : 'white'}; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; margin-bottom: 8px;">
+                    ${mod.isFinal ? '🎓 FİNAL' : 'MODÜL ' + mod.id}
+                </div>
                 <div style="font-size: 18px; font-weight: bold; margin: 5px 0;">${mod.title}</div>
                 <div style="font-size: 13px; color: var(--text-muted);">${mod.desc}</div>
                 <div style="display: flex; gap: 15px; margin-top: 12px; font-size: 12px; color: var(--text-muted);">
                     <span>⏱️ ${mod.duration}</span>
-                    ${mod.locked ? '<span>🔒 Kilitli</span>' : '<span>▶️ Başla</span>'}
+                    <span>🎯 ${mod.xp} XP</span>
+                    <span>📚 ${mod.lessons} Ders</span>
+                </div>
+                <div style="margin-top: 8px; font-size: 12px; color: ${mod.locked ? 'var(--danger)' : 'var(--success)'};">
+                    ${mod.locked ? '🔒 Kilitli (Önceki modülü tamamlayın)' : mod.completed ? '✓ Tamamlandı' : '▶️ Başlamak için tıklayın'}
                 </div>
             </div>
         `;
@@ -999,13 +1052,45 @@ function renderModules() {
     container.innerHTML = html;
 }
 
+function updateCompletedCount() {
+    const completed = uvModules.filter(m => m.completed).length;
+    const countEl = document.getElementById('completedCount');
+    if (countEl) {
+        countEl.textContent = `${completed}/8 Tamamlandı`;
+    }
+}
+
 function openModule(id) {
     const mod = uvModules.find(m => m.id === id);
     if (!mod || mod.locked) return;
     
     currentModule = id;
+    
+    if (mod.isFinal) {
+        goToScreen('quizScreen');
+        document.getElementById('quizTitle').textContent = '🎓 Sertifika Sınavı';
+        document.getElementById('quizContent').innerHTML = `
+            <div class="content-block">
+                <div class="block-title">Sınava Hoş Geldiniz</div>
+                <div style="color: var(--text-muted);">
+                    Bu final sınavında tüm 7 modülde öğrendikleriniz test edilecektir.
+                    <br><br>
+                    <strong>Sınav Bilgileri:</strong>
+                    <ul>
+                        <li>15 çoktan seçmeli soru</li>
+                        <li>Geçme notu: %80 (12 doğru)</li>
+                        <li>Başarılı olanlara dijital sertifika</li>
+                    </ul>
+                    <button class="btn btn-success" onclick="startFinalExam()" style="margin-top: 20px;">
+                        Sınava Başla
+                    </button>
+                </div>
+            </div>
+        `;
+        return;
+    }
+    
     goToScreen('moduleDetail');
-    // Ders içeriği burada yüklenecek
     document.getElementById('lessonContent').innerHTML = `
         <div class="lesson-header">
             <span class="lesson-badge">MODÜL ${mod.id}</span>
@@ -1015,16 +1100,51 @@ function openModule(id) {
         <div class="content-block">
             <div class="block-title">📖 Modül İçeriği</div>
             <div style="color: var(--text-muted);">
-                Bu modül hazırlanıyor. Lütfen CorelDRAW kısayolları bölümünü keşfedin.
+                Bu modül ${mod.lessons} dersten oluşmaktadır.
+                <br><br>
+                <strong>Modül Hedefleri:</strong>
+                <ul>
+                    <li>Temel kavramları öğrenme</li>
+                    <li>Uygulamalı beceriler kazanma</li>
+                    <li>Profesyonel teknikleri uygulama</li>
+                </ul>
+                <button class="btn" onclick="startLesson()" style="margin-top: 20px;">
+                    İlk Derse Başla →
+                </button>
             </div>
         </div>
     `;
 }
 
+function startLesson() {
+    showAchievement('Derse başlandı! +10 XP');
+    addExp(10);
+}
+
+function startFinalExam() {
+    showAchievement('Sınav başladı! Başarılar!');
+    // Sınav mantığı buraya eklenecek
+}
+
 function nextLesson() {
-    // Sonraki ders fonksiyonu
-    showAchievement('Ders tamamlandı! +50 XP');
-    addExp(50);
+    const mod = uvModules.find(m => m.id === currentModule);
+    if (mod) {
+        mod.completed = true;
+        
+        // Sonraki modülü aç
+        const nextMod = uvModules.find(m => m.id === currentModule + 1);
+        if (nextMod) {
+            nextMod.locked = false;
+        }
+        
+        renderModules();
+        updateCompletedCount();
+        updateMainProgress();
+        showAchievement(`Modül ${currentModule} tamamlandı! +${mod.xp} XP`);
+        addExp(mod.xp);
+    }
+    
+    goToScreen('uvAcademyMain');
 }
 
 function prevLesson() {
@@ -1036,8 +1156,8 @@ function prevLesson() {
 // ==========================================
 
 function updateMainProgress() {
-    const total = uvModules.length;
     const completed = uvModules.filter(m => m.completed).length;
+    const total = uvModules.length;
     const percent = Math.round((completed / total) * 100);
     
     const mainProgress = document.getElementById('mainProgress');
