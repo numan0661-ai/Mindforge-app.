@@ -6,6 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <title>UV Akademi Pro - Profesyonel Eğitim Platformu</title>
+
     <style>
         :root {
             --primary: #6366f1; --accent: #06b6d4; --bg: #0b0b1a;
@@ -266,7 +267,7 @@
         }
         .tooltip:hover .tooltip-text { visibility: visible; opacity: 1; }
         
-        .checklist { list-style: none; padding: 0; }
+        .checklist { list-f: none; padding: 0; }
         .checklist li {
             padding: 12px 0 12px 35px;
             position: relative;
@@ -438,6 +439,32 @@
         }
         
         .hidden { display: none !important; }
+/* Filtre butonları için ek stiller */
+.filter-btn {
+    flex: 0;
+    white-space: nowrap;
+    font-size: 12px;
+    padding: 8px 12px;
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-muted);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.filter-btn.active {
+    background: var(--uv);
+    color: white;
+    border-color: var(--uv);
+}
+.filter-btn:hover {
+    border-color: var(--accent);
+}
+
+/* Shortcut kartı cursor pointer */
+.shortcut-card {
+    cursor: pointer;
+}
     </style>
 </head>
 <body>
@@ -507,28 +534,16 @@
     </div>
 
     <!-- UV AKADEMİ ANA EKRAN -->
-    <div class="screen" id="uvAcademyMain">
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
-            <button class="btn btn-secondary" style="flex:0; padding:12px 16px;" onclick="goToScreen('homeScreen')">←</button>
-            <h2 style="margin:0; color:var(--uv)">🧪 UV Akademi</h2>
-        </div>
-        
-        <div class="progress-header">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
-                <span style="font-size:14px; font-weight:bold;">Toplam İlerleme</span>
-                <span style="color:var(--uv); font-weight:bold;" id="totalProgress">0%</span>
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="totalProgressBar"></div>
-            </div>
-            <div class="module-status" style="display:flex; justify-content:space-between; margin-top:10px; font-size:12px; color:var(--text-muted);">
-                <span id="completedModules">0/8 Modül</span>
-                <span id="totalPoints">0 XP Kazanıldı</span>
-            </div>
-        </div>
-        
-        <div id="modulesList"></div>
-    </div>
+   <!-- YENİ - BUNLARI YAPIŞTIRIN -->
+<div style="display:flex; gap:8px; overflow-x:auto; padding-bottom:10px; margin-bottom:15px;">
+    <button class="filter-btn active" onclick="filterShortcuts('all', this)">Tümü</button>
+    <button class="filter-btn" onclick="filterShortcuts('uv', this)" style="border-color:var(--uv); color:var(--uv);">UV Özel</button>
+    <button class="filter-btn" onclick="filterShortcuts('critical', this)" style="border-color:var(--danger); color:var(--danger);">Kritik</button>
+    <button class="filter-btn" onclick="filterShortcuts('file', this)">Dosya</button>
+    <button class="filter-btn" onclick="filterShortcuts('edit', this)">Düzenle</button>
+    <button class="filter-btn" onclick="filterShortcuts('color', this)">Renk</button>
+    <button class="filter-btn" onclick="filterShortcuts('align', this)">Hizalama</button>
+</div>
 
     <!-- MODÜL DETAY EKRANI -->
     <div class="screen" id="moduleDetail">
@@ -3711,18 +3726,28 @@ function renderShortcuts() {
     container.innerHTML = html;
 }
 
-function filterShortcuts(category) {
+function filterShortcuts(category, clickedBtn) {
     const container = document.getElementById('shortcutsContainer');
     if (container) {
         container.dataset.filter = category;
         renderShortcuts();
     }
     
-    // Buton aktifliğini güncelle
-    document.querySelectorAll('.tab-btn').forEach(btn => {
+    // Tüm filtre butonlarını pasif yap
+    document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.classList.remove('active');
+        btn.style.background = 'var(--surface)';
+        btn.style.color = 'var(--text-muted)';
+        btn.style.borderColor = 'rgba(255,255,255,0.1)';
     });
-    event.target.classList.add('active');
+    
+    // Tıklanan butonu aktif yap
+    if (clickedBtn) {
+        clickedBtn.classList.add('active');
+        clickedBtn.style.background = 'var(--uv)';
+        clickedBtn.style.color = 'white';
+        clickedBtn.style.borderColor = 'var(--uv)';
+    }
 }
 
 function searchShortcuts() {
@@ -3796,11 +3821,15 @@ function nextPracticeQuestion() {
     // Karıştır
     options.sort(() => Math.random() - 0.5);
     
-    const optionsHtml = options.map((opt, idx) => `
-        <button class="btn btn-secondary" onclick="checkPracticeAnswer(${idx}, ${options.indexOf(currentPracticeQuestion)})" style="text-align:left; padding:15px;">
-            ${String.fromCharCode(65 + idx)}) ${opt.desc}
-        </button>
-    `).join('');
+    const optionsHtml = options.map((opt, idx) => {
+        // Escaping düzeltildi - &quot; kullanıldı
+        const safeDesc = opt.desc.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        return `
+            <button class="btn btn-secondary" onclick="checkPracticeAnswer(${idx}, ${options.indexOf(currentPracticeQuestion)})" style="text-align:left; padding:15px; margin-bottom:8px;">
+                ${String.fromCharCode(65 + idx)}) ${opt.desc}
+            </button>
+        `;
+    }).join('');
     
     document.getElementById('practiceOptions').innerHTML = optionsHtml;
 }
@@ -4431,8 +4460,12 @@ function renderShortcuts() {
         const badgeClass = s.category === 'uv' ? 'badge-uv' : s.critical ? 'badge-critical' : 'badge-corel';
         const cardClass = s.critical ? 'shortcut-card shortcut-critical' : 'shortcut-card';
         
+        // onclick handler düzeltildi - doğru escaping
+        const safeDesc = s.desc.replace(/'/g, "\\'").replace(/"/g, '\\"');
+        const safeContext = s.uvContext.replace(/'/g, "\\'").replace(/"/g, '\\"');
+        
         html += `
-            <div class="${cardClass}" onclick="showShortcutDetail('${s.key}', '${s.desc.replace(/'/g, "\\'")}', '${s.uvContext.replace(/'/g, "\\'")}')">
+            <div class="${cardClass}" onclick="showShortcutDetail('${s.key}', '${safeDesc}', '${safeContext}')">
                 <span class="category-badge ${badgeClass}">${s.category === 'uv' ? 'UV' : s.critical ? 'KRİTİK' : 'COREL'}</span>
                 <div style="margin-top:8px;">
                     <span class="shortcut-key">${s.key}</span>
@@ -4486,8 +4519,11 @@ function searchShortcuts() {
         const badgeClass = s.category === 'uv' ? 'badge-uv' : s.critical ? 'badge-critical' : 'badge-corel';
         const cardClass = s.critical ? 'shortcut-card shortcut-critical' : 'shortcut-card';
         
+        const safeDesc = s.desc.replace(/'/g, "\\'").replace(/"/g, '\\"');
+        const safeContext = s.uvContext.replace(/'/g, "\\'").replace(/"/g, '\\"');
+        
         html += `
-            <div class="${cardClass}">
+            <div class="${cardClass}" onclick="showShortcutDetail('${s.key}', '${safeDesc}', '${safeContext}')">
                 <span class="category-badge ${badgeClass}">${s.category === 'uv' ? 'UV' : s.critical ? 'KRİTİK' : 'COREL'}</span>
                 <div style="margin-top:8px;">
                     <span class="shortcut-key">${s.key}</span>
@@ -4505,45 +4541,54 @@ function searchShortcuts() {
 }
 
 function showShortcutDetail(key, desc, context) {
-    alert(`${key}: ${desc}\\n\\nUV Bağlamı: ${context}`);
+    // Mevcut modal varsa kaldır
+    const existingModal = document.querySelector('.shortcut-modal');
+    if (existingModal) existingModal.remove();
+    
+    // Yeni modal oluştur
+    const modal = document.createElement('div');
+    modal.className = 'shortcut-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.85);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        padding: 20px;
+        animation: fadeIn 0.3s ease;
+    `;
+    
+    modal.innerHTML = `
+        <div style="
+            background: var(--surface);
+            border: 3px solid var(--uv);
+            border-radius: 20px;
+            padding: 35px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(191, 0, 255, 0.3);
+        ">
+            <div style="font-size: 48px; margin-bottom: 20px;">⌨️</div>
+            <div style="font-size: 28px; font-family: monospace; color: var(--gold); margin-bottom: 20px; font-weight: bold;">${key}</div>
+            <div style="font-size: 20px; color: var(--text); margin-bottom: 15px; font-weight: 600;">${desc}</div>
+            <div style="font-size: 15px; color: var(--accent); margin-bottom: 30px; font-style: italic; line-height: 1.5;">💡 ${context}</div>
+            <button onclick="this.closest('.shortcut-modal').remove()" class="btn" style="width: 100%; padding: 15px;">Kapat</button>
+        </div>
+    `;
+    
+    // Modal dışına tıklayınca kapat
+    modal.onclick = (e) => {
+        if (e.target === modal) modal.remove();
+    };
+    
+    document.body.appendChild(modal);
 }
-
-function startPracticeMode() {
-    practiceMode = true;
-    document.getElementById('practiceArea').classList.add('hidden');
-    document.getElementById('practiceGame').classList.remove('hidden');
-    nextPracticeQuestion();
-}
-
-function nextPracticeQuestion() {
-    const uvShortcuts = corelShortcuts.filter(s => s.category === 'uv' || s.critical);
-    currentPracticeQuestion = uvShortcuts[Math.floor(Math.random() * uvShortcuts.length)];
-    
-    document.getElementById('practiceKey').textContent = currentPracticeQuestion.key;
-    document.getElementById('practiceResult').innerHTML = '';
-    document.getElementById('nextPracticeBtn').style.display = 'none';
-    
-    // 4 seçenek oluştur (1 doğru, 3 yanlış)
-    const options = [currentPracticeQuestion];
-    while (options.length < 4) {
-        const random = corelShortcuts[Math.floor(Math.random() * corelShortcuts.length)];
-        if (!options.find(o => o.key === random.key)) {
-            options.push(random);
-        }
-    }
-    
-    // Karıştır
-    options.sort(() => Math.random() - 0.5);
-    
-    const optionsHtml = options.map((opt, idx) => `
-        <button class="btn btn-secondary" onclick="checkPracticeAnswer(${idx}, ${options.indexOf(currentPracticeQuestion)})" style="text-align:left; padding:15px;">
-            ${String.fromCharCode(65 + idx)}) ${opt.desc}
-        </button>
-    `).join('');
-    
-    document.getElementById('practiceOptions').innerHTML = optionsHtml;
-}
-
 function checkPracticeAnswer(selected, correct) {
     const buttons = document.querySelectorAll('#practiceOptions button');
     const isCorrect = selected === correct;
