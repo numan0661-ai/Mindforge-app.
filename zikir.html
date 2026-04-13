@@ -4,37 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Esma-i Hüsna - Gelişmiş Zikir Uygulaması</title>
-    
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- React & ReactDOM CDN -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    
-    <!-- Babel for JSX -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
-    
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
+        :root {
+            --primary: #1a5f4a;
+            --primary-light: #2d8a6e;
+            --gold: #d4af37;
+            --gold-light: #f4d03f;
+            --bg-dark: #0f1f1a;
+            --bg-card: #1a332b;
+            --text-light: #e8f5e9;
+            --text-muted: #a8c5b5;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f1f1a 0%, #1a2f2a 100%);
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1a2f2a 100%);
             min-height: 100vh;
-            color: #e8f5e9;
+            color: var(--text-light);
             overflow-x: hidden;
         }
-        
-        .arabic-font { font-family: 'Scheherazade New', 'Amiri', serif; }
-        
+
         .bg-animation {
             position: fixed;
             top: 0;
@@ -44,18 +44,188 @@
             z-index: -1;
             opacity: 0.1;
             background-image: 
-                radial-gradient(circle at 20% 50%, #d4af37 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, #2d8a6e 0%, transparent 50%),
-                radial-gradient(circle at 40% 20%, #d4af37 0%, transparent 50%);
+                radial-gradient(circle at 20% 50%, var(--gold) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--primary-light) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, var(--gold) 0%, transparent 50%);
             animation: float 20s ease-in-out infinite;
         }
-        
+
         @keyframes float {
             0%, 100% { transform: translate(0, 0) scale(1); }
             33% { transform: translate(30px, -30px) scale(1.1); }
             66% { transform: translate(-20px, 20px) scale(0.9); }
         }
-        
+
+        header {
+            text-align: center;
+            padding: 2rem 1rem;
+            background: linear-gradient(180deg, rgba(26,95,74,0.4) 0%, transparent 100%);
+            border-bottom: 2px solid var(--gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '﷽';
+            position: absolute;
+            font-size: 15rem;
+            opacity: 0.03;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Amiri', serif;
+            pointer-events: none;
+        }
+
+        h1 {
+            font-family: 'Amiri', serif;
+            font-size: 3rem;
+            color: var(--gold);
+            text-shadow: 0 0 20px rgba(212,175,55,0.3);
+            margin-bottom: 0.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-top: 1rem;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            max-width: 1200px;
+            margin: 1rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .action-card {
+            background: rgba(26,51,43,0.8);
+            border: 1px solid var(--gold);
+            border-radius: 15px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .action-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(212,175,55,0.2);
+        }
+
+        .action-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .action-title {
+            color: var(--gold);
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .action-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Progress Section */
+        .progress-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .progress-card {
+            background: rgba(26,51,43,0.8);
+            border: 1px solid var(--gold);
+            border-radius: 20px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .progress-title {
+            font-size: 1.2rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(212,175,55,0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(212,175,55,0.3);
+            transition: transform 0.3s;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-3px);
+            background: rgba(212,175,55,0.2);
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--gold);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 12px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-light), var(--gold));
+            width: 0%;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px var(--gold);
+            position: relative;
+        }
+
         .progress-bar::after {
             content: '';
             position: absolute;
@@ -66,28 +236,664 @@
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
             animation: shimmer 2s infinite;
         }
-        
+
         @keyframes shimmer {
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
         }
-        
+
+        /* Streak Badge */
+        .streak-badge {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Controls */
+        .controls {
+            max-width: 1200px;
+            margin: 1rem auto;
+            padding: 0 1rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: 1px solid var(--gold);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(212,175,55,0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(212,175,55,0.1);
+            color: var(--gold);
+            border: 1px solid var(--gold);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(212,175,55,0.2);
+        }
+
+        .btn-danger {
+            background: rgba(220,53,69,0.2);
+            color: #ff6b6b;
+            border: 1px solid #ff6b6b;
+        }
+
+        .btn-danger:hover {
+            background: rgba(220,53,69,0.3);
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .filter-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab {
+            padding: 0.6rem 1.2rem;
+            background: rgba(26,51,43,0.6);
+            border: 1px solid var(--primary-light);
+            color: var(--text-muted);
+            border-radius: 20px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .tab.active {
+            background: var(--gold);
+            color: var(--bg-dark);
+            border-color: var(--gold);
+            font-weight: bold;
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(212,175,55,0.2);
+            color: var(--text-light);
+        }
+
+        /* Names Grid */
+        .names-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .name-card {
+            background: linear-gradient(145deg, var(--bg-card), #142921);
+            border: 1px solid rgba(212,175,55,0.2);
+            border-radius: 20px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .name-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold), var(--primary-light));
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .name-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .name-card.completed {
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(212,175,55,0.2);
+            background: linear-gradient(145deg, rgba(26,51,43,0.9), rgba(20,41,33,0.9));
+        }
+
+        .name-card.completed::after {
+            content: '✓';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--gold);
+            color: var(--bg-dark);
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .name-card.favorite {
+            border-color: #ff6b6b;
+            box-shadow: 0 0 15px rgba(255,107,107,0.2);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .arabic-name {
+            font-family: 'Scheherazade New', 'Amiri', serif;
+            font-size: 2.5rem;
+            color: var(--gold);
+            line-height: 1.2;
+            text-align: center;
+            flex: 1;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .icon-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,0.1);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+        }
+
+        .icon-btn:hover {
+            background: var(--gold);
+            color: var(--bg-dark);
+            transform: scale(1.1);
+        }
+
+        .icon-btn.active {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .turkish-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .meaning {
+            color: var(--text-muted);
+            text-align: center;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .purpose {
+            background: rgba(26,95,74,0.3);
+            padding: 0.8rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-right: 3px solid var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .purpose strong {
+            color: var(--gold-light);
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .counter-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(212,175,55,0.2);
+        }
+
+        .counter-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--gold);
+            background: transparent;
+            color: var(--gold);
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .counter-btn:hover {
+            background: var(--gold);
+            color: var(--bg-dark);
+            transform: scale(1.1);
+        }
+
+        .counter-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--gold);
+            min-width: 60px;
+            text-align: center;
+            font-family: 'Amiri', serif;
+        }
+
+        .target-info {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, var(--bg-card), #0f1f1a);
+            border: 2px solid var(--gold);
+            border-radius: 25px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalOpen 0.3s;
+        }
+
+        @keyframes modalOpen {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 2px solid var(--gold);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(90deg);
+        }
+
+        .modal-arabic {
+            font-family: 'Scheherazade New', 'Amiri', serif;
+            font-size: 4rem;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-turkish {
+            font-size: 1.8rem;
+            color: white;
+            margin-bottom: 0.3rem;
+        }
+
+        .modal-meaning {
+            color: rgba(255,255,255,0.8);
+            font-size: 1.1rem;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .detail-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-title {
+            color: var(--gold);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .detail-text {
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .dhikr-counter {
+            background: rgba(212,175,55,0.1);
+            border: 2px solid var(--gold);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .dhikr-count {
+            font-size: 3rem;
+            color: var(--gold);
+            font-weight: bold;
+            font-family: 'Amiri', serif;
+        }
+
+        .dhikr-label {
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .dhikr-controls {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        /* Auto Counter Section */
+        .auto-counter {
+            background: rgba(39,174,96,0.1);
+            border: 2px solid var(--success);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .auto-counter-title {
+            color: var(--success);
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .speed-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .speed-slider {
+            width: 200px;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255,255,255,0.2);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .speed-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--success);
+            cursor: pointer;
+        }
+
+        /* Notes Section */
+        .notes-section {
+            margin-top: 1.5rem;
+        }
+
+        .notes-textarea {
+            width: 100%;
+            min-height: 100px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+            padding: 1rem;
+            color: var(--text-light);
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .notes-textarea:focus {
+            outline: none;
+            border-color: var(--gold-light);
+        }
+
+        /* Program Modal */
+        .program-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .program-item {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(212,175,55,0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .program-item:hover {
+            background: rgba(212,175,55,0.1);
+            transform: translateX(-5px);
+        }
+
+        .program-item.active {
+            border-color: var(--gold);
+            background: rgba(212,175,55,0.2);
+        }
+
+        .program-name {
+            color: var(--gold);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .program-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Stats Modal Charts */
+        .chart-container {
+            background: rgba(0,0,0,0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            color: var(--gold);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 200px;
+            gap: 0.5rem;
+        }
+
+        .bar-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bar {
+            width: 100%;
+            background: linear-gradient(to top, var(--primary), var(--gold));
+            border-radius: 5px 5px 0 0;
+            transition: height 0.5s ease;
+            min-height: 5px;
+        }
+
+        .bar-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .bar-value {
+            font-size: 0.8rem;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        /* Achievement Badges */
+        .achievements {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .achievement {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.3);
+            border: 2px solid var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            opacity: 0.5;
+            transition: all 0.3s;
+            position: relative;
+        }
+
         .achievement.unlocked {
+            opacity: 1;
+            border-color: var(--gold);
+            box-shadow: 0 0 15px rgba(212,175,55,0.3);
             animation: pulse 2s infinite;
         }
-        
+
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
         }
-        
+
+        .achievement:hover::after {
+            content: attr(data-title);
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-dark);
+            color: var(--gold);
+            padding: 0.3rem 0.8rem;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        /* Toast Notification */
         .toast {
             position: fixed;
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
-            background: #d4af37;
-            color: #0f1f1a;
+            background: var(--gold);
+            color: var(--bg-dark);
             padding: 1rem 2rem;
             border-radius: 50px;
             font-weight: bold;
@@ -96,50 +902,578 @@
             z-index: 2000;
             box-shadow: 0 5px 20px rgba(0,0,0,0.3);
         }
-        
+
         .toast.show {
             transform: translateX(-50%) translateY(0);
             opacity: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .names-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .arabic-name {
+                font-size: 2rem;
+            }
+            
+            .modal-arabic {
+                font-size: 3rem;
+            }
+
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold);
+        }
+
+        /* Prayer Times Widget */
+        .prayer-times {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .prayer-time {
+            background: rgba(0,0,0,0.2);
+            padding: 0.5rem;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .prayer-name {
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        .prayer-hour {
+            color: var(--text-muted);
+        }
+
+        /* Calendar Heatmap */
+        .heatmap {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-top: 1rem;
+        }
+
+        .heat-day {
+            aspect-ratio: 1;
+            border-radius: 3px;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .heat-day:hover {
+            transform: scale(1.2);
+        }
+
+        .heat-day.level-0 { background: rgba(255,255,255,0.1); }
+        .heat-day.level-1 { background: rgba(212,175,55,0.3); }
+        .heat-day.level-2 { background: rgba(212,175,55,0.5); }
+        .heat-day.level-3 { background: rgba(212,175,55,0.7); }
+        .heat-day.level-4 { background: rgba(212,175,55,1); color: var(--bg-dark); }
+
+        .heat-day.today {
+            border: 2px solid var(--success);
         }
     </style>
 </head>
 <body>
     <div class="bg-animation"></div>
-    <div id="root"></div>
     
-    <script type="text/babel">
-        // Data
+    <header>
+        <h1>Esma-i Hüsna</h1>
+        <p class="subtitle">Allah'ın 99 İsmi - Gelişmiş Zikir ve İbadet Rehberi</p>
+    </header>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <div class="action-card" onclick="app.openProgramModal()">
+            <div class="action-icon">📿</div>
+            <div class="action-title">Zikir Programı</div>
+            <div class="action-desc">Hazır programlar veya kendi programını oluştur</div>
+        </div>
+        <div class="action-card" onclick="app.openStatsModal()">
+            <div class="action-icon">📊</div>
+            <div class="action-title">İstatistikler</div>
+            <div class="action-desc">Detaylı ilerleme ve grafikler</div>
+        </div>
+        <div class="action-card" onclick="app.openAchievementsModal()">
+            <div class="action-icon">🏆</div>
+            <div class="action-title">Başarılar</div>
+            <div class="action-desc">Rozetler ve hedefler</div>
+        </div>
+        <div class="action-card" onclick="app.startQuickDhikr()">
+            <div class="action-icon">⚡</div>
+            <div class="action-title">Hızlı Zikir</div>
+            <div class="action-desc">Otomatik sayaç ile hızlı zikir</div>
+        </div>
+    </div>
+
+    <!-- Progress Section -->
+    <div class="progress-container">
+        <div class="progress-grid">
+            <div class="progress-card">
+                <div class="progress-title">📊 Genel İlerleme</div>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <span class="stat-number" id="completedCount">0</span>
+                        <span class="stat-label">Tamamlanan</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number" id="totalDhikr">0</span>
+                        <span class="stat-label">Toplam Zikir</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number" id="favoriteCount">0</span>
+                        <span class="stat-label">Favorilerim</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number" id="progressPercent">0%</span>
+                        <span class="stat-label">Tamamlanma</span>
+                    </div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div style="text-align: center; margin-top: 0.5rem;">
+                    <span class="streak-badge" id="streakBadge" style="display: none;">
+                        🔥 <span id="streakCount">0</span> Günlük Seri
+                    </span>
+                </div>
+            </div>
+
+            <div class="progress-card">
+                <div class="progress-title">📅 Aktivite Takvimi</div>
+                <div class="heatmap" id="activityHeatmap"></div>
+                <div style="text-align: center; margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">
+                    Son 28 günün aktivitesi
+                </div>
+            </div>
+
+            <div class="progress-card">
+                <div class="progress-title">🎯 Günlük Hedef</div>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <span class="stat-number" id="dailyTarget">1000</span>
+                        <span class="stat-label">Hedef</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number" id="dailyCurrent">0</span>
+                        <span class="stat-label">Bugün</span>
+                    </div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="dailyProgressBar" style="background: linear-gradient(90deg, var(--info), var(--success));"></div>
+                </div>
+                <button class="btn btn-secondary" style="width: 100%; margin-top: 1rem;" onclick="app.setDailyTarget()">
+                    Hedefi Değiştir
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <button class="btn btn-primary" onclick="app.resetDaily()">
+            <span>🔄</span> Günlük Sıfırla
+        </button>
+        <button class="btn btn-secondary" onclick="app.exportData()">
+            <span>💾</span> Yedekle
+        </button>
+        <button class="btn btn-secondary" onclick="app.importData()">
+            <span>📥</span> Geri Yükle
+        </button>
+        <button class="btn btn-danger" onclick="app.resetAll()">
+            <span>🗑️</span> Tümünü Sıfırla
+        </button>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="filter-tabs">
+        <div class="tab active" onclick="app.filter('all')">Tümü</div>
+        <div class="tab" onclick="app.filter('completed')">Tamamlananlar</div>
+        <div class="tab" onclick="app.filter('incomplete')">Devam Eden</div>
+        <div class="tab" onclick="app.filter('favorites')">Favorilerim</div>
+        <div class="tab" onclick="app.filter('program')">Programdakiler</div>
+    </div>
+
+    <!-- Names Container -->
+    <div class="names-container" id="namesContainer"></div>
+
+    <!-- Detail Modal -->
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="modal-close" onclick="app.closeModal()">×</button>
+                <div class="modal-arabic" id="modalArabic"></div>
+                <div class="modal-turkish" id="modalTurkish"></div>
+                <div class="modal-meaning" id="modalMeaning"></div>
+            </div>
+            <div class="modal-body">
+                <div class="detail-section">
+                    <div class="detail-title">📖 Anlamı</div>
+                    <div class="detail-text" id="modalDescription"></div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-title">🎯 Kullanım Amacı</div>
+                    <div class="detail-text" id="modalPurpose"></div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-title">✨ Faziletleri</div>
+                    <div class="detail-text" id="modalVirtues"></div>
+                </div>
+                
+                <div class="dhikr-counter">
+                    <div class="dhikr-count" id="modalCount">0</div>
+                    <div class="dhikr-label">Bugünkü Zikir Sayısı</div>
+                    <div class="dhikr-controls">
+                        <button class="counter-btn" onclick="app.modalCount(-1)">−</button>
+                        <button class="counter-btn" onclick="app.modalCount(1)" style="background: var(--gold); color: var(--bg-dark);">+</button>
+                    </div>
+                </div>
+
+                <div class="auto-counter">
+                    <div class="auto-counter-title">🤖 Otomatik Sayaç</div>
+                    <div class="speed-control">
+                        <span>Hız:</span>
+                        <input type="range" class="speed-slider" id="speedSlider" min="1" max="10" value="5">
+                        <span id="speedValue">5</span>
+                    </div>
+                    <button class="btn btn-primary" id="autoCountBtn" onclick="app.toggleAutoCount()">
+                        ▶ Başlat
+                    </button>
+                </div>
+
+                <div class="notes-section">
+                    <div class="detail-title">📝 Kişisel Notlarım</div>
+                    <textarea class="notes-textarea" id="personalNotes" placeholder="Bu isim hakkında kişisel notlarınızı buraya yazabilirsiniz..."></textarea>
+                    <button class="btn btn-secondary" style="width: 100%; margin-top: 0.5rem;" onclick="app.saveNotes()">
+                        Notları Kaydet
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Program Modal -->
+    <div class="modal" id="programModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="modal-close" onclick="app.closeProgramModal()">×</button>
+                <div class="modal-turkish">Zikir Programları</div>
+                <div class="modal-meaning">Hazır programlar veya kendi programınızı oluşturun</div>
+            </div>
+            <div class="modal-body">
+                <div class="program-list" id="programList"></div>
+                <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="app.createCustomProgram()">
+                    + Yeni Program Oluştur
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Modal -->
+    <div class="modal" id="statsModal">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header">
+                <button class="modal-close" onclick="app.closeStatsModal()">×</button>
+                <div class="modal-turkish">Detaylı İstatistikler</div>
+                <div class="modal-meaning">İlerlemenizi ve alışkanlıklarınızı analiz edin</div>
+            </div>
+            <div class="modal-body">
+                <div class="chart-container">
+                    <div class="chart-title">Son 7 Gün Zikir Aktivitesi</div>
+                    <div class="bar-chart" id="weeklyChart"></div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-title">En Çok Zikredilen İsimler</div>
+                    <div id="topNamesList" style="max-height: 200px; overflow-y: auto;"></div>
+                </div>
+
+                <div class="stats-grid" style="margin-top: 1rem;">
+                    <div class="stat-box">
+                        <span class="stat-number" id="totalDays">0</span>
+                        <span class="stat-label">Aktif Gün</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number" id="avgDaily">0</span>
+                        <span class="stat-label">Ortalama/Gün</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number" id="bestDay">0</span>
+                        <span class="stat-label">En İyi Gün</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number" id="currentStreak">0</span>
+                        <span class="stat-label">Mevcut Seri</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievements Modal -->
+    <div class="modal" id="achievementsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="modal-close" onclick="app.closeAchievementsModal()">×</button>
+                <div class="modal-turkish">Başarılar ve Rozetler</div>
+                <div class="modal-meaning">Hedeflerinize ulaştıkça rozetler kazanın</div>
+            </div>
+            <div class="modal-body">
+                <div class="achievements" id="achievementsList"></div>
+                <div style="margin-top: 2rem; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 10px;">
+                    <div class="detail-title">📋 Son Kazanılan Başarılar</div>
+                    <div id="recentAchievements" style="color: var(--text-muted); font-size: 0.9rem;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Dhikr Modal -->
+    <div class="modal" id="quickDhikrModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <button class="modal-close" onclick="app.closeQuickDhikr()">×</button>
+                <div class="modal-turkish">Hızlı Zikir Modu</div>
+                <div class="modal-meaning">Otomatik sayaç ile kolay zikir</div>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <div id="quickDhikrName" style="font-size: 2rem; color: var(--gold); margin-bottom: 1rem;"></div>
+                <div id="quickDhikrCounter" style="font-size: 5rem; color: var(--gold); font-weight: bold; font-family: 'Amiri', serif; margin: 2rem 0;">0</div>
+                <div class="speed-control" style="margin-bottom: 1.5rem;">
+                    <span>Hız:</span>
+                    <input type="range" class="speed-slider" id="quickSpeedSlider" min="1" max="10" value="3">
+                    <span id="quickSpeedValue">3</span>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: center;">
+                    <button class="btn btn-secondary" onclick="app.changeQuickDhikr(-1)">← Önceki</button>
+                    <button class="btn btn-primary" id="quickStartBtn" onclick="app.toggleQuickDhikr()">▶ Başlat</button>
+                    <button class="btn btn-secondary" onclick="app.changeQuickDhikr(1)">Sonraki →</button>
+                </div>
+                <button class="btn btn-danger" style="margin-top: 1rem;" onclick="app.resetQuickDhikr()">Sıfırla</button>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="importFile" style="display: none;" accept=".json" onchange="app.handleImport(event)">
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Esma-i Hüsna Data
         const namesData = [
             { id: 1, arabic: "الرَّحْمَنُ", turkish: "Er-Rahmân", meaning: "Çok merhametli, esirgeyen", description: "Dünya ve ahirette tüm mahlûkata merhamet eden, rızkını veren.", purpose: "Rızık bolluğu, sıkıntıdan kurtulmak için.", virtues: "Her gün 100 defa okuyanın kalbi ferahlar, rızkı artar.", target: 100 },
             { id: 2, arabic: "الرَّحِيمُ", turkish: "Er-Rahîm", meaning: "Çok acıyan, merhamet eden", description: "Ahirette müminlere merhamet eden, mağfiret eden.", purpose: "Günahların affı, ahiret saadeti için.", virtues: "Her gün 100 defa okuyan Allah'ın rahmetine nail olur.", target: 100 },
-            // ... (diğer 97 isim burada olacak - kısa tutmak için ilk 2'si gösterildi)
+            { id: 3, arabic: "الْمَلِكُ", turkish: "El-Melik", meaning: "Mülkün gerçek sahibi", description: "Her şeyin maliki ve hükümdarı olan.", purpose: "İtibar, saygınlık ve otorite için.", virtues: "Devamlı okuyan kişiye itibar ve hürmet kazandırır.", target: 100 },
+            { id: 4, arabic: "الْقُدُّوسُ", turkish: "El-Kuddûs", meaning: "Her türlü eksiklikten uzak", description: "Noksanlıktan uzak, her türlü üstün sıfatların sahibi.", purpose: "Kalp temizliği, ruhani yükseliş için.", virtues: "Kalbi temizler, insanı manevi kirlerden arındırır.", target: 100 },
+            { id: 5, arabic: "السَّلاَمُ", turkish: "Es-Selâm", meaning: "Selamet veren", description: "Kullarına selamet ve esenlik veren.", purpose: "Huzur, güvenlik ve sıhhat için.", virtues: "Hastalıklara şifa, gönüllere huzur verir.", target: 100 },
+            { id: 6, arabic: "الْمُؤْمِنُ", turkish: "El-Mü'min", meaning: "Güven veren, emin kılan", description: "Kullarını korkulardan emin kılan, cenneti vaad eden.", purpose: "Korku ve endişeden kurtulmak için.", virtues: "Korku ve huzursuzluğu giderir, emniyet verir.", target: 100 },
+            { id: 7, arabic: "الْمُهَيْمِنُ", turkish: "El-Müheymin", meaning: "Gözeten, koruyan", description: "Her şeyi gözetip koruyan, şahit olan.", purpose: "Korunma, gözetim altında olmak için.", virtues: "Kötülüklerden korur, gözetimi altına alır.", target: 100 },
+            { id: 8, arabic: "الْعَزِيزُ", turkish: "El-Azîz", meaning: "İzzet ve güç sahibi", description: "Galip ve üstün olan, hiçbir şeye muhtaç olmayan.", purpose: "Güç, kuvvet ve izzet için.", virtues: "Zelil olmaktan korur, izzet ve ikram verir.", target: 100 },
+            { id: 9, arabic: "الْجَبَّارُ", turkish: "El-Cebbâr", meaning: "İradesi galip olan", description: "Dilediğini yapan, büyüklenenleri alçaltan.", purpose: "Zorlukların üstesinden gelmek için.", virtues: "Zor işleri kolaylaştırır, büyüklerden çekinilmez.", target: 100 },
+            { id: 10, arabic: "الْمُتَكَبِّرُ", turkish: "El-Mütekebbir", meaning: "Büyüklük sahibi", description: "Büyüklüğün gerçek sahibi, her şeyden üstün.", purpose: "Kibirden kurtulmak, tevazu için.", virtues: "Kibri giderir, tevazu sahibi yapar.", target: 100 },
+            { id: 11, arabic: "الْخَالِقُ", turkish: "El-Hâlık", meaning: "Yaratan", description: "Hiçbir örneği olmadan yaratan.", purpose: "Yaratıcının kudretini anlamak için.", virtues: "Yaratılış sırlarını anlamaya vesile olur.", target: 100 },
+            { id: 12, arabic: "الْبَارِئُ", turkish: "El-Bâri'", meaning: "Mükemmel yaratan", description: "Yarattıklarını en güzel şekilde düzenleyen.", purpose: "İşlerin düzgün gitmesi için.", virtues: "İşleri düzene koyar, güzel neticeler verir.", target: 100 },
+            { id: 13, arabic: "الْمُصَوِّرُ", turkish: "El-Musavvir", meaning: "Şekil veren", description: "Yarattıklarına çeşitli şekiller veren.", purpose: "Güzellik ve estetik için.", virtues: "Güzel ahlak ve görünüş verir.", target: 100 },
+            { id: 14, arabic: "الْغَفَّارُ", turkish: "El-Gaffâr", meaning: "Çok bağışlayan", description: "Günahları örten, çok mağfiret eden.", purpose: "Günahların affı için.", virtues: "Günahları affettirir, tevbeleri kabul ettirir.", target: 100 },
+            { id: 15, arabic: "الْقَهَّارُ", turkish: "El-Kahhâr", meaning: "Her şeye galip olan", description: "Bütün mahlûkata galip ve hakim olan.", purpose: "Düşmanlara karşı galip gelmek için.", virtues: "Düşmanları kahreder, galibiyet verir.", target: 100 },
+            { id: 16, arabic: "الْوَهَّابُ", turkish: "El-Vehhâb", meaning: "Karşılıksız veren", description: "Lütfu bol, karşılık beklemeden veren.", purpose: "Nimet ve bereket için.", virtues: "Rızkı artırır, nimetleri çoğaltır.", target: 100 },
+            { id: 17, arabic: "الرَّزَّاقُ", turkish: "Er-Razzâk", meaning: "Rızık veren", description: "Bütün mahlûkatın rızkını veren.", purpose: "Rızık bolluğu için.", virtues: "Rızkı genişletir, bolluk verir.", target: 100 },
+            { id: 18, arabic: "الْفَتَّاحُ", turkish: "El-Fettâh", meaning: "Açan, halleden", description: "Kapıları açan, işleri halleden.", purpose: "Sıkıntılı işlerin çözümü için.", virtues: "Kapalı kapıları açar, zorlukları giderir.", target: 100 },
+            { id: 19, arabic: "اَلْعَلِيمُ", turkish: "El-Alîm", meaning: "Her şeyi bilen", description: "Gizliyi ve açığı bilen, her şeyden haberdar.", purpose: "İlim ve bilgi için.", virtues: "Akıl ve bilgi verir, anlayışı artırır.", target: 100 },
+            { id: 20, arabic: "الْقَابِضُ", turkish: "El-Kâbız", meaning: "Daraltan, alan", description: "Rızkını dilediği gibi daraltan.", purpose: "Nefsi terbiye için.", virtues: "Nefsi kontrol altına alır, israfa engel olur.", target: 100 },
+            { id: 21, arabic: "الْبَاسِطُ", turkish: "El-Bâsıt", meaning: "Genişleten", description: "Rızkını ve rahmetini genişleten.", purpose: "Rızık ve bereket için.", virtues: "Rızkı genişletir, kalbi ferahlatır.", target: 100 },
+            { id: 22, arabic: "الْخَافِضُ", turkish: "El-Hâfız", meaning: "Alçaltan", description: "Kibirlileri alçaltan, zelil eden.", purpose: "Kibirden kurtulmak için.", virtues: "Kibri giderir, alçak gönüllülük verir.", target: 100 },
+            { id: 23, arabic: "الرَّافِعُ", turkish: "Er-Râfi'", meaning: "Yükselten", description: "Dereceleri yükselten, izzet veren.", purpose: "Makam ve itibar için.", virtues: "Dereceleri yükseltir, izzet verir.", target: 100 },
+            { id: 24, arabic: "الْمُعِزُّ", turkish: "El-Mu'izz", meaning: "İzzet veren", description: "Dilediğine izzet ve üstünlük veren.", purpose: "İtibar ve saygınlık için.", virtues: "İzzet ve ikram sahibi yapar.", target: 100 },
+            { id: 25, arabic: "المُذِلُّ", turkish: "El-Müzil", meaning: "Zelil eden", description: "Dilediğini zelil ve alçak kılan.", purpose: "Düşmanlara karşı üstünlük için.", virtues: "Düşmanları zelil eder, galip gelmeyi sağlar.", target: 100 },
+            { id: 26, arabic: "السَّمِيعُ", turkish: "Es-Semî'", meaning: "Her şeyi işiten", description: "Gizliyi ve açığı, sessizi işiten.", purpose: "Duayı kabul ettirmek için.", virtues: "Duaları işitir, kabul eder.", target: 100 },
+            { id: 27, arabic: "الْبَصِيرُ", turkish: "El-Basîr", meaning: "Her şeyi gören", description: "Zerreleri bile gören, her şeyden haberdar.", purpose: "Gönül gözünü açmak için.", virtues: "Basiret verir, doğru görmeyi sağlar.", target: 100 },
+            { id: 28, arabic: "الْحَكَمُ", turkish: "El-Hâkam", meaning: "Hüküm veren", description: "Adaletli hüküm veren, hakkı batıldan ayıran.", purpose: "Adalet ve doğru karar için.", virtues: "Adaletli olmayı sağlar, doğru karar verdirir.", target: 100 },
+            { id: 29, arabic: "الْعَدْلُ", turkish: "El-Adl", meaning: "Adaletli", description: "Adaletin kaynağı, haksızlık yapmayan.", purpose: "Adalet ve hak için.", virtues: "Adaletli yapar, zulümden korur.", target: 100 },
+            { id: 30, arabic: "اللَّطِيفُ", turkish: "El-Latîf", meaning: "Lütufkâr, ince işiten", description: "Kullarına ince ince lütuf eden.", purpose: "Gizli lütuf ve yardım için.", virtues: "Gizli yardımlarını esirgemez.", target: 100 },
+            { id: 31, arabic: "الْخَبِيرُ", turkish: "El-Habîr", meaning: "Her şeyden haberdar", description: "Her şeyin iç yüzünden haberdar olan.", purpose: "Gerçekleri öğrenmek için.", virtues: "İç yüzü görmeyi sağlar, gerçekleri öğretir.", target: 100 },
+            { id: 32, arabic: "الْحَلِيمُ", turkish: "El-Halîm", meaning: "Yumuşak davranan", description: "Acele etmeyen, yumuşak davranan.", purpose: "Sabır ve yumuşak huyluluk için.", virtues: "Sabır ve tahammül verir.", target: 100 },
+            { id: 33, arabic: "الْعَظِيمُ", turkish: "El-Azîm", meaning: "Büyük, ulu", description: "Büyüklükte benzeri olmayan.", purpose: "Büyük işler başarmak için.", virtues: "Büyük işleri kolaylaştırır.", target: 100 },
+            { id: 34, arabic: "الْغَفُورُ", turkish: "El-Gafûr", meaning: "Çok affeden", description: "Günahları çok affeden, bağışlayan.", purpose: "Günahların affı için.", virtues: "Günahları affettirir, mağfiret buldurur.", target: 100 },
+            { id: 35, arabic: "الشَّكُورُ", turkish: "Eş-Şekûr", meaning: "Karşılık veren", description: "Az şükre çok karşılık veren.", purpose: "Şükür ve karşılık için.", virtues: "Şükürde artış verir, karşılıksız bırakmaz.", target: 100 },
+            { id: 36, arabic: "الْعَلِيُّ", turkish: "El-Alîyy", meaning: "Yüce, ulu", description: "Yücelikte eşi benzeri olmayan.", purpose: "Yücelik ve ululuk için.", virtues: "Dereceyi yükseltir, ululuk verir.", target: 100 },
+            { id: 37, arabic: "الْكَبِيرُ", turkish: "El-Kebîr", meaning: "Büyük", description: "Büyüklükte eşi olmayan.", purpose: "Büyüklük ve azamet için.", virtues: "Kalbe büyüklük verir.", target: 100 },
+            { id: 38, arabic: "الْحَفِيظُ", turkish: "El-Hafîz", meaning: "Koruyan", description: "Her şeyi koruyan, gözeten.", purpose: "Korunma ve emniyet için.", virtues: "Korur, gözetir, emniyet verir.", target: 100 },
+            { id: 39, arabic: "المُقيِت", turkish: "El-Mukît", meaning: "Besleyen, kuvvet veren", description: "Besleyip kuvvet veren, rızık veren.", purpose: "Kuvvet ve güç için.", virtues: "Kuvvet ve kudret verir.", target: 100 },
+            { id: 40, arabic: "الْحسِيبُ", turkish: "El-Haseeb", meaning: "Hesap gören", description: "Kullarına hesap gören, kâfi olan.", purpose: "Hesap verme gücü için.", virtues: "Kâfi gelir, hesabı görür.", target: 100 },
+            { id: 41, arabic: "الْجَلِيلُ", turkish: "El-Celîl", meaning: "Celal ve azamet sahibi", description: "Celal, azamet ve büyüklük sahibi.", purpose: "Celal ve heybet için.", virtues: "Heybet ve azamet verir.", target: 100 },
+            { id: 42, arabic: "الْكَرِيمُ", turkish: "El-Kerîm", meaning: "İkram eden, cömert", description: "İkramı bol, cömert olan.", purpose: "İkram ve cömertlik için.", virtues: "Cömertlik ve ikram sahibi yapar.", target: 100 },
+            { id: 43, arabic: "الرَّقِيبُ", turkish: "Er-Rakîb", meaning: "Gözeten", description: "Her an her şeyi gözeten.", purpose: "Gözetim altında olmak için.", virtues: "Gözetir, korur, muhafaza eder.", target: 100 },
+            { id: 44, arabic: "الْمُجِيبُ", turkish: "El-Mucîb", meaning: "Duaları kabul eden", description: "Duaları kabul eden, icabet eden.", purpose: "Dua kabulü için.", virtues: "Duaları kabul eder, istekleri verir.", target: 100 },
+            { id: 45, arabic: "الْوَاسِعُ", turkish: "El-Vâsi'", meaning: "Geniş, her şeye yeten", description: "Rahmeti ve ilmi geniş olan.", purpose: "Genişlik ve bolluk için.", virtues: "Kalbe genişlik verir, bolluk sağlar.", target: 100 },
+            { id: 46, arabic: "الْحَكِيمُ", turkish: "El-Hakîm", meaning: "Hikmetli", description: "Her işi hikmetli olan, eksiksiz bilen.", purpose: "Hikmet ve doğru karar için.", virtues: "Hikmet verir, işleri düzene koyar.", target: 100 },
+            { id: 47, arabic: "الْوَدُودُ", turkish: "El-Vedûd", meaning: "Çok seven", description: "Kullarını çok seven, sevilen.", purpose: "Sevgi ve muhabbet için.", virtues: "Kalplere sevgi verir, sevilir kılar.", target: 100 },
+            { id: 48, arabic: "الْمَجِيدُ", turkish: "El-Mecîd", meaning: "Şan ve şeref sahibi", description: "Şanı büyük, ikramı bol.", purpose: "Şeref ve ikram için.", virtues: "Şeref ve ikram sahibi yapar.", target: 100 },
+            { id: 49, arabic: "الْبَاعِثُ", turkish: "El-Bâ'is", meaning: "Dirilten", description: "Ölüleri dirilten, uyandıran.", purpose: "Kalb diriliği için.", virtues: "Kalpleri canlandırır, uyandırır.", target: 100 },
+            { id: 50, arabic: "الشَّهِيدُ", turkish: "Eş-Şehîd", meaning: "Her şeye şahit", description: "Gizliyi ve açığı gören, şahit olan.", purpose: "Şahitlik ve doğruluk için.", virtues: "Doğru sözlü yapar, şahitlik verir.", target: 100 },
+            { id: 51, arabic: "الْحَقُّ", turkish: "El-Haqq", meaning: "Gerçek, hakk", description: "Varlığı gerçek, her işi doğru.", purpose: "Hak ve gerçek için.", virtues: "Hakka iletir, gerçeği gösterir.", target: 100 },
+            { id: 52, arabic: "الْوَكِيلُ", turkish: "El-Vekîl", meaning: "Güvenilen, vekil", description: "İşleri güzel yöneten, güvenilen.", purpose: "İşlerin yoluna girmesi için.", virtues: "İşleri düzene koyar, güven verir.", target: 100 },
+            { id: 53, arabic: "الْقَوِيُّ", turkish: "El-Kaviyy", meaning: "Güçlü, kuvvetli", description: "Kudreti sonsuz, güçlü olan.", purpose: "Kuvvet ve güç için.", virtues: "Kuvvet ve kudret verir.", target: 100 },
+            { id: 54, arabic: "الْمَتِينُ", turkish: "El-Metîn", meaning: "Sağlam, metin", description: "Kuvveti sağlam, dayanıklı.", purpose: "Metanet ve dayanıklılık için.", virtues: "Metanet ve sabır verir.", target: 100 },
+            { id: 55, arabic: "الْوَلِيُّ", turkish: "El-Veliyy", meaning: "Dost, yardımcı", description: "Müminlerin dostu ve yardımcısı.", purpose: "Dostluk ve yardım için.", virtues: "Dostluk ve yardımını esirgemez.", target: 100 },
+            { id: 56, arabic: "الْحَمِيدُ", turkish: "El-Hamîd", meaning: "Övgüye layık", description: "Her türlü övgüye layık olan.", purpose: "Övgü ve şükür için.", virtues: "Övgüye layık işler yaptırır.", target: 100 },
+            { id: 57, arabic: "الْمُحْصِي", turkish: "El-Muhsî", meaning: "Sayan, bilen", description: "Her şeyi sayıp bilen.", purpose: "Düzen ve hesap için.", virtues: "Düzenli ve hesaplı yapar.", target: 100 },
+            { id: 58, arabic: "الْمُبْدِئُ", turkish: "El-Mübdi'", meaning: "İlk defa yaratan", description: "Hiç yoktan yaratan, başlatan.", purpose: "Yeni başlangıçlar için.", virtues: "Yeni işlere başlamayı kolaylaştırır.", target: 100 },
+            { id: 59, arabic: "الْمُعِيدُ", turkish: "El-Mu'îd", meaning: "İade eden", description: "Yaratıkları öldükten sonra dirilten.", purpose: "Tekrar ve iade için.", virtues: "Kayıpları geri getirir, yeniler.", target: 100 },
+            { id: 60, arabic: "الْمُحْيِي", turkish: "El-Muhyî", meaning: "Dirilten", description: "Can veren, dirilten.", purpose: "Hayat ve canlılık için.", virtues: "Kalplere hayat verir, canlandırır.", target: 100 },
+            { id: 61, arabic: "اَلْمُمِيتُ", turkish: "El-Mümît", meaning: "Öldüren", description: "Can alan, öldüren.", purpose: "Nefsi öldürmek, tezkiye için.", virtues: "Nefsi kontrol altına alır, tezkiye eder.", target: 100 },
+            { id: 62, arabic: "الْحَيُّ", turkish: "El-Hayy", meaning: "Diri, ebedi", description: "Ebedî diri olan, ölümsüz.", purpose: "Hayat ve dirilik için.", virtues: "Kalbe hayat verir, diri tutar.", target: 100 },
+            { id: 63, arabic: "الْقَيُّومُ",            turkish: "El-Kayyûm", meaning: "Kendine muhtaç olmayan", description: "Varlığı kendinden olan, her şeyi ayakta tutan.", purpose: "Ayakta kalma ve kuvvet için.", virtues: "Ayakta tutar, kuvvet verir.", target: 100 },
+            { id: 64, arabic: "الْوَاجِدُ", turkish: "El-Vâcid", meaning: "Bulan, kavuşan", description: "Dilediğini bulan, hiçbir şeye muhtaç olmayan.", purpose: "Arananları bulmak için.", virtues: "Kayıpları bulur, murada erdirir.", target: 100 },
+            { id: 65, arabic: "الْمَاجِدُ", turkish: "El-Mâcid", meaning: "Şerefli, ulu", description: "İkramı bol, şanı büyük.", purpose: "Şeref ve ululuk için.", virtues: "Şeref ve ikram sahibi yapar.", target: 100 },
+            { id: 66, arabic: "الْواحِدُ", turkish: "El-Vâhid", meaning: "Bir olan", description: "Zatında ve sıfatlarında bir olan.", purpose: "Birlik ve tevhid için.", virtues: "Kalbe tevhid aşkı verir.", target: 100 },
+            { id: 67, arabic: "اَلاَحَدُ", turkish: "El-Ahad", meaning: "Tek olan", description: "Eşi ve benzeri olmayan tek.", purpose: "Teklik ve benzersizlik için.", virtues: "Eşsizlik ve yükseklik verir.", target: 100 },
+            { id: 68, arabic: "الصَّمَدُ", turkish: "Es-Samed", meaning: "Samed, her şey O'na muhtaç", description: "Her şeyin kendisine muhtaç olduğu, kendisi hiçbir şeye muhtaç olmayan.", purpose: "İhtiyaçların giderilmesi için.", virtues: "İhtiyaçları giderir, kâfi gelir.", target: 100 },
+            { id: 69, arabic: "الْقَادِرُ", turkish: "El-Kâdir", meaning: "Güç yetiren, kadir", description: "Her şeye gücü yeten, kadir.", purpose: "Güç ve kudret için.", virtues: "Güç ve kudret verir, her işi kolaylaştırır.", target: 100 },
+            { id: 70, arabic: "الْمُقْتَدِرُ", turkish: "El-Muktedir", meaning: "Güç ve kudret sahibi", description: "Kudreti sonsuz, dilediğini yapan.", purpose: "Üstün güç ve kudret için.", virtues: "Üstün kuvvet ve kudret verir.", target: 100 },
+            { id: 71, arabic: "الْمُقَدِّمُ", turkish: "El-Mukaddim", meaning: "Öne alan", description: "Dilediğini öne alan, ileri götüren.", purpose: "İlerleme ve terfi için.", virtues: "İşleri ilerletir, terfi ettirir.", target: 100 },
+            { id: 72, arabic: "الْمُؤَخِّرُ", turkish: "El-Muahhir", meaning: "Geri bırakan", description: "Dilediğini geri bırakan.", purpose: "Sabır ve beklemek için.", virtues: "Sabır ve tahammül verir.", target: 100 },
+            { id: 73, arabic: "الأوَّلُ", turkish: "El-Evvel", meaning: "İlk", description: "Varlığında ilk, ezeli.", purpose: "Başlangıç ve öncelik için.", virtues: "İşlere güzel başlatır.", target: 100 },
+            { id: 74, arabic: "الآخِرُ", turkish: "El-Âhir", meaning: "Son", description: "Varlığında son, ebedi.", purpose: "Sonuç ve netice için.", virtues: "İşleri güzel neticelendirir.", target: 100 },
+            { id: 75, arabic: "الظَّاهِرُ", turkish: "Ez-Zâhir", meaning: "Açık, görünen", description: "Varlığı açık, görünen.", purpose: "Açıklık ve görünürlük için.", virtues: "Gerçekleri gösterir, açıklık verir.", target: 100 },
+            { id: 76, arabic: "الْبَاطِنُ", turkish: "El-Bâtın", meaning: "Gizli, iç yüzü bilen", description: "Gizliyi bilen, iç yüzü gören.", purpose: "Gizli ilimler ve basiret için.", virtues: "Gizliyi öğretir, basiret verir.", target: 100 },
+            { id: 77, arabic: "الْوَالِي", turkish: "El-Vâlî", meaning: "Vekil, yöneten", description: "Her şeyi yöneten, işleri idare eden.", purpose: "İdare ve yönetim için.", virtues: "İdare ve yönetim kabiliyeti verir.", target: 100 },
+            { id: 78, arabic: "الْمُتَعَالِي", turkish: "El-Müteâlî", meaning: "Yüce, ulu", description: "Yücelikte eşi olmayan, ulu.", purpose: "Yücelik ve ululuk için.", virtues: "Yücelik ve ululuk verir.", target: 100 },
+            { id: 79, arabic: "الْبَرُّ", turkish: "El-Berr", meaning: "İyilik eden, yararlı", description: "İyiliği bol, yararlı işler yapan.", purpose: "İyilik ve fayda için.", virtues: "İyilik yapmayı ve faydalı olmayı sağlar.", target: 100 },
+            { id: 80, arabic: "التَّوَّابُ", turkish: "Et-Tevvâb", meaning: "Tevbeleri kabul eden", description: "Tevbeleri çok kabul eden, bağışlayan.", purpose: "Tevbe kabulü için.", virtues: "Tevbeleri kabul eder, bağışlar.", target: 100 },
+            { id: 81, arabic: "الْمُنْتَقِمُ", turkish: "El-Müntakim", meaning: "İntikam alan", description: "Zalimlerden intikam alan.", purpose: "Zalimlerden kurtulmak için.", virtues: "Zalimlere fırsat vermez, adaletini gösterir.", target: 100 },
+            { id: 82, arabic: "العَفُوُّ", turkish: "El-Afuvv", meaning: "Affeden, geçen", description: "Günahları affeden, geçen.", purpose: "Affedilmek için.", virtues: "Günahları affettirir, bağışlar.", target: 100 },
+            { id: 83, arabic: "الرَّؤُوفُ", turkish: "Er-Ra'ûf", meaning: "Çok şefkatli", description: "Kullarına çok şefkatli, merhametli.", purpose: "Şefkat ve merhamet için.", virtues: "Şefkat ve merhamet duygusu verir.", target: 100 },
+            { id: 84, arabic: "مَالِكُ الْمُلْكِ", turkish: "Mâlikü'l-Mülk", meaning: "Mülkün gerçek sahibi", description: "Mülkün gerçek sahibi, dilediği gibi tasarruf eden.", purpose: "Mülk ve tasarruf için.", virtues: "Mülk ve tasarruf gücü verir.", target: 100 },
+            { id: 85, arabic: "ذُوالْجَلاَلِ وَالإكْرَامِ", turkish: "Zü'l-Celâli ve'l-İkrâm", meaning: "Celal ve ikram sahibi", description: "Celal, azamet ve ikram sahibi.", purpose: "Celal ve ikram için.", virtues: "Hem korku hem ikram sahibi yapar.", target: 100 },
+            { id: 86, arabic: "الْمُقْسِطُ", turkish: "El-Muksit", meaning: "Adaletli", description: "Adaletli davranan, hakkı veren.", purpose: "Adalet ve hak için.", virtues: "Adaletli olmayı sağlar.", target: 100 },
+            { id: 87, arabic: "الْجَامِعُ", turkish: "El-Câmi'", meaning: "Toplayan", description: "Dilediğini toplayan, bir araya getiren.", purpose: "Toplanma ve bir araya gelme için.", virtues: "Dağınıklığı giderir, toplar.", target: 100 },
+            { id: 88, arabic: "الْغَنِيُّ", turkish: "El-Ganiyy", meaning: "Zengin, hiçbir şeye muhtaç olmayan", description: "Hiçbir şeye muhtaç olmayan, zengin.", purpose: "Zenginlik ve kanaat için.", virtues: "Zenginlik ve kanaat verir.", target: 100 },
+            { id: 89, arabic: "الْمُغْنِي", turkish: "El-Muğnî", meaning: "Zengin eden", description: "Dilediğini zengin eden.", purpose: "Zenginlik ve bolluk için.", virtues: "Zenginlik ve bolluk verir.", target: 100 },
+            { id: 90, arabic: "اَلْمَانِعُ", turkish: "El-Mâni'", meaning: "Engelleyen", description: "Dilediğine engel olan, koruyan.", purpose: "Korunma ve engelden kurtulma için.", virtues: "Kötülükleri engeller, korur.", target: 100 },
+            { id: 91, arabic: "الضَّارَّ", turkish: "Ed-Dârr", meaning: "Zarar veren", description: "Dilediğine zarar veren.", purpose: "Zarardan korunmak için.", virtues: "Zararları defeder, korur.", target: 100 },
+            { id: 92, arabic: "النَّافِعُ", turkish: "En-Nâfi'", meaning: "Fayda veren", description: "Dilediğine fayda veren.", purpose: "Fayda ve menfaat için.", virtues: "Faydalı işler yaptırır.", target: 100 },
+            { id: 93, arabic: "النُّورُ", turkish: "En-Nûr", meaning: "Nur, aydınlık", description: "Alemleri nurlandıran, aydınlatan.", purpose: "Nur ve aydınlık için.", virtues: "Kalbe nur verir, aydınlatır.", target: 100 },
+            { id: 94, arabic: "الْهَادِي", turkish: "El-Hâdî", meaning: "Hidayet eden", description: "Doğru yola ileten, hidayet veren.", purpose: "Hidayet ve doğru yol için.", virtues: "Doğru yola iletir, hidayet verir.", target: 100 },
+            { id: 95, arabic: "الْبَدِيعُ", turkish: "El-Bedî'", meaning: "Eşsiz yaratan", description: "Eşi benzeri olmadan yaratan.", purpose: "İcat ve yenilik için.", virtues: "Yaratıcılık ve güzellik verir.", target: 100 },
+            { id: 96, arabic: "اَلْبَاقِي", turkish: "El-Bâkî", meaning: "Baki kalan", description: "Ebedî baki olan, yok olmayan.", purpose: "Bekâ ve devamlılık için.", virtues: "Kalıcı işler yaptırır.", target: 100 },
+            { id: 97, arabic: "الْوَارِثُ", turkish: "El-Vâris", meaning: "Varis, geride kalan", description: "Her şeyin geride kalanı, varisi.", purpose: "Miras ve kalıcı değerler için.", virtues: "Kalıcı eserler bıraktırır.", target: 100 },
+            { id: 98, arabic: "الرَّشِيدُ", turkish: "Er-Reşîd", meaning: "Doğru yola ileten", description: "Doğru yola ileten, akıllıca yöneten.", purpose: "Rüşd ve doğru yönetim için.", virtues: "Doğru kararlar verdirir, yönetir.", target: 100 },
+            { id: 99, arabic: "الصَّبُورُ", turkish: "Es-Sabûr", meaning: "Çok sabreden", description: "Ceza vermede acele etmeyen, çok sabreden.", purpose: "Sabır ve tahammül için.", virtues: "Sabır ve metanet verir.", target: 100 }
         ];
 
+        // Predefined Programs
         const predefinedPrograms = [
             {
                 id: 'morning',
                 name: 'Sabah Zikri',
                 description: 'Güne başlarken çekilecek 7 isim',
-                names: [1, 2],
+                names: [1, 2, 5, 6, 17, 26, 62],
                 color: '#f39c12'
             },
             {
                 id: 'evening',
                 name: 'Akşam Zikri',
                 description: 'Günü kapatırken çekilecek 7 isim',
-                names: [1, 2],
+                names: [3, 4, 14, 34, 38, 80, 99],
                 color: '#9b59b6'
+            },
+            {
+                id: 'rizik',
+                name: 'Rızık ve Bereket',
+                description: 'Rızık artışı için 5 isim',
+                names: [1, 16, 17, 21, 89],
+                color: '#27ae60'
+            },
+            {
+                id: 'huzur',
+                name: 'Huzur ve Güven',
+                description: 'İç huzur için 5 isim',
+                names: [5, 6, 7, 26, 38],
+                color: '#3498db'
+            },
+            {
+                id: 'aff',
+                name: 'Mağfiret ve Af',
+                description: 'Günahların affı için 5 isim',
+                names: [2, 14, 34, 80, 82],
+                color: '#e74c3c'
+            },
+            {
+                id: 'kuvvet',
+                name: 'Kuvvet ve Kudret',
+                description: 'Güç ve kuvvet için 5 isim',
+                names: [8, 9, 53, 69, 70],
+                color: '#e67e22'
+            },
+            {
+                id: 'all',
+                name: 'Tam Program (99 İsim)',
+                description: 'Tüm esma-i hüsna zikri',
+                names: Array.from({length: 99}, (_, i) => i + 1),
+                color: '#d4af37'
             }
         ];
 
+        // Achievements Data
         const achievementsData = [
             { id: 'first', icon: '🌱', title: 'İlk Adım', desc: 'İlk zikrini tamamla', condition: (stats) => stats.totalDhikr >= 1 },
             { id: 'ten', icon: '🔟', title: 'Onlu Çıkış', desc: '10 zikir tamamla', condition: (stats) => stats.totalDhikr >= 10 },
+            { id: 'hundred', icon: '💯', title: 'Yüzü Aşan', desc: '100 zikir tamamla', condition: (stats) => stats.totalDhikr >= 100 },
+            { id: 'thousand', icon: '🔥', title: 'Binlerce', desc: '1000 zikir tamamla', condition: (stats) => stats.totalDhikr >= 1000 },
+            { id: 'first_complete', icon: '✨', title: 'İlk Tamamlama', desc: 'İlk ismi hedef sayısına ulaştır', condition: (stats) => stats.completed >= 1 },
+            { id: 'ten_complete', icon: '🌟', title: 'On İsim', desc: '10 ismi tamamla', condition: (stats) => stats.completed >= 10 },
+            { id: 'half', icon: '🌙', title: 'Yarı Yol', desc: '50 ismi tamamla', condition: (stats) => stats.completed >= 50 },
+            { id: 'full', icon: '👑', title: 'Esma-i Hüsna Ustası', desc: 'Tüm 99 ismi tamamla', condition: (stats) => stats.completed >= 99 },
+            { id: 'streak_3', icon: '🔥', title: '3 Günlük Seri', desc: '3 gün üst üste zikir yap', condition: (stats) => stats.streak >= 3 },
+            { id: 'streak_7', icon: '⚡', title: 'Haftalık Seri', desc: '7 gün üst üste zikir yap', condition: (stats) => stats.streak >= 7 },
+            { id: 'streak_30', icon: '🏆', title: 'Aylık Şampiyon', desc: '30 gün üst üste zikir yap', condition: (stats) => stats.streak >= 30 },
+            { id: 'favorite', icon: '❤️', title: 'Favori Seçici', desc: 'İlk favorini ekle', condition: (stats) => stats.favorites >= 1 },
+            { id: 'collector', icon: '⭐', title: 'Koleksiyoncu', desc: '10 favori ekle', condition: (stats) => stats.favorites >= 10 }
         ];
 
-        // React Components
-        const App = () => {
-            const [data, setData] = React.useState({
+        // Application Logic
+        const app = {
+            data: {
                 counts: {},
                 favorites: [],
                 notes: {},
@@ -148,289 +1482,776 @@
                 dailyTarget: 1000,
                 currentProgram: null,
                 unlockedAchievements: [],
-                lastActiveDate: null,
-                streak: 0
-            });
-            
-            const [currentFilter, setCurrentFilter] = React.useState('all');
-            const [currentModal, setCurrentModal] = React.useState(null);
-            const [modalData, setModalData] = React.useState(null);
-            const [toast, setToast] = React.useState(null);
+                lastActiveDate: null
+            },
+            currentFilter: 'all',
+            currentModalId: null,
+            autoCountInterval: null,
+            quickDhikrIndex: 0,
+            quickDhikrInterval: null,
 
-            // Load data on mount
-            React.useEffect(() => {
+            init() {
+                this.loadData();
+                this.checkDailyReset();
+                this.updateStreak();
+                this.checkAchievements();
+                this.render();
+                this.updateStats();
+                this.renderHeatmap();
+                this.setupEventListeners();
+            },
+
+            loadData() {
                 const saved = localStorage.getItem('esmaDataV2');
                 if (saved) {
-                    setData(prev => ({ ...prev, ...JSON.parse(saved) }));
+                    this.data = { ...this.data, ...JSON.parse(saved) };
                 }
-            }, []);
+            },
 
-            // Save data whenever it changes
-            React.useEffect(() => {
-                localStorage.setItem('esmaDataV2', JSON.stringify(data));
-            }, [data]);
+            saveData() {
+                localStorage.setItem('esmaDataV2', JSON.stringify(this.data));
+            },
 
-            // Check daily reset
-            React.useEffect(() => {
-                checkDailyReset();
-            }, []);
-
-            const checkDailyReset = () => {
+            checkDailyReset() {
                 const today = new Date().toDateString();
-                if (data.lastReset !== today) {
-                    if (data.lastReset) {
-                        const yesterdayTotal = Object.values(data.counts).reduce((a, b) => a + b, 0);
-                        setData(prev => ({
-                            ...prev,
-                            history: { ...prev.history, [prev.lastReset]: yesterdayTotal },
-                            counts: {},
-                            lastReset: today
-                        }));
+                if (this.data.lastReset !== today) {
+                    // Save yesterday's data to history before resetting
+                    if (this.data.lastReset) {
+                        const yesterdayTotal = Object.values(this.data.counts).reduce((a, b) => a + b, 0);
+                        this.data.history[this.data.lastReset] = yesterdayTotal;
+                    }
+                    
+                    this.data.counts = {};
+                    this.data.lastReset = today;
+                    this.saveData();
+                }
+            },
+
+            updateStreak() {
+                const today = new Date();
+                const lastActive = this.data.lastActiveDate ? new Date(this.data.lastActiveDate) : null;
+                
+                if (lastActive) {
+                    const diffTime = Math.abs(today - lastActive);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    
+                    if (diffDays > 1) {
+                        // Streak broken
+                        this.data.streak = 0;
+                    }
+                } else {
+                    this.data.streak = 0;
+                }
+                
+                this.saveData();
+            },
+
+            recordActivity() {
+                const today = new Date().toDateString();
+                this.data.lastActiveDate = today;
+                
+                const todayTotal = Object.values(this.data.counts).reduce((a, b) => a + b, 0);
+                if (todayTotal > 0 && this.data.lastReset === today) {
+                    // Check if this is first activity today
+                    const yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    const yesterdayStr = yesterday.toDateString();
+                    
+                    if (this.data.lastActiveDate !== today) {
+                        this.data.streak = (this.data.streak || 0) + 1;
                     }
                 }
-            };
+                
+                this.saveData();
+                this.checkAchievements();
+            },
 
-            const showToast = (message) => {
-                setToast(message);
-                setTimeout(() => setToast(null), 3000);
-            };
+            getCount(id) {
+                return this.data.counts[id] || 0;
+            },
 
-            const increment = (id) => {
-                setData(prev => ({
-                    ...prev,
-                    counts: { ...prev.counts, [id]: (prev.counts[id] || 0) + 1 }
-                }));
-                showToast(`${namesData.find(n => n.id === id).turkish} +1`);
-            };
-
-            const decrement = (id) => {
-                if (data.counts[id] > 0) {
-                    setData(prev => ({
-                        ...prev,
-                        counts: { ...prev.counts, [id]: prev.counts[id] - 1 }
-                    }));
-                }
-            };
-
-            const toggleFavorite = (id) => {
-                setData(prev => {
-                    const favorites = [...prev.favorites];
-                    const index = favorites.indexOf(id);
-                    if (index > -1) {
-                        favorites.splice(index, 1);
-                        showToast('Favorilerden çıkarıldı');
-                    } else {
-                        favorites.push(id);
-                        showToast('Favorilere eklendi ❤️');
-                    }
-                    return { ...prev, favorites };
-                });
-            };
-
-            const isCompleted = (id) => {
+            increment(id) {
+                this.data.counts[id] = (this.data.counts[id] || 0) + 1;
+                this.recordActivity();
+                this.saveData();
+                this.render();
+                this.updateStats();
+                this.renderHeatmap();
+                this.showToast(`${namesData.find(n => n.id === id).turkish} +1`);
+                
+                // Check if target reached
                 const name = namesData.find(n => n.id === id);
-                return (data.counts[id] || 0) >= name.target;
-            };
+                if (this.data.counts[id] === name.target) {
+                    this.showToast(`🎉 ${name.turkish} hedef tamamlandı!`);
+                    this.checkAchievements();
+                }
+            },
 
-            const isFavorite = (id) => data.favorites.includes(id);
+            decrement(id) {
+                if (this.data.counts[id] > 0) {
+                    this.data.counts[id]--;
+                    this.saveData();
+                    this.render();
+                    this.updateStats();
+                    this.renderHeatmap();
+                }
+            },
 
-            const getFilteredNames = () => {
-                switch(currentFilter) {
+            toggleFavorite(id) {
+                const index = this.data.favorites.indexOf(id);
+                if (index > -1) {
+                    this.data.favorites.splice(index, 1);
+                    this.showToast('Favorilerden çıkarıldı');
+                } else {
+                    this.data.favorites.push(id);
+                    this.showToast('Favorilere eklendi ❤️');
+                }
+                this.saveData();
+                this.render();
+                this.updateStats();
+                this.checkAchievements();
+            },
+
+            isFavorite(id) {
+                return this.data.favorites.includes(id);
+            },
+
+            isCompleted(id) {
+                const name = namesData.find(n => n.id === id);
+                return (this.data.counts[id] || 0) >= name.target;
+            },
+
+            saveNotes() {
+                if (this.currentModalId) {
+                    const notes = document.getElementById('personalNotes').value;
+                    this.data.notes[this.currentModalId] = notes;
+                    this.saveData();
+                    this.showToast('Notlar kaydedildi');
+                }
+            },
+
+            filter(type) {
+                this.currentFilter = type;
+                document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+                event.target.classList.add('active');
+                this.render();
+            },
+
+            getFilteredNames() {
+                switch(this.currentFilter) {
                     case 'completed':
-                        return namesData.filter(n => isCompleted(n.id));
+                        return namesData.filter(n => this.isCompleted(n.id));
                     case 'incomplete':
-                        return namesData.filter(n => !isCompleted(n.id));
+                        return namesData.filter(n => !this.isCompleted(n.id));
                     case 'favorites':
-                        return namesData.filter(n => isFavorite(n.id));
+                        return namesData.filter(n => this.isFavorite(n.id));
+                    case 'program':
+                        if (this.data.currentProgram) {
+                            const program = predefinedPrograms.find(p => p.id === this.data.currentProgram) || 
+                                          this.data.customPrograms?.find(p => p.id === this.data.currentProgram);
+                            if (program) {
+                                return namesData.filter(n => program.names.includes(n.id));
+                            }
+                        }
+                        return [];
                     default:
                         return namesData;
                 }
-            };
+            },
 
-            const completed = namesData.filter(n => isCompleted(n.id)).length;
-            const totalDhikr = Object.values(data.counts).reduce((a, b) => a + b, 0);
-            const favorites = data.favorites.length;
-            const percent = Math.round((completed / namesData.length) * 100);
-
-            return (
-                <div className="min-h-screen">
-                    {/* Header */}
-                    <header className="text-center py-8 px-4 bg-gradient-to-b from-green-800/40 to-transparent border-b-2 border-yellow-500 relative overflow-hidden">
-                        <div className="text-5xl md:text-6xl font-bold text-yellow-500 mb-2 arabic-font" style={{textShadow: '0 0 20px rgba(212,175,55,0.3)'}}>
-                            Esma-i Hüsna
+            render() {
+                const container = document.getElementById('namesContainer');
+                const names = this.getFilteredNames();
+                
+                if (names.length === 0) {
+                    container.innerHTML = `
+                        <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">📿</div>
+                            <div>Bu kategoride henüz kayıt bulunmuyor.</div>
                         </div>
-                        <p className="text-green-200 text-lg">Allah'ın 99 İsmi - Gelişmiş Zikir ve İbadet Rehberi</p>
-                    </header>
-
-                    {/* Quick Actions */}
-                    <div className="max-w-6xl mx-auto px-4 py-6">
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <button className="bg-green-900/80 border border-yellow-500 rounded-xl p-4 hover:shadow-lg transition-all">
-                                <div className="text-3xl mb-2">📿</div>
-                                <div className="font-bold text-yellow-500">Zikir Programı</div>
-                                <div className="text-sm text-green-300">Hazır programlar</div>
-                            </button>
-                            <button className="bg-green-900/80 border border-yellow-500 rounded-xl p-4 hover:shadow-lg transition-all">
-                                <div className="text-3xl mb-2">📊</div>
-                                <div className="font-bold text-yellow-500">İstatistikler</div>
-                                <div className="text-sm text-green-300">İlerleme takibi</div>
-                            </button>
-                            <button className="bg-green-900/80 border border-yellow-500 rounded-xl p-4 hover:shadow-lg transition-all">
-                                <div className="text-3xl mb-2">🏆</div>
-                                <div className="font-bold text-yellow-500">Başarılar</div>
-                                <div className="text-sm text-green-300">Rozetler</div>
-                            </button>
-                            <button className="bg-green-900/80 border border-yellow-500 rounded-xl p-4 hover:shadow-lg transition-all">
-                                <div className="text-3xl mb-2">⚡</div>
-                                <div className="font-bold text-yellow-500">Hızlı Zikir</div>
-                                <div className="text-sm text-green-300">Otomatik sayaç</div>
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Progress Cards */}
-                    <div className="max-w-6xl mx-auto px-4 py-6">
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {/* Genel İlerleme */}
-                            <div className="bg-green-900/80 border border-yellow-500 rounded-2xl p-6">
-                                <h3 className="text-yellow-500 text-xl mb-4 flex items-center gap-2">📊 Genel İlerleme</h3>
-                                <div className="grid grid-cols-2 gap-4 mb-4">
-                                    <div className="text-center bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3">
-                                        <span className="text-2xl font-bold text-yellow-500">{completed}</span>
-                                        <div className="text-sm text-green-300">Tamamlanan</div>
-                                    </div>
-                                    <div className="text-center bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3">
-                                        <span className="text-2xl font-bold text-yellow-500">{totalDhikr}</span>
-                                        <div className="text-sm text-green-300">Toplam Zikir</div>
-                                    </div>
-                                    <div className="text-center bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3">
-                                        <span className="text-2xl font-bold text-yellow-500">{favorites}</span>
-                                        <div className="text-sm text-green-300">Favorilerim</div>
-                                    </div>
-                                    <div className="text-center bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3">
-                                        <span className="text-2xl font-bold text-yellow-500">{percent}%</span>
-                                        <div className="text-sm text-green-300">Tamamlanma</div>
-                                    </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = names.map(name => {
+                    const count = this.getCount(name.id);
+                    const isCompleted = this.isCompleted(name.id);
+                    const isFav = this.isFavorite(name.id);
+                    const progress = Math.min((count / name.target) * 100, 100);
+                    
+                    return `
+                        <div class="name-card ${isCompleted ? 'completed' : ''} ${isFav ? 'favorite' : ''}" onclick="app.openModal(${name.id})">
+                            <div class="card-header">
+                                <div class="card-actions" onclick="event.stopPropagation()">
+                                    <button class="icon-btn ${isFav ? 'active' : ''}" onclick="app.toggleFavorite(${name.id})">
+                                        ${isFav ? '♥' : '♡'}
+                                    </button>
                                 </div>
-                                <div className="relative bg-black/30 rounded-full h-3 overflow-hidden">
-                                    <div className="absolute inset-0 bg-gradient-to-r from-green-600 to-yellow-500 progress-bar" style={{width: `${percent}%`}}></div>
-                                </div>
+                                <div class="arabic-name">${name.arabic}</div>
                             </div>
-
-                            {/* Aktivite Takvimi */}
-                            <div className="bg-green-900/80 border border-yellow-500 rounded-2xl p-6">
-                                <h3 className="text-yellow-500 text-xl mb-4 flex items-center gap-2">📅 Aktivite Takvimi</h3>
-                                <div className="grid grid-cols-7 gap-2">
-                                    {/* Heatmap buraya gelecek */}
-                                </div>
+                            <div class="turkish-name">${name.turkish}</div>
+                            <div class="meaning">${name.meaning}</div>
+                            <div class="purpose">
+                                <strong>🎯 ${name.purpose}</strong>
                             </div>
-
-                            {/* Günlük Hedef */}
-                            <div className="bg-green-900/80 border border-yellow-500 rounded-2xl p-6">
-                                <h3 className="text-yellow-500 text-xl mb-4 flex items-center gap-2">🎯 Günlük Hedef</h3>
-                                <div className="grid grid-cols-2 gap-4 mb-4">
-                                    <div className="text-center bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3">
-                                        <span className="text-2xl font-bold text-yellow-500">{data.dailyTarget}</span>
-                                        <div className="text-sm text-green-300">Hedef</div>
-                                    </div>
-                                    <div className="text-center bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3">
-                                        <span className="text-2xl font-bold text-yellow-500">{totalDhikr}</span>
-                                        <div className="text-sm text-green-300">Bugün</div>
-                                    </div>
-                                </div>
-                                <div className="relative bg-black/30 rounded-full h-3 overflow-hidden">
-                                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-green-500" style={{width: '45%'}}></div>
-                                </div>
+                            <div style="background: rgba(0,0,0,0.2); height: 6px; border-radius: 3px; margin-bottom: 0.5rem; overflow: hidden;">
+                                <div style="width: ${progress}%; height: 100%; background: linear-gradient(90deg, var(--primary-light), var(--gold)); transition: width 0.3s;"></div>
+                            </div>
+                            <div class="counter-section" onclick="event.stopPropagation()">
+                                <button class="counter-btn" onclick="app.decrement(${name.id})">−</button>
+                                <div class="counter-display">${count}</div>
+                                <button class="counter-btn" onclick="app.increment(${name.id})">+</button>
+                            </div>
+                            <div class="target-info">
+                                Hedef: ${name.target} | ${isCompleted ? '✓ Tamamlandı' : `%${Math.round(progress)} tamamlandı`}
                             </div>
                         </div>
-                    </div>
+                    `;
+                }).join('');
+            },
 
-                    {/* Filter Tabs */}
-                    <div className="max-w-6xl mx-auto px-4 py-6">
-                        <div className="flex gap-2 overflow-x-auto">
-                            {['all', 'completed', 'incomplete', 'favorites'].map(tab => (
-                                <button
-                                    key={tab}
-                                    onClick={() => setCurrentFilter(tab)}
-                                    className={`px-4 py-2 rounded-full whitespace-nowrap transition-all ${
-                                        currentFilter === tab 
-                                            ? 'bg-yellow-500 text-green-900 font-bold' 
-                                            : 'bg-green-800/60 text-green-300 border border-green-600'
-                                    }`}
-                                >
-                                    {tab === 'all' ? 'Tümü' : tab === 'completed' ? 'Tamamlananlar' : tab === 'incomplete' ? 'Devam Eden' : 'Favorilerim'}
-                                </button>
-                            ))}
+            updateStats() {
+                const completed = namesData.filter(n => this.isCompleted(n.id)).length;
+                const totalDhikr = Object.values(this.data.counts).reduce((a, b) => a + b, 0);
+                const favorites = this.data.favorites.length;
+                const percent = Math.round((completed / namesData.length) * 100);
+                const dailyCurrent = totalDhikr;
+                const dailyPercent = Math.min((dailyCurrent / this.data.dailyTarget) * 100, 100);
+
+                document.getElementById('completedCount').textContent = completed;
+                document.getElementById('totalDhikr').textContent = totalDhikr;
+                document.getElementById('favoriteCount').textContent = favorites;
+                document.getElementById('progressPercent').textContent = percent + '%';
+                document.getElementById('progressBar').style.width = percent + '%';
+                
+                document.getElementById('dailyTarget').textContent = this.data.dailyTarget;
+                document.getElementById('dailyCurrent').textContent = dailyCurrent;
+                document.getElementById('dailyProgressBar').style.width = dailyPercent + '%';
+
+                // Streak badge
+                const streak = this.data.streak || 0;
+                if (streak > 0) {
+                    document.getElementById('streakBadge').style.display = 'inline-flex';
+                    document.getElementById('streakCount').textContent = streak;
+                } else {
+                    document.getElementById('streakBadge').style.display = 'none';
+                }
+            },
+
+            renderHeatmap() {
+                const container = document.getElementById('activityHeatmap');
+                const today = new Date();
+                const days = [];
+                
+                for (let i = 27; i >= 0; i--) {
+                    const date = new Date(today);
+                    date.setDate(date.getDate() - i);
+                    days.push(date);
+                }
+
+                container.innerHTML = days.map(date => {
+                    const dateStr = date.toDateString();
+                    const count = this.data.history[dateStr] || 0;
+                    const isToday = dateStr === today.toDateString();
+                    
+                    let level = 0;
+                    if (count > 500) level = 4;
+                    else if (count > 300) level = 3;
+                    else if (count > 100) level = 2;
+                    else if (count > 0) level = 1;
+
+                    return `
+                        <div class="heat-day level-${level} ${isToday ? 'today' : ''}" 
+                             title="${date.toLocaleDateString('tr-TR')}: ${count} zikir">
+                            ${isToday ? '•' : ''}
                         </div>
-                    </div>
+                    `;
+                }).join('');
+            },
 
-                    {/* Names Grid */}
-                    <div className="max-w-6xl mx-auto px-4 pb-12">
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {getFilteredNames().map(name => {
-                                const count = data.counts[name.id] || 0;
-                                const isCompleted = isCompleted(name.id);
-                                const isFav = isFavorite(name.id);
-                                const progress = Math.min((count / name.target) * 100, 100);
-                                
-                                return (
-                                    <div key={name.id} className={`bg-green-900/80 border rounded-2xl p-6 transition-all hover:shadow-xl ${
-                                        isCompleted ? 'border-yellow-500 shadow-yellow-500/20' : 'border-yellow-500/30'
-                                    } ${isFav ? 'border-red-400 shadow-red-400/20' : ''}`}>
-                                        <div className="flex justify-between items-start mb-4">
-                                            <div className="arabic-font text-4xl text-yellow-500 text-center flex-1">{name.arabic}</div>
-                                            <button
-                                                onClick={() => toggleFavorite(name.id)}
-                                                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
-                                                    isFav ? 'bg-red-500 text-white' : 'bg-white/10 text-green-300'
-                                                }`}
-                                            >
-                                                {isFav ? '♥' : '♡'}
-                                            </button>
-                                        </div>
-                                        <div className="text-xl font-bold text-center mb-2">{name.turkish}</div>
-                                        <div className="text-green-300 text-center mb-4">{name.meaning}</div>
-                                        <div className="bg-green-800/40 p-3 rounded-lg mb-4 border-r-4 border-yellow-500">
-                                            <strong className="text-yellow-400">🎯 {name.purpose}</strong>
-                                        </div>
-                                        <div className="relative bg-black/30 rounded-full h-2 mb-4 overflow-hidden">
-                                            <div className="absolute inset-0 bg-gradient-to-r from-green-600 to-yellow-500" style={{width: `${progress}%`}}></div>
-                                        </div>
-                                        <div className="flex items-center justify-center gap-4">
-                                            <button 
-                                                onClick={() => decrement(name.id)}
-                                                className="w-10 h-10 rounded-full border-2 border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-green-900 transition-all"
-                                            >
-                                                −
-                                            </button>
-                                            <div className="text-2xl font-bold text-yellow-500 min-w-[60px] text-center">{count}</div>
-                                            <button 
-                                                onClick={() => increment(name.id)}
-                                                className="w-10 h-10 rounded-full border-2 border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-green-900 transition-all"
-                                            >
-                                                +
-                                            </button>
-                                        </div>
-                                        <div className="text-center text-green-300 text-sm mt-2">
-                                            Hedef: {name.target} | {isCompleted ? '✓ Tamamlandı' : `%${Math.round(progress)} tamamlandı`}
-                                        </div>
-                                    </div>
-                                );
-                            })}
+            openModal(id) {
+                this.currentModalId = id;
+                const name = namesData.find(n => n.id === id);
+                const count = this.getCount(id);
+                
+                document.getElementById('modalArabic').textContent = name.arabic;
+                document.getElementById('modalTurkish').textContent = name.turkish;
+                document.getElementById('modalMeaning').textContent = name.meaning;
+                document.getElementById('modalDescription').textContent = name.description;
+                document.getElementById('modalPurpose').textContent = name.purpose;
+                document.getElementById('modalVirtues').textContent = name.virtues;
+                document.getElementById('modalCount').textContent = count;
+                document.getElementById('personalNotes').value = this.data.notes[id] || '';
+                
+                document.getElementById('detailModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+                
+                // Reset auto counter
+                this.stopAutoCount();
+                document.getElementById('autoCountBtn').textContent = '▶ Başlat';
+            },
+
+            closeModal() {
+                this.stopAutoCount();
+                document.getElementById('detailModal').classList.remove('active');
+                document.body.style.overflow = '';
+                this.currentModalId = null;
+            },
+
+            modalCount(delta) {
+                if (delta > 0) {
+                    this.increment(this.currentModalId);
+                } else {
+                    this.decrement(this.currentModalId);
+                }
+                document.getElementById('modalCount').textContent = this.getCount(this.currentModalId);
+            },
+
+            toggleAutoCount() {
+                const btn = document.getElementById('autoCountBtn');
+                
+                if (this.autoCountInterval) {
+                    this.stopAutoCount();
+                    btn.textContent = '▶ Başlat';
+                } else {
+                    const speed = 11 - document.getElementById('speedSlider').value;
+                    const interval = speed * 200;
+                    
+                    btn.textContent = '⏸ Durdur';
+                    this.autoCountInterval = setInterval(() => {
+                        this.modalCount(1);
+                    }, interval);
+                }
+            },
+
+            stopAutoCount() {
+                if (this.autoCountInterval) {
+                    clearInterval(this.autoCountInterval);
+                    this.autoCountInterval = null;
+                }
+            },
+
+            // Program Modal Functions
+            openProgramModal() {
+                const container = document.getElementById('programList');
+                const customPrograms = this.data.customPrograms || [];
+                const allPrograms = [...predefinedPrograms, ...customPrograms];
+                
+                container.innerHTML = allPrograms.map(program => {
+                    const isActive = this.data.currentProgram === program.id;
+                    const completedCount = program.names.filter(id => this.isCompleted(id)).length;
+                    const progress = Math.round((completedCount / program.names.length) * 100);
+                    
+                    return `
+                        <div class="program-item ${isActive ? 'active' : ''}" onclick="app.selectProgram('${program.id}')">
+                            <div class="program-name" style="color: ${program.color || 'var(--gold)'}">
+                                ${isActive ? '▶ ' : ''}${program.name}
+                            </div>
+                            <div class="program-desc">
+                                ${program.description}<br>
+                                <small>${program.names.length} isim | %${progress} tamamlandı</small>
+                            </div>
                         </div>
-                    </div>
+                    `;
+                }).join('');
+                
+                document.getElementById('programModal').classList.add('active');
+            },
 
-                    {/* Toast */}
-                    {toast && (
-                        <div className="toast show">{toast}</div>
-                    )}
-                </div>
-            );
+            closeProgramModal() {
+                document.getElementById('programModal').classList.remove('active');
+            },
+
+            selectProgram(programId) {
+                this.data.currentProgram = programId;
+                this.saveData();
+                this.closeProgramModal();
+                this.filter('program');
+                this.showToast('Program seçildi: ' + programId);
+            },
+
+            createCustomProgram() {
+                const name = prompt('Program adı:');
+                if (!name) return;
+                
+                const desc = prompt('Program açıklaması:') || '';
+                const namesInput = prompt('İsim numaralarını virgülle ayırarak girin (1-99):');
+                if (!namesInput) return;
+                
+                const names = namesInput.split(',').map(n => parseInt(n.trim())).filter(n => n >= 1 && n <= 99);
+                
+                if (names.length === 0) {
+                    alert('Geçerli isim numarası girilmedi!');
+                    return;
+                }
+                
+                const newProgram = {
+                    id: 'custom_' + Date.now(),
+                    name: name,
+                    description: desc,
+                    names: names,
+                    color: '#d4af37',
+                    isCustom: true
+                };
+                
+                if (!this.data.customPrograms) this.data.customPrograms = [];
+                this.data.customPrograms.push(newProgram);
+                this.saveData();
+                
+                this.openProgramModal();
+                this.showToast('Yeni program oluşturuldu!');
+            },
+
+            // Stats Modal Functions
+            openStatsModal() {
+                this.renderWeeklyChart();
+                this.renderTopNames();
+                this.calculateDetailedStats();
+                document.getElementById('statsModal').classList.add('active');
+            },
+
+            closeStatsModal() {
+                document.getElementById('statsModal').classList.remove('active');
+            },
+
+            renderWeeklyChart() {
+                const container = document.getElementById('weeklyChart');
+                const today = new Date();
+                const days = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
+                const data = [];
+                
+                for (let i = 6; i >= 0; i--) {
+                    const date = new Date(today);
+                    date.setDate(date.getDate() - i);
+                    const count = this.data.history[date.toDateString()] || 0;
+                    data.push(count);
+                }
+                
+                const max = Math.max(...data, 1);
+                
+                container.innerHTML = data.map((count, index) => `
+                    <div class="bar-item">
+                        <div class="bar-value">${count}</div>
+                        <div class="bar" style="height: ${(count / max) * 100}%"></div>
+                        <div class="bar-label">${days[index]}</div>
+                    </div>
+                `).join('');
+            },
+
+            renderTopNames() {
+                const container = document.getElementById('topNamesList');
+                const sorted = namesData
+                    .map(n => ({ ...n, count: this.getCount(n.id) }))
+                    .sort((a, b) => b.count - a.count)
+                    .slice(0, 10);
+                
+                container.innerHTML = sorted.map((name, index) => `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background: rgba(0,0,0,0.2); margin-bottom: 0.5rem; border-radius: 5px;">
+                        <span>${index + 1}. ${name.turkish}</span>
+                        <span style="color: var(--gold); font-weight: bold;">${name.count}</span>
+                    </div>
+                `).join('');
+            },
+
+            calculateDetailedStats() {
+                const history = this.data.history || {};
+                const activeDays = Object.keys(history).length;
+                const totalDhikr = Object.values(history).reduce((a, b) => a + b, 0);
+                const avgDaily = activeDays > 0 ? Math.round(totalDhikr / activeDays) : 0;
+                const bestDay = Math.max(...Object.values(history), 0);
+                
+                document.getElementById('totalDays').textContent = activeDays;
+                document.getElementById('avgDaily').textContent = avgDaily;
+                document.getElementById('bestDay').textContent = bestDay;
+                document.getElementById('currentStreak').textContent = this.data.streak || 0;
+            },
+
+            // Achievements Functions
+            openAchievementsModal() {
+                this.renderAchievements();
+                document.getElementById('achievementsModal').classList.add('active');
+            },
+
+            closeAchievementsModal() {
+                document.getElementById('achievementsModal').classList.remove('active');
+            },
+
+            renderAchievements() {
+                const container = document.getElementById('achievementsList');
+                const recentContainer = document.getElementById('recentAchievements');
+                
+                const stats = {
+                    totalDhikr: Object.values(this.data.counts).reduce((a, b) => a + b, 0),
+                    completed: namesData.filter(n => this.isCompleted(n.id)).length,
+                    favorites: this.data.favorites.length,
+                    streak: this.data.streak || 0
+                };
+                
+                container.innerHTML = achievementsData.map(ach => {
+                    const unlocked = this.data.unlockedAchievements.includes(ach.id);
+                    return `
+                        <div class="achievement ${unlocked ? 'unlocked' : ''}" 
+                             data-title="${ach.title}: ${ach.desc}"
+                             onclick="if(${unlocked}) app.showToast('${ach.title}: ${ach.desc}')">
+                            ${ach.icon}
+                        </div>
+                    `;
+                }).join('');
+                
+                // Recent achievements
+                const recent = this.data.unlockedAchievements.slice(-5);
+                if (recent.length === 0) {
+                    recentContainer.innerHTML = 'Henüz başarı kazanılmadı. Zikir yapmaya başlayın!';
+                } else {
+                    recentContainer.innerHTML = recent.map(id => {
+                        const ach = achievementsData.find(a => a.id === id);
+                        return `🏆 ${ach.title}<br>`;
+                    }).join('');
+                }
+            },
+
+            checkAchievements() {
+                const stats = {
+                    totalDhikr: Object.values(this.data.counts).reduce((a, b) => a + b, 0) + 
+                               Object.values(this.data.history || {}).reduce((a, b) => a + b, 0),
+                    completed: namesData.filter(n => this.isCompleted(n.id)).length,
+                    favorites: this.data.favorites.length,
+                    streak: this.data.streak || 0
+                };
+                
+                let newUnlock = false;
+                achievementsData.forEach(ach => {
+                    if (!this.data.unlockedAchievements.includes(ach.id)) {
+                        if (ach.condition(stats)) {
+                            this.data.unlockedAchievements.push(ach.id);
+                            newUnlock = true;
+                            this.showToast(`🏆 Yeni Başarı: ${ach.title}!`);
+                        }
+                    }
+                });
+                
+                if (newUnlock) {
+                    this.saveData();
+                }
+            },
+
+            // Quick Dhikr Functions
+            startQuickDhikr() {
+                this.quickDhikrIndex = 0;
+                this.updateQuickDhikrDisplay();
+                document.getElementById('quickDhikrModal').classList.add('active');
+            },
+
+            closeQuickDhikr() {
+                this.stopQuickDhikr();
+                document.getElementById('quickDhikrModal').classList.remove('active');
+            },
+
+            updateQuickDhikrDisplay() {
+                const name = namesData[this.quickDhikrIndex];
+                const count = this.getCount(name.id);
+                document.getElementById('quickDhikrName').textContent = `${name.arabic} - ${name.turkish}`;
+                document.getElementById('quickDhikrCounter').textContent = count;
+            },
+
+            changeQuickDhikr(direction) {
+                this.stopQuickDhikr();
+                document.getElementById('quickStartBtn').textContent = '▶ Başlat';
+                
+                this.quickDhikrIndex += direction;
+                if (this.quickDhikrIndex < 0) this.quickDhikrIndex = namesData.length - 1;
+                if (this.quickDhikrIndex >= namesData.length) this.quickDhikrIndex = 0;
+                
+                this.updateQuickDhikrDisplay();
+            },
+
+            toggleQuickDhikr() {
+                const btn = document.getElementById('quickStartBtn');
+                
+                if (this.quickDhikrInterval) {
+                    this.stopQuickDhikr();
+                    btn.textContent = '▶ Başlat';
+                } else {
+                    const speed = 11 - document.getElementById('quickSpeedSlider').value;
+                    const interval = speed * 300;
+                    
+                    btn.textContent = '⏸ Durdur';
+                    this.quickDhikrInterval = setInterval(() => {
+                        const name = namesData[this.quickDhikrIndex];
+                        this.increment(name.id);
+                        this.updateQuickDhikrDisplay();
+                    }, interval);
+                }
+            },
+
+            stopQuickDhikr() {
+                if (this.quickDhikrInterval) {
+                    clearInterval(this.quickDhikrInterval);
+                    this.quickDhikrInterval = null;
+                }
+            },
+
+            resetQuickDhikr() {
+                this.stopQuickDhikr();
+                document.getElementById('quickStartBtn').textContent = '▶ Başlat';
+                // Don't actually reset counts, just stop
+                this.showToast('Sayaç durduruldu');
+            },
+
+            // Utility Functions
+            setDailyTarget() {
+                const current = this.data.dailyTarget;
+                const newTarget = prompt(`Günlük hedef zikir sayısı (şu an: ${current}):`, current);
+                if (newTarget && !isNaN(newTarget) && newTarget > 0) {
+                    this.data.dailyTarget = parseInt(newTarget);
+                    this.saveData();
+                    this.updateStats();
+                    this.showToast(`Günlük hedef: ${newTarget}`);
+                }
+            },
+
+            resetDaily() {
+                if (confirm('Bugünkü tüm zikirleri sıfırlamak istediğinize emin misiniz?')) {
+                    // Save to history before reset
+                    const todayTotal = Object.values(this.data.counts).reduce((a, b) => a + b, 0);
+                    if (todayTotal > 0) {
+                        this.data.history[this.data.lastReset] = todayTotal;
+                    }
+                    
+                    this.data.counts = {};
+                    this.saveData();
+                    this.render();
+                    this.updateStats();
+                    this.renderHeatmap();
+                    this.showToast('Günlük zikirler sıfırlandı');
+                }
+            },
+
+            resetAll() {
+                if (confirm('TÜM verileri sıfırlamak istediğinize emin misiniz? Bu işlem geri alınamaz!')) {
+                    this.data = {
+                        counts: {},
+                        favorites: [],
+                        notes: {},
+                        history: {},
+                        lastReset: new Date().toDateString(),
+                        dailyTarget: 1000,
+                        currentProgram: null,
+                        unlockedAchievements: [],
+                        streak: 0,
+                        lastActiveDate: null
+                    };
+                    this.saveData();
+                    this.render();
+                    this.updateStats();
+                    this.renderHeatmap();
+                    this.showToast('Tüm veriler sıfırlandı');
+                }
+            },
+
+            exportData() {
+                const dataStr = JSON.stringify(this.data, null, 2);
+                const blob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `esma-i-husna-yedek-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                this.showToast('Veriler yedeklendi');
+            },
+
+            importData() {
+                document.getElementById('importFile').click();
+            },
+
+            handleImport(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const imported = JSON.parse(e.target.result);
+                        if (confirm('Mevcut verilerin üzerine yazılacak. Emin misiniz?')) {
+                            this.data = { ...this.data, ...imported };
+                            this.saveData();
+                            this.render();
+                            this.updateStats();
+                            this.renderHeatmap();
+                            this.showToast('Veriler geri yüklendi');
+                        }
+                    } catch (err) {
+                        alert('Dosya okunurken hata oluştu!');
+                    }
+                };
+                reader.readAsText(file);
+                event.target.value = '';
+            },
+
+            showToast(message) {
+                const toast = document.getElementById('toast');
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            },
+
+            setupEventListeners() {
+                // Speed sliders
+                document.getElementById('speedSlider').addEventListener('input', (e) => {
+                    document.getElementById('speedValue').textContent = e.target.value;
+                    if (this.autoCountInterval) {
+                        this.stopAutoCount();
+                        this.toggleAutoCount();
+                    }
+                });
+                
+                document.getElementById('quickSpeedSlider').addEventListener('input', (e) => {
+                    document.getElementById('quickSpeedValue').textContent = e.target.value;
+                    if (this.quickDhikrInterval) {
+                        this.stopQuickDhikr();
+                        this.toggleQuickDhikr();
+                    }
+                });
+            }
         };
 
-        // Render
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+
+        // Close modals on outside click
+        ['detailModal', 'programModal', 'statsModal', 'achievementsModal', 'quickDhikrModal'].forEach(id => {
+            document.getElementById(id).addEventListener('click', (e) => {
+                if (e.target.id === id) {
+                    if (id === 'detailModal') app.closeModal();
+                    else if (id === 'programModal') app.closeProgramModal();
+                    else if (id === 'statsModal') app.closeStatsModal();
+                    else if (id === 'achievementsModal') app.closeAchievementsModal();
+                    else if (id === 'quickDhikrModal') app.closeQuickDhikr();
+                }
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                app.closeModal();
+                app.closeProgramModal();
+                app.closeStatsModal();
+                app.closeAchievementsModal();
+                app.closeQuickDhikr();
+            }
+            if (e.key === ' ' && document.getElementById('quickDhikrModal').classList.contains('active')) {
+                e.preventDefault();
+                app.toggleQuickDhikr();
+            }
+        });
     </script>
 </body>
 </html>
